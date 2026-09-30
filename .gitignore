@@ -1,0 +1,5 @@
+# Claude Code — configurações pessoais
+.claude/settings.local.json
+
+# Sistema operacional
+.DS_Store
