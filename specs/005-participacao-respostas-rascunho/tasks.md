@@ -72,8 +72,8 @@ sequência.
   `agora: datetime | None = None` e usam `momento_de_referencia` e `estado` de
   `trajetoria.campanha.consultas`. Nenhum relógio novo. **Todo teste passa `agora`
   explícito** pelo auxiliar `momento(...)`.
-- **Gates da 004**: criar Participação usa `admite_participacao`; diagnóstico da falha
-  por `estado` e `avaliar`. Nenhuma regra de estado, período ou critério reescrita.
+- **Gates da 004**: criar Participação usa a admissão da 004 por `estado` e `avaliar`,
+  avaliada uma vez e equivalente a `admite_participacao` (teste de equivalência). Nenhuma regra de estado, período ou critério reescrita.
 - **Instrumentos nos testes**: montados e publicados pelas operações da 002. A baseline
   da 003 (`materializar()`) **nunca** é publicada nem alterada.
 - **Ausência × vazio (regra uniforme)**: em toda operação `responder_*`, `None`, `""`,
@@ -111,7 +111,7 @@ sequência.
 
 **Purpose**: app Django vazio e registrado; suíte da 004 compatível.
 
-- [ ] T001 Criar o esqueleto do app e registrá-lo:
+- [X] T001 Criar o esqueleto do app e registrá-lo:
   - `trajetoria/participacao/__init__.py` (vazio);
   - `trajetoria/participacao/apps.py` com `ParticipacaoConfig(AppConfig)`,
     `name = "trajetoria.participacao"`, `verbose_name = "Participações"`;
@@ -141,7 +141,7 @@ todas as histórias.
 
 **⚠️ CRITICAL**: nenhuma história começa antes desta fase.
 
-- [ ] T003 Escrever `tests/participacao/construcao.py` (auxiliares, não testes; depende
+- [X] T003 Escrever `tests/participacao/construcao.py` (auxiliares, não testes; depende
   de T006 por `ParticipacaoRejeitada`). Imports de `trajetoria.participacao.models` e
   `trajetoria.participacao.operacoes` ficam **dentro das funções** que os usam
   (`retrato`), para que o módulo importe antes de T007 e T010; imports das Features
@@ -185,7 +185,7 @@ todas as histórias.
   - `retrato(participacao) -> dict`: a linha da Participação, as linhas das suas
     Respostas e das suas `RespostaOpcao` (por `values()`, ordenadas), para comparar
     antes e depois.
-- [ ] T004 Escrever `tests/participacao/conftest.py` (depende de T003) com as fixtures
+- [X] T004 Escrever `tests/participacao/conftest.py` (depende de T003) com as fixtures
   `inst` (`instrumento()`), `campanha` (`campanha_aberta(inst.versao,
   ano_minimo=2020)`), `conclusao` (`conclusao(ano=2022)`, elegível) e `participacao`
   (`iniciar_participacao(campanha, conclusao, agora=NO_PERIODO).participacao` —
@@ -193,7 +193,7 @@ todas as histórias.
   iniciar_participacao` **dentro da fixture**, porque `operacoes.py` só existe a partir
   de T010 e o `conftest.py` não pode quebrar a coleta dos testes da Fase 2).
   `fonte_simulada` vem de `tests/conftest.py`, sem redefinir.
-- [ ] T005 [P] Escrever `tests/participacao/test_participacao_modelo.py`, que DEVE falhar
+- [X] T005 [P] Escrever `tests/participacao/test_participacao_modelo.py`, que DEVE falhar
   antes de T007. Escrita direta no ORM, cada caso em `transaction.atomic()`, esperando
   `IntegrityError`:
   - duas `Participacao` com a mesma `(campanha, conclusao)`;
@@ -213,7 +213,7 @@ todas as histórias.
   - remover `Campanha`, `ConclusaoAcademica`, `Pergunta` ou `Opcao` referenciadas →
     `ProtectedError`;
   - remover `Resposta` apaga suas `RespostaOpcao` (`CASCADE`).
-- [ ] T006 [P] Implementar `trajetoria/participacao/regras.py`, no padrão de
+- [X] T006 [P] Implementar `trajetoria/participacao/regras.py`, no padrão de
   `trajetoria/campanha/regras.py` (sem importar dele):
   - `Motivo(Enum)` com `COLETA_NAO_ADMITIDA`, `CONCLUSAO_NAO_ELEGIVEL`,
     `PARTICIPACAO_INEXISTENTE`, `PERGUNTA_DE_OUTRA_VERSAO`, `OPCAO_DE_OUTRA_PERGUNTA`,
@@ -222,7 +222,7 @@ todas as histórias.
   - `Violacao(motivo, campo: str | None, detalhe: str)` (`dataclass(frozen=True)`);
   - `ParticipacaoRejeitada(Exception)` com `violacoes` (≥ 1, senão `ValueError`), a
     propriedade `motivos` e `__str__` legível.
-- [ ] T007 Implementar `trajetoria/participacao/models.py` conforme
+- [X] T007 Implementar `trajetoria/participacao/models.py` conforme
   [data-model.md](data-model.md) (depende de T001). Docstring citando o data-model e a
   regra "CHECKs só de colunas da própria linha; regras entre tabelas nas operações".
   Copiar o padrão `_nao_vazio(campo, nome)` dos outros apps, sem importar.
@@ -263,7 +263,7 @@ todas as histórias.
       related_name="+")`;
     - `UniqueConstraint(fields=["resposta", "opcao"], name="resposta_opcao_unica")`;
     - sem posição, timestamp ou outro campo.
-- [ ] T008 Gerar `trajetoria/participacao/migrations/0001_initial.py` com
+- [X] T008 Gerar `trajetoria/participacao/migrations/0001_initial.py` com
   `uv run python manage.py makemigrations participacao`. Conferir que cria só as três
   tabelas do app, depende das migrações de `campanha`, `academico` e `instrumento`, e
   não tem `RunSQL`. Rodar `uv run pytest tests/participacao/test_participacao_modelo.py`
@@ -282,7 +282,7 @@ convite nem autenticação.
 **Independent Test**: Campanha aberta + Conclusão elegível → `CRIADA`; Conclusão não
 elegível ou Campanha fora de coleta → rejeição sem nada criado.
 
-- [ ] T009 [US1] Escrever `tests/participacao/test_participacao_inicio.py` (DEVE falhar
+- [X] T009 [US1] Escrever `tests/participacao/test_participacao_inicio.py` (DEVE falhar
   antes de T010):
   - início válido: `situacao is CRIADA`; `campanha`, `conclusao` e `iniciada_em ==
     NO_PERIODO`; `respostas_atuais` ainda não existe — verificar zero linhas em
@@ -298,7 +298,7 @@ elegível ou Campanha fora de coleta → rejeição sem nada criado.
   - sem convite: o teste não cria nada além de Campanha e Conclusão (US1.6);
   - `TypeError` para `campanha` ou `conclusao` de classe errada e para `agora` ingênuo
     ou `date`, sem nenhuma linha criada.
-- [ ] T010 [US1] Implementar em `trajetoria/participacao/operacoes.py` (docstring citando
+- [X] T010 [US1] Implementar em `trajetoria/participacao/operacoes.py` (docstring citando
   [contracts/operacoes.md](contracts/operacoes.md); `__all__` explícito):
   - `SituacaoInicio(Enum)` (`CRIADA`, `JA_EXISTENTE`) e `Inicio(NamedTuple)`
     (`participacao`, `situacao`);
@@ -321,7 +321,7 @@ elegível ou Campanha fora de coleta → rejeição sem nada criado.
 **Independent Test**: iniciar o mesmo par várias vezes → uma linha, mesmo `id`, mesmo
 `iniciada_em`; ramo de corrida forçado → `JA_EXISTENTE`.
 
-- [ ] T011 [US2] Acrescentar a `tests/participacao/test_participacao_inicio.py` (DEVEM
+- [X] T011 [US2] Acrescentar a `tests/participacao/test_participacao_inicio.py` (DEVEM
   falhar antes de T013):
   - repetição → `JA_EXISTENTE`, mesmo `id` e `iniciada_em`, `retrato` idêntico, uma
     linha (US2.1, SC-002);
@@ -332,13 +332,13 @@ elegível ou Campanha fora de coleta → rejeição sem nada criado.
     para 2010, simulando 001/DP-005) → `JA_EXISTENTE` (FR-034, DP-507);
   - não existe operação de reinício, tentativa ou nova Participação do par (US2.4):
     `operacoes.__all__` é exatamente o conjunto do contrato.
-- [ ] T012 [P] [US2] Escrever `tests/participacao/test_participacao_concorrencia.py`
+- [X] T012 [P] [US2] Escrever `tests/participacao/test_participacao_concorrencia.py`
   (DEVE falhar antes de T013), **determinístico**: cria a Participação do par por ORM e
   faz `monkeypatch` de `operacoes._participacao_existente` para devolver `None` na
   primeira chamada; `iniciar_participacao` deve cair no `IntegrityError` do savepoint,
   reler e devolver `JA_EXISTENTE` com a Participação já gravada; ao final, uma linha
   (R11, R17, FR-006).
-- [ ] T013 [US2] Em `trajetoria/participacao/operacoes.py`, completar
+- [X] T013 [US2] Em `trajetoria/participacao/operacoes.py`, completar
   `iniciar_participacao`:
   - auxiliar privado `_participacao_existente(campanha, conclusao) ->
     Participacao | None` (ponto do `monkeypatch` de T012);
@@ -348,7 +348,7 @@ elegível ou Campanha fora de coleta → rejeição sem nada criado.
     relê pelo par; se encontrar, devolve `JA_EXISTENTE`; se **não** encontrar (o
     `IntegrityError` não veio da unicidade do par), relança o `IntegrityError`
     original. Sem bloqueio da Campanha, sem retry, sem framework de locking.
-- [ ] T014 [US2] (Opcional, R17) Acrescentar a
+- [X] T014 [US2] (Opcional, R17) Acrescentar a
   `tests/participacao/test_participacao_concorrencia.py` um teste real com
   `@pytest.mark.django_db(transaction=True)`, `threading.Barrier(2)` e duas threads
   chamando `iniciar_participacao` no mesmo par (cada thread fecha sua conexão em
@@ -368,7 +368,7 @@ elegível ou Campanha fora de coleta → rejeição sem nada criado.
 **Independent Test**: registrar uma Opção válida e consultá-la por ORM; Opção de outra
 Pergunta, nenhuma Opção, coleção ou texto → rejeitados sem gravar.
 
-- [ ] T015 [US3] Escrever `tests/participacao/test_participacao_respostas.py` (seção
+- [X] T015 [US3] Escrever `tests/participacao/test_participacao_respostas.py` (seção
   escolha única; DEVE falhar antes de T016):
   - "Sim" em `inst.unica` → uma Resposta com `opcao` = "Sim", `texto`, `escala`,
     `complemento` nulos, nenhuma `RespostaOpcao` (US3.1);
@@ -385,7 +385,7 @@ Pergunta, nenhuma Opção, coleção ou texto → rejeitados sem gravar.
     **mesmo valor** → aceito, mesmo `id`, `retrato` idêntico (FR-036);
   - `TypeError` para `participacao` ou `pergunta` de classe errada e `agora` ingênuo;
   - em toda rejeição, `retrato` idêntico antes e depois.
-- [ ] T016 [US3] Em `trajetoria/participacao/operacoes.py`, implementar o esqueleto
+- [X] T016 [US3] Em `trajetoria/participacao/operacoes.py`, implementar o esqueleto
   privado das escritas (`_escrever(participacao, pergunta, tipo, agora, gravar)` ou
   equivalente simples, passos 1–5 e 7 das convenções) e
   `responder_escolha_unica(participacao, pergunta, opcao, *, agora=None) -> Resposta`
@@ -405,7 +405,7 @@ Pergunta, nenhuma Opção, coleção ou texto → rejeitados sem gravar.
 **Independent Test**: `{A, C}` e `{C, A}` iguais; `{A, A}` = `{A}`; vazio e `{A, X}`
 rejeitados sem gravar.
 
-- [ ] T017 [US4] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
+- [X] T017 [US4] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
   escolha múltipla; DEVEM falhar antes de T018):
   - `{A, C}` → uma Resposta; `opcao`, `texto`, `escala` nulos; duas `RespostaOpcao`
     (US4.1);
@@ -419,7 +419,7 @@ rejeitados sem gravar.
   - `None` → `VALOR_VAZIO` (`campo="opcoes"`);
   - `"A"` (str) e uma `Opcao` isolada → `VALOR_INCOMPATIVEL`;
   - `responder_escolha_multipla` em `inst.unica` → `VALOR_INCOMPATIVEL`.
-- [ ] T018 [US4] Implementar em `trajetoria/participacao/operacoes.py`
+- [X] T018 [US4] Implementar em `trajetoria/participacao/operacoes.py`
   `responder_escolha_multipla(participacao, pergunta, opcoes, *, agora=None) ->
   Resposta`: `None` → `VALOR_VAZIO`; aceita coleção iterável (não `str`, não `Opcao`)
   de `Opcao`; deduplica por `pk`; vazio → `VALOR_VAZIO`; confere pelo banco que todas são da Pergunta; grava a
@@ -436,7 +436,7 @@ rejeitados sem gravar.
 
 **Independent Test**: `"  27 anos "` volta idêntico; vazio rejeitado.
 
-- [ ] T019 [US5] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
+- [X] T019 [US5] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
   texto; DEVEM falhar antes de T020):
   - `"  27 anos "` gravado e lido exatamente (US5.1);
   - `"2020/2"` aceito, sem validação de ano (US5.2);
@@ -444,7 +444,7 @@ rejeitados sem gravar.
     (US5.3);
   - `3` e uma `Opcao` → `VALOR_INCOMPATIVEL`; `responder_texto` em
     `inst.escala` → `VALOR_INCOMPATIVEL` (US5.4).
-- [ ] T020 [US5] Implementar em `trajetoria/participacao/operacoes.py`
+- [X] T020 [US5] Implementar em `trajetoria/participacao/operacoes.py`
   `responder_texto(participacao, pergunta, texto, *, agora=None) -> Resposta`: `None`
   → `VALOR_VAZIO`; não `str` → `VALOR_INCOMPATIVEL`; `not texto.strip()` →
   `VALOR_VAZIO`; grava sem
@@ -461,14 +461,14 @@ rejeitados sem gravar.
 **Independent Test**: 1, 3, 5 aceitos; 0, 6 fora dos limites; `2.5`, `"3"`, `True`
 incompatíveis.
 
-- [ ] T021 [US6] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
+- [X] T021 [US6] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
   escala; DEVEM falhar antes de T022):
   - 1, 3 e 5 → `escala` igual ao inteiro; nenhum rótulo gravado (US6.1, US6.4);
   - 0 e 6 → `ESCALA_FORA_DOS_LIMITES` (US6.2);
   - `2.5`, `"3"` e `True` → `VALOR_INCOMPATIVEL` (US6.3);
   - `None` → `VALOR_VAZIO` (`campo="escala"`), Pergunta continua sem Resposta;
   - `responder_escala` em `inst.texto` → `VALOR_INCOMPATIVEL`.
-- [ ] T022 [US6] Implementar em `trajetoria/participacao/operacoes.py`
+- [X] T022 [US6] Implementar em `trajetoria/participacao/operacoes.py`
   `responder_escala(participacao, pergunta, valor, *, agora=None) -> Resposta`:
   `None` → `VALOR_VAZIO`; `type(valor) is not int` → `VALOR_INCOMPATIVEL` (exclui
   `bool`); fora de
@@ -486,7 +486,7 @@ incompatíveis.
 **Independent Test**: sequências de registrar/substituir/remover deixam só o último
 valor; remover volta a não respondida.
 
-- [ ] T023 [US7] Escrever `tests/participacao/test_participacao_rascunho.py` (DEVE falhar
+- [X] T023 [US7] Escrever `tests/participacao/test_participacao_rascunho.py` (DEVE falhar
   antes de T024 nas partes de remoção):
   - "Sim" → "Não" em `unica`: mesmo `id` de Resposta, `opcao` = "Não", uma linha
     (US7.1, FR-018);
@@ -504,7 +504,7 @@ valor; remover volta a não respondida.
     `posterior` (Seção 2) → aceito; mudar `unica` de "Sim" para "Não" mantém a Resposta
     de `posterior` (FR-038);
   - `remover_resposta` com Pergunta de outra Versão → `PERGUNTA_DE_OUTRA_VERSAO`.
-- [ ] T024 [US7] Implementar em `trajetoria/participacao/operacoes.py`
+- [X] T024 [US7] Implementar em `trajetoria/participacao/operacoes.py`
   `SituacaoRemocao(Enum)` (`REMOVIDA`, `INEXISTENTE`) e
   `remover_resposta(participacao, pergunta, *, agora=None) -> SituacaoRemocao`
   (passos 1–4 do esqueleto; apaga a Resposta — `CASCADE` leva as `RespostaOpcao`).
@@ -521,7 +521,7 @@ valor; remover volta a não respondida.
 **Independent Test**: "Outro:" com complemento aceito em única e múltipla; sem a Opção,
 vazio ou em outro tipo → rejeitado.
 
-- [ ] T025 [US8] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
+- [X] T025 [US8] Acrescentar a `tests/participacao/test_participacao_respostas.py` (seção
   complemento; DEVEM falhar antes de T026):
   - `unica_outro` = "Outro:" com `complemento="Cuidando de familiar"` → gravado
     exatamente (US8.1);
@@ -537,7 +537,7 @@ vazio ou em outro tipo → rejeitado.
   - `responder_texto` e `responder_escala` não aceitam o parâmetro `complemento`
     (`TypeError` de Python por argumento inesperado) — FR-030 b pela assinatura
     (US8.4).
-- [ ] T026 [US8] Em `trajetoria/participacao/operacoes.py`, acrescentar
+- [X] T026 [US8] Em `trajetoria/participacao/operacoes.py`, acrescentar
   `complemento=None` a `responder_escolha_unica` e `responder_escolha_multipla`:
   vazio → `VALOR_VAZIO`; não `str` → `VALOR_INCOMPATIVEL`; Opção com
   `complemento_textual` não selecionada (`opcao` em única; ausente do conjunto em
@@ -556,7 +556,7 @@ vazio ou em outro tipo → rejeitado.
 **Independent Test**: respostas dos quatro tipos e complemento → `respostas_atuais`
 distingue não respondida e dá o valor tipado; `localizar_participacao` não cria.
 
-- [ ] T027 [US9] Escrever `tests/participacao/test_participacao_consulta.py` (DEVE falhar
+- [X] T027 [US9] Escrever `tests/participacao/test_participacao_consulta.py` (DEVE falhar
   antes de T028):
   - `respostas_atuais` com algumas Perguntas respondidas: chaves = ids das Perguntas
     respondidas; Pergunta não respondida ausente; valores por tipo (`opcao`,
@@ -573,7 +573,7 @@ distingue não respondida e dá o valor tipado; `localizar_participacao` não cr
   - consultas não gravam: `retrato` idêntico antes e depois (US9.5);
   - `respostas_atuais` não faz consultas por Resposta além do pré-carregamento
     (`django_assert_max_num_queries`), apenas como proteção de uso.
-- [ ] T028 [US9] Implementar `trajetoria/participacao/consultas.py` (docstring citando
+- [X] T028 [US9] Implementar `trajetoria/participacao/consultas.py` (docstring citando
   [contracts/consultas.md](contracts/consultas.md); `__all__` explícito):
   - `localizar_participacao(campanha, conclusao) -> Participacao | None`;
   - `participacoes_da_conclusao(conclusao) -> tuple[Participacao, ...]`, ordem
@@ -596,7 +596,7 @@ distingue não respondida e dá o valor tipado; `localizar_participacao` não cr
 **Independent Test**: a mesma Conclusão em Campanhas 2025, 2027 e 2030 → três
 Participações; alterar uma não muda as outras.
 
-- [ ] T029 [P] [US10] Escrever `tests/participacao/test_participacao_longitudinal.py`
+- [X] T029 [P] [US10] Escrever `tests/participacao/test_participacao_longitudinal.py`
   (comportamento já entregue; pode passar de imediato):
   - Conclusão ADS — 2024 (fictícia) com Participações em três Campanhas com períodos
     2025, 2027 e 2030, cada uma iniciada com `agora` no próprio período (US10.1);
@@ -608,7 +608,7 @@ Participações; alterar uma não muda as outras.
     independentes (US10.5, FR-009);
   - duas Campanhas sobrepostas EM_COLETA com a mesma Conclusão → uma Participação em
     cada (FR-007).
-- [ ] T030 [US10] Se T029 falhar, corrigir em `trajetoria/participacao/operacoes.py` ou
+- [X] T030 [US10] Se T029 falhar, corrigir em `trajetoria/participacao/operacoes.py` ou
   `trajetoria/participacao/consultas.py` sem novo conceito; senão, nada a fazer.
 
 ---
@@ -620,7 +620,7 @@ Participações; alterar uma não muda as outras.
 **Independent Test**: depois do encerramento (explícito e por data), toda escrita é
 rejeitada e o `retrato` não muda.
 
-- [ ] T031 [P] [US11] Escrever `tests/participacao/test_participacao_coleta.py`
+- [X] T031 [P] [US11] Escrever `tests/participacao/test_participacao_coleta.py`
   (comportamento já entregue; pode passar de imediato):
   - Respostas registradas; Campanha encerrada com `encerrar` da 004 → registrar (cada
     um dos quatro tipos), substituir e remover → `COLETA_NAO_ADMITIDA`; `retrato`
@@ -636,7 +636,7 @@ rejeitada e o `retrato` não muda.
   - **elegibilidade só no início**: Participação criada; `ano_conclusao` da Conclusão
     alterado por ORM para fora dos critérios; `responder_texto` continua aceito durante
     a coleta (FR-034, DP-507).
-- [ ] T032 [US11] Se T031 falhar, corrigir o passo 3 do esqueleto em
+- [X] T032 [US11] Se T031 falhar, corrigir o passo 3 do esqueleto em
   `trajetoria/participacao/operacoes.py`; senão, nada a fazer. Sem prazo de graça
   (DP-502).
 
@@ -649,7 +649,7 @@ rejeitada e o `retrato` não muda.
 **Independent Test**: Versões 2027 e 2028 (textos idênticos) → toda referência a 2028
 numa Participação de 2027 é rejeitada; cada item de FR-052 tem caso de teste.
 
-- [ ] T033 [P] [US12] Escrever `tests/participacao/test_participacao_versao.py`
+- [X] T033 [P] [US12] Escrever `tests/participacao/test_participacao_versao.py`
   (comportamento já entregue; pode passar de imediato):
   - `inst28 = instrumento_derivado(inst)`; Participação na Campanha de 2027;
     `inst28.texto` → `PERGUNTA_DE_OUTRA_VERSAO` (US12.1);
@@ -661,7 +661,7 @@ numa Participação de 2027 é rejeitada; cada item de FR-052 tem caso de teste.
     SC-005); `PARTICIPACAO_INEXISTENTE` com instância de `Participacao` não gravada;
   - nenhuma mensagem (`str(erro)` e `detalhe`) contém texto, inteiro ou complemento
     declarados (FR-059).
-- [ ] T034 [US12] Se T033 falhar, corrigir em `trajetoria/participacao/operacoes.py`;
+- [X] T034 [US12] Se T033 falhar, corrigir em `trajetoria/participacao/operacoes.py`;
   senão, nada a fazer.
 
 ---
@@ -671,7 +671,7 @@ numa Participação de 2027 é rejeitada; cada item de FR-052 tem caso de teste.
 **Purpose**: aceitação ponta a ponta, escopo e verificação final. Nenhuma funcionalidade
 nova.
 
-- [ ] T035 Escrever `tests/participacao/test_participacao_aceitacao.py`:
+- [X] T035 Escrever `tests/participacao/test_participacao_aceitacao.py`:
   - as **11 perguntas de sucesso** do solicitante (spec, tabela de cobertura), um teste
     cada, reaproveitando auxiliares;
   - **escopo por app e por modelo, sem proibição global por nome** (R16):
@@ -683,12 +683,12 @@ nova.
     - campos concretos de `Campanha`, `ConclusaoAcademica`, `Pergunta` e `Opcao`
       inalterados (listas dos data-models da 004, 001 e 002);
   - a baseline da 003 continua `RASCUNHO`.
-- [ ] T036 [P] Atualizar `README.md` com o link "Participação e respostas em rascunho:
+- [X] T036 [P] Atualizar `README.md` com o link "Participação e respostas em rascunho:
   [quickstart da Feature 005](specs/005-participacao-respostas-rascunho/quickstart.md)".
   Ajustar a tabela de `specs/005-participacao-respostas-rascunho/quickstart.md` se
   nomes de arquivos de teste mudarem (hoje: 10 arquivos; consulta em
   `test_participacao_consulta.py`; Versão em `test_participacao_versao.py`).
-- [ ] T037 Rodar e registrar o resultado:
+- [X] T037 Rodar e registrar o resultado:
   - `uv run pytest` (suíte completa: 001–005 verdes);
   - `uv run ruff check .`;
   - `uv run python manage.py check`;
@@ -699,7 +699,7 @@ nova.
     `main`); em `config/`, só a linha de `INSTALLED_APPS`; nenhum `admin.py`, `urls.py`
     ou `management/` em `trajetoria/participacao/` (FR-058);
   - se o teste com threads de T014 falhar de forma intermitente, removê-lo e registrar.
-- [ ] T038 Conferir a Constitution e a Definition of Done e registrar em
+- [X] T038 Conferir a Constitution e a Definition of Done e registrar em
   `specs/005-participacao-respostas-rascunho/plan.md` uma "Revisão pós-implementação":
   - gate mantido; nada da lista "Limites" criado;
   - nenhum log ou dado declarado em mensagens;

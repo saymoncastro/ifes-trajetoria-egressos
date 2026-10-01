@@ -22,7 +22,8 @@ Perguntas/Opções da Versão**. Ela não executa a jornada.
 - **Operações explícitas por tipo**: `iniciar_participacao`, `responder_escolha_unica`,
   `responder_escolha_multipla`, `responder_texto`, `responder_escala`,
   `remover_resposta`. Sem valor genérico nem CRUD (R7).
-- **Gates da 004, sem replicar regra** (R10): criar exige `admite_participacao`;
+- **Gates da 004, sem replicar regra** (R10): criar exige a admissão da 004 (`estado` e
+  `avaliar`, equivalente a `admite_participacao`);
   escrever exige só `estado(…) is EM_COLETA`; início repetido devolve a existente.
 - **Concorrência proporcional** (R11): `UNIQUE` + savepoint para inícios simultâneos;
   `select_for_update(of=("self",))` da Participação para escritas.
@@ -100,6 +101,47 @@ resolvidas por decisão do solicitante:
 Um teste da 004 proibia globalmente os nomes dos novos modelos. Foi corrigido pelo
 escopo do app (R16), sem efeito sobre a Constituição nem sobre requisitos da 004.
 
+**Revisão pós-implementação (2026-10-01, T038)**: gate mantido. Definition of Done
+atendida:
+
+- 138 testes novos em `tests/participacao/` (10 arquivos) cobrem os invariantes; a
+  suíte completa tem 685 testes, todos verdes;
+- ruff, `manage.py check` e `makemigrations --check` limpos;
+- dois modelos de domínio (`Participacao`, `Resposta`) e uma tabela técnica
+  (`RespostaOpcao`) numa única migração (`0001_initial.py`), sem `RunSQL`, gatilho,
+  função PostgreSQL, sinal, `save()` sobrescrito, job ou scheduler;
+- CHECKs só de colunas da própria linha (`resposta_um_valor_direto`,
+  `resposta_texto_nao_vazio`, `resposta_complemento_nao_vazio`) e três UNIQUEs; tipo da
+  Pergunta, pertença da Opção, Versão, limites da escala, ≥ 1 seleção, complemento ×
+  Opção e coleta ficam em `operacoes.py`;
+- `related_name="+"` em todas as FKs para modelos anteriores: Campanha, Conclusão,
+  Pergunta e Opção não ganharam acesso reverso nem coluna (testado em
+  `test_participacao_aceitacao.py`);
+- nenhuma diferença em relação à `main` em `trajetoria/academico`, `fonte_academica`,
+  `instrumento`, `formulario_2024`, `campanha`, nem nos testes das Features 001–004; em
+  `config/`, só `INSTALLED_APPS` e o comentário; nenhuma interface, admin, URL ou
+  comando;
+- concorrência: o teste determinístico do ramo `IntegrityError` é a proteção principal;
+  o teste com threads (R17) passou em 10 execuções seguidas e foi mantido;
+- nenhum log; nenhuma mensagem de rejeição contém valor declarado (testado);
+- nada da lista "Limites" de tasks.md foi criado: sem estado, `concluida_em`, progresso,
+  obrigatoriedade, navegação, histórico, sessão ou JSON;
+- somente dados fictícios; DP-501 a DP-508 e as herdadas continuam abertas, sem regra
+  implícita; a baseline da 003 continua RASCUNHO;
+- desvio de processo registrado: `remover_resposta` foi implementada junto das demais
+  operações, antes dos seus testes (T023), que então passaram de imediato;
+- **code review (2026-10-01)**: cinco achados corrigidos, com testes de regressão (142
+  testes da 005; 689 no total):
+  - nas escritas, o relógio padrão é lido depois do bloqueio da Participação (uma escrita
+    que esperou pelo bloqueio não é julgada por um instante anterior à espera);
+  - Campanha ou Conclusão não gravada em `iniciar_participacao` é `ValueError`, não
+    `DoesNotExist`;
+  - escritas fora da escolha múltipla não tocam `RespostaOpcao`;
+  - `responder_escolha_multipla` não relê a Resposta gravada;
+  - a admissão é avaliada uma vez (`estado` + `avaliar`), com teste de equivalência com
+    `admite_participacao`;
+- Complexity Tracking continua vazio.
+
 ## Decisões Pendentes
 
 | ID | DECISÃO PENDENTE | Instância competente (se conhecida) | Solução provisória (hipótese) | Como reverter |
@@ -161,7 +203,8 @@ Toda FK para modelo de feature anterior usa `related_name="+"` (R2).
    `RespostaOpcao` quando múltipla.
 
 `iniciar_participacao`: busca → se existe, `JA_EXISTENTE` → senão
-`admite_participacao` → insere em savepoint → `IntegrityError` ⇒ `JA_EXISTENTE`.
+admissão da 004 (`estado` + `avaliar`, uma vez) → insere em savepoint → `IntegrityError` ⇒
+`JA_EXISTENTE`.
 Rejeição de início reúne `COLETA_NAO_ADMITIDA` e `CONCLUSAO_NAO_ELEGIVEL`.
 
 Exceção local `ParticipacaoRejeitada` com `Violacao(motivo, campo, detalhe)`, no padrão
@@ -231,7 +274,7 @@ trajetoria/
 │   └── migrations/
 │       ├── __init__.py
 │       └── 0001_initial.py
-├── campanha/                         # inalterado (consumido: estado, avaliar, admite_participacao,
+├── campanha/                         # inalterado (consumido: estado, avaliar,
 │                                     # momento_de_referencia)
 ├── academico/                        # inalterado
 ├── instrumento/                      # inalterado

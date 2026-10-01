@@ -193,10 +193,13 @@ confirmadas (spec, Clarifications). As decisões abaixo são de desenho.
 ## R10 — Gate de escrita: estado da Campanha, não elegibilidade
 
 - **Decisão**:
-  - **Iniciar** (par sem Participação): `admite_participacao(campanha, conclusao,
-    agora=…)` da 004 como gate. Se falso, o diagnóstico usa os mesmos contratos:
-    `estado(…) is not EM_COLETA` → `COLETA_NAO_ADMITIDA`; `avaliar(…)` com pendências →
-    `CONCLUSAO_NAO_ELEGIVEL`. As duas violações podem vir juntas (FR-012).
+  - **Iniciar** (par sem Participação): a admissão da 004 (FR-053), avaliada uma vez
+    pelos seus contratos: `estado(…) is not EM_COLETA` → `COLETA_NAO_ADMITIDA`;
+    `avaliar(…)` com pendências → `CONCLUSAO_NAO_ELEGIVEL`. Admitido ⇔ nenhuma violação,
+    o que coincide com `admite_participacao` (teste de equivalência). As duas violações
+    podem vir juntas (FR-012). Ajuste do code review: a primeira versão chamava
+    `admite_participacao` e, na falha, reavaliava as duas condições para o diagnóstico;
+    se as duas avaliações divergissem, a rejeição sairia vazia (`ValueError`).
   - **Escrever resposta**: `estado(campanha, agora=…) is EM_COLETA`. Elegibilidade não
     é reavaliada (Clarifications, FR-034).
   - **Início repetido** (par com Participação): devolve a existente sem consultar estado

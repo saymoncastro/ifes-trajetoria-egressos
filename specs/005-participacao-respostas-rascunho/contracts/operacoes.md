@@ -22,12 +22,15 @@ ajustada nas tasks sem mudar o comportamento descrito aqui.
   Versão, Seção, Pergunta ou Opção (FR-043, FR-060).
 - **Tempo**: `iniciar_participacao` e as escritas recebem `agora: datetime | None =
   None`, interpretado por `momento_de_referencia` e `estado` da 004 (R13). `agora` que
-  não seja `datetime` com timezone é `TypeError`.
+  não seja `datetime` com timezone é `TypeError`. Nas escritas de resposta, o padrão
+  (relógio) é lido **depois** do bloqueio da Participação: uma escrita que esperou pelo
+  bloqueio é julgada pelo instante em que o obteve (FR-039).
 - **Textos**: gravados exatamente como recebidos, sem `strip()`. Vazio ou só com espaços
   é rejeitado.
 - **Erro de programação × domínio** (R8): argumento estrutural de classe errada
   (`campanha`, `conclusao`, `participacao`, `pergunta`, `agora`) é `TypeError` antes de
-  qualquer escrita. Valor declarado de forma ou conteúdo inválido é
+  qualquer escrita. `campanha` ou `conclusao` não gravada (ou removida) em
+  `iniciar_participacao` é `ValueError`. Valor declarado de forma ou conteúdo inválido é
   `ParticipacaoRejeitada`.
 - **Sem dado declarado em rastros**: `Violacao.detalhe` cita motivo, campo e UUIDs
   técnicos, nunca texto, inteiro ou complemento declarados. Nenhum log (FR-059, R15).
@@ -92,11 +95,13 @@ class Inicio(NamedTuple):
 | Situação | Efeito | Retorno |
 |----------|--------|---------|
 | Par já tem Participação (qualquer estado da Campanha, qualquer elegibilidade atual) | nada | `(existente, JA_EXISTENTE)` (FR-013) |
-| Par sem Participação e `admite_participacao(campanha, conclusao, agora=…)` | cria com `iniciada_em = momento_de_referencia(agora)` | `(nova, CRIADA)` (FR-011) |
+| Par sem Participação e admitido pela 004 (nenhuma violação abaixo ⇔ `admite_participacao`) | cria com `iniciada_em = momento_de_referencia(agora)` | `(nova, CRIADA)` (FR-011) |
 | Par sem Participação e admissão falha | nada | `ParticipacaoRejeitada` com `COLETA_NAO_ADMITIDA` e/ou `CONCLUSAO_NAO_ELEGIVEL` (FR-012) |
 | Insert concorrente perde a corrida (`IntegrityError` na unicidade) | nada | `(a outra, JA_EXISTENTE)` (R11) |
 
-Diagnóstico da falha: `estado(campanha, agora=…) is not EM_COLETA` →
+Admissão e diagnóstico numa só avaliação, pelos contratos da 004 (cada condição avaliada
+uma vez; um teste garante a equivalência com `admite_participacao`):
+`estado(campanha, agora=…) is not EM_COLETA` →
 `COLETA_NAO_ADMITIDA`; `not avaliar(campanha, conclusao).elegivel` →
 `CONCLUSAO_NAO_ELEGIVEL`. Nenhuma regra de estado, período ou critério é reescrita
 (FR-014). `JA_EXISTENTE` não autoriza escrita: as escritas verificam a coleta por conta
@@ -127,7 +132,8 @@ Retorno: a `Resposta` gravada, com `opcoes` recarregadas quando for escolha múl
 - `complemento` informado: vazio ou só espaços → `VALOR_VAZIO` (`complemento`); Opção sem
   `complemento_textual` → `COMPLEMENTO_NAO_ADMITIDO`; `complemento` que não é `str` →
   `VALOR_INCOMPATIVEL`.
-- Grava `opcao`, `complemento`; apaga seleções e zera `texto`, `escala` (defensivo).
+- Grava `opcao`, `complemento`; `texto` e `escala` ficam `NULL`. Não toca
+  `RespostaOpcao`: o tipo da Pergunta não muda, então não há seleções (002 FR-062).
 
 ### `responder_escolha_multipla(participacao, pergunta, opcoes, *, complemento=None, agora=None) -> Resposta`
 
