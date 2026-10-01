@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "trajetoria-ifes"
+version = "0.1.0"
+description = "Trajetória Ifes — Núcleo Institucional de Acompanhamento de Egressos (NIAE)"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "Django>=5.2,<5.3",
+  "psycopg[binary]>=3.2,<3.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4,<9",
+  "pytest-django>=4.11,<5",
+  "ruff>=0.14,<0.15",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["trajetoria"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-markers"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

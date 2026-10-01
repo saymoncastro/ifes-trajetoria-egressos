@@ -1,0 +1,140 @@
+"""Conjunto canônico da fonte simulada.
+
+Reproduz exatamente specs/001-nucleo-academico-fonte-simulada/contracts/cenarios-simulados.md.
+Todos os dados são fictícios: prefixo `SIM-` e sobrenome "Exemplo". Unidades e cursos são
+apenas plausíveis no Ifes e não declaram quais valores existem na fonte real (DP-004, DP-007).
+
+A situação acadêmica é vocabulário interno desta fonte, não do NIAE. Só `concluida` é
+reconhecida como conclusão (decisão da própria fonte; para a fonte real, DP-008).
+"""
+
+from dataclasses import dataclass
+from datetime import date
+
+
+@dataclass(frozen=True)
+class PessoaSimulada:
+    id_externo: str
+    nome: str | None
+
+
+@dataclass(frozen=True)
+class RegistroSimulado:
+    id_externo: str
+    id_pessoa: str
+    situacao: str | None
+    curso: str | None = None
+    unidade: str | None = None
+    nivel: str | None = None
+    modalidade: str | None = None
+    forma_oferta: str | None = None
+    ano_conclusao: int | None = None
+    data_conclusao: date | None = None
+
+
+CONCLUIDA = "concluida"
+
+TADS = "Tecnologia em Análise e Desenvolvimento de Sistemas"
+GRAD, TEC, POS = "Graduação", "Técnico", "Pós-graduação"
+PRES, EAD = "Presencial", "A distância"
+
+PESSOAS: tuple[PessoaSimulada, ...] = (
+    PessoaSimulada("SIM-P-0001", "Ana Exemplo"),  # A
+    PessoaSimulada("SIM-P-0002", "Bruno Exemplo"),  # B
+    PessoaSimulada("SIM-P-0003", "Maria Exemplo"),  # C — "experiência esperada"
+    PessoaSimulada("SIM-P-0004", "Diego Exemplo"),  # D — três conclusões
+    PessoaSimulada("SIM-P-0005", "Elisa Exemplo"),  # E
+    PessoaSimulada("SIM-P-0006", "João Exemplo"),  # F1 — só matrícula ativa
+    PessoaSimulada("SIM-P-0007", "Fernanda Exemplo"),  # F2 — conclusão + matrícula ativa
+    PessoaSimulada("SIM-P-0008", "Gustavo Exemplo"),  # F3 — nenhum registro concluído
+    PessoaSimulada("SIM-P-0009", None),  # sem nome
+    PessoaSimulada("SIM-P-0010", "Carla Exemplo"),  # homônimos
+    PessoaSimulada("SIM-P-0011", "Carla Exemplo"),  # homônimos
+)
+
+REGISTROS: tuple[RegistroSimulado, ...] = (
+    # A
+    RegistroSimulado(
+        "SIM-C-0001", "SIM-P-0001", CONCLUIDA, TADS, "Serra", GRAD, PRES, None,
+        2022, date(2022, 12, 16),
+    ),
+    # B — mesmo campus, períodos diferentes
+    RegistroSimulado(
+        "SIM-C-0002", "SIM-P-0002", CONCLUIDA, "Técnico em Edificações", "Vitória", TEC,
+        PRES, "Integrado", 2014,
+    ),
+    RegistroSimulado(
+        "SIM-C-0003", "SIM-P-0002", CONCLUIDA, "Bacharelado em Engenharia Civil", "Vitória",
+        GRAD, PRES, None, 2020, date(2020, 7, 10),
+    ),
+    # C — unidades diferentes
+    RegistroSimulado(
+        "SIM-C-0004", "SIM-P-0003", CONCLUIDA, TADS, "Serra", GRAD, PRES, None, 2022,
+    ),
+    RegistroSimulado(
+        "SIM-C-0005", "SIM-P-0003", CONCLUIDA, "Especialização em Informática na Educação",
+        "Cefor", POS, EAD, None, 2025, date(2025, 3, 28),
+    ),
+    # D — níveis diferentes
+    RegistroSimulado(
+        "SIM-C-0006", "SIM-P-0004", CONCLUIDA, "Técnico em Química", "Vila Velha", TEC, PRES,
+        "Integrado", 2012,
+    ),
+    RegistroSimulado(
+        "SIM-C-0007", "SIM-P-0004", CONCLUIDA, "Licenciatura em Química", "Vila Velha", GRAD,
+        PRES, None, 2017,
+    ),
+    RegistroSimulado(
+        "SIM-C-0008", "SIM-P-0004", CONCLUIDA, "Mestrado Profissional em Química",
+        "Vila Velha", POS, PRES, None, 2020,
+    ),
+    # E
+    RegistroSimulado(
+        "SIM-C-0009", "SIM-P-0005", CONCLUIDA, "Técnico em Agropecuária", "Alegre", TEC, PRES,
+        "Integrado", 2019,
+    ),
+    # F1
+    RegistroSimulado(
+        "SIM-C-0901", "SIM-P-0006", "matricula_ativa", "Bacharelado em Sistemas de Informação",
+        "Cachoeiro de Itapemirim", GRAD, PRES,
+    ),
+    # F2
+    RegistroSimulado(
+        "SIM-C-0010", "SIM-P-0007", CONCLUIDA, "Técnico em Mecânica", "Cariacica", TEC, PRES,
+        "Subsequente", 2018,
+    ),
+    RegistroSimulado(
+        "SIM-C-0902", "SIM-P-0007", "matricula_ativa", "Bacharelado em Engenharia Mecânica",
+        "Cariacica", GRAD, PRES,
+    ),
+    # F3
+    RegistroSimulado(
+        "SIM-C-0903", "SIM-P-0008", "evasao", "Técnico em Logística", "Viana", TEC, PRES,
+        "Concomitante",
+    ),
+    RegistroSimulado(
+        "SIM-C-0904", "SIM-P-0008", "transferencia", "Licenciatura em Matemática",
+        "Cachoeiro de Itapemirim", GRAD, PRES,
+    ),
+    RegistroSimulado(
+        "SIM-C-0905", "SIM-P-0008", "situacao_legada_x", "Técnico em Informática", "Colatina",
+        TEC, PRES, "Subsequente",
+    ),
+    RegistroSimulado(
+        "SIM-C-0906", "SIM-P-0008", None, "Tecnologia em Logística", "Cariacica", GRAD, PRES,
+    ),
+    # Sem nome
+    RegistroSimulado(
+        "SIM-C-0011", "SIM-P-0009", CONCLUIDA, "Técnico em Informática", "Colatina", TEC, PRES,
+        "Subsequente", 2021,
+    ),
+    # Homônimos
+    RegistroSimulado(
+        "SIM-C-0012", "SIM-P-0010", CONCLUIDA, "Licenciatura em Pedagogia", "Vitória", GRAD,
+        PRES, None, 2016,
+    ),
+    RegistroSimulado(
+        "SIM-C-0013", "SIM-P-0011", CONCLUIDA, "Tecnologia em Redes de Computadores", "Serra",
+        GRAD, PRES, None, 2023,
+    ),
+)
