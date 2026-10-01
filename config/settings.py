@@ -14,8 +14,9 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "insegura-apenas-desenvolviment
 DEBUG = False
 ALLOWED_HOSTS: list[str] = []
 
-# Só o núcleo: sem admin, auth, sessions, contenttypes ou messages (FR-030, R15).
-INSTALLED_APPS = ["trajetoria.academico"]
+# Só os apps de domínio: sem admin, auth, sessions, contenttypes ou messages (001: FR-030,
+# R15; 002: R17 — nenhuma interface expõe edição ou publicação do instrumento).
+INSTALLED_APPS = ["trajetoria.academico", "trajetoria.instrumento"]
 
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
