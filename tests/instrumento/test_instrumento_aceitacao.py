@@ -64,6 +64,6 @@ def test_sc007_quatro_tipos_dois_estados_cinco_modelos():
     assert len(TipoPergunta) == 4
     assert len(EstadoVersao) == 2
     nomes = {m.__name__ for m in apps.get_app_config("instrumento").get_models()}
+    # A igualdade também garante FR-066: a 002 não cria Campanha, Participação nem
+    # Resposta (esses conceitos pertencem às features seguintes).
     assert nomes == {"Pesquisa", "Versao", "Secao", "Pergunta", "Opcao"}
-    todos = {m.__name__ for m in apps.get_models()}
-    assert todos.isdisjoint({"Campanha", "Participacao", "Resposta"})
