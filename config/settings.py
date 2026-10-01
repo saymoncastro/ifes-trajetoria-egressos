@@ -15,8 +15,9 @@ DEBUG = False
 ALLOWED_HOSTS: list[str] = []
 
 # Só os apps de domínio: sem admin, auth, sessions, contenttypes ou messages (001: FR-030,
-# R15; 002: R17 — nenhuma interface expõe edição ou publicação do instrumento).
-INSTALLED_APPS = ["trajetoria.academico", "trajetoria.instrumento"]
+# R15; 002: R17 — nenhuma interface expõe edição ou publicação do instrumento; 004: R13 —
+# nenhuma interface expõe operações de Campanha).
+INSTALLED_APPS = ["trajetoria.academico", "trajetoria.instrumento", "trajetoria.campanha"]
 
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
