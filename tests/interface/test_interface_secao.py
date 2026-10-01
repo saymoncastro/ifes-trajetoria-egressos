@@ -81,7 +81,7 @@ def test_quatro_tipos_complemento_escala_e_explicativo(client, cenario, ana):
     assert not re.search(r"\b1 = ", q20)  # rótulo inicial ausente não é inventado
     q26 = _bloco(html, 7)  # escolha múltipla com "Outro:"
     assert q26.count('type="checkbox"') == 6
-    assert 'name="p7-complemento"' in q26 and "Descreva: «Outro:»" in q26
+    assert 'name="p7-complemento"' in q26 and "Descreva: «Outro»" in q26
     q32 = _bloco(html, 13)  # explicativo
     assert "Não considerar auxilio estudantil como bolsa." in q32
     descrito = re.search(r'aria-describedby="([^"]+)"', q32).group(1).split()
@@ -122,6 +122,17 @@ def test_s3_sem_pre_preenchimento_pela_conclusao(client, cenario, ana):
     assert html.index("Sobre a sua formação") < html.index(_formulario(html)[:40])
 
 
+def test_contexto_compacto_e_resumo_de_erros_no_topo(client, cenario, ana):
+    resposta = client.post(f"/participacoes/{ana.pk}/secoes/1/", {"p1": "99"})
+    html, texto = _html(resposta), ci.texto_visivel(resposta)
+    assert "Sobre a sua formação: Tecnologia em Análise e Desenvolvimento de Sistemas" in texto
+    assert "Unidade" not in texto and "Modalidade" not in texto  # sem a lista completa
+    resumo = html.index('class="resumo-erros"')
+    assert html.index("<h1>") < resumo < html.index("Sobre a sua formação")
+    assert resumo < html.index("É com muita satisfação")  # antes do texto de abertura
+    assert "Você concorda com os termos acima? — Selecione uma das opções" in texto
+
+
 def test_secao_sem_titulo_nao_ganha_h2_inventado(client, cenario, ana):
     _preencher(ana, cenario.base, [1, 2, 3, 6, 8, 10, 11])
     html = _html(_get(client, ana, 13))
@@ -129,12 +140,14 @@ def test_secao_sem_titulo_nao_ganha_h2_inventado(client, cenario, ana):
     assert "<h2" not in principal
 
 
-def test_remover_so_para_radio_e_escala_respondidos(client, cenario, ana):
+def test_sem_resposta_so_para_radio_e_escala_nao_obrigatorios(client, cenario, ana):
     _preencher(ana, cenario.base, [1])
     html = _html(_get(client, ana, 1))
-    assert 'name="p1-remover"' in html
+    assert "-remover" not in html  # Q1 obrigatória, mesmo respondida
     html2 = _html(_get(client, ana, 2))
-    assert "-remover" not in html2
+    q6 = _bloco(html2, 5)  # Q6, rádio não obrigatória, ainda sem resposta
+    assert 'name="p5-remover"' in q6 and "Deixar esta pergunta sem resposta" in q6
+    assert re.findall(r'name="(p\d+)-remover"', html2) == ["p5"]  # demais: obrigatórias
 
 
 def test_secao_fora_do_percurso_vai_para_a_atual(client, cenario, ana):

@@ -24,7 +24,8 @@ def contexto_da_formacao(conclusao) -> list[tuple[str, str]]:
 
 def resumo_da_formacao(conclusao) -> str:
     """Uma linha "curso · unidade · ano" com os atributos existentes, para distinguir
-    formações (e homônimos) na entrada de demonstração. Vazio se nada foi informado."""
+    formações (e homônimos) na entrada de demonstração e como contexto compacto nas telas de
+    Seção. Vazio se nada foi informado."""
     ano = conclusao.ano_conclusao
     if ano is None and conclusao.data_conclusao is not None:
         ano = conclusao.data_conclusao.year

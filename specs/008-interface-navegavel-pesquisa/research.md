@@ -297,17 +297,25 @@ informação: só pede que a view mostre o que a 006 calcula naquele momento.
 
 ## R9 — Remover resposta sem JavaScript
 
-**Decisão**: para Perguntas de **escolha única (em rádio) e escala** que tenham Resposta
-gravada, a Seção mostra, logo abaixo das Opções, uma caixa de seleção rotulada **"Remover
-minha resposta a esta pergunta"** (`p<n>-remover`). Marcada, a Resposta é removida pela
-005 ao salvar, qualquer que seja a Opção marcada. Escolha múltipla (desmarcar tudo), texto
+**Decisão**: para Perguntas **não obrigatórias** de **escolha única (em rádio) e escala**,
+a Seção mostra, logo abaixo das Opções, uma caixa de seleção rotulada **"Deixar esta
+pergunta sem resposta"** (`p<n>-remover`), com ou sem Resposta gravada. Marcada, a
+Resposta é removida pela 005 ao salvar (ou nada é gravado, se não havia), qualquer que seja
+a Opção marcada. Escolha múltipla (desmarcar tudo), texto
 (apagar) e lista suspensa (opção vazia "Selecione…") já permitem remover pelo próprio
 controle.
 
 **Justificativa**: FR-043 — Q48 orienta "deixe em branco", e rádios não podem ser
 desmarcados sem JavaScript. A caixa é um controle de formulário claramente distinto das
-Opções (não é `<input type=radio>` no mesmo grupo), não é gravada como Resposta e aparece
-para qualquer Pergunta respondida, obrigatória ou não — não é regra de obrigatoriedade.
+Opções (não é `<input type=radio>` no mesmo grupo) e não é gravada como Resposta.
+
+**Revisão (auditoria de UX de 2026-10-01, UX-02/UX-03)**: a decisão original mostrava a
+caixa para qualquer Pergunta respondida, obrigatória ou não, e só depois de gravar. Na
+prática, as Seções revisitadas ganhavam uma caixa por Pergunta (12 em "Avaliação"), com o
+mesmo aspecto de uma Opção; nas obrigatórias, marcá-la só produzia a pendência da 006; e,
+numa opcional, um clique por engano não tinha volta antes de salvar. A obrigatoriedade
+usada é o atributo estático da Pergunta, o mesmo já exibido como "(obrigatória)" — não é
+regra de percurso.
 
 **Alternativas consideradas**:
 
