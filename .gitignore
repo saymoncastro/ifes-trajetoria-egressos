@@ -7,3 +7,13 @@
 # Referências locais não versionáveis
 # Exportação original do Google Formulários: contém a URL administrativa (de edição).
 docs/referencias/formulario-egresso-ifes-2024-original.pdf
+
+# Python / ferramentas
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Variáveis locais
+.env

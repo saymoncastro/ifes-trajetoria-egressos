@@ -47,7 +47,7 @@ Estes itens ficam fora:
 
 **Purpose**: projeto Django mínimo, executável e verificável.
 
-- [ ] T001 Criar `pyproject.toml` na raiz:
+- [X] T001 Criar `pyproject.toml` na raiz:
   - `requires-python = ">=3.13,<3.14"`;
   - dependências `Django>=5.2,<5.3` e `psycopg[binary]>=3.2,<3.4`;
   - extra `dev` com `pytest`, `pytest-django`, `ruff`;
@@ -56,18 +56,18 @@ Estes itens ficam fora:
   - `[tool.ruff]` com `target-version = "py313"`.
 
   Em seguida, gerar `uv.lock` com `uv sync --extra dev`.
-- [ ] T002 [P] Criar os pacotes vazios do plan:
+- [X] T002 [P] Criar os pacotes vazios do plan:
   - `trajetoria/__init__.py`;
   - `trajetoria/academico/__init__.py` e `trajetoria/academico/apps.py` (AppConfig
     `trajetoria.academico`, `default_auto_field` irrelevante porque as chaves são UUID);
   - `trajetoria/academico/migrations/__init__.py`;
   - `trajetoria/fonte_academica/__init__.py`.
-- [ ] T003 [P] Criar `.env.example` só com `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`,
+- [X] T003 [P] Criar `.env.example` só com `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`,
   `PGDATABASE` e `DJANGO_SECRET_KEY`, todos com valores de exemplo e sem segredo real.
   O arquivo é só referência: nada carrega `.env` automaticamente. As variáveis são
   exportadas no shell quando o padrão de T004 não servir.
   Acrescentar `.venv/`, `__pycache__/`, `.env` e `.pytest_cache/` ao `.gitignore`.
-- [ ] T004 Criar o esqueleto do Django (depende de T001 e T002):
+- [X] T004 Criar o esqueleto do Django (depende de T001 e T002):
   - `manage.py`;
   - `config/__init__.py`;
   - `config/settings.py`:
@@ -99,7 +99,7 @@ as histórias dependem disso.
 
 **⚠️ CRITICAL**: nenhuma história começa antes desta fase.
 
-- [ ] T005 [P] Implementar `trajetoria/fonte_academica/contrato.py` conforme
+- [X] T005 [P] Implementar `trajetoria/fonte_academica/contrato.py` conforme
   [contracts/fonte-academica.md](contracts/fonte-academica.md). O módulo NÃO importa
   Django. Conteúdo:
   - `Protocol` `FonteAcademica` com o atributo `codigo: str` e as operações
@@ -114,7 +114,7 @@ as histórias dependem disso.
     - `data_conclusao` presente com `ano_conclusao` `None` ou diferente de
       `data_conclusao.year` (regra 5);
   - `PessoaEncontrada.conclusoes` como `tuple`.
-- [ ] T006 [P] Implementar `trajetoria/academico/models.py` exatamente conforme
+- [X] T006 [P] Implementar `trajetoria/academico/models.py` exatamente conforme
   [data-model.md](data-model.md). Não criar `admin.py`.
   - **`Pessoa`**:
     - `id = UUIDField(primary_key=True, default=uuid4, editable=False)`;
@@ -139,10 +139,10 @@ as histórias dependem disso.
       O `ano_conclusao IS NOT NULL` explícito é obrigatório: sem ele, data com ano `NULL`
       resulta em `UNKNOWN` e passa no PostgreSQL;
     - `Meta.ordering = ["ano_conclusao", "id"]` (só de apresentação, FR-017).
-- [ ] T007 Gerar `trajetoria/academico/migrations/0001_initial.py` com
+- [X] T007 Gerar `trajetoria/academico/migrations/0001_initial.py` com
   `uv run python manage.py makemigrations academico` (depende de T004 e T006).
   Verificar com `uv run python manage.py makemigrations --check --dry-run`.
-- [ ] T008 [P] Implementar `trajetoria/fonte_academica/cenarios.py`: o conjunto
+- [X] T008 [P] Implementar `trajetoria/fonte_academica/cenarios.py`: o conjunto
   canônico **exatamente** como em
   [contracts/cenarios-simulados.md](contracts/cenarios-simulados.md).
   - Dataclasses internas `PessoaSimulada(id_externo, nome)` e
@@ -152,7 +152,7 @@ as histórias dependem disso.
   - Situações `concluida`, `matricula_ativa`, `evasao`, `transferencia`,
     `situacao_legada_x` e `None`.
   - Apenas dados fictícios: prefixo `SIM-` e sobrenome "Exemplo".
-- [ ] T009 Implementar `trajetoria/fonte_academica/simulada.py` (depende de T005 e
+- [X] T009 Implementar `trajetoria/fonte_academica/simulada.py` (depende de T005 e
   T008). Classe `FonteSimulada` com:
   - `codigo = "simulada"`;
   - construtor `(pessoas=cenarios.PESSOAS, registros=cenarios.REGISTROS,
@@ -164,7 +164,7 @@ as histórias dependem disso.
     desconhecida ou `None`) ou `ConclusaoInexistente`;
   - lança `FonteAcademicaIndisponivel` em ambas as operações quando
     `indisponivel=True`.
-- [ ] T010 Criar `tests/conftest.py` (depende de T009) com a fixture `fonte_simulada`
+- [X] T010 Criar `tests/conftest.py` (depende de T009) com a fixture `fonte_simulada`
   (`FonteSimulada()`) e a fixture `fonte_indisponivel`
   (`FonteSimulada(indisponivel=True)`). Nada além disso.
 
