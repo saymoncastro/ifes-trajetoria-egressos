@@ -17,6 +17,7 @@ from trajetoria.academico.incorporacao import (
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.cenarios import PessoaSimulada, RegistroSimulado
+from trajetoria.fonte_academica.contrato import FonteAcademicaIndisponivel
 from trajetoria.fonte_academica.simulada import FonteSimulada
 
 pytestmark = pytest.mark.django_db
@@ -295,4 +296,46 @@ def test_pessoa_que_perde_as_conclusoes_e_sinalizada_sem_alteracao(fonte_simulad
     assert resultado.divergencias == (
         Divergencia(TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", "simulada", "SIM-C-0001"),
     )
+    assert _retrato() == retrato
+
+
+# --- US8: inexistência e falha da fonte --------------------------------------------------
+
+
+def test_pessoa_inexistente_nao_cria_nada(fonte_simulada):
+    resultado = incorporar_pessoa(fonte_simulada, "SIM-P-9999")
+
+    assert resultado.situacao is SituacaoIncorporacao.PESSOA_INEXISTENTE
+    assert resultado.pessoa is None
+    assert Pessoa.objects.count() == 0
+
+
+def test_pessoa_incorporada_que_some_da_fonte_e_sinalizada_sem_remocao(fonte_simulada):
+    incorporar_pessoa(fonte_simulada, "SIM-P-0001")
+    retrato = _retrato()
+
+    resultado = incorporar_pessoa(variante_canonica("vii"), "SIM-P-0001")
+
+    assert resultado.situacao is SituacaoIncorporacao.PESSOA_INEXISTENTE
+    assert resultado.pessoa.id_externo == "SIM-P-0001"
+    assert resultado.divergencias == (
+        Divergencia(TipoDivergencia.AUSENTE_NA_FONTE, "pessoa", "simulada", "SIM-P-0001"),
+    )
+    assert _retrato() == retrato
+
+
+def test_falha_da_fonte_e_propagada_sem_escrita(fonte_indisponivel):
+    with pytest.raises(FonteAcademicaIndisponivel):
+        incorporar_pessoa(fonte_indisponivel, "SIM-P-0001")
+
+    assert Pessoa.objects.count() == 0
+
+
+def test_falha_da_fonte_nao_altera_o_ja_incorporado(fonte_simulada, fonte_indisponivel):
+    incorporar_pessoa(fonte_simulada, "SIM-P-0001")
+    retrato = _retrato()
+
+    with pytest.raises(FonteAcademicaIndisponivel):
+        incorporar_pessoa(fonte_indisponivel, "SIM-P-0001")
+
     assert _retrato() == retrato

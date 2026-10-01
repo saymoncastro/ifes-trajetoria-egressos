@@ -61,11 +61,11 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
     # Consulta antes de abrir a transação: uma falha da fonte não chega a escrever nada.
     resposta = fonte.obter_pessoa(id_externo_pessoa)
 
-    if not isinstance(resposta, PessoaEncontrada):
-        return ResultadoIncorporacao(SituacaoIncorporacao.PESSOA_INEXISTENTE)
-
-    with transaction.atomic():
-        resultado = _incorporar(fonte.codigo, resposta)
+    if isinstance(resposta, PessoaEncontrada):
+        with transaction.atomic():
+            resultado = _incorporar(fonte.codigo, resposta)
+    else:
+        resultado = _pessoa_inexistente(fonte.codigo, resposta.id_externo)
     for divergencia in resultado.divergencias:
         _registrar(divergencia)
     return resultado
@@ -159,6 +159,19 @@ def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporaca
         conclusoes_criadas=tuple(criadas),
         conclusoes_existentes=tuple(existentes),
         divergencias=tuple(divergencias),
+    )
+
+
+def _pessoa_inexistente(codigo: str, id_externo: str) -> ResultadoIncorporacao:
+    # Se já foi incorporada, a ausência é sinalizada; nada é removido.
+    pessoa = Pessoa.objects.filter(fonte=codigo, id_externo=id_externo).first()
+    divergencias = (
+        (Divergencia(TipoDivergencia.AUSENTE_NA_FONTE, "pessoa", codigo, id_externo),)
+        if pessoa is not None
+        else ()
+    )
+    return ResultadoIncorporacao(
+        SituacaoIncorporacao.PESSOA_INEXISTENTE, pessoa=pessoa, divergencias=divergencias
     )
 
 

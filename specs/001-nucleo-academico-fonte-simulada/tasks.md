@@ -503,7 +503,7 @@ tem efeito no banco.
 
 ### Tests for User Story 8 ⚠️
 
-- [ ] T030 [US8] Acrescentar a `tests/test_incorporacao.py` (depende de T028):
+- [X] T030 [US8] Acrescentar a `tests/test_incorporacao.py` (depende de T028):
   - `SIM-P-9999` devolve `PESSOA_INEXISTENTE` com 0 linhas;
   - a variante (vii) de T023, depois de SIM-P-0001 ter sido incorporada, devolve
     `PESSOA_INEXISTENTE` com `AUSENTE_NA_FONTE` (`registro="pessoa"`) e nada removido;
@@ -513,7 +513,7 @@ tem efeito no banco.
 
 ### Implementation for User Story 8
 
-- [ ] T031 [US8] Em `trajetoria/academico/incorporacao.py` (depende de T030):
+- [X] T031 [US8] Em `trajetoria/academico/incorporacao.py` (depende de T030):
   - tratar `PessoaInexistente` conforme a tabela de
     [contracts/incorporacao.md](contracts/incorporacao.md);
   - garantir que `FonteAcademicaIndisponivel` se propaga sem captura nem conversão e
