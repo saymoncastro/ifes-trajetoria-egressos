@@ -9,3 +9,4 @@ Software do Núcleo Institucional de Acompanhamento de Egressos (NIAE) do Ifes.
 - Participação e respostas em rascunho: [quickstart da Feature 005](specs/005-participacao-respostas-rascunho/quickstart.md)
 - Jornada de resposta e conclusão: [quickstart da Feature 006](specs/006-jornada-conclusao-participacao/quickstart.md)
 - Contextualização da formação e entrada na pesquisa: [quickstart da Feature 007](specs/007-contextualizacao-formacao-entrada/quickstart.md)
+- Interface navegável de demonstração (dados fictícios, sem autenticação): [quickstart da Feature 008](specs/008-interface-navegavel-pesquisa/quickstart.md)

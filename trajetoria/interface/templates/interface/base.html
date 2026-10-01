@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if ha_erros %}Erro: {% endif %}{% block titulo %}{% endblock %} — Trajetória Ifes (demonstração)</title>
+<style>{% include "interface/estilo.css" %}</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="faixa-demonstracao" role="note">
+  <p class="coluna"><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. Não há autenticação: a escolha de uma pessoa não comprova identidade.</p>
+</div>
+<header class="cabecalho">
+  <div class="coluna">
+    <span>Trajetória Ifes</span>
+    {% if pessoa_demonstracao %}
+    <p class="pessoa">Pessoa fictícia: {{ pessoa_demonstracao.nome|default:"sem nome informado" }}</p>
+    <a href="/demonstracao/">Trocar de pessoa</a>
+    <form method="post" action="/demonstracao/encerrar/">{% csrf_token %}<button type="submit">Encerrar demonstração</button></form>
+    {% endif %}
+  </div>
+</header>
+<main id="conteudo" tabindex="-1">
+  <div class="coluna">
+{% block conteudo %}{% endblock %}
+  </div>
+</main>
+<footer>
+  <div class="coluna"><p>Trajetória Ifes — demonstração local com dados fictícios.</p></div>
+</footer>
+</body>
+</html>

@@ -172,7 +172,13 @@ def test_10_nenhum_mecanismo_de_autenticacao():
     # Nenhuma rota expõe a entrada (nem nada da participação).
     rotas = [getattr(r, "lookup_str", "") for r in _rotas(get_resolver().url_patterns)]
     assert not [r for r in rotas if r.startswith("trajetoria.participacao")]
-    for app in RAIZ.glob("trajetoria/*/"):
+    # Apps de domínio: a interface de demonstração da Feature 008 vive em apps próprios
+    # (`interface`, `demonstracao`) e não expõe nada a partir do domínio.
+    dominio = (
+        "academico", "instrumento", "campanha", "participacao", "fonte_academica",
+        "formulario_2024",
+    )  # fmt: skip
+    for app in (RAIZ / "trajetoria" / d for d in dominio):
         for nome in ("urls.py", "views.py", "admin.py", "forms.py", "middleware.py"):
             assert not (app / nome).exists(), app / nome
     publicos = [n.lower() for n in modulo_entrada.__all__]

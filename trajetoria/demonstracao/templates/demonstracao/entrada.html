@@ -1,0 +1,26 @@
+{% extends "interface/base.html" %}
+{% block titulo %}Escolha uma pessoa fictícia{% endblock %}
+{% block conteudo %}
+<h1>Escolha uma pessoa fictícia</h1>
+<p>Esta é uma demonstração do Trajetória Ifes com dados inteiramente fictícios. Escolher uma pessoa não é login e não comprova identidade.</p>
+{% if pessoas %}
+<ul class="lista-simples">
+  {% for pessoa in pessoas %}
+  <li>
+    <h2>{{ pessoa.nome }}</h2>
+    {% if pessoa.resumos %}
+    <ul>{% for resumo in pessoa.resumos %}<li>{{ resumo }}</li>{% endfor %}</ul>
+    {% else %}
+    <p>Nenhuma formação registrada.</p>
+    {% endif %}
+    <form method="post" action="/demonstracao/escolher/">{% csrf_token %}
+      <input type="hidden" name="pessoa" value="{{ pessoa.pk }}">
+      <button type="submit" class="primario">Entrar como {{ pessoa.nome }}</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="aviso">Nenhuma pessoa fictícia preparada. Execute o preparo do cenário de demonstração (veja o guia de início rápido da Feature 008).</p>
+{% endif %}
+{% endblock %}

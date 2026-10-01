@@ -1,0 +1,8 @@
+{% if itens %}
+<dl>
+  {% for rotulo, valor in itens %}<dt>{{ rotulo }}</dt><dd>{{ valor }}</dd>
+  {% endfor %}
+</dl>
+{% else %}
+<p>Dados da formação não informados pela fonte.</p>
+{% endif %}
