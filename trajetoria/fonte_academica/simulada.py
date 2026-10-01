@@ -9,6 +9,7 @@ from collections.abc import Iterable
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.cenarios import PessoaSimulada, RegistroSimulado
 from trajetoria.fonte_academica.contrato import (
+    CAMPOS_DE_CONTEXTO,
     ConclusaoEncontrada,
     ConclusaoInexistente,
     ConclusaoNaFonte,
@@ -62,17 +63,11 @@ class FonteSimulada:
 
 def _reconhecida(registro: RegistroSimulado) -> bool:
     # Matrícula ativa, evasão, transferência, situação desconhecida ou ausente: não.
-    return registro.situacao == cenarios.SITUACAO_CONCLUIDA
+    return registro.situacao == cenarios.CONCLUIDA
 
 
 def _para_contrato(registro: RegistroSimulado) -> ConclusaoNaFonte:
     return ConclusaoNaFonte(
         id_externo=registro.id_externo,
-        curso=registro.curso,
-        unidade=registro.unidade,
-        nivel=registro.nivel,
-        modalidade=registro.modalidade,
-        forma_oferta=registro.forma_oferta,
-        ano_conclusao=registro.ano_conclusao,
-        data_conclusao=registro.data_conclusao,
+        **{campo: getattr(registro, campo) for campo in CAMPOS_DE_CONTEXTO},
     )

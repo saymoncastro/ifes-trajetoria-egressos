@@ -17,7 +17,7 @@ from trajetoria.academico.incorporacao import (
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.cenarios import PessoaSimulada, RegistroSimulado
-from trajetoria.fonte_academica.contrato import FonteAcademicaIndisponivel
+from trajetoria.fonte_academica.contrato import ConclusaoInexistente, FonteAcademicaIndisponivel
 from trajetoria.fonte_academica.simulada import FonteSimulada
 
 pytestmark = pytest.mark.django_db
@@ -339,3 +339,15 @@ def test_falha_da_fonte_nao_altera_o_ja_incorporado(fonte_simulada, fonte_indisp
         incorporar_pessoa(fonte_indisponivel, "SIM-P-0001")
 
     assert _retrato() == retrato
+
+
+def test_resposta_fora_do_contrato_e_erro_e_nao_inexistencia():
+    class FonteDefeituosa:
+        codigo = "defeituosa"
+
+        def obter_pessoa(self, id_externo):
+            return ConclusaoInexistente(id_externo)  # tipo errado para esta operação
+
+    with pytest.raises(TypeError):
+        incorporar_pessoa(FonteDefeituosa(), "X")
+    assert Pessoa.objects.count() == 0

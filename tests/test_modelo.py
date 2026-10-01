@@ -7,7 +7,11 @@ from django.db import IntegrityError, transaction
 from django.db.models import ProtectedError
 
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
-from trajetoria.fonte_academica.contrato import ConclusaoNaFonte, PessoaEncontrada
+from trajetoria.fonte_academica.contrato import (
+    CAMPOS_DE_CONTEXTO,
+    ConclusaoNaFonte,
+    PessoaEncontrada,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -103,3 +107,13 @@ def test_contrato_rejeita_conclusao_invalida(campos):
 def test_contrato_rejeita_nome_vazio():
     with pytest.raises(ValueError):
         PessoaEncontrada("P1", "", ())
+
+
+def test_contrato_rejeita_conclusao_repetida_na_mesma_pessoa():
+    with pytest.raises(ValueError):
+        PessoaEncontrada("P1", None, (ConclusaoNaFonte("C1"), ConclusaoNaFonte("C1")))
+
+
+def test_campos_de_contexto_do_contrato_existem_no_modelo():
+    campos_do_modelo = {f.name for f in ConclusaoAcademica._meta.concrete_fields}
+    assert set(CAMPOS_DE_CONTEXTO) <= campos_do_modelo

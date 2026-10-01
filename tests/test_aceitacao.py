@@ -36,10 +36,13 @@ def test_contexto_de_uma_conclusao_consultado_isoladamente(fonte_simulada):
     assert conclusao.pessoa == pessoa
 
 
-def test_ordem_das_conclusoes_e_estavel(fonte_simulada):
+def test_ordem_das_conclusoes_e_deterministica(fonte_simulada):
+    # Ordem só de apresentação (FR-017): por ano, depois pela identidade interna.
     pessoa = incorporar_pessoa(fonte_simulada, "SIM-P-0004").pessoa
 
-    assert list(pessoa.conclusoes.all()) == list(pessoa.conclusoes.all())
+    conclusoes = list(pessoa.conclusoes.all())
+    assert [c.ano_conclusao for c in conclusoes] == [2012, 2017, 2020]
+    assert conclusoes == sorted(conclusoes, key=lambda c: (c.ano_conclusao, c.id))
 
 
 def descrever_trajetoria(pessoa: Pessoa) -> list[str]:

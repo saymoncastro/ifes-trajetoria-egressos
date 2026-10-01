@@ -13,9 +13,11 @@ from django.db import transaction
 
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica.contrato import (
+    CAMPOS_DE_CONTEXTO,
     ConclusaoNaFonte,
     FonteAcademica,
     PessoaEncontrada,
+    PessoaInexistente,
 )
 
 logger = logging.getLogger("trajetoria.academico")
@@ -64,71 +66,33 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
     if isinstance(resposta, PessoaEncontrada):
         with transaction.atomic():
             resultado = _incorporar(fonte.codigo, resposta)
-    else:
+    elif isinstance(resposta, PessoaInexistente):
         resultado = _pessoa_inexistente(fonte.codigo, resposta.id_externo)
+    else:
+        # Resposta fora do contrato é erro de integração, nunca "inexistente" (FR-025).
+        raise TypeError(f"resposta fora do contrato: {type(resposta).__name__}")
     for divergencia in resultado.divergencias:
         _registrar(divergencia)
     return resultado
 
 
 def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporacao:
-    divergencias: list[Divergencia] = []
     pessoa = Pessoa.objects.filter(fonte=codigo, id_externo=resposta.id_externo).first()
-    if pessoa is not None and pessoa.nome != resposta.nome:
-        divergencias.append(
-            Divergencia(
-                TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", codigo, pessoa.id_externo,
-                ("nome",),
-            )
-        )
-
     ja_incorporadas = {
         c.id_externo: c
         for c in ConclusaoAcademica.objects.filter(
             fonte=codigo, id_externo__in=[c.id_externo for c in resposta.conclusoes]
         )
     }
-    novas: list[ConclusaoNaFonte] = []
-    existentes: list[ConclusaoAcademica] = []
-    for na_fonte in resposta.conclusoes:
-        incorporada = ja_incorporadas.get(na_fonte.id_externo)
-        if incorporada is None:
-            novas.append(na_fonte)
-        elif pessoa is None or incorporada.pessoa_id != pessoa.id:
-            # Não reatribui nem duplica.
-            divergencias.append(
-                Divergencia(
-                    TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao", codigo,
-                    na_fonte.id_externo,
-                )
-            )
-        else:
-            campos = tuple(
-                campo for campo, valor in _contexto(na_fonte).items()
-                if getattr(incorporada, campo) != valor
-            )
-            if campos:
-                divergencias.append(
-                    Divergencia(
-                        TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", codigo,
-                        na_fonte.id_externo, campos,
-                    )
-                )
-            existentes.append(incorporada)
 
-    if pessoa is not None:
-        presentes = [c.id_externo for c in resposta.conclusoes]
-        for ausente in pessoa.conclusoes.filter(fonte=codigo).exclude(id_externo__in=presentes):
-            divergencias.append(
-                Divergencia(
-                    TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", codigo, ausente.id_externo
-                )
-            )
-    elif not novas:
+    if pessoa is None and all(c.id_externo in ja_incorporadas for c in resposta.conclusoes):
         # Sem conclusão que possa ser associada a ela (nenhuma reconhecida, ou todas já de
         # outras Pessoas): a Pessoa não é materializada (FR-039).
+        divergencias = tuple(
+            _comparar(codigo, None, ja_incorporadas[c.id_externo], c) for c in resposta.conclusoes
+        )
         return ResultadoIncorporacao(
-            SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL, divergencias=tuple(divergencias)
+            SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL, divergencias=divergencias
         )
 
     pessoa_criada = False
@@ -136,17 +100,46 @@ def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporaca
         pessoa, pessoa_criada = Pessoa.objects.get_or_create(
             fonte=codigo, id_externo=resposta.id_externo, defaults={"nome": resposta.nome}
         )
-    criadas = []
-    for na_fonte in novas:
-        conclusao, _ = ConclusaoAcademica.objects.get_or_create(
-            fonte=codigo,
-            id_externo=na_fonte.id_externo,
-            defaults={"pessoa": pessoa, **_contexto(na_fonte)},
+    divergencias: list[Divergencia] = []
+    # Também cobre a Pessoa criada por outra transação entre a leitura e o get_or_create.
+    if not pessoa_criada and pessoa.nome != resposta.nome:
+        divergencias.append(
+            Divergencia(
+                TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", codigo, pessoa.id_externo,
+                ("nome",),
+            )
         )
-        criadas.append(conclusao)
 
-    # Pessoa já incorporada que a fonte agora devolve sem conclusões: as ausências já
-    # foram sinalizadas acima, e nada foi alterado.
+    criadas: list[ConclusaoAcademica] = []
+    existentes: list[ConclusaoAcademica] = []
+    for na_fonte in resposta.conclusoes:
+        incorporada = ja_incorporadas.get(na_fonte.id_externo)
+        if incorporada is None:
+            incorporada, criada = ConclusaoAcademica.objects.get_or_create(
+                fonte=codigo,
+                id_externo=na_fonte.id_externo,
+                defaults={"pessoa": pessoa, **_contexto(na_fonte)},
+            )
+            if criada:
+                criadas.append(incorporada)
+                continue
+        # Já existia, inclusive se criada por outra transação depois da leitura acima.
+        if divergencia := _comparar(codigo, pessoa, incorporada, na_fonte):
+            divergencias.append(divergencia)
+        if incorporada.pessoa_id == pessoa.id:
+            existentes.append(incorporada)
+
+    if not pessoa_criada:
+        presentes = [c.id_externo for c in resposta.conclusoes]
+        for ausente in pessoa.conclusoes.filter(fonte=codigo).exclude(id_externo__in=presentes):
+            divergencias.append(
+                Divergencia(
+                    TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", codigo, ausente.id_externo
+                )
+            )
+
+    # Pessoa já incorporada que a fonte agora devolve sem conclusões: as ausências foram
+    # sinalizadas acima, e nada foi alterado.
     situacao = (
         SituacaoIncorporacao.INCORPORADA
         if resposta.conclusoes
@@ -160,6 +153,30 @@ def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporaca
         conclusoes_existentes=tuple(existentes),
         divergencias=tuple(divergencias),
     )
+
+
+def _comparar(
+    codigo: str,
+    pessoa: Pessoa | None,
+    incorporada: ConclusaoAcademica,
+    na_fonte: ConclusaoNaFonte,
+) -> Divergencia | None:
+    """Compara uma conclusão já incorporada com a devolvida agora; não altera nada."""
+    if pessoa is None or incorporada.pessoa_id != pessoa.id:
+        # Não reatribui nem duplica.
+        return Divergencia(
+            TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao", codigo, na_fonte.id_externo
+        )
+    campos = tuple(
+        campo for campo, valor in _contexto(na_fonte).items()
+        if getattr(incorporada, campo) != valor
+    )
+    if campos:
+        return Divergencia(
+            TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", codigo, na_fonte.id_externo,
+            campos,
+        )
+    return None
 
 
 def _pessoa_inexistente(codigo: str, id_externo: str) -> ResultadoIncorporacao:
@@ -176,15 +193,7 @@ def _pessoa_inexistente(codigo: str, id_externo: str) -> ResultadoIncorporacao:
 
 
 def _contexto(conclusao: ConclusaoNaFonte) -> dict:
-    return {
-        "curso": conclusao.curso,
-        "unidade": conclusao.unidade,
-        "nivel": conclusao.nivel,
-        "modalidade": conclusao.modalidade,
-        "forma_oferta": conclusao.forma_oferta,
-        "ano_conclusao": conclusao.ano_conclusao,
-        "data_conclusao": conclusao.data_conclusao,
-    }
+    return {campo: getattr(conclusao, campo) for campo in CAMPOS_DE_CONTEXTO}
 
 
 def _registrar(divergencia: Divergencia) -> None:

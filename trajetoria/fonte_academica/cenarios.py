@@ -32,7 +32,7 @@ class RegistroSimulado:
     data_conclusao: date | None = None
 
 
-SITUACAO_CONCLUIDA = "concluida"
+CONCLUIDA = "concluida"
 
 TADS = "Tecnologia em Análise e Desenvolvimento de Sistemas"
 GRAD, TEC, POS = "Graduação", "Técnico", "Pós-graduação"
@@ -55,42 +55,42 @@ PESSOAS: tuple[PessoaSimulada, ...] = (
 REGISTROS: tuple[RegistroSimulado, ...] = (
     # A
     RegistroSimulado(
-        "SIM-C-0001", "SIM-P-0001", "concluida", TADS, "Serra", GRAD, PRES, None,
+        "SIM-C-0001", "SIM-P-0001", CONCLUIDA, TADS, "Serra", GRAD, PRES, None,
         2022, date(2022, 12, 16),
     ),
     # B — mesmo campus, períodos diferentes
     RegistroSimulado(
-        "SIM-C-0002", "SIM-P-0002", "concluida", "Técnico em Edificações", "Vitória", TEC,
+        "SIM-C-0002", "SIM-P-0002", CONCLUIDA, "Técnico em Edificações", "Vitória", TEC,
         PRES, "Integrado", 2014,
     ),
     RegistroSimulado(
-        "SIM-C-0003", "SIM-P-0002", "concluida", "Bacharelado em Engenharia Civil", "Vitória",
+        "SIM-C-0003", "SIM-P-0002", CONCLUIDA, "Bacharelado em Engenharia Civil", "Vitória",
         GRAD, PRES, None, 2020, date(2020, 7, 10),
     ),
     # C — unidades diferentes
     RegistroSimulado(
-        "SIM-C-0004", "SIM-P-0003", "concluida", TADS, "Serra", GRAD, PRES, None, 2022,
+        "SIM-C-0004", "SIM-P-0003", CONCLUIDA, TADS, "Serra", GRAD, PRES, None, 2022,
     ),
     RegistroSimulado(
-        "SIM-C-0005", "SIM-P-0003", "concluida", "Especialização em Informática na Educação",
+        "SIM-C-0005", "SIM-P-0003", CONCLUIDA, "Especialização em Informática na Educação",
         "Cefor", POS, EAD, None, 2025, date(2025, 3, 28),
     ),
     # D — níveis diferentes
     RegistroSimulado(
-        "SIM-C-0006", "SIM-P-0004", "concluida", "Técnico em Química", "Vila Velha", TEC, PRES,
+        "SIM-C-0006", "SIM-P-0004", CONCLUIDA, "Técnico em Química", "Vila Velha", TEC, PRES,
         "Integrado", 2012,
     ),
     RegistroSimulado(
-        "SIM-C-0007", "SIM-P-0004", "concluida", "Licenciatura em Química", "Vila Velha", GRAD,
+        "SIM-C-0007", "SIM-P-0004", CONCLUIDA, "Licenciatura em Química", "Vila Velha", GRAD,
         PRES, None, 2017,
     ),
     RegistroSimulado(
-        "SIM-C-0008", "SIM-P-0004", "concluida", "Mestrado Profissional em Química",
+        "SIM-C-0008", "SIM-P-0004", CONCLUIDA, "Mestrado Profissional em Química",
         "Vila Velha", POS, PRES, None, 2020,
     ),
     # E
     RegistroSimulado(
-        "SIM-C-0009", "SIM-P-0005", "concluida", "Técnico em Agropecuária", "Alegre", TEC, PRES,
+        "SIM-C-0009", "SIM-P-0005", CONCLUIDA, "Técnico em Agropecuária", "Alegre", TEC, PRES,
         "Integrado", 2019,
     ),
     # F1
@@ -100,7 +100,7 @@ REGISTROS: tuple[RegistroSimulado, ...] = (
     ),
     # F2
     RegistroSimulado(
-        "SIM-C-0010", "SIM-P-0007", "concluida", "Técnico em Mecânica", "Cariacica", TEC, PRES,
+        "SIM-C-0010", "SIM-P-0007", CONCLUIDA, "Técnico em Mecânica", "Cariacica", TEC, PRES,
         "Subsequente", 2018,
     ),
     RegistroSimulado(
@@ -125,16 +125,16 @@ REGISTROS: tuple[RegistroSimulado, ...] = (
     ),
     # Sem nome
     RegistroSimulado(
-        "SIM-C-0011", "SIM-P-0009", "concluida", "Técnico em Informática", "Colatina", TEC, PRES,
+        "SIM-C-0011", "SIM-P-0009", CONCLUIDA, "Técnico em Informática", "Colatina", TEC, PRES,
         "Subsequente", 2021,
     ),
     # Homônimos
     RegistroSimulado(
-        "SIM-C-0012", "SIM-P-0010", "concluida", "Licenciatura em Pedagogia", "Vitória", GRAD,
+        "SIM-C-0012", "SIM-P-0010", CONCLUIDA, "Licenciatura em Pedagogia", "Vitória", GRAD,
         PRES, None, 2016,
     ),
     RegistroSimulado(
-        "SIM-C-0013", "SIM-P-0011", "concluida", "Tecnologia em Redes de Computadores", "Serra",
+        "SIM-C-0013", "SIM-P-0011", CONCLUIDA, "Tecnologia em Redes de Computadores", "Serra",
         GRAD, PRES, None, 2023,
     ),
 )

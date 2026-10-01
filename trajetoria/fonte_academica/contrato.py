@@ -48,6 +48,11 @@ class ConclusaoNaFonte:
             raise ValueError("ano_conclusao deve estar preenchido e ser o ano de data_conclusao")
 
 
+# Atributos de contexto da conclusão, derivados do próprio contrato: quem copia ou compara
+# o contexto usa esta tupla, e um campo novo no contrato não fica esquecido em lista à mão.
+CAMPOS_DE_CONTEXTO = tuple(f.name for f in fields(ConclusaoNaFonte) if f.name != "id_externo")
+
+
 @dataclass(frozen=True)
 class PessoaEncontrada:
     """Pessoa conhecida pela fonte, com suas conclusões reconhecidas (possivelmente nenhuma)."""
@@ -61,6 +66,9 @@ class PessoaEncontrada:
         _rejeitar_cadeias_vazias(self)
         if not isinstance(self.conclusoes, tuple):
             raise TypeError("conclusoes deve ser tuple")
+        ids = [c.id_externo for c in self.conclusoes]
+        if len(ids) != len(set(ids)):
+            raise ValueError("conclusoes não pode repetir id_externo")
 
 
 @dataclass(frozen=True)
