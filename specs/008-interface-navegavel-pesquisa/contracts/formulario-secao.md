@@ -29,10 +29,11 @@ Para cada `ConteudoPergunta p` de `secao.perguntas`, em ordem, com `n = p.posica
 Campos auxiliares:
 
 - `p<n>-complemento` — só se `p` tem Opção com `complemento_textual`;
-  `CharField(strip=False)`; rótulo "Descreva: «<texto da Opção>»" (ex.: "Descreva:
-  «Outro:»"); ausente quando vazio ou só espaços.
-- `p<n>-remover` — só para `ESCOLHA_UNICA` em rádios e `ESCALA`, **e** só se
-  `p.id in respostas`; `BooleanField`; rótulo "Remover minha resposta a esta pergunta".
+  `CharField(strip=False)`; rótulo "Descreva: «<texto da Opção>»", sem os dois-pontos
+  finais do texto (ex.: "Descreva: «Outro»"); ausente quando vazio ou só espaços.
+- `p<n>-remover` — só para `ESCOLHA_UNICA` em rádios e `ESCALA` **não obrigatórias**,
+  com ou sem Resposta gravada; `BooleanField`; rótulo "Deixar esta pergunta sem
+  resposta" (research R9, revisado).
 
 Regras comuns:
 

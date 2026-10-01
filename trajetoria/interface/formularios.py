@@ -103,8 +103,10 @@ class FormularioDaSecao(forms.Form):
         self.initial = _iniciais(secao, respostas)
 
     def _removivel(self, pergunta) -> bool:
-        """Rádios e escala não podem ser desmarcados sem JavaScript (R9)."""
-        return modo_de(pergunta) in (RADIO, ESCALA) and pergunta.id in self.respostas
+        """Rádios e escala não podem ser desmarcados sem JavaScript (R9). Só Perguntas não
+        obrigatórias: numa obrigatória, remover só produz uma pendência; e a caixa vale
+        também antes de gravar, para desfazer uma marcação por engano."""
+        return modo_de(pergunta) in (RADIO, ESCALA) and not pergunta.obrigatoria
 
     def clean(self):
         dados = super().clean()
@@ -119,7 +121,7 @@ class FormularioDaSecao(forms.Form):
                 marcadas = {valor.opcao} if valor.opcao is not None else valor.opcoes
                 if opcao.posicao not in marcadas:
                     self.add_error(
-                        nome, mensagens.COMPLEMENTO_SEM_OPCAO.format(opcao=opcao.texto)
+                        nome, mensagens.COMPLEMENTO_SEM_OPCAO.format(opcao=_nome(opcao))
                     )
                     continue
             self.limpos[pergunta.posicao] = valor
@@ -173,12 +175,17 @@ class FormularioDaSecao(forms.Form):
         if f"{nome}-complemento" in self.fields:
             opcao = next(o for o in pergunta.opcoes if o.complemento_textual)
             item.complemento = {
-                "rotulo": f"Descreva: «{opcao.texto}»",
+                "rotulo": f"Descreva: «{_nome(opcao)}»",
                 "valor": self._atual(f"{nome}-complemento") or "",
             }
         if f"{nome}-remover" in self.fields:
             item.remover = {"marcado": bool(self._atual(f"{nome}-remover"))}
         return item
+
+
+def _nome(opcao) -> str:
+    """O texto da Opção citado numa frase fixa, sem os dois-pontos finais ("Outro:")."""
+    return opcao.texto.rstrip().rstrip(":")
 
 
 def _com_complemento(pergunta) -> bool:

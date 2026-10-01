@@ -3,6 +3,9 @@
 {% block conteudo %}
 {% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
 <h1>{{ titulo }}</h1>
+{% if resolucao == "entrada_resolvida" or resolucao == "selecao_necessaria" %}
+  <p>Esta é a pesquisa do Ifes com seus egressos. Você responde uma seção de cada vez; o que for salvo fica guardado, e você pode parar e continuar depois.</p>
+{% endif %}
 {% if resolucao == "entrada_resolvida" %}
   <p>Esta pesquisa refere-se à sua formação:</p>
   <div class="contexto">{% include "interface/dados_formacao.html" with itens=principal.contexto %}</div>
@@ -10,6 +13,7 @@
     <button type="submit" class="primario">{{ principal.acao }}</button>
   </form>
 {% elif resolucao == "selecao_necessaria" %}
+  <p>A pesquisa é respondida separadamente para cada formação. Escolha por qual começar ou continuar; as outras continuam disponíveis aqui.</p>
   <ul class="lista-simples">
     {% for formacao in pendentes %}
     <li>

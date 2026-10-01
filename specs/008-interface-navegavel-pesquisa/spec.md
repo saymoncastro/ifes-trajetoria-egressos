@@ -1017,10 +1017,14 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   feito. [Hipótese; 005 FR-025, FR-026]
 - **FR-042**: Texto não vazio DEVE ser enviado à 005 exatamente como recebido, sem
   aparar, normalizar ou converter. [005 FR-026]
-- **FR-043**: DEVE ser possível remover a Resposta de qualquer Pergunta respondida,
-  inclusive de escolha única e de escala, sem JavaScript. O meio de remoção NÃO DEVE ser
-  apresentado como Opção do instrumento nem gravado como Resposta. [Const. — XIII, XIV;
-  005 FR-033 c]
+- **FR-043**: DEVE ser possível deixar sem Resposta qualquer Pergunta **não obrigatória**,
+  inclusive de escolha única e de escala, sem JavaScript — também antes de gravar, para
+  desfazer uma marcação por engano. O meio de remoção NÃO DEVE ser apresentado como Opção
+  do instrumento nem gravado como Resposta. Em Pergunta obrigatória, a Resposta é trocada
+  pelo próprio controle; remover só produziria uma pendência. [Const. — XIII, XIV;
+  005 FR-033 c] *(Revisado após a auditoria de UX de 2026-10-01, UX-02/UX-03: oferecida
+  em toda Pergunta respondida, a caixa poluía as Seções revisitadas e, nas obrigatórias,
+  só levava a erro.)*
 - **FR-044**: A interface DEVE validar a **forma** dos dados recebidos antes de chamar a
   005 (Opção pertencente à Pergunta apresentada, ponto de escala existente, complemento
   só com a Opção correspondente marcada, valores bem formados). Essa validação NÃO DEVE

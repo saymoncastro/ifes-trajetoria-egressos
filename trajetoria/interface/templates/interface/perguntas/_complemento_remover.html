@@ -7,6 +7,6 @@
 {% if item.remover %}
 <div class="opcao remover">
   <input type="checkbox" id="{{ item.nome }}-remover" name="{{ item.nome }}-remover" value="1"{% if item.remover.marcado %} checked{% endif %}>
-  <label for="{{ item.nome }}-remover">Remover minha resposta a esta pergunta</label>
+  <label for="{{ item.nome }}-remover">Deixar esta pergunta sem resposta</label>
 </div>
 {% endif %}

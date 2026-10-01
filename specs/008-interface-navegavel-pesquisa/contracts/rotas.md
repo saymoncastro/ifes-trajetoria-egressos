@@ -100,16 +100,19 @@ Conteúdo da página de Seção (FR-027, FR-032 a FR-039, FR-054):
 
 1. Faixa de demonstração e cabeçalho (Pessoa em uso, trocar, encerrar).
 2. `h1` = título da Versão (ou "Pesquisa").
-3. "Sobre a sua formação" — contexto da Conclusão (`ItemContexto`).
-4. Se é a primeira Seção da Versão: `texto_abertura`.
-5. `h2` = título da Seção (se houver) e texto introdutório (se houver).
-6. Resumo de erros/pendências (se houver).
+3. Resumo de erros/pendências (se houver), logo abaixo do `h1` — antes do contexto e do
+   texto de abertura, para ficar visível sem rolar também no celular.
+4. "Sobre a sua formação" — contexto da Conclusão em **uma linha** (curso · unidade ·
+   ano, `resumo_da_formacao`); a lista completa fica no início, na conclusão e na
+   confirmação.
+5. Se é a primeira Seção da Versão: `texto_abertura`.
+6. `h2` = título da Seção (se houver) e texto introdutório (se houver).
 7. Perguntas, na ordem da Versão (contrato do formulário).
 8. Botão **"Salvar e continuar"** (primeiro botão do formulário).
 9. Se há Seção anterior em `passagens`: ligação "Voltar à seção anterior", com a nota
    "Alterações não salvas nesta página serão descartadas."
 10. Ligação "Sair e continuar depois" → `/formacoes/` (nota: "O que já foi salvo fica
-    guardado.").
+    guardado. O que foi marcado nesta página e ainda não foi salvo será descartado.").
 
 `?pendencias=1` → se a Seção é a última de `passagens` e tem `pendentes`, mostra as
 pendências (resumo + mensagem por Pergunta); caso contrário, ignora. `&salvo=1`
