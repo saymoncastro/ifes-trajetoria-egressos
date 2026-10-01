@@ -4,8 +4,10 @@ Contrato: specs/001-nucleo-academico-fonte-simulada/contracts/incorporacao.md. A
 recebida como argumento; o núcleo conhece apenas o contrato da fronteira.
 """
 
+import logging
 from dataclasses import dataclass
 from enum import Enum
+from typing import Literal
 
 from django.db import transaction
 
@@ -16,11 +18,31 @@ from trajetoria.fonte_academica.contrato import (
     PessoaEncontrada,
 )
 
+logger = logging.getLogger("trajetoria.academico")
+
 
 class SituacaoIncorporacao(Enum):
     INCORPORADA = "incorporada"
     SEM_CONCLUSAO_ELEGIVEL = "sem_conclusao_elegivel"
     PESSOA_INEXISTENTE = "pessoa_inexistente"
+
+
+class TipoDivergencia(Enum):
+    ATRIBUTOS_DIFERENTES = "atributos_diferentes"
+    CONCLUSAO_DE_OUTRA_PESSOA = "conclusao_de_outra_pessoa"
+    AUSENTE_NA_FONTE = "ausente_na_fonte"
+
+
+@dataclass(frozen=True)
+class Divergencia:
+    """Diferença entre o já incorporado e o que a fonte devolveu agora. Só é sinalizada:
+    nada é alterado e nada sobre ela é persistido (FR-033; DP-005, DP-006)."""
+
+    tipo: TipoDivergencia
+    registro: Literal["pessoa", "conclusao"]
+    fonte: str
+    id_externo: str
+    campos: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -30,6 +52,7 @@ class ResultadoIncorporacao:
     pessoa_criada: bool = False
     conclusoes_criadas: tuple[ConclusaoAcademica, ...] = ()
     conclusoes_existentes: tuple[ConclusaoAcademica, ...] = ()
+    divergencias: tuple[Divergencia, ...] = ()
 
 
 def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> ResultadoIncorporacao:
@@ -46,19 +69,85 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
         return ResultadoIncorporacao(SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL)
 
     with transaction.atomic():
-        pessoa, pessoa_criada = Pessoa.objects.get_or_create(
-            fonte=fonte.codigo,
-            id_externo=resposta.id_externo,
-            defaults={"nome": resposta.nome},
-        )
-        criadas, existentes = [], []
-        for conclusao_na_fonte in resposta.conclusoes:
-            conclusao, criada = ConclusaoAcademica.objects.get_or_create(
-                fonte=fonte.codigo,
-                id_externo=conclusao_na_fonte.id_externo,
-                defaults={"pessoa": pessoa, **_contexto(conclusao_na_fonte)},
+        resultado = _incorporar(fonte.codigo, resposta)
+    for divergencia in resultado.divergencias:
+        _registrar(divergencia)
+    return resultado
+
+
+def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporacao:
+    divergencias: list[Divergencia] = []
+    pessoa = Pessoa.objects.filter(fonte=codigo, id_externo=resposta.id_externo).first()
+    if pessoa is not None and pessoa.nome != resposta.nome:
+        divergencias.append(
+            Divergencia(
+                TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", codigo, pessoa.id_externo,
+                ("nome",),
             )
-            (criadas if criada else existentes).append(conclusao)
+        )
+
+    ja_incorporadas = {
+        c.id_externo: c
+        for c in ConclusaoAcademica.objects.filter(
+            fonte=codigo, id_externo__in=[c.id_externo for c in resposta.conclusoes]
+        )
+    }
+    novas: list[ConclusaoNaFonte] = []
+    existentes: list[ConclusaoAcademica] = []
+    for na_fonte in resposta.conclusoes:
+        incorporada = ja_incorporadas.get(na_fonte.id_externo)
+        if incorporada is None:
+            novas.append(na_fonte)
+        elif pessoa is None or incorporada.pessoa_id != pessoa.id:
+            # Não reatribui nem duplica.
+            divergencias.append(
+                Divergencia(
+                    TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao", codigo,
+                    na_fonte.id_externo,
+                )
+            )
+        else:
+            campos = tuple(
+                campo for campo, valor in _contexto(na_fonte).items()
+                if getattr(incorporada, campo) != valor
+            )
+            if campos:
+                divergencias.append(
+                    Divergencia(
+                        TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", codigo,
+                        na_fonte.id_externo, campos,
+                    )
+                )
+            existentes.append(incorporada)
+
+    if pessoa is not None:
+        presentes = [c.id_externo for c in resposta.conclusoes]
+        for ausente in pessoa.conclusoes.filter(fonte=codigo).exclude(id_externo__in=presentes):
+            divergencias.append(
+                Divergencia(
+                    TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", codigo, ausente.id_externo
+                )
+            )
+    elif not novas:
+        # Todas as conclusões devolvidas já pertencem a outras Pessoas: nenhuma pode ser
+        # associada a esta, que então não é materializada (FR-039).
+        return ResultadoIncorporacao(
+            SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL, divergencias=tuple(divergencias)
+        )
+
+    pessoa_criada = False
+    if pessoa is None:
+        pessoa, pessoa_criada = Pessoa.objects.get_or_create(
+            fonte=codigo, id_externo=resposta.id_externo, defaults={"nome": resposta.nome}
+        )
+    criadas = []
+    for na_fonte in novas:
+        conclusao, _ = ConclusaoAcademica.objects.get_or_create(
+            fonte=codigo,
+            id_externo=na_fonte.id_externo,
+            defaults={"pessoa": pessoa, **_contexto(na_fonte)},
+        )
+        criadas.append(conclusao)
 
     return ResultadoIncorporacao(
         SituacaoIncorporacao.INCORPORADA,
@@ -66,6 +155,7 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
         pessoa_criada=pessoa_criada,
         conclusoes_criadas=tuple(criadas),
         conclusoes_existentes=tuple(existentes),
+        divergencias=tuple(divergencias),
     )
 
 
@@ -79,3 +169,15 @@ def _contexto(conclusao: ConclusaoNaFonte) -> dict:
         "ano_conclusao": conclusao.ano_conclusao,
         "data_conclusao": conclusao.data_conclusao,
     }
+
+
+def _registrar(divergencia: Divergencia) -> None:
+    # Só identificadores e nomes de campos: nunca valores pessoais (Princípio XVI).
+    logger.warning(
+        "Divergência %s em %s %s:%s (campos: %s)",
+        divergencia.tipo.name,
+        divergencia.registro,
+        divergencia.fonte,
+        divergencia.id_externo,
+        ", ".join(divergencia.campos) or "—",
+    )

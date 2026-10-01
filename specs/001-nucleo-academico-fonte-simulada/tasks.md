@@ -377,7 +377,7 @@ alterar o banco.
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T023 [US5] Acrescentar a `tests/fontes_de_teste.py` (depende de T018) a função
+- [X] T023 [US5] Acrescentar a `tests/fontes_de_teste.py` (depende de T018) a função
   `variante_canonica(...)`. Ela devolve `FonteSimulada(pessoas=..., registros=...)` com
   o mesmo `codigo = "simulada"` e uma das variantes do catálogo:
   - (i) curso de SIM-C-0001 alterado;
@@ -388,7 +388,7 @@ alterar o banco.
   - (vi) SIM-C-0001 passa a `matricula_ativa`, e SIM-P-0001 fica sem conclusão
     reconhecida (usada em T028);
   - (vii) SIM-P-0001 e SIM-C-0001 ausentes (usada em T030).
-- [ ] T024 [US5] Acrescentar a `tests/test_incorporacao.py` (depende de T021 e T023).
+- [X] T024 [US5] Acrescentar a `tests/test_incorporacao.py` (depende de T021 e T023).
   Pré-condição dos testes de variante: o conjunto canônico já foi incorporado com
   `FonteSimulada()` antes de incorporar a variante.
   - **repetição** (SC-003): incorporar todas as 11 pessoas do catálogo 3 vezes, em
@@ -411,7 +411,7 @@ alterar o banco.
 
 ### Implementation for User Story 5
 
-- [ ] T025 [US5] Implementar a divergência em `trajetoria/academico/incorporacao.py`
+- [X] T025 [US5] Implementar a divergência em `trajetoria/academico/incorporacao.py`
   (depende de T024), conforme [contracts/incorporacao.md](contracts/incorporacao.md):
   - enum `TipoDivergencia` (`ATRIBUTOS_DIFERENTES`, `CONCLUSAO_DE_OUTRA_PESSOA`,
     `AUSENTE_NA_FONTE`) e dataclass

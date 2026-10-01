@@ -4,8 +4,11 @@
 provar a substituibilidade (FR-024, SC-006). Não existe em produção.
 """
 
+from dataclasses import replace
 from datetime import date
 
+from trajetoria.fonte_academica import cenarios
+from trajetoria.fonte_academica.cenarios import RegistroSimulado
 from trajetoria.fonte_academica.contrato import (
     ConclusaoEncontrada,
     ConclusaoInexistente,
@@ -88,3 +91,45 @@ CASOS_DE_CONTRATO = {
         "conclusao_inexistente": "ALT-C-404",
     },
 }
+
+
+def variante_canonica(variante: str) -> FonteSimulada:
+    """O catálogo canônico com uma única mudança, mesmo código de fonte ("simulada").
+
+    Simula a mesma fonte devolvendo, numa leitura posterior, conteúdo diferente do já
+    incorporado (FR-033).
+    """
+    pessoas = list(cenarios.PESSOAS)
+    registros = list(cenarios.REGISTROS)
+
+    def trocar(id_externo, **mudancas):
+        i = next(n for n, r in enumerate(registros) if r.id_externo == id_externo)
+        registros[i] = replace(registros[i], **mudancas)
+
+    match variante:
+        case "i":  # curso de SIM-C-0001 alterado
+            trocar("SIM-C-0001", curso="Tecnologia em Sistemas para Internet")
+        case "ii":  # SIM-C-0003 ausente
+            registros = [r for r in registros if r.id_externo != "SIM-C-0003"]
+        case "iii":  # SIM-C-0002 atribuída a SIM-P-0001
+            trocar("SIM-C-0002", id_pessoa="SIM-P-0001")
+        case "iv":  # SIM-P-0009 passa a ter nome
+            pessoas = [
+                replace(p, nome="Nina Exemplo") if p.id_externo == "SIM-P-0009" else p
+                for p in pessoas
+            ]
+        case "v":  # nova conclusão para SIM-P-0001
+            registros.append(
+                RegistroSimulado(
+                    "SIM-C-0099", "SIM-P-0001", "concluida", "Especialização em Gestão Pública",
+                    "Cefor", "Pós-graduação", "A distância", None, 2024,
+                )
+            )
+        case "vi":  # SIM-P-0001 fica sem conclusão reconhecida
+            trocar("SIM-C-0001", situacao="matricula_ativa")
+        case "vii":  # SIM-P-0001 e SIM-C-0001 ausentes
+            pessoas = [p for p in pessoas if p.id_externo != "SIM-P-0001"]
+            registros = [r for r in registros if r.id_externo != "SIM-C-0001"]
+        case _:
+            raise ValueError(variante)
+    return FonteSimulada(pessoas=pessoas, registros=registros)

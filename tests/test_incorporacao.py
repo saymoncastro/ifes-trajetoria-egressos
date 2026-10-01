@@ -1,12 +1,21 @@
 """Incorporação de Pessoas e Conclusões a partir de uma fonte acadêmica."""
 
+import logging
+import random
+from dataclasses import replace
 from datetime import date
 
 import pytest
 
-from tests.fontes_de_teste import FonteAlternativa
-from trajetoria.academico.incorporacao import SituacaoIncorporacao, incorporar_pessoa
+from tests.fontes_de_teste import FonteAlternativa, variante_canonica
+from trajetoria.academico.incorporacao import (
+    Divergencia,
+    SituacaoIncorporacao,
+    TipoDivergencia,
+    incorporar_pessoa,
+)
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
+from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.cenarios import PessoaSimulada, RegistroSimulado
 from trajetoria.fonte_academica.simulada import FonteSimulada
 
@@ -114,3 +123,106 @@ def test_outra_implementacao_da_fonte_funciona_sem_ajuste_no_dominio():
     conclusoes = list(resultado.pessoa.conclusoes.all())
     assert len(conclusoes) == 2
     assert {c.fonte for c in conclusoes} == {"teste-alternativa"}
+
+
+# --- US5: repetição sem duplicidade e divergência sinalizada -----------------------------
+
+IDS_PESSOAS = [p.id_externo for p in cenarios.PESSOAS]
+
+
+def _incorporar_catalogo(fonte, ordem=IDS_PESSOAS):
+    return [incorporar_pessoa(fonte, id_pessoa) for id_pessoa in ordem]
+
+
+def _retrato():
+    """Todas as linhas com todos os valores, inclusive `incorporado_em`."""
+    return (
+        list(Pessoa.objects.order_by("id").values()),
+        list(ConclusaoAcademica.objects.order_by("id").values()),
+    )
+
+
+def test_repetir_o_catalogo_em_ordens_diferentes_nao_duplica(fonte_simulada):
+    _incorporar_catalogo(fonte_simulada)
+    retrato = _retrato()
+
+    embaralhada = list(IDS_PESSOAS)
+    random.Random(2026).shuffle(embaralhada)
+    for ordem in (list(reversed(IDS_PESSOAS)), embaralhada):
+        for resultado in _incorporar_catalogo(fonte_simulada, ordem):
+            assert resultado.pessoa_criada is False
+            assert resultado.conclusoes_criadas == ()
+
+    assert _retrato() == retrato
+
+
+def test_conclusao_repetida_mantem_a_mesma_identidade(fonte_simulada):
+    primeira = incorporar_pessoa(fonte_simulada, "SIM-P-0005")
+    segunda = incorporar_pessoa(fonte_simulada, "SIM-P-0005")
+
+    assert segunda.pessoa.id == primeira.pessoa.id
+    assert segunda.conclusoes_existentes[0].id == primeira.conclusoes_criadas[0].id
+    assert ConclusaoAcademica.objects.count() == 1
+
+
+def test_nova_conclusao_e_associada_a_pessoa_existente(fonte_simulada):
+    original = incorporar_pessoa(fonte_simulada, "SIM-P-0001").pessoa
+
+    resultado = incorporar_pessoa(variante_canonica("v"), "SIM-P-0001")
+
+    assert resultado.pessoa.id == original.id
+    assert resultado.pessoa_criada is False
+    assert [c.id_externo for c in resultado.conclusoes_criadas] == ["SIM-C-0099"]
+    assert Pessoa.objects.count() == 1
+
+
+@pytest.mark.parametrize(
+    ("variante", "id_pessoa", "esperada"),
+    [
+        ("i", "SIM-P-0001", (TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", "SIM-C-0001",
+                             ("curso",))),
+        ("ii", "SIM-P-0002", (TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", "SIM-C-0003", ())),
+        ("iii", "SIM-P-0001", (TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao",
+                               "SIM-C-0002", ())),
+        ("iv", "SIM-P-0009", (TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", "SIM-P-0009",
+                              ("nome",))),
+    ],
+)
+def test_divergencia_e_sinalizada_sem_alterar_nada(
+    fonte_simulada, caplog, variante, id_pessoa, esperada
+):
+    _incorporar_catalogo(fonte_simulada)
+    retrato = _retrato()
+
+    with caplog.at_level(logging.WARNING, logger="trajetoria"):
+        resultado = incorporar_pessoa(variante_canonica(variante), id_pessoa)
+
+    tipo, registro, id_externo, campos = esperada
+    assert resultado.divergencias == (
+        Divergencia(tipo, registro, "simulada", id_externo, campos),
+    )
+    assert _retrato() == retrato  # nada sobrescrito, removido ou duplicado
+
+    assert len(caplog.records) == 1
+    mensagem = caplog.records[0].getMessage()
+    for trecho in (tipo.name, registro, "simulada", id_externo):
+        assert trecho in mensagem
+    assert "Exemplo" not in mensagem  # nunca o nome da pessoa
+
+
+def test_pessoa_nova_so_com_conclusao_de_outra_pessoa_nao_e_materializada(fonte_simulada):
+    # Nenhuma conclusão pode ser associada a ela; criá-la violaria FR-039.
+    incorporar_pessoa(fonte_simulada, "SIM-P-0002")
+    retrato = _retrato()
+    alheia = next(r for r in cenarios.REGISTROS if r.id_externo == "SIM-C-0002")
+    fonte = FonteSimulada(
+        pessoas=[PessoaSimulada("SIM-P-T2", None)],
+        registros=[replace(alheia, id_pessoa="SIM-P-T2")],
+    )
+
+    resultado = incorporar_pessoa(fonte, "SIM-P-T2")
+
+    assert resultado.situacao is SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL
+    assert resultado.pessoa is None
+    assert [d.tipo for d in resultado.divergencias] == [TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA]
+    assert _retrato() == retrato
