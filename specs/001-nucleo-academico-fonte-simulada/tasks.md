@@ -311,7 +311,7 @@ substitui a simulada sem mudar o domínio.
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T018 [P] [US4] Criar `tests/fontes_de_teste.py` com `FonteAlternativa`.
+- [X] T018 [P] [US4] Criar `tests/fontes_de_teste.py` com `FonteAlternativa`.
   - É outra implementação do `Protocol`, sem herdar nem reutilizar `FonteSimulada`.
   - Usa dicionários internos, `codigo = "teste-alternativa"`, parâmetro
     `indisponivel` e um conjunto fictício próprio (prefixo `ALT-`) com:
@@ -322,7 +322,7 @@ substitui a simulada sem mudar o domínio.
     `CASOS_DE_CONTRATO` com os ids de: pessoa com conclusões, pessoa sem conclusão
     reconhecida, pessoa inexistente, conclusão reconhecida, registro não reconhecido e
     conclusão inexistente.
-- [ ] T019 [US4] Criar `tests/test_contrato_fonte.py` (depende de T018). A suíte é
+- [X] T019 [US4] Criar `tests/test_contrato_fonte.py` (depende de T018). A suíte é
   parametrizada sobre `[FonteSimulada, FonteAlternativa]` e cobre as regras 1 a 8 de
   [contracts/fonte-academica.md](contracts/fonte-academica.md):
   - só conclusões reconhecidas em `PessoaEncontrada`;
@@ -338,7 +338,7 @@ substitui a simulada sem mudar o domínio.
   - `trajetoria/fonte_academica/contrato.py` não importa `django`;
   - nenhum módulo de `trajetoria/academico/` importa `trajetoria.fonte_academica.simulada`
     (FR-021).
-- [ ] T020 [P] [US4] Criar `tests/test_fonte_simulada.py` (FR-026 a FR-029, SC-001,
+- [X] T020 [P] [US4] Criar `tests/test_fonte_simulada.py` (FR-026 a FR-029, SC-001,
   SC-009):
   - teste tabular com **cada linha** de
     [contracts/cenarios-simulados.md](contracts/cenarios-simulados.md): os resultados de
@@ -351,14 +351,14 @@ substitui a simulada sem mudar o domínio.
     - nenhum valor casa com padrão de CPF (`\d{3}\.?\d{3}\.?\d{3}-?\d{2}`) nem contém
       `@`;
   - nenhuma data de conclusão é posterior a 2026-09-30.
-- [ ] T021 [US4] Acrescentar a `tests/test_incorporacao.py` (depende de T014 e T018):
+- [X] T021 [US4] Acrescentar a `tests/test_incorporacao.py` (depende de T014 e T018):
   incorporar a pessoa com 2 conclusões da `FonteAlternativa` com o mesmo
   `incorporar_pessoa`, sem nenhum ajuste no domínio. O resultado é 1 Pessoa e 2
   Conclusões com `fonte = "teste-alternativa"` (FR-024, SC-006).
 
 ### Implementation for User Story 4
 
-- [ ] T022 [US4] Nenhum código de produção novo é esperado. Se T019 ou T020 falharem,
+- [X] T022 [US4] Nenhum código de produção novo é esperado. Se T019 ou T020 falharem,
   corrigir `trajetoria/fonte_academica/simulada.py` ou `cenarios.py`, nunca o
   contrato para acomodar a implementação.
 

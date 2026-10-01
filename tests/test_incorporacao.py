@@ -4,6 +4,7 @@ from datetime import date
 
 import pytest
 
+from tests.fontes_de_teste import FonteAlternativa
 from trajetoria.academico.incorporacao import SituacaoIncorporacao, incorporar_pessoa
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica.cenarios import PessoaSimulada, RegistroSimulado
@@ -100,3 +101,16 @@ def test_conclusoes_parecidas_com_origens_distintas_nao_se_fundem():
     resultado = incorporar_pessoa(fonte, "SIM-P-T1")
 
     assert resultado.pessoa.conclusoes.count() == 2
+
+
+# --- US4: substituição da fonte ----------------------------------------------------------
+
+
+def test_outra_implementacao_da_fonte_funciona_sem_ajuste_no_dominio():
+    resultado = incorporar_pessoa(FonteAlternativa(), "ALT-P-1")
+
+    assert resultado.situacao is SituacaoIncorporacao.INCORPORADA
+    assert Pessoa.objects.get().fonte == "teste-alternativa"
+    conclusoes = list(resultado.pessoa.conclusoes.all())
+    assert len(conclusoes) == 2
+    assert {c.fonte for c in conclusoes} == {"teste-alternativa"}
