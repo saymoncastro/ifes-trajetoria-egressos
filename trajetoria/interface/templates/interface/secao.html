@@ -1,0 +1,35 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}Seção {{ passagem.secao.posicao }}{% endif %}{% endblock %}
+{% block conteudo %}
+{% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
+<h1>{{ titulo_pesquisa }}</h1>
+{% include "interface/contexto.html" %}
+{% if primeira and texto_abertura %}<div class="abertura">{{ texto_abertura|linebreaks }}</div>{% endif %}
+{% if resumo_erros %}
+<div class="resumo-erros" role="alert" aria-labelledby="titulo-erros">
+  <h2 id="titulo-erros">Há problemas nesta seção</h2>
+  {% if salvo %}<p>O que já foi preenchido nesta seção foi salvo.</p>{% endif %}
+  <ul>
+    {% for erro in resumo_erros %}<li><a href="#{{ erro.ancora }}">{{ erro.texto }}</a></li>{% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% if passagem.secao.titulo %}<h2>{{ passagem.secao.titulo }}</h2>{% endif %}
+{% if passagem.secao.texto %}<div class="texto-secao">{{ passagem.secao.texto|linebreaks }}</div>{% endif %}
+<form method="post" action="{{ acao }}" novalidate>{% csrf_token %}
+  {% for item in itens %}
+    {% if item.modo == "texto" %}{% include "interface/perguntas/texto_curto.html" %}
+    {% elif item.modo == "lista" %}{% include "interface/perguntas/escolha_unica.html" %}
+    {% elif item.modo == "radio" %}{% include "interface/perguntas/escolha_unica.html" %}
+    {% elif item.modo == "caixas" %}{% include "interface/perguntas/escolha_multipla.html" %}
+    {% else %}{% include "interface/perguntas/escala.html" %}{% endif %}
+  {% endfor %}
+  <div class="acoes">
+    <button type="submit" class="primario">Salvar e continuar</button>
+  </div>
+</form>
+{% if anterior %}
+<p><a href="{{ anterior }}">Voltar à seção anterior</a><br><span class="nota">Alterações não salvas nesta página serão descartadas.</span></p>
+{% endif %}
+<p><a href="/formacoes/">Sair e continuar depois</a><br><span class="nota">O que já foi salvo fica guardado.</span></p>
+{% endblock %}

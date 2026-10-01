@@ -1,0 +1,13 @@
+<fieldset class="pergunta{% if item.erros %} com-erro{% endif %}" id="{{ item.nome }}" role="radiogroup"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
+  <legend>{% include "interface/perguntas/_enunciado.html" %}</legend>
+  {% include "interface/perguntas/_cabecalho.html" %}
+  <div class="escala">
+    {% for opcao in item.opcoes %}
+    <div class="opcao">
+      <input type="radio" id="{{ opcao.id }}" name="{{ item.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}>
+      <label for="{{ opcao.id }}">{{ opcao.texto }}</label>
+    </div>
+    {% endfor %}
+  </div>
+  {% include "interface/perguntas/_complemento_remover.html" %}
+</fieldset>

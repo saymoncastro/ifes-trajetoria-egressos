@@ -1,0 +1,12 @@
+{% if item.complemento %}
+<div class="complemento">
+  <label for="{{ item.nome }}-complemento">{{ item.complemento.rotulo }}</label>
+  <input type="text" id="{{ item.nome }}-complemento" name="{{ item.nome }}-complemento" value="{{ item.complemento.valor }}">
+</div>
+{% endif %}
+{% if item.remover %}
+<div class="opcao remover">
+  <input type="checkbox" id="{{ item.nome }}-remover" name="{{ item.nome }}-remover" value="1"{% if item.remover.marcado %} checked{% endif %}>
+  <label for="{{ item.nome }}-remover">Remover minha resposta a esta pergunta</label>
+</div>
+{% endif %}

@@ -1,0 +1,3 @@
+{% if item.pergunta.texto_explicativo %}<p class="explicacao" id="{{ item.nome }}-explicacao">{{ item.pergunta.texto_explicativo }}</p>{% endif %}
+{% if item.descricao_escala %}<p class="descricao-escala" id="{{ item.nome }}-escala">{{ item.descricao_escala }}</p>{% endif %}
+{% if item.erros %}<p class="erro" id="{{ item.nome }}-erro">{% for erro in item.erros %}<span>Erro: {{ erro }}</span>{% if not forloop.last %} {% endif %}{% endfor %}</p>{% endif %}

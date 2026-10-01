@@ -1,0 +1,11 @@
+<fieldset class="pergunta{% if item.erros %} com-erro{% endif %}" id="{{ item.nome }}"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}>
+  <legend>{% include "interface/perguntas/_enunciado.html" %} <span class="nota">(marque todas que se aplicam)</span></legend>
+  {% include "interface/perguntas/_cabecalho.html" %}
+  {% for opcao in item.opcoes %}
+  <div class="opcao">
+    <input type="checkbox" id="{{ opcao.id }}" name="{{ item.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
+    <label for="{{ opcao.id }}">{{ opcao.texto }}</label>
+  </div>
+  {% endfor %}
+  {% include "interface/perguntas/_complemento_remover.html" %}
+</fieldset>

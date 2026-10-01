@@ -1,0 +1,5 @@
+<div class="pergunta{% if item.erros %} com-erro{% endif %}" id="{{ item.nome }}">
+  <label class="enunciado" for="{{ item.nome }}-campo">{% include "interface/perguntas/_enunciado.html" %}</label>
+  {% include "interface/perguntas/_cabecalho.html" %}
+  <input type="text" id="{{ item.nome }}-campo" name="{{ item.nome }}" value="{{ item.texto }}"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
+</div>

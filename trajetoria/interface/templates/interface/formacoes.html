@@ -1,0 +1,39 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+{% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
+<h1>{{ titulo }}</h1>
+{% if resolucao == "entrada_resolvida" %}
+  <p>Esta pesquisa refere-se à sua formação:</p>
+  <div class="contexto">{% include "interface/dados_formacao.html" with itens=principal.contexto %}</div>
+  <form method="post" action="/formacoes/entrar/">{% csrf_token %}
+    <button type="submit" class="primario">{{ principal.acao }}</button>
+  </form>
+{% elif resolucao == "selecao_necessaria" %}
+  <ul class="lista-simples">
+    {% for formacao in pendentes %}
+    <li>
+      {% include "interface/dados_formacao.html" with itens=formacao.contexto %}
+      <p>{{ formacao.situacao }}</p>
+      <form method="post" action="/formacoes/entrar/">{% csrf_token %}
+        <input type="hidden" name="formacao" value="{{ formacao.pk }}">
+        <button type="submit" class="primario">{{ formacao.acao }} desta formação</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>{{ mensagem }}</p>
+{% endif %}
+{% if outras %}
+  {% if resolucao == "entrada_resolvida" or resolucao == "selecao_necessaria" %}<h2>Suas outras formações</h2>{% endif %}
+  <ul class="lista-simples">
+    {% for formacao in outras %}
+    <li>
+      {% include "interface/dados_formacao.html" with itens=formacao.contexto %}
+      <p><strong>{{ formacao.situacao }}</strong></p>
+    </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}
