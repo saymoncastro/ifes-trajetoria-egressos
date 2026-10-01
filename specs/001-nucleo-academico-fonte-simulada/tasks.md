@@ -441,7 +441,7 @@ simulada identificada pelo próprio código.
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T026 [US6] Acrescentar a `tests/test_incorporacao.py` (depende de T024), cobrindo
+- [X] T026 [US6] Acrescentar a `tests/test_incorporacao.py` (depende de T024), cobrindo
   FR-035 e SC-005:
   - depois de incorporar o catálogo, 100% das Pessoas e Conclusões têm
     `fonte == "simulada"`, `id_externo` igual ao do catálogo e `incorporado_em`
@@ -451,7 +451,7 @@ simulada identificada pelo próprio código.
 
 ### Implementation for User Story 6
 
-- [ ] T027 [US6] Nenhum código novo é esperado: os campos vêm de T006 e são
+- [X] T027 [US6] Nenhum código novo é esperado: os campos vêm de T006 e são
   preenchidos em T013. Se T026 falhar, corrigir só `trajetoria/academico/incorporacao.py`.
   Não acrescentar campo de proveniência.
 
@@ -469,7 +469,7 @@ SIM-C-09xx existe no banco.
 
 ### Tests for User Story 7 ⚠️
 
-- [ ] T028 [US7] Acrescentar a `tests/test_incorporacao.py` (depende de T026), cobrindo
+- [X] T028 [US7] Acrescentar a `tests/test_incorporacao.py` (depende de T026), cobrindo
   FR-018, FR-019, FR-039 e SC-004:
   - SIM-P-0006 (F1, só `matricula_ativa`) e SIM-P-0008 (F3: evasão, transferência,
     desconhecida, não informada) devolvem `SEM_CONCLUSAO_ELEGIVEL`, com `pessoa is None`
@@ -484,7 +484,7 @@ SIM-C-09xx existe no banco.
 
 ### Implementation for User Story 7
 
-- [ ] T029 [US7] Em `trajetoria/academico/incorporacao.py` (depende de T025 e T028),
+- [X] T029 [US7] Em `trajetoria/academico/incorporacao.py` (depende de T025 e T028),
   completar o caso `PessoaEncontrada` com `conclusoes == ()`. Não criar Pessoa já vem
   de T013; aqui, se a Pessoa já existir localmente, devolvê-la com as divergências
   `AUSENTE_NA_FONTE` de T025, sem alteração.

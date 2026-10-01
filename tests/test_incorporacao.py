@@ -226,3 +226,73 @@ def test_pessoa_nova_so_com_conclusao_de_outra_pessoa_nao_e_materializada(fonte_
     assert resultado.pessoa is None
     assert [d.tipo for d in resultado.divergencias] == [TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA]
     assert _retrato() == retrato
+
+
+# --- US6: proveniência mínima ------------------------------------------------------------
+
+
+def test_toda_linha_tem_fonte_id_externo_e_momento_de_incorporacao(fonte_simulada):
+    _incorporar_catalogo(fonte_simulada)
+    pessoas_declaradas = {p.id_externo for p in cenarios.PESSOAS}
+    conclusoes_declaradas = {r.id_externo for r in cenarios.REGISTROS}
+
+    for linha in [*Pessoa.objects.all(), *ConclusaoAcademica.objects.all()]:
+        assert linha.fonte == "simulada"  # o código identifica a fonte simulada
+        assert linha.incorporado_em is not None
+    assert {p.id_externo for p in Pessoa.objects.all()} <= pessoas_declaradas
+    assert {c.id_externo for c in ConclusaoAcademica.objects.all()} <= conclusoes_declaradas
+
+
+def test_momento_de_incorporacao_nao_muda_em_nova_incorporacao(fonte_simulada):
+    _incorporar_catalogo(fonte_simulada)
+    antes = {c.id: c.incorporado_em for c in ConclusaoAcademica.objects.all()}
+
+    _incorporar_catalogo(fonte_simulada)
+
+    assert {c.id: c.incorporado_em for c in ConclusaoAcademica.objects.all()} == antes
+
+
+def test_proveniencia_registra_a_fonte_alternativa():
+    incorporar_pessoa(FonteAlternativa(), "ALT-P-1")
+
+    assert {p.fonte for p in Pessoa.objects.all()} == {"teste-alternativa"}
+    assert {c.id_externo for c in ConclusaoAcademica.objects.all()} == {"ALT-C-1", "ALT-C-2"}
+
+
+# --- US7: não concluído não vira Conclusão elegível --------------------------------------
+
+
+@pytest.mark.parametrize("id_pessoa", ["SIM-P-0006", "SIM-P-0008"])
+def test_pessoa_so_com_registros_nao_concluidos_nao_e_persistida(fonte_simulada, id_pessoa):
+    resultado = incorporar_pessoa(fonte_simulada, id_pessoa)
+
+    assert resultado.situacao is SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL
+    assert resultado.pessoa is None
+    assert Pessoa.objects.count() == 0
+    assert ConclusaoAcademica.objects.count() == 0
+
+
+def test_so_a_conclusao_reconhecida_e_persistida(fonte_simulada):
+    resultado = incorporar_pessoa(fonte_simulada, "SIM-P-0007")
+
+    assert [c.id_externo for c in resultado.pessoa.conclusoes.all()] == ["SIM-C-0010"]
+
+
+def test_nenhum_registro_nao_concluido_vira_conclusao(fonte_simulada):
+    _incorporar_catalogo(fonte_simulada)
+
+    assert not ConclusaoAcademica.objects.filter(id_externo__startswith="SIM-C-09").exists()
+
+
+def test_pessoa_que_perde_as_conclusoes_e_sinalizada_sem_alteracao(fonte_simulada):
+    _incorporar_catalogo(fonte_simulada)
+    retrato = _retrato()
+
+    resultado = incorporar_pessoa(variante_canonica("vi"), "SIM-P-0001")
+
+    assert resultado.situacao is SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL
+    assert resultado.pessoa.id_externo == "SIM-P-0001"
+    assert resultado.divergencias == (
+        Divergencia(TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", "simulada", "SIM-C-0001"),
+    )
+    assert _retrato() == retrato

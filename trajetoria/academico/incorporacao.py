@@ -64,10 +64,6 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
     if not isinstance(resposta, PessoaEncontrada):
         return ResultadoIncorporacao(SituacaoIncorporacao.PESSOA_INEXISTENTE)
 
-    if not resposta.conclusoes:
-        # Pessoa sem conclusão elegível não é materializada (FR-039).
-        return ResultadoIncorporacao(SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL)
-
     with transaction.atomic():
         resultado = _incorporar(fonte.codigo, resposta)
     for divergencia in resultado.divergencias:
@@ -129,8 +125,8 @@ def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporaca
                 )
             )
     elif not novas:
-        # Todas as conclusões devolvidas já pertencem a outras Pessoas: nenhuma pode ser
-        # associada a esta, que então não é materializada (FR-039).
+        # Sem conclusão que possa ser associada a ela (nenhuma reconhecida, ou todas já de
+        # outras Pessoas): a Pessoa não é materializada (FR-039).
         return ResultadoIncorporacao(
             SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL, divergencias=tuple(divergencias)
         )
@@ -149,8 +145,15 @@ def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporaca
         )
         criadas.append(conclusao)
 
+    # Pessoa já incorporada que a fonte agora devolve sem conclusões: as ausências já
+    # foram sinalizadas acima, e nada foi alterado.
+    situacao = (
+        SituacaoIncorporacao.INCORPORADA
+        if resposta.conclusoes
+        else SituacaoIncorporacao.SEM_CONCLUSAO_ELEGIVEL
+    )
     return ResultadoIncorporacao(
-        SituacaoIncorporacao.INCORPORADA,
+        situacao,
         pessoa=pessoa,
         pessoa_criada=pessoa_criada,
         conclusoes_criadas=tuple(criadas),
