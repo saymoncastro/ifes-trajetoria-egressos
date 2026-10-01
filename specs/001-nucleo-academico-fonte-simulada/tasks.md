@@ -182,7 +182,7 @@ Conclusão cujos atributos são iguais aos da fonte.
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T011 [P] [US1] Criar `tests/test_modelo.py` (`@pytest.mark.django_db`) com as
+- [X] T011 [P] [US1] Criar `tests/test_modelo.py` (`@pytest.mark.django_db`) com as
   restrições de [data-model.md](data-model.md):
   - (a) `IntegrityError` ao repetir (`fonte`, `id_externo`) em Pessoa e em
     ConclusaoAcademica. O mesmo `id_externo` em **fontes diferentes** é aceito e gera
@@ -200,7 +200,7 @@ Conclusão cujos atributos são iguais aos da fonte.
     derivado, então todo atributo acadêmico é institucional por definição (FR-036);
   - (f) `ConclusaoNaFonte` com `''`, com ano diferente do ano da data ou com data e
     ano `None` gera `ValueError` (T005).
-- [ ] T012 [P] [US1] Criar `tests/test_incorporacao.py` com o teste do Cenário A:
+- [X] T012 [P] [US1] Criar `tests/test_incorporacao.py` com o teste do Cenário A:
   - `incorporar_pessoa(fonte_simulada, "SIM-P-0001")` devolve `INCORPORADA` e
     `pessoa_criada=True`;
   - há 1 Pessoa e 1 ConclusaoAcademica;
@@ -213,7 +213,7 @@ Conclusão cujos atributos são iguais aos da fonte.
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implementar `trajetoria/academico/incorporacao.py` (depende de T006,
+- [X] T013 [US1] Implementar `trajetoria/academico/incorporacao.py` (depende de T006,
   T009, T011, T012):
   - enum `SituacaoIncorporacao` (`INCORPORADA`, `SEM_CONCLUSAO_ELEGIVEL`,
     `PESSOA_INEXISTENTE`);
@@ -246,7 +246,7 @@ cada, com 2, 2 e 3 conclusões.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T014 [US2] Acrescentar a `tests/test_incorporacao.py` (depende de T012):
+- [X] T014 [US2] Acrescentar a `tests/test_incorporacao.py` (depende de T012):
   - B, C e D geram 1 Pessoa cada, com 2, 2 e 3 Conclusões de UUIDs distintos;
   - em C, as unidades são "Serra" e "Cefor"; em D, os níveis são distintos;
   - **homônimos**: SIM-P-0010 e SIM-P-0011 ("Carla Exemplo") geram 2 Pessoas
@@ -258,7 +258,7 @@ cada, com 2, 2 e 3 conclusões.
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Nenhum código novo é esperado: o comportamento vem de T013. Se T014
+- [X] T015 [US2] Nenhum código novo é esperado: o comportamento vem de T013. Se T014
   falhar, corrigir só `trajetoria/academico/incorporacao.py`, sem acrescentar busca por
   nome ou por atributos.
 
@@ -276,7 +276,7 @@ reproduz a "experiência esperada" (SC-008).
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T016 [P] [US3] Criar `tests/test_aceitacao.py` (`django_db`):
+- [X] T016 [P] [US3] Criar `tests/test_aceitacao.py` (`django_db`):
   - **(a) SC-002**: depois de incorporar SIM-P-0004 (Cenário D, 3 conclusões), há
     exatamente 1 Pessoa e 3 Conclusões. Cada item de `pessoa.conclusoes.all()` tem
     exatamente o curso, a unidade, o nível, a modalidade, a forma de oferta e o ano do
@@ -293,7 +293,7 @@ reproduz a "experiência esperada" (SC-008).
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Nenhum código novo é esperado: leitura pelos modelos (T006). Se
+- [X] T017 [US3] Nenhum código novo é esperado: leitura pelos modelos (T006). Se
   T016 falhar, corrigir só `Meta.ordering` ou `related_name` em
   `trajetoria/academico/models.py`.
 
