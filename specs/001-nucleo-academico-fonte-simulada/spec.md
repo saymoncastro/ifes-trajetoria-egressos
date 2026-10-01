@@ -54,6 +54,9 @@ sem precisar saber de onde e como esses dados foram obtidos.
   Conclusão Acadêmica obtida de uma fonte e lhe atribui identidade interna própria.
 - **Registro reconhecido como conclusão**: registro que a fonte declara explicitamente
   como formação concluída, no sentido do Art. 3º da PAEG.
+- **Conclusão Acadêmica elegível**: nesta spec, sinônimo de conclusão reconhecida, ou
+  seja, elegível como egresso (Princípio II). Não se refere a elegibilidade de
+  campanha, que será tratada em feature própria.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -244,8 +247,10 @@ Verificar que a fonte aparece identificada como simulada.
    possível saber de qual fonte e com qual identificador da fonte ela foi obtida.
 3. **Given** dados vindos da fonte simulada, **When** sua proveniência é consultada,
    **Then** a fonte aparece explicitamente como simulada.
-4. **Given** qualquer atributo acadêmico incorporado, **When** sua categoria é
-   consultada, **Then** é "institucional", e nunca "declarado" ou "derivado".
+4. **Given** qualquer atributo acadêmico incorporado, **When** se verifica sua
+   categoria, **Then** ela é "institucional" por definição. O modelo desta feature não
+   tem nenhum campo declarado ou derivado, então não há como um atributo acadêmico ser
+   registrado como resposta ou cálculo.
 
 ---
 
@@ -374,7 +379,7 @@ perguntas do instrumento.
   modalidade, forma de oferta ou período de conclusão. Esses atributos existem apenas no
   contexto de uma Conclusão Acadêmica. [Const. — XI]
 - **FR-004**: O sistema NÃO DEVE criar mais de uma Pessoa para a mesma referência de
-  origem de pessoa, ainda que ela tenha várias formações em cursos, unidades, níveis ou
+  origem de pessoa (critério detalhado em FR-031), ainda que ela tenha várias formações em cursos, unidades, níveis ou
   períodos diferentes. [Const. — XI]
 - **FR-005**: A Pessoa é composta por identidade interna e referências de origem. A
   fonte PODE fornecer o **nome** como atributo institucional **opcional**, apenas para

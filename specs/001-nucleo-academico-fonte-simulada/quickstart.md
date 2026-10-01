@@ -8,9 +8,13 @@ nenhum sistema acadêmico real (SC-007).
 - `uv` instalado. O Python 3.13 é provisionado pelo próprio `uv`.
 - PostgreSQL 16 ou superior acessível localmente, com um usuário que possa criar bancos
   (o pytest cria o banco de teste).
-- Conexão configurada pelas variáveis padrão do PostgreSQL (`PGHOST`, `PGPORT`,
-  `PGUSER`, `PGPASSWORD`, `PGDATABASE`). Nenhum segredo é versionado. O
-  `.env.example` lista as variáveis.
+- Sem nenhuma variável, a aplicação usa o banco `trajetoria` no PostgreSQL local, por
+  socket e com o usuário do sistema operacional.
+- Para outro servidor, **exporte no shell** as variáveis padrão do PostgreSQL (`PGHOST`,
+  `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`). Nada lê `.env` automaticamente; o
+  `.env.example` só lista as variáveis. Nenhum segredo é versionado.
+- O banco `trajetoria` precisa existir para `migrate` (`createdb trajetoria`). O banco
+  de teste é criado pelo pytest.
 
 ## Preparar
 

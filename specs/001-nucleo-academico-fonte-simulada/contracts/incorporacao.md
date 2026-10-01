@@ -21,7 +21,8 @@ ResultadoIncorporacao(
     divergencias: tuple[Divergencia, ...],
 )
 
-Divergencia(tipo: TipoDivergencia, fonte: str, id_externo: str, campos: tuple[str, ...])
+Divergencia(tipo: TipoDivergencia, registro: Literal["pessoa", "conclusao"],
+            fonte: str, id_externo: str, campos: tuple[str, ...])
 # TipoDivergencia: ATRIBUTOS_DIFERENTES | CONCLUSAO_DE_OUTRA_PESSOA | AUSENTE_NA_FONTE
 ```
 
@@ -63,8 +64,9 @@ Resolução, fila, painel e aprovação ficam fora do escopo (DP-005, DP-006).
 - **Idempotente**: repetir a chamada com a fonte inalterada não cria linhas e devolve as
   mesmas identidades internas.
 - **Atômica**: a escrita ocorre em uma transação; a consulta à fonte ocorre antes dela.
-- **Segura sob concorrência**: as restrições de unicidade decidem a criação; quem perde
-  a corrida reutiliza o registro existente.
+- **Unicidade garantida pelo banco**: as restrições de unicidade decidem a criação, e
+  quem perde uma eventual corrida reutiliza o registro existente. É uma garantia
+  estrutural, sem teste dedicado de concorrência nesta feature (proporcional ao risco).
 - A deduplicação usa somente (fonte, `id_externo`). Nome e demais atributos nunca são
   usados (FR-005, FR-031).
 
@@ -77,6 +79,8 @@ interface de leitura do núcleo:
   significado de domínio (FR-015, FR-017).
 - **Contexto de uma conclusão**: `ConclusaoAcademica` obtida por `id`, com
   `conclusao.pessoa` (FR-016).
+- **Atributo ausente**: `None` significa "não informado pela fonte" (FR-010). Nunca é
+  valor padrão nem inferido.
 - **Proveniência**: `fonte`, `id_externo` e `incorporado_em` em ambos. `fonte = "simulada"`
   identifica a fonte simulada (FR-035).
 

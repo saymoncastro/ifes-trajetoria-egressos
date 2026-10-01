@@ -64,13 +64,23 @@ Estes itens ficam fora:
   - `trajetoria/fonte_academica/__init__.py`.
 - [ ] T003 [P] Criar `.env.example` só com `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`,
   `PGDATABASE` e `DJANGO_SECRET_KEY`, todos com valores de exemplo e sem segredo real.
+  O arquivo é só referência: nada carrega `.env` automaticamente. As variáveis são
+  exportadas no shell quando o padrão de T004 não servir.
   Acrescentar `.venv/`, `__pycache__/`, `.env` e `.pytest_cache/` ao `.gitignore`.
 - [ ] T004 Criar o esqueleto do Django (depende de T001 e T002):
   - `manage.py`;
   - `config/__init__.py`;
   - `config/settings.py`:
-    - um único arquivo; lê `DJANGO_SECRET_KEY` e `PG*` do ambiente;
-    - `DATABASES` em PostgreSQL via `psycopg`;
+    - um único arquivo; lê `DJANGO_SECRET_KEY` e `PG*` do ambiente, com padrões de
+      desenvolvimento local para rodar sem nenhuma variável exportada;
+    - `SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "insegura-apenas-desenvolvimento-local")`.
+      A chave padrão é fictícia e marcada como insegura; não há ambiente de produção
+      nesta feature;
+    - `DATABASES` em PostgreSQL via `psycopg`:
+      - `NAME = os.environ.get("PGDATABASE", "trajetoria")`;
+      - `HOST`, `PORT`, `USER` e `PASSWORD` de `PGHOST`, `PGPORT`, `PGUSER` e
+        `PGPASSWORD`, com padrão `""`, o que usa os padrões do libpq (socket local e
+        usuário do sistema operacional);
     - `INSTALLED_APPS = ["trajetoria.academico"]`, sem admin, auth, sessions,
       contenttypes ou messages;
     - `USE_TZ = True`, `TIME_ZONE = "America/Sao_Paulo"`;
@@ -175,14 +185,19 @@ Conclusão cujos atributos são iguais aos da fonte.
 - [ ] T011 [P] [US1] Criar `tests/test_modelo.py` (`@pytest.mark.django_db`) com as
   restrições de [data-model.md](data-model.md):
   - (a) `IntegrityError` ao repetir (`fonte`, `id_externo`) em Pessoa e em
-    ConclusaoAcademica;
+    ConclusaoAcademica. O mesmo `id_externo` em **fontes diferentes** é aceito e gera
+    duas Pessoas distintas: a unicidade é por par, e não há fusão entre fontes
+    (FR-034);
   - (b) `IntegrityError` com `''` em `fonte`, `id_externo`, `nome`, `curso`;
   - (c) `IntegrityError` com `data_conclusao=2020-07-10` e `ano_conclusao=2019`, e
     também com `data_conclusao=2020-07-10` e `ano_conclusao=None` (caso `UNKNOWN`);
   - (d) `ProtectedError` ao excluir Pessoa com conclusão;
   - (e) o conjunto de campos de `Pessoa` é exatamente
     `{id, fonte, id_externo, nome, incorporado_em}`, sem campo acadêmico (FR-003) e sem
-    `fonte_simulada`;
+    `fonte_simulada`. O de `ConclusaoAcademica` é exatamente
+    `{id, pessoa, fonte, id_externo, curso, unidade, nivel, modalidade, forma_oferta,
+    ano_conclusao, data_conclusao, incorporado_em}`. Não há campo declarado nem
+    derivado, então todo atributo acadêmico é institucional por definição (FR-036);
   - (f) `ConclusaoNaFonte` com `''`, com ano diferente do ano da data ou com data e
     ano `None` gera `ValueError` (T005).
 - [ ] T012 [P] [US1] Criar `tests/test_incorporacao.py` com o teste do Cenário A:
@@ -207,6 +222,9 @@ Conclusão cujos atributos são iguais aos da fonte.
     [contracts/incorporacao.md](contracts/incorporacao.md);
   - `incorporar_pessoa(fonte, id_externo_pessoa)`:
     - chama `fonte.obter_pessoa` **antes** de abrir a transação;
+    - para `PessoaEncontrada` com `conclusoes == ()`, devolve `SEM_CONCLUSAO_ELEGIVEL`
+      sem criar nada (FR-039). O caso de Pessoa já incorporada que perde as conclusões
+      fica para T029;
     - para `PessoaEncontrada` com conclusões, dentro de `transaction.atomic()`, faz
       `get_or_create` da Pessoa por (`fonte.codigo`, `id_externo`), com `nome` em
       `defaults`;
@@ -268,12 +286,10 @@ reproduz a "experiência esperada" (SC-008).
     `conclusao.pessoa` (FR-016);
   - **(c)** a ordem das conclusões é a mesma em duas leituras (FR-017);
   - **(d) consumidor de demonstração** (SC-008), com SIM-P-0003:
-    - a função local `descrever_trajetoria(pessoa)` usa **apenas** os modelos e devolve
-      as linhas da "experiência esperada" (TADS — Serra — Graduação — Presencial —
-      2022; Especialização em Informática na Educação — Cefor — Pós-graduação — A
-      distância — 2025);
-    - o teste afirma que o módulo de teste não referencia `FonteSimulada` dentro dessa
-      função.
+    - a função local `descrever_trajetoria(pessoa)` recebe só a Pessoa, usa **apenas**
+      os modelos e devolve as linhas da "experiência esperada" (TADS — Serra —
+      Graduação — Presencial — 2022; Especialização em Informática na Educação — Cefor
+      — Pós-graduação — A distância — 2025).
 
 ### Implementation for User Story 3
 
@@ -363,13 +379,18 @@ alterar o banco.
 
 - [ ] T023 [US5] Acrescentar a `tests/fontes_de_teste.py` (depende de T018) a função
   `variante_canonica(...)`. Ela devolve `FonteSimulada(pessoas=..., registros=...)` com
-  o mesmo `codigo = "simulada"` e as variantes do catálogo:
+  o mesmo `codigo = "simulada"` e uma das variantes do catálogo:
   - (i) curso de SIM-C-0001 alterado;
   - (ii) SIM-C-0003 ausente;
   - (iii) SIM-C-0002 atribuída a SIM-P-0001;
   - (iv) SIM-P-0009 passa a ter nome;
-  - (v) uma nova conclusão `concluida` para SIM-P-0001.
-- [ ] T024 [US5] Acrescentar a `tests/test_incorporacao.py` (depende de T021 e T023):
+  - (v) uma nova conclusão `concluida` para SIM-P-0001;
+  - (vi) SIM-C-0001 passa a `matricula_ativa`, e SIM-P-0001 fica sem conclusão
+    reconhecida (usada em T028);
+  - (vii) SIM-P-0001 e SIM-C-0001 ausentes (usada em T030).
+- [ ] T024 [US5] Acrescentar a `tests/test_incorporacao.py` (depende de T021 e T023).
+  Pré-condição dos testes de variante: o conjunto canônico já foi incorporado com
+  `FonteSimulada()` antes de incorporar a variante.
   - **repetição** (SC-003): incorporar todas as 11 pessoas do catálogo 3 vezes, em
     ordem direta, inversa e embaralhada com semente fixa. As contagens e o conjunto de
     UUIDs são iguais aos de uma incorporação, e a segunda chamada devolve
@@ -378,17 +399,15 @@ alterar o banco.
     da Conclusão (FR-008);
   - **nova conclusão** (v): é associada à Pessoa existente, sem nova Pessoa (FR-032);
   - **divergências** (i) a (iv) produzem, respectivamente:
-    - `ATRIBUTOS_DIFERENTES` com `campos=("curso",)`;
-    - `AUSENTE_NA_FONTE`;
-    - `CONCLUSAO_DE_OUTRA_PESSOA`, sem reatribuição nem duplicata;
-    - `ATRIBUTOS_DIFERENTES` com `campos=("nome",)`;
+    - `ATRIBUTOS_DIFERENTES`, `registro="conclusao"`, `campos=("curso",)`;
+    - `AUSENTE_NA_FONTE`, `registro="conclusao"`;
+    - `CONCLUSAO_DE_OUTRA_PESSOA`, `registro="conclusao"`, sem reatribuição nem
+      duplicata;
+    - `ATRIBUTOS_DIFERENTES`, `registro="pessoa"`, `campos=("nome",)`;
   - em todas as divergências, um retrato de todas as linhas (valores e
     `incorporado_em`) antes e depois é idêntico;
-  - **pessoa que deixa de ter conclusões**: uma variante em que SIM-P-0001 só tem
-    registro não concluído devolve `SEM_CONCLUSAO_ELEGIVEL` com `AUSENTE_NA_FONTE` e
-    sem alteração;
-  - **log**: `caplog` registra um WARNING por divergência contendo tipo, fonte e
-    `id_externo`, e nunca o nome da pessoa.
+  - **log**: `caplog` registra um WARNING por divergência contendo tipo, registro,
+    fonte e `id_externo`, e nunca o nome da pessoa.
 
 ### Implementation for User Story 5
 
@@ -396,7 +415,8 @@ alterar o banco.
   (depende de T024), conforme [contracts/incorporacao.md](contracts/incorporacao.md):
   - enum `TipoDivergencia` (`ATRIBUTOS_DIFERENTES`, `CONCLUSAO_DE_OUTRA_PESSOA`,
     `AUSENTE_NA_FONTE`) e dataclass
-    `Divergencia(tipo, fonte, id_externo, campos)`;
+    `Divergencia(tipo, registro, fonte, id_externo, campos)`, com
+    `registro: Literal["pessoa", "conclusao"]`;
   - comparar o nome da Pessoa existente e os atributos de cada Conclusão existente com
     os da fonte;
   - conclusão existente ligada a outra Pessoa: não criar nem mover;
@@ -404,7 +424,7 @@ alterar o banco.
     `AUSENTE_NA_FONTE`;
   - nunca `update`/`delete`;
   - `logging.getLogger("trajetoria.academico")` com `.warning` e só os campos tipo,
-    fonte, `id_externo` e `campos`;
+    registro, fonte, `id_externo` e `campos`;
   - nada é persistido sobre a divergência.
 
 **Checkpoint**: idempotência e divergência mínima verdes.
@@ -456,15 +476,18 @@ SIM-C-09xx existe no banco.
     e 0 Pessoas e 0 Conclusões no banco;
   - SIM-P-0007 (F2) persiste só SIM-C-0010;
   - depois de incorporar o catálogo inteiro, `ConclusaoAcademica` não tem nenhum
-    `id_externo` iniciado por `SIM-C-09`.
+    `id_externo` iniciado por `SIM-C-09`;
+  - **pessoa que deixa de ter conclusões**: depois do catálogo canônico, a variante
+    (vi) de T023 devolve `SEM_CONCLUSAO_ELEGIVEL`, a Pessoa existente e uma divergência
+    `AUSENTE_NA_FONTE` (`registro="conclusao"`) para SIM-C-0001, com o retrato das
+    linhas idêntico.
 
 ### Implementation for User Story 7
 
 - [ ] T029 [US7] Em `trajetoria/academico/incorporacao.py` (depende de T025 e T028),
-  tratar `PessoaEncontrada` com `conclusoes == ()`:
-  - devolver `SEM_CONCLUSAO_ELEGIVEL` sem criar Pessoa;
-  - se a Pessoa já existir localmente, devolvê-la com as divergências
-    `AUSENTE_NA_FONTE` de T025, sem alteração.
+  completar o caso `PessoaEncontrada` com `conclusoes == ()`. Não criar Pessoa já vem
+  de T013; aqui, se a Pessoa já existir localmente, devolvê-la com as divergências
+  `AUSENTE_NA_FONTE` de T025, sem alteração.
 
 **Checkpoint**: elegibilidade protegida (Princípio II).
 
@@ -482,8 +505,8 @@ tem efeito no banco.
 
 - [ ] T030 [US8] Acrescentar a `tests/test_incorporacao.py` (depende de T028):
   - `SIM-P-9999` devolve `PESSOA_INEXISTENTE` com 0 linhas;
-  - uma variante sem SIM-P-0001, depois de SIM-P-0001 ter sido incorporada, devolve
-    `PESSOA_INEXISTENTE` com `AUSENTE_NA_FONTE` para a Pessoa e nada removido;
+  - a variante (vii) de T023, depois de SIM-P-0001 ter sido incorporada, devolve
+    `PESSOA_INEXISTENTE` com `AUSENTE_NA_FONTE` (`registro="pessoa"`) e nada removido;
   - `fonte_indisponivel` faz `pytest.raises(FonteAcademicaIndisponivel)` com 0 linhas;
   - depois de incorporar SIM-P-0001, uma nova chamada com `fonte_indisponivel` lança a
     exceção e o retrato das linhas é idêntico (FR-025).
@@ -521,6 +544,10 @@ tem efeito no banco.
     `urlpatterns = []`), coluna `fonte_simulada`, enum de nível ou modalidade,
     disparo de sincronização nem entidade de Pesquisa, Campanha ou Participação;
   - `INSTALLED_APPS` contém só o núcleo;
+  - SC-007: a suíte passa sem acesso à rede nem a sistema acadêmico (nenhum cliente
+    HTTP ou de banco externo nas dependências);
+  - SC-010: cada uma das 8 perguntas de sucesso da descrição original é respondida com
+    "sim", apontando requisito e teste;
   - DP-001 a DP-009 continuam abertas e nenhuma virou regra implícita.
 
 Acessibilidade (XX) e responsividade (XXI): **N/A**, porque não há interface nesta
