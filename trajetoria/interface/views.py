@@ -18,7 +18,7 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.demonstracao.entrada import pessoa_em_uso
 from trajetoria.interface import mensagens
-from trajetoria.interface.apresentacao import contexto_da_formacao
+from trajetoria.interface.apresentacao import contexto_da_formacao, resumo_da_formacao
 from trajetoria.interface.formularios import FormularioDaSecao
 from trajetoria.interface.gravacao import salvar_secao
 from trajetoria.participacao.consultas import situacao_da_jornada
@@ -276,7 +276,7 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
     indice = jornada.passagens.index(passagem)
     anterior = jornada.passagens[indice - 1].secao.posicao if indice else None
     resumo = [
-        {"ancora": item.nome, "texto": f"{erro} — {item.pergunta.texto}"}
+        {"ancora": item.nome, "texto": f"{item.pergunta.texto} — {erro}"}
         for item in itens
         for erro in item.erros
     ]
@@ -288,7 +288,7 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
             "texto_abertura": versao.texto_abertura,
             "primeira": indice == 0,
             "acao": _base(participacao) + f"secoes/{passagem.secao.posicao}/",
-            "contexto_formacao": contexto_da_formacao(participacao.conclusao),
+            "resumo_formacao": resumo_da_formacao(participacao.conclusao),
             "passagem": passagem,
             "itens": itens,
             "resumo_erros": resumo,

@@ -35,7 +35,7 @@ a { color: #1a4480; text-decoration: underline; }
 .faixa-demonstracao {
   background: #fff1d2; border-bottom: 2px solid #565c65; padding: 0.75rem 0;
 }
-.faixa-demonstracao p { margin: 0; }
+.faixa-demonstracao p { margin: 0 auto; }
 
 .cabecalho { border-bottom: 1px solid #565c65; padding: 0.75rem 0; }
 .cabecalho .coluna { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; }
@@ -55,9 +55,13 @@ p, ul, ol, dl { margin: 0 0 1rem; }
   background: #f5f7fa;
 }
 .contexto h2 { margin-top: 0; font-size: 1.125rem; }
-.contexto dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0; }
-.contexto dt { font-weight: 600; }
-.contexto dd { margin: 0; overflow-wrap: anywhere; }
+.contexto-compacto p { margin: 0; overflow-wrap: anywhere; }
+.contexto dl, .lista-simples dl {
+  display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 1rem;
+}
+.contexto dl { margin: 0; }
+.contexto dt, .lista-simples dt { font-weight: 600; }
+.contexto dd, .lista-simples dd { margin: 0; overflow-wrap: anywhere; }
 
 .aviso {
   border: 2px solid #565c65; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
@@ -77,7 +81,7 @@ p, ul, ol, dl { margin: 0 0 1rem; }
   display: block; font-weight: 600; margin: 0 0 0.5rem; padding: 0; overflow-wrap: anywhere;
 }
 .pergunta.com-erro { border-left: 4px solid #b50909; padding-left: 0.75rem; }
-.obrigatoria { font-weight: 400; }
+.obrigatoria, .pergunta legend .nota { font-weight: 400; }
 .explicacao, .descricao-escala { margin: 0 0 0.5rem; color: #1b1b1b; }
 .erro { color: #b50909; font-weight: 600; margin: 0 0 0.5rem; }
 
@@ -107,7 +111,15 @@ button, .botao {
   border: 2px solid #1a4480; cursor: pointer;
 }
 button.primario { background: #1a4480; color: #ffffff; }
-button.secundario, .cabecalho button { background: #ffffff; color: #1a4480; }
+button.secundario { background: #ffffff; color: #1a4480; }
+/* Cabeçalho em duas linhas fixas (nome do produto; controles da demonstração), em vez de uma
+   quebra acidental; "Encerrar demonstração" com peso de ligação, sem competir com a ação
+   principal da tela. */
+.cabecalho .coluna > span { flex-basis: 100%; font-weight: 700; }
+.cabecalho button {
+  background: none; border: 0; padding: 0; color: #1a4480; font-weight: 400;
+  text-decoration: underline;
+}
 
 .nota { font-size: 0.9375rem; }
 
