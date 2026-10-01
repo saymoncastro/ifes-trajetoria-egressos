@@ -525,9 +525,9 @@ tem efeito no banco.
 
 ## Phase 11: Polish & Cross-Cutting Concerns
 
-- [ ] T032 [P] Atualizar `README.md` com uma descrição de uma linha e um link para
+- [X] T032 [P] Atualizar `README.md` com uma descrição de uma linha e um link para
   [quickstart.md](quickstart.md) e para a Constituição. Nada além disso.
-- [ ] T033 Validar o [quickstart.md](quickstart.md) de ponta a ponta:
+- [X] T033 Validar o [quickstart.md](quickstart.md) de ponta a ponta:
   - `uv sync --extra dev`;
   - `uv run python manage.py check`;
   - `makemigrations --check --dry-run`;
@@ -537,7 +537,7 @@ tem efeito no banco.
   - demonstração no shell com SIM-P-0003.
 
   Corrigir o quickstart se algum passo divergir.
-- [ ] T034 Revisão final contra a Constituição (Princípios XVI, XXII, XXIX e Definition
+- [X] T034 Revisão final contra a Constituição (Princípios XVI, XXII, XXIX e Definition
   of Done). Confirmar e registrar no PR que:
   - os logs não contêm nomes;
   - não existem `admin.py`, rotas ou endpoints (`config/urls.py` só com
