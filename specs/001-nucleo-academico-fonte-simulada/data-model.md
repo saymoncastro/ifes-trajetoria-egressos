@@ -46,7 +46,10 @@ Pessoa 1 ──── 0..N ConclusaoAcademica
 **Restrições**:
 - `UNIQUE (fonte, id_externo)` garante a idempotência da Conclusão (FR-031).
 - `CHECK` impede cadeia vazia em todos os campos de texto.
-- `CHECK (data_conclusao IS NULL OR ano_conclusao = ano de data_conclusao)` (FR-011).
+- `CHECK (data_conclusao IS NULL OR (ano_conclusao IS NOT NULL AND ano_conclusao = ano de
+  data_conclusao))` (FR-011). O `ano_conclusao IS NOT NULL` explícito é necessário: sem ele,
+  data preenchida com ano `NULL` faz a comparação resultar em `UNKNOWN`, e o PostgreSQL
+  aceita a linha.
 - A FK `pessoa` usa `PROTECT`: nenhuma remoção em cascata (Princípio VIII).
 - Não há restrição entre conclusões da mesma Pessoa. Atributos iguais com referências
   diferentes são conclusões distintas (FR-014).

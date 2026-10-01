@@ -53,8 +53,8 @@ class FonteAcademicaIndisponivel(Exception): ...
    `RegistroNaoReconhecidoComoConclusao`, nunca `ConclusaoInexistente`.
 4. Atributo não fornecido é `None`. Cadeia vazia é proibida. Nenhum valor é deduzido
    de outro (por exemplo, a modalidade não vem do nome do curso).
-5. Se `data_conclusao` vier preenchida, `ano_conclusao` DEVE ser o ano dessa data. Só o
-   ano significa granularidade anual.
+5. Se `data_conclusao` vier preenchida, `ano_conclusao` DEVE estar preenchido e ser o ano
+   dessa data. Só o ano significa granularidade anual.
 6. Falha de acesso, tempo esgotado ou erro interno DEVEM lançar
    `FonteAcademicaIndisponivel`. Uma falha nunca vira resultado vazio ou parcial.
 7. Os identificadores externos são opacos e estáveis para o mesmo registro. Códigos,

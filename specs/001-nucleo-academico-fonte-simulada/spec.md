@@ -4,7 +4,8 @@
 
 **Created**: 2026-09-30
 
-**Status**: Draft
+**Status**: Approved. Aprovada pelo solicitante em 2026-09-30, após `/speckit-plan` e
+`/speckit-tasks`, com as correções de revisão (SC-004).
 
 **Input**: User description: "Feature 001 — Núcleo acadêmico longitudinal e fonte
 institucional simulada. Estabelecer a fundação de domínio para que o NIAE represente
@@ -626,8 +627,9 @@ perguntas do instrumento.
 - **SC-003**: Incorporar o conjunto completo da fonte simulada 3 vezes, em ordens
   diferentes, resulta exatamente nas mesmas quantidades e nas mesmas identidades
   internas de Pessoas e Conclusões de uma única incorporação, com 0 duplicatas.
-- **SC-004**: 0 registros do Cenário F aparecem como Conclusão Acadêmica, e 100% das
-  consultas diretas a eles informam "não reconhecido como conclusão".
+- **SC-004**: 0 registros **não concluídos** do Cenário F aparecem como Conclusão
+  Acadêmica, e 100% das consultas diretas a eles informam "não reconhecido como
+  conclusão". A conclusão reconhecida da Pessoa F2 é persistida normalmente.
 - **SC-005**: 100% das Pessoas e Conclusões incorporadas têm fonte, identificador na
   fonte e referência temporal da obtenção recuperáveis. 100% das obtidas da fonte simulada
   aparecem identificadas como simuladas.

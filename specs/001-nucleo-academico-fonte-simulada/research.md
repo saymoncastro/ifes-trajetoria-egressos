@@ -146,7 +146,9 @@ features, sem antecipá-las.
 
 - **Decision**:
   - Dois campos opcionais: `ano_conclusao` e `data_conclusao`.
-  - Uma restrição CHECK garante que, havendo data, o ano é o ano da data.
+  - Uma restrição CHECK garante que, havendo data, o ano está preenchido e é o ano da
+    data. A exigência de ano não nulo é explícita, porque `NULL` na comparação resultaria
+    em `UNKNOWN`, que o CHECK aceita.
   - Só ano preenchido indica granularidade anual.
 - **Rationale**: preserva a granularidade da fonte sem fabricar precisão (FR-011) e
   continua consultável por ano.
