@@ -162,6 +162,7 @@ def test_inicio_repetido_apos_conclusao_sair_dos_criterios(participacao):
 
 
 def test_nao_existe_reinicio_nem_tentativa():
+    # A 006 acrescenta só a conclusão, ponto de extensão previsto (005 FR-056; 006 R16).
     assert set(operacoes.__all__) == {
         "Inicio",
         "SituacaoInicio",
@@ -172,6 +173,10 @@ def test_nao_existe_reinicio_nem_tentativa():
         "responder_escolha_multipla",
         "responder_escolha_unica",
         "responder_texto",
+        # Feature 006
+        "ResultadoConclusao",
+        "SituacaoConclusao",
+        "concluir",
     }
 
 

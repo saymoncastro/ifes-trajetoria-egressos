@@ -71,15 +71,23 @@ def test_remover_resposta_de_pergunta_obrigatoria(participacao, inst):
 
 
 def test_participacao_parcial_ou_completa_nao_e_conclusao(participacao, inst):
-    # Zero, algumas e todas as respostas: nada caracteriza conclusão ou progresso (US7.6).
+    # Zero, algumas e todas as respostas: escrever nunca conclui nem marca progresso (US7.6).
+    # `concluida_em` existe desde a 006 e só `concluir` o grava (006 research R16).
     campos = {f.name for f in Participacao._meta.concrete_fields}
-    assert campos == {"id", "campanha", "conclusao", "iniciada_em"}
+    assert campos == {"id", "campanha", "conclusao", "iniciada_em", "concluida_em"}
+
+    def em_rascunho():
+        gravada = Participacao.objects.get(pk=participacao.pk)
+        return gravada.concluida_em is None and gravada.iniciada_em == NO_PERIODO
+
+    assert em_rascunho()
     responder_escolha_unica(
         participacao, inst.unica, inst.opcao(inst.unica, "Sim"), agora=NO_PERIODO
     )
+    assert em_rascunho()
     responder_texto(participacao, inst.texto, "27", agora=NO_PERIODO)
     responder_escala(participacao, inst.escala, 4, agora=NO_PERIODO)
-    assert Participacao.objects.get(pk=participacao.pk).iniciada_em == NO_PERIODO
+    assert em_rascunho()
 
 
 def test_atomicidade_da_substituicao_de_multipla(participacao, inst):

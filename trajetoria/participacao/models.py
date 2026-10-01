@@ -24,8 +24,8 @@ def _ambos(a: str, b: str) -> Q:
 
 
 class Participacao(models.Model):
-    """Ocorrência de acompanhamento de uma Conclusão Acadêmica numa Campanha. Sem estado:
-    nesta feature, toda Participação está em preenchimento (FR-055)."""
+    """Ocorrência de acompanhamento de uma Conclusão Acadêmica numa Campanha. Em rascunho
+    ou concluída, derivado de `concluida_em`; sem enum de estado (006 FR-002)."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     campanha = models.ForeignKey("campanha.Campanha", on_delete=models.PROTECT, related_name="+")
@@ -34,6 +34,9 @@ class Participacao(models.Model):
     )
     # Momento de referência da criação, não `auto_now_add`: os testes controlam o tempo.
     iniciada_em = models.DateTimeField()
+    # Momento de referência da conclusão aceita; `NULL` = em rascunho (006 FR-001). Gravado
+    # só por `concluir`, uma única vez (006 FR-003).
+    concluida_em = models.DateTimeField(null=True)
 
     class Meta:
         # Só determinismo; sem significado de preferência ou de "atual" (FR-049).
