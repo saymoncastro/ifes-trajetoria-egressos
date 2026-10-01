@@ -122,16 +122,13 @@ def test_l_acesso_nao_depende_de_convite(versao_publicada, cenarios):
 
 # --- SC-009: escopo contido ---------------------------------------------------------------
 
-PROIBIDOS = {
-    "Participacao", "Resposta", "Convite", "Destinatario", "Segmento", "Regra",
-    "Agendamento", "MembroCampanha", "Populacao", "Snapshot", "HistoricoCampanha",
-    "VersaoCampanha",
-}
 
-
-def test_um_unico_modelo_novo_e_nenhum_proibido():
+def test_app_campanha_tem_somente_o_modelo_campanha():
+    # SC-009 é sobre o escopo da 004: o app `campanha` não cria Participação, Resposta,
+    # Convite, Destinatário, Segmento, Regra, Agendamento nem fotografia. A igualdade
+    # garante isso sem proibir que features posteriores criem esses conceitos em seus
+    # próprios apps.
     assert [m.__name__ for m in apps.get_app_config("campanha").get_models()] == ["Campanha"]
-    assert not {m.__name__ for m in apps.get_models()} & PROIBIDOS
 
 
 def test_versao_e_conclusao_sem_colunas_novas():

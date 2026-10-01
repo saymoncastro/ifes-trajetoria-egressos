@@ -144,6 +144,15 @@ atendida:
 - a asserção redundante do SC-007 da 002 foi removida, porque a igualdade dos cinco
   modelos já garante FR-066.
 
+**Correção de escopo de teste (2026-10-01, após o merge)**: o teste SC-009
+`test_um_unico_modelo_novo_e_nenhum_proibido` proibia, no projeto inteiro, modelos
+chamados `Participacao`, `Resposta`, `Convite` etc. Era excessivamente amplo: SC-009
+trata do escopo da 004 (o app `campanha` não cria esses conceitos), não de features
+posteriores. Ele virou `test_app_campanha_tem_somente_o_modelo_campanha`, que exige que
+os modelos do app `campanha` sejam exatamente `["Campanha"]`, sem lista global de nomes.
+Não é mudança de requisito da 004 e nenhum código de produção mudou. Motivação: a
+Feature 005 cria `Participacao` e `Resposta` no app `participacao`.
+
 ## Decisões Pendentes
 
 | ID | DECISÃO PENDENTE | Instância competente (se conhecida) | Solução provisória (hipótese) | Como reverter |
