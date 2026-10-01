@@ -90,6 +90,20 @@ ninguém a competência de publicar.
 **Conflitos identificados**: nenhum. A tensão com o Princípio X (publicação sem
 competência definida) está tratada por não exposição (R17) e registrada em DP-001.
 
+**Revisão pós-implementação (2026-10-01, T038)**: gate mantido. Definition of Done
+atendida:
+
+- 169 testes novos cobrem os invariantes, e a suíte da 001 passa sem alteração;
+- nenhuma interface, admin, URL ou comando expõe edição ou publicação;
+- nenhum dado pessoal e nenhum log novo;
+- DP-001 a DP-007 continuam abertas;
+- nada da lista "Limites" de tasks.md foi criado: nem momento de aplicação da regra
+  (FR-053), nem gatilho, `RunSQL`, hook de modelo ou sinal (ADR 0002 rejeitado nesta
+  fase);
+- uma única migração (`0001_initial.py`);
+- nenhuma alteração em `trajetoria/academico/`, `trajetoria/fonte_academica/` ou nos
+  testes da 001 (FR-067).
+
 ## Decisões Pendentes
 
 | ID | DECISÃO PENDENTE | Instância competente (se conhecida) | Solução provisória (hipótese) | Como reverter |

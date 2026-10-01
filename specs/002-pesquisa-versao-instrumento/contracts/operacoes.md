@@ -20,6 +20,12 @@ ajustada nas tasks sem mudar o comportamento descrito aqui.
   espaços é rejeitado com `TEXTO_VAZIO`. Texto opcional vazio ou só com espaços também é
   rejeitado; ausência é `None`.
 - **Sem efeitos externos**: nenhuma operação acessa rede, Pessoa ou Conclusão Acadêmica.
+- **Tipo de argumento errado** (texto que não é `str`, `obrigatoria` ou
+  `complemento_textual` que não é `bool`, destino que não é `Secao` ou `FINALIZAR`) é erro
+  de programação: levanta `TypeError` antes de qualquer escrita. `OperacaoRejeitada` fica
+  para valores inválidos no domínio.
+- **Designação**: toda operação que grava designação bloqueia a Pesquisa, para que a
+  verificação de `DESIGNACAO_REPETIDA` valha também sob concorrência.
 
 ## Rejeição
 
@@ -42,7 +48,7 @@ demais operações rejeitam na primeira violação.
 | Motivo | Requisito | Quando |
 |--------|-----------|--------|
 | `VERSAO_PUBLICADA` | FR-016, FR-058 o | Escrita em Versão publicada ou em seus elementos |
-| `REFERENCIA_OUTRA_VERSAO` | FR-058 a, g | Destino de regra ou encaminhamento, Seção de destino de movimentação, ou origem de cópia de outra Versão/Pesquisa |
+| `REFERENCIA_OUTRA_VERSAO` | FR-058 a, g | Destino de regra ou encaminhamento, ou Seção de destino de movimentação, de outra Versão. Também na publicação, se uma escrita fora das operações tiver criado essa referência |
 | `OPCAO_EM_TIPO_SEM_OPCOES` | FR-040, FR-058 b | Opção em `TEXTO_CURTO` ou `ESCALA` |
 | `ESCALA_EM_TIPO_NAO_ESCALA` | FR-058 c | Configuração de escala em tipo que não é `ESCALA` |
 | `ESCALA_INVALIDA` | FR-038, FR-058 d | Escala sem limites, limite não inteiro ou início ≥ fim |

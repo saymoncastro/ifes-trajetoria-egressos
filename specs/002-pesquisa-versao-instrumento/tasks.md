@@ -71,13 +71,13 @@ arquivos são sequenciais.
 
 **Purpose**: app Django vazio, registrado e verificável.
 
-- [ ] T001 [P] Criar o esqueleto do app:
+- [X] T001 [P] Criar o esqueleto do app:
   - `trajetoria/instrumento/__init__.py` (vazio);
   - `trajetoria/instrumento/apps.py` com `InstrumentoConfig(AppConfig)`,
     `name = "trajetoria.instrumento"`, `verbose_name = "Instrumento de pesquisa"`;
   - `trajetoria/instrumento/migrations/__init__.py` (vazio);
   - diretório `tests/instrumento/` **sem** `__init__.py` (como `tests/`).
-- [ ] T002 Em `config/settings.py`, acrescentar `"trajetoria.instrumento"` a
+- [X] T002 Em `config/settings.py`, acrescentar `"trajetoria.instrumento"` a
   `INSTALLED_APPS` depois de `"trajetoria.academico"` e atualizar o comentário: continua
   sem admin, auth, sessions, contenttypes e messages (R17). Depende de T001. Verificar com
   `uv run python manage.py check`.
@@ -93,7 +93,7 @@ operações, usados por todas as histórias.
 
 **⚠️ CRITICAL**: nenhuma história começa antes desta fase.
 
-- [ ] T003 [P] Implementar `trajetoria/instrumento/models.py` conforme
+- [X] T003 [P] Implementar `trajetoria/instrumento/models.py` conforme
   [data-model.md](data-model.md). Docstring do módulo citando o data-model e a regra
   "`NULL` = ausente; cadeia vazia proibida". Reusar o padrão `_nao_vazio(campo, nome)` de
   `trajetoria/academico/models.py`, copiando-o (não importar do app `academico`).
@@ -167,7 +167,7 @@ operações, usados por todas as histórias.
   - Nomes de restrição com prefixo da tabela (por exemplo `versao_designacao_unica`,
     `pergunta_escala_coerente`), para que os testes os reconheçam nas mensagens.
   - Nenhum campo de data de criação ou alteração; nenhum campo além dos listados.
-- [ ] T004 [P] Implementar `trajetoria/instrumento/regras.py`:
+- [X] T004 [P] Implementar `trajetoria/instrumento/regras.py`:
   - `class Motivo(Enum)` com **exatamente** os 22 valores da tabela "Motivos" de
     [contracts/operacoes.md](contracts/operacoes.md#motivos-motivo):
     `VERSAO_PUBLICADA`, `REFERENCIA_OUTRA_VERSAO`, `OPCAO_EM_TIPO_SEM_OPCOES`,
@@ -185,11 +185,11 @@ operações, usados por todas as histórias.
   - `verificar_completude(versao) -> tuple[Violacao, ...]` fica para T022 (US5); não
     criar agora.
   - Sem importar `operacoes.py` (R8: consumidores importam `Motivo` sem as operações).
-- [ ] T005 Gerar `trajetoria/instrumento/migrations/0001_initial.py` com
+- [X] T005 Gerar `trajetoria/instrumento/migrations/0001_initial.py` com
   `uv run python manage.py makemigrations instrumento` (depende de T002 e T003).
   Conferir que contém as UNIQUE adiadas e a UNIQUE parcial. Verificar com
   `uv run python manage.py makemigrations --check --dry-run`.
-- [ ] T006 [P] Implementar `trajetoria/instrumento/conteudo.py` conforme
+- [X] T006 [P] Implementar `trajetoria/instrumento/conteudo.py` conforme
   [contracts/conteudo.md](contracts/conteudo.md) (depende de T003):
   - `@dataclass(frozen=True)`: `Escala(inicio: int, fim: int, rotulo_inicio: str |
     None = None, rotulo_fim: str | None = None)`, `RegraNavegacao(destino_secao_id: UUID
@@ -200,7 +200,7 @@ operações, usados por todas as histórias.
     regra; senão `RegraNavegacao(regra_destino_id, regra_finaliza)`. `escala` é `None`
     fora de `ESCALA`. `estado` e `tipo` como os enums de `models.py`;
   - **nenhum** campo de momento de aplicação da regra (FR-053).
-- [ ] T007 Criar o esqueleto de `trajetoria/instrumento/operacoes.py` (depende de T003,
+- [X] T007 Criar o esqueleto de `trajetoria/instrumento/operacoes.py` (depende de T003,
   T004 e T006). Docstring citando [contracts/operacoes.md](contracts/operacoes.md).
   Só auxiliares privados, ainda sem operações públicas:
   - `_MANTER = object()` (sentinela de "não informado" nos `alterar_*`);
@@ -232,7 +232,7 @@ distintas, mesma Pesquisa, estado `RASCUNHO` e banco sem nenhuma Pessoa.
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T008 [P] [US1] Criar `tests/instrumento/test_instrumento_estrutura.py` com os
+- [X] T008 [P] [US1] Criar `tests/instrumento/test_instrumento_estrutura.py` com os
   cenários de US1 da spec:
   - `criar_pesquisa("Pesquisa Institucional de Egressos")` cria Pesquisa sem Versões;
   - `criar_versao(p, "2024")` → `estado == RASCUNHO`, `publicada_em is None`,
@@ -248,7 +248,7 @@ distintas, mesma Pesquisa, estado `RASCUNHO` e banco sem nenhuma Pessoa.
   - `Pessoa.objects.count() == 0` e `ConclusaoAcademica.objects.count() == 0` durante
     todo o teste (FR-065). Este é o único lugar onde os testes desta feature importam
     modelos da 001.
-- [ ] T009 [P] [US1] Criar `tests/instrumento/test_instrumento_modelo.py` com as
+- [X] T009 [P] [US1] Criar `tests/instrumento/test_instrumento_modelo.py` com as
   restrições de Pesquisa e Versão (escrita direta no ORM, `IntegrityError` dentro de
   `transaction.atomic()`, como `tests/test_modelo.py`):
   - `''` em `Pesquisa.nome`, `Versao.designacao`, `titulo`, `texto_abertura`,
@@ -264,7 +264,7 @@ distintas, mesma Pesquisa, estado `RASCUNHO` e banco sem nenhuma Pessoa.
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T010 [US1] Em `trajetoria/instrumento/operacoes.py`, implementar
   `criar_pesquisa(nome)`, `renomear_pesquisa(pesquisa, nome)`,
   `criar_versao(pesquisa, designacao)` e `alterar_versao(versao, *, designacao=_MANTER,
   titulo=_MANTER, texto_abertura=_MANTER, texto_encerramento=_MANTER)` conforme a tabela
@@ -286,7 +286,7 @@ reordenação, movimentação e remoção em rascunho.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T011 [US2] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
+- [X] T011 [US2] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
   (depende de T008):
   - Seções criadas nas posições 3, 1, 2 são lidas na ordem 1, 2, 3; o mesmo para
     Perguntas (SC-005); leitura repetida igual (`==`);
@@ -302,14 +302,14 @@ reordenação, movimentação e remoção em rascunho.
     Seção vazia é removida;
   - `alterar_pergunta` muda `texto`, `texto_explicativo` e `obrigatoria` mantendo o
     `id`.
-- [ ] T012 [US2] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
+- [X] T012 [US2] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
   de T009): posição `0` rejeitada em Seção e Pergunta; posição repetida rejeitada **no
   fim** da transação (`IntegrityError` ao sair do `atomic`) e aceita quando trocada
   dentro da mesma transação; `ProtectedError` ao excluir Seção com Pergunta.
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T013 [US2] Em `trajetoria/instrumento/operacoes.py`, implementar
   `adicionar_secao`, `alterar_secao`, `remover_secao`, `reordenar_secoes`,
   `adicionar_pergunta(secao, posicao, tipo, texto, *, obrigatoria,
   texto_explicativo=None, escala=None)`, `alterar_pergunta` (só `texto`,
@@ -334,7 +334,7 @@ rejeitada; tipo não alterável.
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T014 [US3] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
+- [X] T014 [US3] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
   (depende de T011):
   - uma pergunta de cada tipo; `tipo="DATA"`, `"MATRIZ"`, `"UPLOAD"` →
     `TIPO_NAO_SUPORTADO`;
@@ -348,16 +348,16 @@ rejeitada; tipo não alterável.
   - `alterar_pergunta(p, escala=Escala(0, 10))` em `ESCALA` altera a escala;
     `escala=None` em `ESCALA` → `ESCALA_INVALIDA`; `escala` em outro tipo →
     `ESCALA_EM_TIPO_NAO_ESCALA`.
-- [ ] T015 [US3] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
+- [X] T015 [US3] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
   de T012): `tipo` fora dos quatro; `ESCALA` com `escala_inicio` ou `escala_fim` nulo;
   `escala_inicio >= escala_fim`; colunas de escala preenchidas em outro tipo; rótulo
   `''` — todos `IntegrityError`.
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Confirmar que `TipoPergunta` em `trajetoria/instrumento/models.py`
+- [X] T016 [US3] Confirmar que `TipoPergunta` em `trajetoria/instrumento/models.py`
   tem exatamente quatro membros (nenhum código novo esperado).
-- [ ] T017 [US3] Em `trajetoria/instrumento/operacoes.py`, completar a validação de
+- [X] T017 [US3] Em `trajetoria/instrumento/operacoes.py`, completar a validação de
   escala em `adicionar_pergunta` e acrescentar `escala=_MANTER` a `alterar_pergunta`
   (sem parâmetro `tipo`):
   - `escala` obrigatória se e somente se o tipo é `ESCALA`; limites `int` (não `bool`),
@@ -378,7 +378,7 @@ alterado mantém o `id`; Q8/Q9 fictícias independentes.
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T018 [US4] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
+- [X] T018 [US4] Acrescentar a `tests/instrumento/test_instrumento_estrutura.py`
   (depende de T014):
   - Opções nas posições 2, 1 lidas como 1, 2, cada uma com `id` próprio;
   - `alterar_opcao(texto=…)` mantém `id`;
@@ -391,14 +391,14 @@ alterado mantém o `id`; Q8/Q9 fictícias independentes.
   - `reordenar_opcoes` completa e incompleta; `remover_opcao`; `remover_pergunta`
     remove as Opções (`Opcao.objects.filter(pergunta_id=…)` vazio);
   - 80 Opções numa pergunta são aceitas (FR-044).
-- [ ] T019 [US4] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
+- [X] T019 [US4] Acrescentar a `tests/instrumento/test_instrumento_modelo.py` (depende
   de T015): (`pergunta`, `texto`) repetido; duas Opções com `complemento_textual=True`
   na mesma Pergunta; `regra_destino` preenchido junto com `regra_finaliza=True`;
   `texto=''` — todos `IntegrityError`.
 
 ### Implementation for User Story 4
 
-- [ ] T020 [US4] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T020 [US4] Em `trajetoria/instrumento/operacoes.py`, implementar
   `adicionar_opcao(pergunta, posicao, texto, *, complemento_textual=False)`,
   `alterar_opcao(opcao, *, texto=_MANTER, complemento_textual=_MANTER)`,
   `remover_opcao` e `reordenar_opcoes`, conforme a tabela "Opção" do contrato.
@@ -418,7 +418,7 @@ igual (`==`) ao lido na publicação.
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T021 [P] [US5] Criar `tests/instrumento/test_instrumento_publicacao.py`:
+- [X] T021 [P] [US5] Criar `tests/instrumento/test_instrumento_publicacao.py`:
   - Versão completa → `publicar` devolve `SituacaoPublicacao.PUBLICADA`, `estado ==
     PUBLICADA`, `publicada_em` preenchido;
   - segunda chamada → `JA_PUBLICADA`, `publicada_em` inalterado;
@@ -451,7 +451,7 @@ igual (`==`) ao lido na publicação.
 
 ### Implementation for User Story 5
 
-- [ ] T022 [US5] Em `trajetoria/instrumento/regras.py`, implementar
+- [X] T022 [US5] Em `trajetoria/instrumento/regras.py`, implementar
   `verificar_completude(versao) -> tuple[Violacao, ...]` (FR-059), devolvendo **todas**
   as violações em ordem determinística (Seções por posição, Perguntas por posição):
   - `SEM_SECOES` (elemento = Versão);
@@ -460,7 +460,7 @@ igual (`==`) ao lido na publicação.
   - `DESTINO_NAO_POSTERIOR` por encaminhamento e por Opção com `regra_destino` cuja
     Seção de destino tenha `posicao <=` a da Seção de origem (R15). Sem análise de grafo.
   Recebe o modelo `Versao` e lê pelo ORM; não importa `operacoes.py`.
-- [ ] T023 [US5] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T023 [US5] Em `trajetoria/instrumento/operacoes.py`, implementar
   `class SituacaoPublicacao(Enum)` (`PUBLICADA`, `JA_PUBLICADA`) e `publicar(versao)`
   exatamente pelos passos do contrato (bloquear; já publicada → `JA_PUBLICADA` sem
   gravar; completude; gravar `estado` e `publicada_em = timezone.now()`). `publicar` é a
@@ -482,7 +482,7 @@ e registrada.
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T024 [P] [US6] Criar `tests/instrumento/test_instrumento_nova_versao.py`:
+- [X] T024 [P] [US6] Criar `tests/instrumento/test_instrumento_nova_versao.py`:
   - origem publicada com textos da Versão, duas Seções, um de cada tipo de pergunta,
     escala com rótulos, Opção com complemento, encaminhamento e regras (as partes de
     regra/encaminhamento em skip até T033);
@@ -499,7 +499,7 @@ e registrada.
 
 ### Implementation for User Story 6
 
-- [ ] T025 [US6] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T025 [US6] Em `trajetoria/instrumento/operacoes.py`, implementar
   `criar_versao_a_partir_de(origem, designacao)` pelos quatro passos de R11 (Versão;
   Seções sem encaminhamento; Perguntas e Opções sem regra; encaminhamentos e regras
   traduzidos por `dict[UUID, Secao]`). Bloquear a origem com `select_for_update()` só
@@ -520,7 +520,7 @@ o outro) com textos fictícios; percursos de Seções enumerados iguais aos espe
 
 ### Tests for User Story 7 ⚠️
 
-- [ ] T026 [P] [US7] Criar `tests/instrumento/construcao.py` (auxiliar, não é teste):
+- [X] T026 [P] [US7] Criar `tests/instrumento/construcao.py` (auxiliar, não é teste):
   - `percursos_de_secoes(conteudo: ConteudoVersao) -> set[tuple[str, ...]]`: enumera
     os percursos de Seções segundo
     [contracts/conteudo.md](contracts/conteudo.md#percurso-de-seções). Cada percurso é
@@ -532,7 +532,7 @@ o outro) com textos fictícios; percursos de Seções enumerados iguais aos espe
     escopo) ou se um destino não for posterior (proteção contra ciclo);
   - `sem_identidades(conteudo)`: devolve a árvore com `id`s, `estado`, `publicada_em`,
     `origem_id` e `designacao` neutralizados (usado por T024).
-- [ ] T027 [US7] Criar `tests/instrumento/test_instrumento_navegacao.py` (depende de
+- [X] T027 [US7] Criar `tests/instrumento/test_instrumento_navegacao.py` (depende de
   T026):
   - `definir_regra(x, y, z)` → `ConteudoOpcao.regra == RegraNavegacao(z.id, False)`;
     `remover_regra` → `None`;
@@ -554,10 +554,10 @@ o outro) com textos fictícios; percursos de Seções enumerados iguais aos espe
 
 ### Implementation for User Story 7
 
-- [ ] T028 [US7] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T028 [US7] Em `trajetoria/instrumento/operacoes.py`, implementar
   `definir_encaminhamento(secao, destino)` (destino `Secao | None`;
   `REFERENCIA_OUTRA_VERSAO` se de outra Versão).
-- [ ] T029 [US7] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T029 [US7] Em `trajetoria/instrumento/operacoes.py`, implementar
   `definir_regra(pergunta, opcao, destino)` para destino `Secao`, e
   `remover_regra(pergunta, opcao)`, na ordem de verificação do contrato:
   `VERSAO_PUBLICADA`, `REGRA_EM_TIPO_INCOMPATIVEL`, `OPCAO_DE_OUTRA_PERGUNTA`,
@@ -578,7 +578,7 @@ de fim.
 
 ### Tests for User Story 8 ⚠️
 
-- [ ] T030 [US8] Acrescentar a `tests/instrumento/test_instrumento_navegacao.py`
+- [X] T030 [US8] Acrescentar a `tests/instrumento/test_instrumento_navegacao.py`
   (depende de T027):
   - `definir_regra(q1, nao, FINALIZAR)` → `RegraNavegacao(None, True)`;
   - percursos: `("Termos", "FIM")` e `("Termos", …, "FIM")` para "Sim";
@@ -589,7 +589,7 @@ de fim.
 
 ### Implementation for User Story 8
 
-- [ ] T031 [US8] Em `trajetoria/instrumento/operacoes.py`, implementar
+- [X] T031 [US8] Em `trajetoria/instrumento/operacoes.py`, implementar
   `class Finalizar` e a sentinela única `FINALIZAR = Finalizar()`, e aceitar
   `destino=FINALIZAR` em `definir_regra` (grava `regra_finaliza=True`,
   `regra_destino=None`). Exportar `FINALIZAR` em `__all__`.
@@ -607,7 +607,7 @@ idêntico após a rejeição.
 
 ### Tests for User Story 9 ⚠️
 
-- [ ] T032 [P] [US9] Criar `tests/instrumento/test_instrumento_rejeicoes.py`:
+- [X] T032 [P] [US9] Criar `tests/instrumento/test_instrumento_rejeicoes.py`:
   - um caso por membro de `Motivo` (22), parametrizado com `pytest.param(…,
     id=motivo.name)`; um teste extra garante que o conjunto de casos cobre
     **exatamente** `set(Motivo)`;
@@ -622,7 +622,7 @@ idêntico após a rejeição.
 
 ### Implementation for User Story 9
 
-- [ ] T033 [US9] Retirar todos os `pytest.mark.skip` deixados em T021 e T024 e
+- [X] T033 [US9] Retirar todos os `pytest.mark.skip` deixados em T021 e T024 e
   corrigir em `trajetoria/instrumento/operacoes.py` ou `regras.py` qualquer falha de
   T032 (nenhum código novo esperado).
 
@@ -632,7 +632,7 @@ idêntico após a rejeição.
 
 ## Phase 12: Polish & Cross-Cutting Concerns
 
-- [ ] T034 Acrescentar a `tests/instrumento/construcao.py`
+- [X] T034 Acrescentar a `tests/instrumento/construcao.py`
   `versao_de_demonstracao() -> Versao`, construída **só** pelas operações públicas, com
   textos fictícios e reduzidos (não o Formulário 2024), cobrindo toda linha de
   "intenção" da tabela "Cobertura estrutural" da spec: título, abertura e encerramento
@@ -641,7 +641,7 @@ idêntico após a rejeição.
   pergunta de cada tipo; escala 1–5 com rótulos; Opção com complemento textual em
   escolha única e em múltipla; texto explicativo; pergunta opcional; listas iguais em
   duas perguntas; Seção sem título.
-- [ ] T035 Criar `tests/instrumento/test_instrumento_aceitacao.py` (depende de T034):
+- [X] T035 Criar `tests/instrumento/test_instrumento_aceitacao.py` (depende de T034):
   - **SC-001**: `versao_de_demonstracao()` é publicável e `percursos_de_secoes` devolve
     exatamente o conjunto esperado (escrito à mão no teste);
   - **SC-006**: nenhum arquivo em `trajetoria/instrumento/` importa `trajetoria.academico`
@@ -650,14 +650,14 @@ idêntico após a rejeição.
   - **SC-007**: `len(TipoPergunta) == 4`, `len(EstadoVersao) == 2`;
     `apps.get_app_config("instrumento").get_models()` tem exatamente os cinco modelos;
     nenhum modelo registrado se chama `Campanha`, `Participacao` ou `Resposta`.
-- [ ] T036 Executar a validação completa do [quickstart](quickstart.md):
+- [X] T036 Executar a validação completa do [quickstart](quickstart.md):
   `uv run ruff check .`, `uv run python manage.py check`,
   `uv run python manage.py makemigrations --check --dry-run`,
   `uv run python manage.py migrate` e `uv run pytest` (inclui a suíte da 001, que deve
   passar sem alteração — SC-006). Fazer a demonstração no shell descrita no quickstart.
-- [ ] T037 [P] Em `README.md`, acrescentar uma linha com o link para o
+- [X] T037 [P] Em `README.md`, acrescentar uma linha com o link para o
   [quickstart da Feature 002](quickstart.md), ao lado do da 001.
-- [ ] T038 Revisão final contra a Constituição e a spec, registrando o resultado em
+- [X] T038 Revisão final contra a Constituição e a spec, registrando o resultado em
   `specs/002-pesquisa-versao-instrumento/plan.md` (nota curta ao fim do Constitution
   Check):
   - Definition of Done: testes adequados ao risco, nenhuma interface exposta, nenhum
