@@ -127,11 +127,13 @@ def test_9_encerramento_impede_alteracoes(participacao, inst):
     assert respostas_atuais(participacao)[inst.texto.id].texto == "27"
 
 
-def test_10_nenhuma_jornada_ou_conclusao_antecipada():
+def test_10_nenhum_progresso_submissao_ou_estado():
+    # A conclusão (`concluir`, `concluida_em`) é o ponto de extensão que a 005 reservou à 006
+    # (005 FR-056; 006 research R16). Progresso, submissão e estado continuam proibidos.
     publicas = set(operacoes.__all__) | set(consultas.__all__)
-    proibidas = ("concluir", "concluida", "submet", "progresso", "proxima", "obrigat", "naveg")
+    proibidas = ("submet", "progresso", "proxima", "obrigat", "naveg")
     assert not [n for n in publicas if any(p in n.lower() for p in proibidas)]
-    for atributo in ("estado", "concluida_em", "submetida_em", "progresso"):
+    for atributo in ("estado", "submetida_em", "progresso"):
         assert not hasattr(Participacao, atributo)
 
 
@@ -152,7 +154,8 @@ def _campos(modelo) -> list[str]:
 
 
 def test_campos_dos_modelos_novos():
-    assert _campos(Participacao) == ["id", "campanha", "conclusao", "iniciada_em"]
+    # `concluida_em`: único campo acrescentado pela 006 (006 FR-001; research R16).
+    assert _campos(Participacao) == ["id", "campanha", "conclusao", "iniciada_em", "concluida_em"]
     assert _campos(Resposta) == [
         "id",
         "participacao",

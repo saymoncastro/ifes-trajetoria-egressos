@@ -1,7 +1,8 @@
-"""Operações de escrita de Participação e Resposta (contracts/operacoes.md).
+"""Operações de escrita de Participação e Resposta (005 contracts/operacoes.md; 006
+contracts/conclusao.md).
 
-Único caminho de escrita suportado. Toda operação roda numa transação e valida tudo antes
-da primeira gravação: ou tudo é gravado, ou nada (FR-051).
+Único caminho de escrita suportado, inclusive da conclusão (006). Toda operação roda numa
+transação e valida tudo antes da primeira gravação: ou tudo é gravado, ou nada (FR-051).
 
 - Criar Participação exige a admissão da 004 (Campanha EM_COLETA e Conclusão ELEGÍVEL,
   por `estado` e `avaliar`, equivalente a `admite_participacao`).
@@ -33,14 +34,30 @@ from trajetoria.campanha.consultas import (
     momento_de_referencia,
 )
 from trajetoria.campanha.models import Campanha
+from trajetoria.instrumento.conteudo import conteudo_da_versao
 from trajetoria.instrumento.models import Opcao, Pergunta, TipoPergunta
+from trajetoria.participacao.consultas import respostas_atuais
 from trajetoria.participacao.models import Participacao, Resposta, RespostaOpcao
-from trajetoria.participacao.regras import Motivo, ParticipacaoRejeitada, Violacao
+from trajetoria.participacao.percurso import (
+    pendencias,
+    percorrer,
+    perguntas_do_percurso,
+    respondidas,
+)
+from trajetoria.participacao.regras import (
+    Motivo,
+    ParticipacaoRejeitada,
+    Violacao,
+    coleta_nao_admitida,
+)
 
 __all__ = [
     "Inicio",
+    "ResultadoConclusao",
+    "SituacaoConclusao",
     "SituacaoInicio",
     "SituacaoRemocao",
+    "concluir",
     "iniciar_participacao",
     "remover_resposta",
     "responder_escala",
@@ -92,9 +109,7 @@ def _violacoes_de_admissao(campanha, conclusao, agora: datetime) -> list[Violaca
     cita só critério e motivo, nunca o valor da Conclusão."""
     violacoes = []
     if estado(campanha, agora=agora) is not EstadoCampanha.EM_COLETA:
-        violacoes.append(
-            Violacao(Motivo.COLETA_NAO_ADMITIDA, "campanha", "a Campanha não está em coleta")
-        )
+        violacoes.append(coleta_nao_admitida())
     if pendencias := avaliar(campanha, conclusao).pendencias:
         criterios = ", ".join(f"{p.criterio.value} ({p.motivo.value})" for p in pendencias)
         violacoes.append(
@@ -141,7 +156,7 @@ def _bloquear(participacao) -> Participacao:
     mesma Participação ficam serializadas sem travar a rodada inteira (research R11)."""
     gravada = (
         Participacao.objects.select_for_update(of=("self",))
-        .select_related("campanha")
+        .select_related("campanha__versao")
         .filter(pk=participacao.pk)
         .first()
     )
@@ -151,21 +166,26 @@ def _bloquear(participacao) -> Participacao:
 
 
 def _escrever(participacao, pergunta, agora, tipo: TipoPergunta | None, aplicar: Callable):
-    """Passos comuns (contrato, "Esqueleto"): tipos → bloqueio → coleta → Versão → tipo da
-    Pergunta → `aplicar(participacao, pergunta)`, que valida o valor e grava. Tudo numa
-    transação; a validação vem antes da primeira gravação (FR-051)."""
+    """Passos comuns (contrato, "Esqueleto"): tipos → bloqueio → (2a) não concluída → coleta →
+    Versão → tipo da Pergunta → `aplicar(participacao, pergunta)`, que valida o valor e grava.
+    Tudo numa transação; a validação vem antes da primeira gravação (FR-051)."""
     _exigir(participacao, Participacao, "participacao")
     _exigir(pergunta, Pergunta, "pergunta")
     if agora is not None:
         momento_de_referencia(agora)  # `TypeError` antes de qualquer acesso ao banco
     with transaction.atomic():
         participacao = _bloquear(participacao)
+        # 2a (006 FR-038): concluída é imutável, em qualquer estado da Campanha.
+        if participacao.concluida_em is not None:
+            _rejeitar(
+                Motivo.PARTICIPACAO_CONCLUIDA, "participacao", "a Participação está concluída"
+            )
         # O relógio é lido só depois do bloqueio: uma escrita que esperou pela de outra não
         # é julgada por um instante anterior à espera (FR-039).
         agora = momento_de_referencia(agora)
         # Sem reavaliar elegibilidade: ela só vale na criação (FR-034).
         if estado(participacao.campanha, agora=agora) is not EstadoCampanha.EM_COLETA:
-            _rejeitar(Motivo.COLETA_NAO_ADMITIDA, "campanha", "a Campanha não está em coleta")
+            raise ParticipacaoRejeitada((coleta_nao_admitida(),))
         pergunta = Pergunta.objects.select_related("secao").filter(pk=pergunta.pk).first()
         if pergunta is None or pergunta.secao.versao_id != participacao.campanha.versao_id:
             _rejeitar(
@@ -223,18 +243,24 @@ def _texto_declarado(valor, campo: str) -> str:
     return valor  # gravado como recebido, sem strip()
 
 
-def _opcao_da_pergunta(pergunta: Pergunta, opcao) -> Opcao:
+def _opcao_da_pergunta(pergunta: Pergunta, opcao, *, relida: bool = False) -> Opcao:
+    """`relida=True`: a Opção já foi lida do banco nesta transação (valor gravado de uma
+    Resposta), então sua Pergunta é verdade e a pertença dispensa nova consulta. Opções
+    recebidas numa escrita são sempre relidas (research R9 da 005)."""
     if opcao is None:
         _vazio("opcao")
     if not isinstance(opcao, Opcao):
         _incompativel("opcao")
-    gravada = Opcao.objects.filter(pk=opcao.pk, pergunta=pergunta).first()
+    if relida:
+        gravada = opcao if opcao.pergunta_id == pergunta.id else None
+    else:
+        gravada = Opcao.objects.filter(pk=opcao.pk, pergunta=pergunta).first()
     if gravada is None:
         _rejeitar(Motivo.OPCAO_DE_OUTRA_PERGUNTA, "opcao", f"Opção {opcao.pk} não é da Pergunta")
     return gravada
 
 
-def _opcoes_da_pergunta(pergunta: Pergunta, opcoes) -> list[Opcao]:
+def _opcoes_da_pergunta(pergunta: Pergunta, opcoes, *, relidas: bool = False) -> list[Opcao]:
     if opcoes is None:
         _vazio("opcoes")
     if isinstance(opcoes, (str, bytes, Opcao)) or not isinstance(opcoes, Iterable):
@@ -245,7 +271,10 @@ def _opcoes_da_pergunta(pergunta: Pergunta, opcoes) -> list[Opcao]:
     ids = list(dict.fromkeys(o.pk for o in opcoes))  # conjunto: repetição não conta
     if not ids:
         _vazio("opcoes")
-    gravadas = list(Opcao.objects.filter(pk__in=ids, pergunta=pergunta))
+    if relidas:  # ver `_opcao_da_pergunta`
+        gravadas = [o for o in {o.pk: o for o in opcoes}.values() if o.pergunta_id == pergunta.id]
+    else:
+        gravadas = list(Opcao.objects.filter(pk__in=ids, pergunta=pergunta))
     if len(gravadas) != len(ids):
         _rejeitar(Motivo.OPCAO_DE_OUTRA_PERGUNTA, "opcoes", "alguma Opção não é da Pergunta")
     return gravadas
@@ -317,21 +346,26 @@ def responder_texto(participacao, pergunta, texto, *, agora: datetime | None = N
     return _escrever(participacao, pergunta, agora, TipoPergunta.TEXTO_CURTO, aplicar)
 
 
+def _escala_da_pergunta(pergunta: Pergunta, valor) -> int:
+    """Inteiro entre os limites da Pergunta histórica, inclusive (FR-027)."""
+    if valor is None:
+        _vazio("escala")
+    if type(valor) is not int:  # exclui bool, float e texto
+        _incompativel("escala")
+    if not pergunta.escala_inicio <= valor <= pergunta.escala_fim:
+        _rejeitar(
+            Motivo.ESCALA_FORA_DOS_LIMITES,
+            "escala",
+            f"fora de [{pergunta.escala_inicio}, {pergunta.escala_fim}]",
+        )
+    return valor
+
+
 def responder_escala(participacao, pergunta, valor, *, agora: datetime | None = None) -> Resposta:
     """Inteiro entre os limites da Pergunta histórica, inclusive (FR-027)."""
 
     def aplicar(participacao, pergunta):
-        if valor is None:
-            _vazio("escala")
-        if type(valor) is not int:  # exclui bool, float e texto
-            _incompativel("escala")
-        if not pergunta.escala_inicio <= valor <= pergunta.escala_fim:
-            _rejeitar(
-                Motivo.ESCALA_FORA_DOS_LIMITES,
-                "escala",
-                f"fora de [{pergunta.escala_inicio}, {pergunta.escala_fim}]",
-            )
-        return _gravar(participacao, pergunta, escala=valor)
+        return _gravar(participacao, pergunta, escala=_escala_da_pergunta(pergunta, valor))
 
     return _escrever(participacao, pergunta, agora, TipoPergunta.ESCALA, aplicar)
 
@@ -352,3 +386,84 @@ def remover_resposta(participacao, pergunta, *, agora: datetime | None = None) -
         return SituacaoRemocao.REMOVIDA if removidas else SituacaoRemocao.INEXISTENTE
 
     return _escrever(participacao, pergunta, agora, None, aplicar)
+
+
+# --- Concluir (Feature 006) ------------------------------------------------------------------
+
+
+class SituacaoConclusao(Enum):
+    CONCLUIDA = "concluida"  # concluida_em gravado agora
+    JA_CONCLUIDA = "ja_concluida"  # nada lido além da Participação; nada mudou (006 FR-036)
+
+
+class ResultadoConclusao(NamedTuple):
+    participacao: Participacao
+    situacao: SituacaoConclusao
+
+
+def concluir(participacao, *, agora: datetime | None = None) -> ResultadoConclusao:
+    """Conclui a Participação (006 contracts/conclusao.md, "Passos").
+
+    Valida tudo antes de qualquer escrita — coleta (004), estrutura e percurso finalizado,
+    pendências — e rejeita com todas as violações, sem remover nem gravar nada. Só então
+    remove as Respostas fora do percurso final e grava `concluida_em`, na mesma transação
+    (006 FR-032 a FR-037, FR-044)."""
+    _exigir(participacao, Participacao, "participacao")
+    if agora is not None:
+        momento_de_referencia(agora)  # `TypeError` antes de qualquer acesso ao banco
+    with transaction.atomic():
+        participacao = _bloquear(participacao)
+        # A conclusão histórica já ocorreu: sem Campanha, Versão, Respostas ou limpeza.
+        if participacao.concluida_em is not None:
+            return ResultadoConclusao(participacao, SituacaoConclusao.JA_CONCLUIDA)
+        agora = momento_de_referencia(agora)
+        violacoes = []
+        if estado(participacao.campanha, agora=agora) is not EstadoCampanha.EM_COLETA:
+            violacoes.append(coleta_nao_admitida())
+        conteudo = conteudo_da_versao(participacao.campanha.versao)
+        respostas = respostas_atuais(participacao)
+        try:
+            passagens = percorrer(conteudo, respondidas(respostas))
+        except ParticipacaoRejeitada as erro:
+            raise ParticipacaoRejeitada((*violacoes, *erro.violacoes)) from None
+        ativas = perguntas_do_percurso(passagens)  # a mesma base para validar e para remover
+        violacoes.extend(pendencias(passagens))
+        violacoes.extend(_incoerencias(respostas, ativas))
+        if violacoes:
+            raise ParticipacaoRejeitada(violacoes)
+        # Só agora, com tudo validado: remover as inativas e registrar o momento.
+        Resposta.objects.filter(participacao=participacao).exclude(pergunta_id__in=ativas).delete()
+        participacao.concluida_em = agora
+        participacao.save(update_fields=["concluida_em"])
+    return ResultadoConclusao(participacao, SituacaoConclusao.CONCLUIDA)
+
+
+def _verificar_resposta_gravada(resposta: Resposta, pergunta: Pergunta) -> None:
+    """Os validadores da 005 aplicados ao valor gravado, sem regra nova (006 FR-045, R10).
+    Só uma escrita fora das operações produz uma Resposta que não passe aqui. As Opções vêm
+    de `respostas_atuais`, lidas nesta transação: nenhuma consulta por Resposta."""
+    if pergunta.tipo == TipoPergunta.ESCOLHA_UNICA:
+        opcao = _opcao_da_pergunta(pergunta, resposta.opcao, relida=True)
+        _complemento(resposta.complemento, [opcao])
+    elif pergunta.tipo == TipoPergunta.ESCOLHA_MULTIPLA:
+        opcoes = _opcoes_da_pergunta(pergunta, list(resposta.opcoes.all()), relidas=True)
+        _complemento(resposta.complemento, opcoes)
+    elif pergunta.tipo == TipoPergunta.TEXTO_CURTO:
+        _texto_declarado(resposta.texto, "texto")
+    else:
+        _escala_da_pergunta(pergunta, resposta.escala)
+
+
+def _incoerencias(respostas: dict, ativas: frozenset) -> list[Violacao]:
+    """Uma violação, com o motivo da 005, por Resposta ativa incoerente com a Versão."""
+    violacoes = []
+    for pergunta_id in sorted(ativas & respostas.keys(), key=str):
+        resposta = respostas[pergunta_id]
+        try:
+            _verificar_resposta_gravada(resposta, resposta.pergunta)
+        except ParticipacaoRejeitada as erro:
+            violacoes.extend(
+                Violacao(v.motivo, "pergunta", f"Pergunta {pergunta_id}: {v.detalhe}")
+                for v in erro.violacoes
+            )
+    return violacoes
