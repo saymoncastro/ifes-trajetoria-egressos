@@ -9,6 +9,11 @@ Também registra os vínculos de governança dos operadores fictícios do editor
 pela CPAEG, B pela CSAEG da unidade Vitória e C não tem vínculo. São fictícios e não
 representam designação institucional real (DP-1002).
 
+Para o acompanhamento da coleta (011), acrescenta uma Campanha fictícia **nunca aberta e sem
+período**, com a Versão de referência em rascunho e critério de unidades {Serra, Vitória}, para
+que B (CSAEG Vitória) tenha uma Campanha relevante. Nunca aberta, ela não admite Participação
+(004 FR-053) e não entra em `campanhas_em_coleta_para`: a jornada da 007/008 não muda.
+
 A publicação da cópia é técnica e local, como nos testes das 005–007; a baseline continua em
 RASCUNHO e nada disso é publicação institucional (002/DP-001). Idempotente: repetir não
 duplica nada. Recomeçar do zero é recriar o banco local — não existe operação para remover
@@ -47,6 +52,11 @@ VINCULOS = (
     ("demonstracao:operador-b", Papel.CSAEG, "Vitória"),
 )
 DURACAO = timedelta(days=180)
+# Fora de `CAMPANHAS`: nunca é aberta, então `_exigir_campanhas_em_coleta` não a verifica.
+CAMPANHA_ACOMPANHAMENTO = (
+    "Demonstração — acompanhamento Serra e Vitória",
+    {"unidades": ["Serra", "Vitória"]},
+)
 CAMPANHAS = {
     "Demonstração — coleta ampla": {
         "ano_minimo": 2015,
@@ -102,10 +112,12 @@ def preparar() -> Resumo:
         with transaction.atomic():
             for pessoa in cenarios.PESSOAS:
                 incorporar_pessoa(fonte, pessoa.id_externo)
-            versao = _versao_de_demonstracao()
+            baseline = materializar().versao
+            versao = _versao_de_demonstracao(baseline)
             for nome, criterios in CAMPANHAS.items():
                 if not Campanha.objects.filter(nome=nome).exists():
                     _abrir_campanha(nome, versao, criterios)
+            _campanha_de_acompanhamento(baseline)
             _garantir_vinculos()
     except (
         MaterializacaoRecusada,
@@ -130,8 +142,7 @@ def _exigir_campanhas_em_coleta() -> None:
             )
 
 
-def _versao_de_demonstracao() -> Versao:
-    baseline = materializar().versao
+def _versao_de_demonstracao(baseline: Versao) -> Versao:
     existente = Versao.objects.filter(
         pesquisa_id=baseline.pesquisa_id, designacao=DESIGNACAO_DEMONSTRACAO
     ).first()
@@ -149,6 +160,14 @@ def _garantir_vinculos() -> None:
         ativos = vinculos_ativos(identificador)
         if not any(v.papel == papel and v.unidade == unidade for v in ativos):
             op_governanca.registrar_vinculo(identificador, papel, unidade)
+
+
+def _campanha_de_acompanhamento(baseline: Versao) -> None:
+    """Só pelas operações da 004: criar e definir critérios. Sem período e sem abertura."""
+    nome, criterios = CAMPANHA_ACOMPANHAMENTO
+    if not Campanha.objects.filter(nome=nome).exists():
+        campanha = op_campanha.criar_campanha(nome, baseline)
+        op_campanha.definir_criterios(campanha, **criterios)
 
 
 def _abrir_campanha(nome: str, versao: Versao, criterios: dict) -> None:

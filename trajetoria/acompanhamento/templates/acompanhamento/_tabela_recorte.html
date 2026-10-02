@@ -1,0 +1,40 @@
+<h2>Recortes</h2>
+<nav class="recortes" aria-label="Recortes">
+  <ul>
+    {% for recorte in item.recortes_oferecidos %}<li><a href="?recorte={{ recorte.valor }}"{% if recorte == item.recorte %} aria-current="page"{% endif %}>{{ recorte.rotulo }}</a></li>{% endfor %}
+  </ul>
+</nav>
+<div class="rolagem" role="region" aria-label="Tabela: {{ item.recorte.rotulo }}" tabindex="0">
+<table>
+  <caption>{{ item.recorte.rotulo }} — dados do registro acadêmico institucional</caption>
+  <thead>
+    <tr>
+      {% if item.recorte.valor == "curso" %}{% if item.coluna_unidade %}<th scope="col">Unidade</th>{% endif %}<th scope="col">Curso</th>{% else %}<th scope="col">{{ item.recorte.rotulo }}</th>{% endif %}
+      <th scope="col" class="numero">Elegíveis atuais</th>
+      <th scope="col" class="numero">Participações iniciadas</th>
+      <th scope="col" class="numero">Participações concluídas</th>
+      <th scope="col" class="numero">Taxa de conclusão</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for linha in linhas %}
+    <tr>
+      {% if item.recorte.valor == "curso" %}{% if item.coluna_unidade %}<th scope="row">{{ linha.rotulos.0 }}</th>{% endif %}<th scope="row">{{ linha.rotulos.1 }}</th>{% else %}<th scope="row">{{ linha.rotulos.0 }}</th>{% endif %}
+      <td class="numero">{{ linha.elegiveis }}</td>
+      <td class="numero">{{ linha.iniciadas }}</td>
+      <td class="numero">{{ linha.concluidas }}</td>
+      <td class="numero">{% include "acompanhamento/_taxa.html" with valor=linha.taxa_conclusao %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="row"{% if item.recorte.valor == "curso" and item.coluna_unidade %} colspan="2"{% endif %}>Total</th>
+      <td class="numero">{{ resumo.elegiveis }}</td>
+      <td class="numero">{{ resumo.iniciadas }}</td>
+      <td class="numero">{{ resumo.concluidas }}</td>
+      <td class="numero">{% include "acompanhamento/_taxa.html" with valor=resumo.taxa_conclusao %}</td>
+    </tr>
+  </tfoot>
+</table>
+</div>

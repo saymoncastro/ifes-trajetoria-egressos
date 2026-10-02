@@ -1,0 +1,27 @@
+/* Acompanhamento da coleta (011) — acréscimos às folhas da 008 e da 009, sem redesenhá-las.
+   Só a tabela rola na horizontal, dentro de uma região rotulada e focável (FR-123). */
+
+.visualmente-oculto {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.dados { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+.dados dt { font-weight: 600; }
+.dados dd { margin: 0; overflow-wrap: anywhere; }
+.definicao { display: block; font-size: 0.9375rem; font-weight: 400; }
+
+.rolagem { overflow-x: auto; max-width: 100%; margin: 0 0 1.5rem; }
+table { border-collapse: collapse; width: 100%; }
+caption { text-align: left; font-weight: 600; padding: 0 0 0.5rem; }
+th, td { border-bottom: 1px solid #565c65; padding: 0.5rem; text-align: left; vertical-align: top; }
+td.numero, th.numero { text-align: right; white-space: nowrap; }
+tfoot th, tfoot td { font-weight: 600; border-top: 2px solid #565c65; }
+
+.recortes ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; list-style: none; padding: 0; }
+.recortes [aria-current="page"] { font-weight: 600; text-decoration: none; }
+
+@media (max-width: 30rem) {
+  .dados { grid-template-columns: 1fr; }
+  .dados dd { margin-bottom: 0.5rem; }
+}

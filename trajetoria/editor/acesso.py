@@ -4,10 +4,11 @@ Cada view declara, com `@exige(regra)`, uma das três regras de `governanca.regr
 requisição, **antes** de qualquer outra coisa da view (busca do elemento, formulário,
 operação da 002):
 
-1. identificação: `operador_em_uso` — o adaptador de demonstração, único ponto a trocar
-   quando houver identificação produtiva (DP-1001). Sem operador → escolha de operador
-   fictício (endereço fixo, sem retorno);
-2. vínculos ativos do operador; nenhum → recusa;
+1. identificação e vínculos ativos: `vinculos_do_operador_em_uso` — o adaptador de
+   demonstração, único ponto a trocar quando houver identificação produtiva (DP-1001), o
+   mesmo do acompanhamento da coleta (011). Sem operador → escolha de operador fictício
+   (endereço fixo, sem retorno);
+2. nenhum vínculo ativo → recusa;
 3. a regra da rota; falsa → recusa.
 
 Resolução do operador e autorização ficam separadas. Fora do modo de demonstração o
@@ -19,9 +20,8 @@ from functools import wraps
 
 from django.shortcuts import redirect, render
 
-from trajetoria.demonstracao.operador import operador_em_uso
+from trajetoria.demonstracao.operador import vinculos_do_operador_em_uso
 from trajetoria.editor import mensagens
-from trajetoria.governanca.consultas import vinculos_ativos
 from trajetoria.governanca.regras import (
     pode_consultar_publicado,
     pode_consultar_rascunho,
@@ -65,10 +65,9 @@ def exige(regra):
     def decorador(view):
         @wraps(view)
         def envolvida(request, *args, **kwargs):
-            identificador = operador_em_uso(request)
-            if identificador is None:
+            vinculos = vinculos_do_operador_em_uso(request)
+            if vinculos is None:
                 return redirect(ESCOLHA_DE_OPERADOR)
-            vinculos = vinculos_ativos(identificador)
             if not vinculos:
                 return recusa(request, mensagens.RECUSA_SEM_ATUACAO)
             request.atuacao = Atuacao(

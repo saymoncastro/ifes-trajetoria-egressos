@@ -1,10 +1,11 @@
 """Fronteiras da governança (Feature 010; plan, "Sinais de over engineering"; SC-004, SC-006
 a SC-008).
 
-Um modelo, cinco campos, dois papéis, três regras; nada de autenticação, privilégio técnico,
-modo de demonstração, publicação, aprovação ou papel genérico. Os nomes são verificados pelo
-que o app **define** (funções, classes, membros de enum), não pelo texto livre das
-docstrings, que fala de "registro administrativo" e de "Versões publicadas".
+Um modelo, cinco campos, dois papéis, três regras do editor e a regra de acompanhamento da
+coleta (011); nada de autenticação, privilégio técnico, modo de demonstração, publicação,
+aprovação ou papel genérico. Os nomes são verificados pelo que o app **define** (funções,
+classes, membros de enum), não pelo texto livre das docstrings, que fala de "registro
+administrativo" e de "Versões publicadas".
 """
 
 import ast

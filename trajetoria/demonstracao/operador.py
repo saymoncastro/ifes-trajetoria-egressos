@@ -15,6 +15,8 @@ from dataclasses import dataclass
 
 from django.conf import settings
 
+from trajetoria.governanca.consultas import vinculos_ativos
+
 
 @dataclass(frozen=True)
 class OperadorFicticio:
@@ -50,6 +52,14 @@ def operador_em_uso(request) -> str | None:
         operador = operador_ficticio(valor)
         setattr(request, _EM_USO, operador.identificador if operador else None)
     return getattr(request, _EM_USO)
+
+
+def vinculos_do_operador_em_uso(request) -> list | None:
+    """Ponto único de identificação das superfícies institucionais (editor e acompanhamento):
+    `None` sem operador identificado; senão os vínculos ativos dele (`[]` se nenhum). Não
+    autoriza nada: cada superfície aplica a sua regra sobre esses vínculos."""
+    identificador = operador_em_uso(request)
+    return None if identificador is None else vinculos_ativos(identificador)
 
 
 def usar_operador(response, operador: OperadorFicticio) -> None:

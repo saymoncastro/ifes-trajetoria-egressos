@@ -93,6 +93,37 @@ def test_escolher_identificador_fora_da_lista_e_404(client):
     assert resposta.status_code == 404 and COOKIE not in client.cookies
 
 
+# --- Destino fechado (Feature 011; research R13) ------------------------------------------------
+
+
+def test_escolha_com_destino_acompanhamento(client):
+    html = client.get("/demonstracao/operador/?destino=acompanhamento").content.decode()
+    assert '<input type="hidden" name="destino" value="acompanhamento">' in html
+    resposta = client.post(
+        "/demonstracao/operador/escolher/", {"operador": B, "destino": "acompanhamento"}
+    )
+    assert resposta.status_code == 302 and resposta["Location"] == "/acompanhamento/"
+
+
+@pytest.mark.parametrize(
+    "destino", ["qualquer-coisa", "/externo/", "https://exemplo.invalid/", "/acompanhamento/", ""]
+)
+def test_destino_fora_da_lista_fechada_volta_ao_editor(client, destino):
+    resposta = client.post("/demonstracao/operador/escolher/", {"operador": A, "destino": destino})
+    assert resposta["Location"] == "/editor/"
+    html = client.get(f"/demonstracao/operador/?destino={destino}").content.decode()
+    assert 'name="destino"' not in html
+
+
+def test_links_para_as_duas_areas_do_operador_em_uso(client):
+    assert 'href="/acompanhamento/"' not in client.get("/demonstracao/operador/").content.decode()
+    client.post("/demonstracao/operador/escolher/", {"operador": B})
+    html = client.get("/demonstracao/operador/").content.decode()
+    assert 'href="/editor/"' in html and 'href="/acompanhamento/"' in html
+    texto = ci.texto_visivel(client.get("/demonstracao/operador/"))
+    assert "Editor do instrumento" in texto and "Acompanhamento da coleta" in texto
+
+
 def test_trocar_e_encerrar(client):
     client.post("/demonstracao/operador/escolher/", {"operador": A})
     client.post("/demonstracao/operador/escolher/", {"operador": B})

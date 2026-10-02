@@ -1,0 +1,28 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}{{ item.campanha.nome }}{% endblock %}
+{% block conteudo %}
+<h1>{{ item.campanha.nome }}</h1>
+<dl class="dados">
+  <dt>Instrumento</dt><dd>{% include "acompanhamento/_instrumento.html" with instrumento=item.instrumento %}</dd>
+  <dt>Período</dt><dd>{% include "acompanhamento/_periodo.html" with campanha=item.campanha %}</dd>
+  <dt>Situação</dt><dd>{{ item.situacao }}</dd>
+  {% if item.campanha.aberta_em %}<dt>Aberta em</dt><dd>{{ item.campanha.aberta_em|date:"d/m/Y H:i" }}</dd>{% endif %}
+  {% if item.encerramento %}<dt>Encerrada em</dt><dd>{{ item.encerramento.1|date:"d/m/Y H:i" }} ({{ forma_encerramento }})</dd>{% endif %}
+</dl>
+{% for aviso in item.avisos %}<p class="aviso" role="status">{{ aviso }}</p>{% endfor %}
+
+<h2>Resumo</h2>
+<p>{{ contagem_por_formacao }}</p>
+<dl class="dados">
+  <dt>Elegíveis atuais <span class="definicao">{{ definicoes.elegiveis }}</span></dt><dd>{{ resumo.elegiveis }}</dd>
+  <dt>Participações iniciadas <span class="definicao">{{ definicoes.iniciadas }}</span></dt><dd>{{ resumo.iniciadas }}</dd>
+  <dt>Participações concluídas <span class="definicao">{{ definicoes.concluidas }}</span></dt><dd>{{ resumo.concluidas }}</dd>
+  <dt>{{ item.rotulo_nao_concluidas }} <span class="definicao">{{ definicoes.nao_concluidas }}</span></dt><dd>{{ resumo.nao_concluidas }}</dd>
+  <dt>Taxa de início <span class="definicao">{{ definicoes.taxa_inicio }}</span></dt><dd>{% include "acompanhamento/_taxa.html" with valor=resumo.taxa_inicio %}</dd>
+  <dt>Taxa de conclusão <span class="definicao">{{ definicoes.taxa_conclusao }}</span></dt><dd>{% include "acompanhamento/_taxa.html" with valor=resumo.taxa_conclusao %}</dd>
+</dl>
+{% if not resumo.elegiveis %}<p>{{ sem_elegiveis }}</p>{% endif %}
+
+{% include "acompanhamento/_tabela_recorte.html" %}
+<p class="nota">Números calculados em {{ momento|date:"d/m/Y H:i" }}.</p>
+{% endblock %}
