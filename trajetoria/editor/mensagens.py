@@ -1,12 +1,30 @@
 """Textos do editor ao operador (research R10; FR-003, FR-034, FR-056, FR-071, FR-094 a
-FR-096). Só textos: os mapeamentos de rejeição são locais, nas views e no diagnóstico.
-Nenhum texto do instrumento está aqui — Pesquisas, Versões, Seções, Perguntas e Opções vêm
-sempre do banco. Linguagem revisável sem mudar comportamento (008/DP-801)."""
+FR-096; 010 FR-043, FR-061). Só textos: os mapeamentos de rejeição são locais, nas views e
+no diagnóstico. Nenhum texto do instrumento está aqui — Pesquisas, Versões, Seções,
+Perguntas e Opções vêm sempre do banco. Linguagem revisável sem mudar comportamento (008/DP-801)."""
 
 BANNER = (
-    "Ambiente não produtivo: não há autenticação, e ter acesso a este editor não confere "
-    "competência institucional para elaborar ou publicar o instrumento."
+    "Ambiente não produtivo de demonstração: a identificação é simulada por operador "
+    "fictício, e os vínculos fictícios não representam designação institucional real. Este "
+    "editor não está disponível para uso produtivo."
 )
+
+# Recusas de acesso (010; contracts/acesso-editor.md): linguagem operacional, sem artigo da
+# PAEG, papel em código, regra ou identificador. A fundamentação está em governanca/regras.py.
+RECUSA_TITULO = "Acesso não permitido"
+RECUSA_SEM_ATUACAO = (
+    "Não há vínculo institucional ativo para este operador. Sem vínculo ativo, o editor não "
+    "pode ser usado."
+)
+RECUSA_RASCUNHO = (
+    "Seu vínculo institucional atual não permite consultar Versões em rascunho. Ele permite "
+    "consultar o instrumento publicado."
+)
+RECUSA_ELABORACAO = (
+    "Seu vínculo institucional atual não permite editar este instrumento. Ele permite "
+    "consultar o instrumento publicado."
+)
+SOMENTE_PUBLICADAS = "Somente Versões publicadas são exibidas para a sua atuação."
 
 SEMANTICA_NAVEGACAO = (
     "Como a jornada atual aplica a navegação: o desvio é aplicado quando o respondente "

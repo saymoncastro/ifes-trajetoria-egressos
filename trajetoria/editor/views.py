@@ -4,26 +4,44 @@
 `trajetoria.instrumento.operacoes`; as leituras usam `conteudo_da_versao` e consultas
 simples. Nenhuma regra do domínio vive aqui: as recusas vêm da 002 e são traduzidas por
 mapas **locais**, só com os motivos que a operação chamada pode devolver — motivo não
-mapeado continua sendo erro (research R10). Nada aqui publica (002/DP-001), autentica ou
-autoriza (DP-901): o editor só existe no modo de demonstração local.
+mapeado continua sendo erro (research R10). Nada aqui publica (002/DP-001) nem autentica.
+
+**Autorização** (Feature 010): toda view declara, com `@acesso.exige(regra)` como decorador
+mais externo, uma das três regras de governança; identificação, vínculos e regra são
+verificados antes de qualquer busca, formulário ou operação. As leituras de uma Versão
+verificam ainda o estado real dela (`_exigir_consulta`). O editor só existe no modo de
+demonstração local.
 """
 
 from functools import wraps
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from trajetoria.editor import acoes, apresentacao, mensagens
+from trajetoria.editor import acesso, acoes, apresentacao, mensagens
 from trajetoria.editor import formularios as f
 from trajetoria.editor.diagnostico import diagnosticar
+from trajetoria.governanca.regras import (
+    pode_consultar_publicado,
+    pode_consultar_rascunho,
+    pode_elaborar_instrumento,
+)
 from trajetoria.instrumento import operacoes as op
 from trajetoria.instrumento.conteudo import Escala, conteudo_da_versao
-from trajetoria.instrumento.models import Opcao, Pergunta, Pesquisa, Secao, TipoPergunta, Versao
+from trajetoria.instrumento.models import (
+    EstadoVersao,
+    Opcao,
+    Pergunta,
+    Pesquisa,
+    Secao,
+    TipoPergunta,
+    Versao,
+)
 from trajetoria.instrumento.regras import Motivo, OperacaoRejeitada
 from trajetoria.interface.formularios import FormularioDaSecao
 
@@ -52,6 +70,7 @@ def _render(request, template, contexto, status=200):
         "banner": mensagens.BANNER,
         "ha_erros": bool(formulario is not None and formulario.errors),
         "aviso": _aviso(request),
+        "atuacao": request.atuacao,
         **contexto,
     }
     return render(request, template, contexto, status=status)
@@ -108,6 +127,13 @@ def _exigir_rascunho(request, versao, consulta: str) -> None:
     if request.method == "POST":
         raise _Resposta(_publicada(request, versao))
     raise _Resposta(redirect(consulta + "?aviso=publicada"))
+
+
+def _exigir_consulta(request, versao) -> None:
+    """Leitura de uma Versão pelo estado **real** dela (010 FR-038): rascunho só para quem
+    consulta rascunhos, mesmo por endereço direto. As listas filtram, mas não protegem."""
+    if not versao.publicada and not request.atuacao.consultar_rascunho:
+        raise _Resposta(acesso.recusa(request, mensagens.RECUSA_RASCUNHO))
 
 
 def _objeto(request, modelo, pk, *relacionados):
@@ -170,34 +196,49 @@ def _trilha_pesquisa(pesquisa):
 # --- Pesquisas e Versões (US1–US4) ------------------------------------------------------------
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 def pesquisas(request):
-    lista = Pesquisa.objects.annotate(versoes_n=Count("versoes")).order_by("nome", "pk")
+    # Quem não consulta rascunhos não os recebe nem na contagem (010 FR-036).
+    so_publicadas = not request.atuacao.consultar_rascunho
+    filtro = Q(versoes__estado=EstadoVersao.PUBLICADA) if so_publicadas else None
+    nenhuma = "nenhuma Versão publicada" if so_publicadas else "nenhuma Versão"
+    lista = Pesquisa.objects.annotate(versoes_n=Count("versoes", filter=filtro)).order_by(
+        "nome", "pk"
+    )
     return _render(
         request,
         "editor/pesquisas.html",
         {
             "pesquisas": [
-                (p, apresentacao.plural(p.versoes_n, "Versão", "Versões", "nenhuma Versão"))
-                for p in lista
+                (p, apresentacao.plural(p.versoes_n, "Versão", "Versões", nenhuma)) for p in lista
             ],
+            "somente_publicadas": so_publicadas,
+            "somente_publicadas_texto": mensagens.SOMENTE_PUBLICADAS,
             "trilha": [("Pesquisas", None)],
         },
     )
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
 def pesquisa(request, pesquisa):
     pesquisa = _objeto(request, Pesquisa, pesquisa)
+    versoes = pesquisa.versoes.select_related("origem").order_by("designacao")
+    so_publicadas = not request.atuacao.consultar_rascunho
+    if so_publicadas:
+        versoes = versoes.filter(estado=EstadoVersao.PUBLICADA)
     return _render(
         request,
         "editor/pesquisa.html",
         {
             "pesquisa": pesquisa,
-            "versoes": pesquisa.versoes.select_related("origem").order_by("designacao"),
+            "versoes": versoes,
+            "somente_publicadas": so_publicadas,
+            "somente_publicadas_texto": mensagens.SOMENTE_PUBLICADAS,
             "trilha": [("Pesquisas", "/editor/"), (pesquisa.nome, None)],
         },
     )
@@ -221,6 +262,7 @@ def _formulario(request, formulario, *, titulo, trilha, cancelar, envio, campos=
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -259,6 +301,7 @@ _MAPA_DESIGNACAO = {
 }
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -284,6 +327,7 @@ def versao_nova(request, pesquisa):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -336,11 +380,13 @@ def _trilha_versao(versao):
     ]
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
 def versao(request, versao):
     versao = _objeto(request, Versao, versao, "pesquisa", "origem")
+    _exigir_consulta(request, versao)
     conteudo = conteudo_da_versao(versao)
     secoes = apresentacao.estrutura(conteudo)
     total = sum(len(s["perguntas"]) for s in secoes)
@@ -363,6 +409,7 @@ def versao(request, versao):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -439,6 +486,7 @@ def _gravar(request, versao, formulario, gravar, mapa, endereco):
         return None
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -471,12 +519,14 @@ def secao_nova(request, versao):
     )
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
 def secao(request, secao):
     secao = _secao(request, secao)
     versao = secao.versao
+    _exigir_consulta(request, versao)
     conteudo = conteudo_da_versao(versao)
     dados = next(s for s in apresentacao.estrutura(conteudo) if s["id"] == secao.pk)
     _marcar([dados], None if versao.publicada else diagnosticar(versao, conteudo))
@@ -493,6 +543,7 @@ def secao(request, secao):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -528,6 +579,7 @@ def secao_editar(request, secao):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_POST
 @never_cache
 @_respondendo
@@ -571,6 +623,7 @@ def _remover(request, *, versao, rotulo, consequencias, remover, voltar, sucesso
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -618,6 +671,7 @@ def _introducao_do_tipo(tipo) -> tuple[str, ...]:
     return (f"Tipo: {nome} — {descricao}.",)
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -663,12 +717,14 @@ def pergunta_nova(request, secao):
     )
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
 def pergunta(request, pergunta):
     pergunta = _pergunta(request, pergunta)
     versao = pergunta.secao.versao
+    _exigir_consulta(request, versao)
     conteudo = conteudo_da_versao(versao)
     dados = apresentacao.pergunta_apresentada(conteudo, pergunta.pk)
     if not versao.publicada:
@@ -705,6 +761,7 @@ def _trilha_pergunta(pergunta, conteudo):
     ]
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -756,6 +813,7 @@ def _escala_atual(pergunta) -> tuple[str, ...]:
     return (f"Escala atual: {apresentacao.descrever_escala(escala)}",)
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_POST
 @never_cache
 @_respondendo
@@ -768,6 +826,7 @@ def pergunta_mover(request, pergunta):
     )  # fmt: skip
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -801,6 +860,7 @@ def pergunta_trocar_secao(request, pergunta):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -862,6 +922,7 @@ def _ordinal_da_opcao(opcao) -> int:
     return opcao.pergunta.opcoes.filter(posicao__lte=opcao.posicao).count()
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -899,6 +960,7 @@ def opcao_nova(request, pergunta):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -934,6 +996,7 @@ def opcao_editar(request, opcao):
     )
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_POST
 @never_cache
 @_respondendo
@@ -946,6 +1009,7 @@ def opcao_mover(request, opcao):
     )  # fmt: skip
 
 
+@acesso.exige(pode_elaborar_instrumento)
 @require_http_methods(["GET", "POST"])
 @never_cache
 @_respondendo
@@ -972,6 +1036,7 @@ def opcao_remover(request, opcao):
 # --- Diagnóstico técnico (US11) -----------------------------------------------------------------
 
 
+@acesso.exige(pode_consultar_rascunho)
 @require_GET
 @never_cache
 @_respondendo
@@ -999,11 +1064,13 @@ def _trilha_previa(versao):
     return [*_trilha_versao(versao), ("Pré-visualização", f"/editor/versoes/{versao.pk}/previa/")]
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
 def previa(request, versao):
     versao = _objeto(request, Versao, versao, "pesquisa")
+    _exigir_consulta(request, versao)
     conteudo = conteudo_da_versao(versao)
     local = apresentacao.localizador(conteudo)
     return _render(
@@ -1018,6 +1085,7 @@ def previa(request, versao):
     )
 
 
+@acesso.exige(pode_consultar_publicado)
 @require_GET
 @never_cache
 @_respondendo
@@ -1026,6 +1094,7 @@ def previa_secao(request, versao, ordinal):
     **ordem** da Versão; desvios são anotações estruturais. Nada da 006 é chamado, nada é
     gravado, nenhum estado é guardado entre requisições (FR-088 a FR-091)."""
     versao = _objeto(request, Versao, versao, "pesquisa")
+    _exigir_consulta(request, versao)
     conteudo = conteudo_da_versao(versao)
     if not 1 <= ordinal <= len(conteudo.secoes):
         raise Http404

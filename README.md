@@ -10,4 +10,5 @@ Software do Núcleo Institucional de Acompanhamento de Egressos (NIAE) do Ifes.
 - Jornada de resposta e conclusão: [quickstart da Feature 006](specs/006-jornada-conclusao-participacao/quickstart.md)
 - Contextualização da formação e entrada na pesquisa: [quickstart da Feature 007](specs/007-contextualizacao-formacao-entrada/quickstart.md)
 - Interface navegável de demonstração (dados fictícios, sem autenticação): [quickstart da Feature 008](specs/008-interface-navegavel-pesquisa/quickstart.md)
-- Editor institucional de Pesquisa e Versão (só no modo local não produtivo, `TRAJETORIA_DEMONSTRACAO=1`; não deve ser habilitado em ambiente produtivo antes da Feature 010 — governança, papéis e autorização; não publica; acesso não é autorização institucional): [quickstart da Feature 009](specs/009-editor-pesquisa-versao/quickstart.md)
+- Editor institucional de Pesquisa e Versão (só no modo local não produtivo, `TRAJETORIA_DEMONSTRACAO=1`; não publica): [quickstart da Feature 009](specs/009-editor-pesquisa-versao/quickstart.md)
+- Governança, papéis e escopos institucionais (vínculos CPAEG/CSAEG autorizam o editor; operador fictício só no modo de demonstração; o editor continua indisponível para uso produtivo enquanto não houver identificação de operadores — DP-1001): [quickstart da Feature 010](specs/010-governanca-papeis-escopos/quickstart.md)

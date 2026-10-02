@@ -3,17 +3,18 @@
 {% block conteudo %}
 <h1>{{ pesquisa.nome }}</h1>
 <h2>Versões</h2>
+{% if somente_publicadas %}<p class="nota">{{ somente_publicadas_texto }}</p>{% endif %}
 {% if versoes %}
 <ul class="lista-simples">
   {% for versao in versoes %}<li>
     <p><a href="/editor/versoes/{{ versao.pk }}/">{{ versao.designacao }}</a>
-    — <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }}{% else %}Rascunho{% endif %}</span>{% if versao.origem %}
-    <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}</p>
-    <ul class="lista-acoes"><li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir de «{{ versao.designacao }}»</a></li></ul>
+    — <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }}{% else %}Rascunho{% endif %}</span>{% if versao.origem %}{% if versao.origem.publicada or atuacao.consultar_rascunho %}
+    <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}{% endif %}</p>
+    {% if atuacao.elaborar %}<ul class="lista-acoes"><li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir de «{{ versao.designacao }}»</a></li></ul>{% endif %}
   </li>{% endfor %}
 </ul>
 {% else %}
-<p>Ainda não há Versões nesta Pesquisa.</p>
+<p>{% if somente_publicadas %}Esta Pesquisa não tem nenhuma Versão publicada.{% else %}Ainda não há Versões nesta Pesquisa.{% endif %}</p>
 {% endif %}
-<p><a class="botao" href="/editor/pesquisas/{{ pesquisa.pk }}/versoes/nova/">Criar Versão em rascunho</a></p>
+{% if atuacao.elaborar %}<p><a class="botao" href="/editor/pesquisas/{{ pesquisa.pk }}/versoes/nova/">Criar Versão em rascunho</a></p>{% endif %}
 {% endblock %}

@@ -3,13 +3,13 @@
 {% block conteudo %}
 <h1>{{ versao.designacao }}</h1>
 <p>Pesquisa: {{ versao.pesquisa.nome }}.
-  <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }} — não pode ser alterada{% else %}Rascunho{% endif %}</span>{% if versao.origem %}
-  <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}</p>
+  <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }} — não pode ser alterada{% else %}Rascunho{% endif %}</span>{% if versao.origem %}{% if versao.origem.publicada or atuacao.consultar_rascunho %}
+  <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}{% endif %}</p>
 <ul class="lista-acoes">
   {% if editavel %}<li><a href="/editor/versoes/{{ versao.pk }}/dados/">Editar dados da Versão</a></li>
   <li><a href="/editor/versoes/{{ versao.pk }}/diagnostico/">Diagnóstico técnico</a></li>{% endif %}
   <li><a href="/editor/versoes/{{ versao.pk }}/previa/">Pré-visualizar</a></li>
-  <li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir desta</a></li>
+  {% if atuacao.elaborar %}<li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir desta</a></li>{% endif %}
 </ul>
 {% if editavel %}<p class="nota">{{ trabalhe_em_copia }}</p>{% endif %}
 {% block diagnostico %}{% if diagnostico %}{% include "editor/_diagnostico.html" with resumo=True %}{% endif %}{% endblock %}

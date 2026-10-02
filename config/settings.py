@@ -24,19 +24,22 @@ ALLOWED_HOSTS = [
 # dados fictícios; desligado, toda página responde 404 (FR-001, FR-002). O editor
 # institucional do instrumento (009, `/editor/`) também só existe neste modo não produtivo.
 # Esta flag é um interruptor técnico de ambiente, NÃO governança: não autentica nem
-# autoriza ninguém a elaborar ou publicar o instrumento (009 DP-901; 002/DP-001).
+# autoriza ninguém. Nela, o operador do editor é escolhido entre operadores fictícios; o que
+# ele pode fazer vem só dos vínculos de governança (010). Ninguém publica (002/DP-001).
 TRAJETORIA_DEMONSTRACAO = os.environ.get("TRAJETORIA_DEMONSTRACAO") == "1"
 
 # Apps de domínio, sem admin, auth, sessions, contenttypes, messages ou staticfiles. As
 # restrições de não exposição continuam valendo para egressos (001: FR-030, R15; 002: R17;
 # 004: R13; 005: FR-058; 006: FR-054; 007: FR-049): a interface da 008 existe só em modo de
 # demonstração, com Pessoas da fonte simulada. `demonstracao` é o adaptador temporário que
-# faz as vezes da fronteira de identidade e sai quando ela existir.
+# faz as vezes da fronteira de identidade e sai quando ela existir. `governanca` (010) guarda
+# os vínculos CPAEG/CSAEG que autorizam o editor; não é autenticação.
 INSTALLED_APPS = [
     "trajetoria.academico",
     "trajetoria.instrumento",
     "trajetoria.campanha",
     "trajetoria.participacao",
+    "trajetoria.governanca",
     "trajetoria.interface",
     "trajetoria.demonstracao",
     "trajetoria.editor",

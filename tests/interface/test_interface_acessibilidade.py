@@ -140,6 +140,7 @@ def telas(client, cenario, relogio):
     b = cenario.base
     ce.incorporar(FonteSimulada(), "SIM-P-0002")
     resultado = {"entrada": client.get("/demonstracao/")}
+    resultado["operador"] = client.get("/demonstracao/operador/")  # 010
     resultado["formacoes-sem-pesquisa"] = _como(client, "SIM-P-0002", "/formacoes/")
     resultado["formacoes-selecao"] = _como(client, "SIM-P-0003", "/formacoes/")
     resultado["formacoes-resolvida"] = _como(client, "SIM-P-0001", "/formacoes/")

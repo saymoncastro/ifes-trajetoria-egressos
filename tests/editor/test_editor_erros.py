@@ -11,6 +11,7 @@ import pytest
 from django.test import Client
 
 from tests.editor import construcao_editor as ce
+from tests.editor.construcao_editor import A, atuar_como
 from tests.participacao.construcao import pergunta_mem, secao_mem
 from trajetoria.editor import acoes
 from trajetoria.instrumento import operacoes as op
@@ -77,22 +78,24 @@ def test_post_em_elemento_removido(client, db):
     assert "O conteúdo mudou" in ce.texto_visivel(resposta)
 
 
-def test_motivo_nao_mapeado_continua_sendo_erro(multipla, monkeypatch):
+def test_motivo_nao_mapeado_continua_sendo_erro(multipla, monkeypatch, vinculo_cpaeg):
     monkeypatch.setattr(op, "adicionar_opcao", _rejeicao(Motivo.TIPO_NAO_SUPORTADO))
-    cliente = Client(raise_request_exception=False)
+    cliente = atuar_como(Client(raise_request_exception=False), A)
     resposta = cliente.post(f"/editor/perguntas/{multipla.pk}/opcoes/nova/", {"texto": "Nova"})
     assert resposta.status_code == 500
     assert "Informe" not in resposta.content.decode()
     with pytest.raises(OperacaoRejeitada):
-        Client().post(f"/editor/perguntas/{multipla.pk}/opcoes/nova/", {"texto": "Nova"})
+        atuar_como(Client(), A).post(
+            f"/editor/perguntas/{multipla.pk}/opcoes/nova/", {"texto": "Nova"}
+        )
 
 
-def test_excecao_inesperada_e_500_sem_rastro(multipla, monkeypatch):
+def test_excecao_inesperada_e_500_sem_rastro(multipla, monkeypatch, vinculo_cpaeg):
     def falha(*args, **kwargs):
         raise RuntimeError("falha inesperada")
 
     monkeypatch.setattr(op, "adicionar_opcao", falha)
-    resposta = Client(raise_request_exception=False).post(
+    resposta = atuar_como(Client(raise_request_exception=False), A).post(
         f"/editor/perguntas/{multipla.pk}/opcoes/nova/", {"texto": "Nova"}
     )
     assert resposta.status_code == 500
