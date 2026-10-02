@@ -44,8 +44,11 @@ def conclusao(
     modalidade=None,
     forma_oferta=None,
     ano=None,
+    data=None,
     pessoa: Pessoa | None = None,
 ) -> ConclusaoAcademica:
+    """Conclusão fictícia por ORM. Com `data`, `ano` precisa ser o ano da data (001);
+    `data` é usado pelos testes da 012."""
     n = next(_sequencia)
     if pessoa is None:
         pessoa = Pessoa.objects.create(
@@ -61,6 +64,7 @@ def conclusao(
         modalidade=modalidade,
         forma_oferta=forma_oferta,
         ano_conclusao=ano,
+        data_conclusao=data,
     )
 
 

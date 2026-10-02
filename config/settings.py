@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "trajetoria.demonstracao",
     "trajetoria.editor",
     "trajetoria.acompanhamento",
+    "trajetoria.analitico",
 ]
 
 MIDDLEWARE = [

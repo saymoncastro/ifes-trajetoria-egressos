@@ -197,9 +197,10 @@ def test_11_nenhum_modelo_novo():
 
 def test_12_nada_de_gen_ou_dashboard():
     # A API pública é exatamente a de entrada (test_api_publica_exata); aqui, nenhum modelo
-    # analítico em app algum.
+    # analítico fora do app da Feature 012 (snapshot analítico), a feature futura prevista
+    # pela 004/DP-408: a FR-051 da 007 é escopo negativo da própria 007.
     analiticos = ("dashboard", "indicador", "agregacao", "snapshot", "exportacao", "grafico")
-    modelos = [m.__name__.lower() for m in apps.get_models()]
+    modelos = [m.__name__.lower() for m in apps.get_models() if m._meta.app_label != "analitico"]
     assert not [n for n in modelos if any(p in n for p in analiticos)]
 
 
