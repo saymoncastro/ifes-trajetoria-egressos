@@ -18,6 +18,7 @@ from django.apps import apps
 from django.test import Client, RequestFactory
 from django.views import defaults
 
+from tests.dependencias import DEPENDENCIAS_APROVADAS
 from tests.interface import construcao_interface as ci
 from tests.participacao import construcao as c
 from trajetoria.formulario_2024 import declaracao
@@ -122,7 +123,7 @@ def test_nenhuma_escrita_direta_nem_modelo():
 
 def test_sem_dependencia_nova_nem_script():
     projeto = tomllib.loads((RAIZ / "pyproject.toml").read_text())["project"]
-    assert projeto["dependencies"] == ["Django>=5.2,<5.3", "psycopg[binary]>=3.2,<3.4"]
+    assert projeto["dependencies"] == DEPENDENCIAS_APROVADAS
     for arquivo in _fontes(INTERFACE, DEMONSTRACAO, sufixos=(".html",)):
         conteudo = arquivo.read_text()
         assert "<script" not in conteudo and not re.search(r'(src|href)="https?://', conteudo)

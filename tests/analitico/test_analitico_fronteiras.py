@@ -14,6 +14,7 @@ from django.urls import get_resolver
 
 import trajetoria.analitico
 from tests.analitico import construcao as c
+from tests.dependencias import DEPENDENCIAS_APROVADAS
 from trajetoria.academico.models import Pessoa
 from trajetoria.analitico.models import RegistroDoSnapshot, SnapshotAnalitico
 from trajetoria.analitico.operacoes import capturar_snapshot
@@ -134,7 +135,7 @@ def test_nenhuma_rota_leva_ao_analitico():
 def test_sem_dependencia_nova():
     raiz_do_projeto = Path(__file__).resolve().parents[2]
     projeto = tomllib.loads((raiz_do_projeto / "pyproject.toml").read_text())["project"]
-    assert projeto["dependencies"] == ["Django>=5.2,<5.3", "psycopg[binary]>=3.2,<3.4"]
+    assert projeto["dependencies"] == DEPENDENCIAS_APROVADAS
 
 
 def test_nenhuma_regra_de_governanca_nova():

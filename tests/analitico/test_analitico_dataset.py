@@ -12,6 +12,7 @@ from tests.participacao.construcao import (
     FIM,
     Q14,
     baseline_publicada,
+    instrumento,
     opcao_de,
     pergunta_de,
     pergunta_mem,
@@ -28,6 +29,7 @@ from trajetoria.analitico.consultas import (
 )
 from trajetoria.analitico.models import RegistroDoSnapshot
 from trajetoria.analitico.operacoes import capturar_snapshot
+from trajetoria.instrumento.conteudo import conteudo_da_versao
 from trajetoria.instrumento.models import Opcao, Pergunta, TipoPergunta
 from trajetoria.participacao.consultas import situacao_da_jornada
 from trajetoria.participacao.models import Participacao, Resposta, RespostaOpcao
@@ -255,3 +257,79 @@ def test_rascunho_com_respostas_incoerentes_nao_interrompe_a_leitura(cenario):
     assert rascunho.fora_do_percurso is None  # não determinável
     assert cenario.inst.posterior.pk in rascunho.respostas  # nada descartado
     assert linhas[cenario.serra_info.pk].participacao.concluida is True
+
+
+# --- Perguntas do percurso (acréscimo da Feature 013, research R6) ------------------------------
+
+
+def _secao(inst, posicao: int) -> set:
+    return set(
+        Pergunta.objects.filter(secao__versao=inst.versao, secao__posicao=posicao).values_list(
+            "pk", flat=True
+        )
+    )
+
+
+def test_perguntas_do_percurso_e_o_ultimo_campo_com_padrao_none():
+    ultimo = dataclasses.fields(LinhaDoDataset)[-1]
+    assert ultimo.name == "perguntas_do_percurso"
+    assert ultimo.default is None
+
+
+def test_perguntas_do_percurso_de_concluida(cenario):
+    # "Sim" não tem regra: o percurso segue para a Seção 2 (opcional) e finaliza.
+    linha = _linhas(capturar_snapshot(cenario.campanha))[cenario.serra_info.pk]
+    inst = cenario.inst
+    assert linha.perguntas_do_percurso == frozenset(_secao(inst, 1) | _secao(inst, 2))
+    assert linha.fora_do_percurso == frozenset()  # inalterado
+
+
+def test_perguntas_do_percurso_de_recusa(cenario):
+    linha = _linhas(capturar_snapshot(cenario.campanha))[cenario.vitoria_info.pk]
+    assert linha.perguntas_do_percurso == frozenset(_secao(cenario.inst, 1))
+
+
+def test_perguntas_do_percurso_de_rascunho_exclui_as_fora_do_percurso(cenario):
+    linha = _linhas(capturar_snapshot(cenario.campanha))[cenario.serra_eng.pk]
+    posterior = cenario.inst.posterior.pk
+    assert linha.perguntas_do_percurso == frozenset(_secao(cenario.inst, 1))
+    assert posterior in linha.fora_do_percurso
+    assert posterior not in linha.perguntas_do_percurso
+    assert linha.fora_do_percurso == frozenset(linha.respostas) - linha.perguntas_do_percurso
+
+
+def test_perguntas_do_percurso_sem_participacao(cenario):
+    linha = _linhas(capturar_snapshot(cenario.campanha))[cenario.vitoria_sem_atributos.pk]
+    assert linha.perguntas_do_percurso is None
+
+
+def test_perguntas_do_percurso_com_estrutura_nao_suportada(inst):
+    versao = versao_publicada_de(
+        secao_mem(pergunta_mem(regras={"Sim": FIM}), pergunta_mem(regras={"Não": FIM}))
+    )
+    campanha = c.campanha_aberta_no_passado(versao)
+    conclusao = c.conclusao(unidade="Serra")
+    participacao = c.iniciada(campanha, conclusao)
+    pergunta = pergunta_de(versao, 1, 1)
+    responder_escolha_unica(participacao, pergunta, opcao_de(pergunta, "Sim"), agora=c.na_coleta())
+    linha = _linhas(capturar_snapshot(campanha))[conclusao.pk]
+    assert linha.perguntas_do_percurso is None
+    assert linha.fora_do_percurso is None
+
+
+def test_conteudo_ja_lido_e_reutilizado_sem_nova_leitura(cenario):
+    snapshot = capturar_snapshot(cenario.campanha)
+    conteudo = conteudo_da_versao(cenario.campanha.versao)
+    with CaptureQueriesContext(connection) as sem:
+        esperado = list(linhas_do_dataset(snapshot))
+    with CaptureQueriesContext(connection) as com:
+        reutilizado = list(linhas_do_dataset(snapshot, conteudo=conteudo))
+    assert reutilizado == esperado
+    assert len(com.captured_queries) < len(sem.captured_queries)
+    assert not [q for q in com.captured_queries if "instrumento_secao" in q["sql"]]
+
+
+def test_conteudo_de_outra_versao_e_recusado(cenario):
+    snapshot = capturar_snapshot(cenario.campanha)
+    with pytest.raises(ValueError):
+        list(linhas_do_dataset(snapshot, conteudo=conteudo_da_versao(instrumento("outra").versao)))

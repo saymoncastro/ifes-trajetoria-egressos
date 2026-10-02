@@ -28,6 +28,12 @@ ALLOWED_HOSTS = [
 # ele pode fazer vem só dos vínculos de governança (010). Ninguém publica (002/DP-001).
 TRAJETORIA_DEMONSTRACAO = os.environ.get("TRAJETORIA_DEMONSTRACAO") == "1"
 
+# Chave dedicada da pseudonimização analítica das exportações (Feature 013, FR-027): deriva
+# `conclusao_analitica_id` e `pessoa_analitica_id` por HMAC-SHA-256. Distinta de SECRET_KEY,
+# fora do repositório e sem valor padrão utilizável: vazia, toda exportação é recusada.
+# Trocá-la rompe a ligação com exportações anteriores; custódia e rotação em DP-1301.
+TRAJETORIA_CHAVE_PSEUDONIMIZACAO = os.environ.get("TRAJETORIA_CHAVE_PSEUDONIMIZACAO", "")
+
 # Apps de domínio, sem admin, auth, sessions, contenttypes, messages ou staticfiles. As
 # restrições de não exposição continuam valendo para egressos (001: FR-030, R15; 002: R17;
 # 004: R13; 005: FR-058; 006: FR-054; 007: FR-049): a interface da 008 existe só em modo de

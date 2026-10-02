@@ -15,6 +15,7 @@ from django.apps import apps
 from django.core.management import call_command
 from django.test import Client
 
+from tests.dependencias import DEPENDENCIAS_APROVADAS
 from tests.editor import construcao_editor as ce
 from trajetoria.editor import urls
 
@@ -110,7 +111,7 @@ def test_sem_script_recurso_externo_nem_dependencia_nova():
         conteudo = arquivo.read_text()
         assert "<script" not in conteudo and not re.search(r'(src|href)="https?://', conteudo)
     projeto = tomllib.loads((RAIZ / "pyproject.toml").read_text())["project"]
-    assert projeto["dependencies"] == ["Django>=5.2,<5.3", "psycopg[binary]>=3.2,<3.4"]
+    assert projeto["dependencies"] == DEPENDENCIAS_APROVADAS
 
 
 def test_rotas_sem_publicacao_exclusao_api_ou_campanha():
