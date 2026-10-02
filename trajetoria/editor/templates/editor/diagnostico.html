@@ -1,0 +1,8 @@
+{% extends "editor/base.html" %}
+{% block titulo %}Diagnóstico técnico — {{ versao.designacao }}{% endblock %}
+{% block conteudo %}
+<h1>Diagnóstico técnico</h1>
+<p>Versão «{{ versao.designacao }}», em rascunho. O diagnóstico é recalculado a cada consulta e não é gravado.</p>
+{% include "editor/_diagnostico.html" with resumo=False %}
+<p><a href="/editor/versoes/{{ versao.pk }}/">Voltar à estrutura da Versão</a></p>
+{% endblock %}

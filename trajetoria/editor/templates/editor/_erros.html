@@ -1,0 +1,7 @@
+<div class="coluna"><div class="resumo-erros" role="alert" aria-labelledby="titulo-erros">
+  <h2 id="titulo-erros">Erro: corrija os itens abaixo</h2>
+  <ul>
+    {% for erro in formulario.non_field_errors %}<li>{{ erro }}</li>{% endfor %}
+    {% for campo in formulario %}{% for erro in campo.errors %}<li><a href="#campo-{{ campo.name }}">{{ campo.label }}: {{ erro }}</a></li>{% endfor %}{% endfor %}
+  </ul>
+</div></div>

@@ -21,7 +21,10 @@ ALLOWED_HOSTS = [
 ]
 
 # Modo de demonstração (008): só "1" ativa. Destinado exclusivamente a ambiente local com
-# dados fictícios; desligado, toda página responde 404 (FR-001, FR-002).
+# dados fictícios; desligado, toda página responde 404 (FR-001, FR-002). O editor
+# institucional do instrumento (009, `/editor/`) também só existe neste modo não produtivo.
+# Esta flag é um interruptor técnico de ambiente, NÃO governança: não autentica nem
+# autoriza ninguém a elaborar ou publicar o instrumento (009 DP-901; 002/DP-001).
 TRAJETORIA_DEMONSTRACAO = os.environ.get("TRAJETORIA_DEMONSTRACAO") == "1"
 
 # Apps de domínio, sem admin, auth, sessions, contenttypes, messages ou staticfiles. As
@@ -36,6 +39,7 @@ INSTALLED_APPS = [
     "trajetoria.participacao",
     "trajetoria.interface",
     "trajetoria.demonstracao",
+    "trajetoria.editor",
 ]
 
 MIDDLEWARE = [

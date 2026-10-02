@@ -1,0 +1,5 @@
+{% if trilha %}<nav class="trilha" aria-label="Você está em">
+  <ol>
+    {% for rotulo, endereco in trilha %}<li>{% if endereco %}<a href="{{ endereco }}">{{ rotulo }}</a>{% else %}<span aria-current="page">{{ rotulo }}</span>{% endif %}</li>{% endfor %}
+  </ol>
+</nav>{% endif %}

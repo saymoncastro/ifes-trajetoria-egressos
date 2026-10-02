@@ -1,0 +1,15 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% for paragrafo in introducao %}<p>{{ paragrafo }}</p>{% endfor %}
+{% if alerta %}<p class="aviso" role="status">{{ alerta }}</p>{% endif %}
+<form method="post" action="{{ acao }}" novalidate>{% csrf_token %}
+  {% for campo in campos %}{% include "editor/_campo.html" %}{% endfor %}
+  <div class="acoes">
+    <button type="submit" class="primario">{{ rotulo_envio }}</button>
+    {% if envio_extra %}<button type="submit" name="{{ envio_extra.0 }}" value="1" class="secundario">{{ envio_extra.1 }}</button>{% endif %}
+    <a href="{{ cancelar }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

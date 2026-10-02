@@ -1,0 +1,23 @@
+{% extends "editor/base.html" %}
+{% block titulo %}Pré-visualização — {{ rotulo }}{% endblock %}
+{% block conteudo %}
+<h1>Pré-visualização — {{ rotulo }} <span class="detalhe">({{ ordinal }} de {{ total }})</span></h1>
+<p class="aviso" role="note">Pré-visualização — nada é gravado; os desvios não são executados. A navegação abaixo segue a ordem das Seções, não os ramos.</p>
+{% if secao.texto %}<div class="texto-secao">{{ secao.texto|linebreaks }}</div>{% endif %}
+<div class="previa">
+{% for item, anotacoes in itens_anotados %}
+  {% if item.modo == "texto" %}{% include "interface/perguntas/texto_curto.html" %}
+  {% elif item.modo == "lista" or item.modo == "radio" %}{% include "interface/perguntas/escolha_unica.html" %}
+  {% elif item.modo == "caixas" %}{% include "interface/perguntas/escolha_multipla.html" %}
+  {% else %}{% include "interface/perguntas/escala.html" %}{% endif %}
+  {% if anotacoes %}<ul class="anotacoes">{% for anotacao in anotacoes %}<li>{{ anotacao }}</li>{% endfor %}</ul>{% endif %}
+{% endfor %}
+</div>
+{% if encaminhamento %}<p class="nota">{{ encaminhamento }}</p>{% endif %}
+<ul class="lista-acoes">
+  {% if anterior %}<li><a href="{{ anterior }}">Seção anterior na ordem</a></li>{% endif %}
+  {% if seguinte %}<li><a href="{{ seguinte }}">Seção seguinte na ordem</a></li>{% endif %}
+  <li><a href="/editor/versoes/{{ versao.pk }}/previa/">Índice da pré-visualização</a></li>
+  <li><a href="/editor/versoes/{{ versao.pk }}/">Voltar à estrutura</a></li>
+</ul>
+{% endblock %}

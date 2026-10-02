@@ -1,0 +1,39 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ dados.rotulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ dados.rotulo }}</h1>
+<p><span class="estado">{% if editavel %}Rascunho{% else %}Publicada — não pode ser alterada{% endif %}</span>
+  {{ dados.secao.rotulo }}.</p>
+{% for problema in dados.problemas %}<p class="problema">Problema: {{ problema }}</p>{% endfor %}
+<p><strong>Texto:</strong> {{ dados.texto }}</p>
+<p><strong>Texto explicativo:</strong> {{ dados.texto_explicativo|default:"sem texto explicativo" }}</p>
+<p><strong>Tipo:</strong> {{ dados.tipo }} — {{ dados.descricao_tipo }}. <span class="nota">{{ tipo_fixo }}</span></p>
+<p><strong>Obrigatoriedade:</strong> {{ dados.obrigatoriedade }}</p>
+{% if dados.escala %}<p><strong>Escala:</strong> {{ dados.escala }}</p>{% endif %}
+{% if editavel %}<ul class="lista-acoes">
+  <li><a href="/editor/perguntas/{{ pergunta.pk }}/editar/">Editar Pergunta</a></li>
+  <li><a href="/editor/perguntas/{{ pergunta.pk }}/trocar-secao/">Mover para outra Seção</a></li>
+  <li><a href="/editor/perguntas/{{ pergunta.pk }}/remover/" aria-label="Remover a {{ dados.rotulo_completo }}">Remover a Pergunta</a></li>
+</ul>{% endif %}
+{% if dados.de_escolha %}
+<h2>Opções</h2>
+{% if dados.admite_desvio %}<p class="nota">{{ semantica }}</p>{% else %}<p class="nota">{{ so_escolha_unica }}</p>{% endif %}
+{% if editavel %}<p><a class="botao" href="/editor/perguntas/{{ pergunta.pk }}/opcoes/nova/">Adicionar Opção</a></p>{% endif %}
+{% if dados.opcoes %}
+<ol class="itens">
+  {% for opcao in dados.opcoes %}<li id="opcao-{{ opcao.ordinal }}">
+    <p>{{ opcao.texto }}{% if opcao.complemento %} <span class="detalhe">— aceita complemento escrito</span>{% endif %}</p>
+    {% if opcao.desvio %}<p class="detalhe">Desvio: {{ opcao.desvio }}</p>{% endif %}
+    {% for problema in opcao.problemas %}<p class="problema">Problema: {{ problema }}</p>{% endfor %}
+    {% if editavel %}<div class="lista-acoes">{% include "editor/_ordem.html" with mover=opcao.endereco|add:"mover/" primeiro=forloop.first ultimo=forloop.last rotulo_ordem=opcao.rotulo %}
+      <a href="{{ opcao.endereco }}" aria-label="Editar a {{ opcao.rotulo }}">Editar</a>
+      <a href="{{ opcao.endereco }}remover/" aria-label="Remover a {{ opcao.rotulo }}">Remover</a></div>{% endif %}
+  </li>{% endfor %}
+</ol>
+{% else %}
+<p>Esta Pergunta ainda não tem Opções.</p>
+{% endif %}
+{% else %}
+<p class="nota">Perguntas do tipo {{ dados.tipo|lower }} não têm Opções nem desvio de navegação.</p>
+{% endif %}
+{% endblock %}

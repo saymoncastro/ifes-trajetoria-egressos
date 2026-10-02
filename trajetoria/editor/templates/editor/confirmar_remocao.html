@@ -1,0 +1,18 @@
+{% extends "editor/base.html" %}
+{% block titulo %}Remover {{ rotulo }}{% endblock %}
+{% block conteudo %}
+<h1>Remover {{ rotulo }}</h1>
+{% if impedimentos %}
+<div role="status">{% for impedimento in impedimentos %}<p class="problema">{{ impedimento }}</p>{% endfor %}</div>
+<p><a href="{{ voltar }}">Voltar</a></p>
+{% else %}
+<p>Esta ação não pode ser desfeita.</p>
+{% if consequencias %}<ul>{% for consequencia in consequencias %}<li>{{ consequencia }}</li>{% endfor %}</ul>{% endif %}
+<form method="post" action="{{ acao }}">{% csrf_token %}
+  <div class="acoes">
+    <button type="submit" class="primario">Remover</button>
+    <a href="{{ voltar }}">Cancelar</a>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

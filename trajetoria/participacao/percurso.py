@@ -33,6 +33,7 @@ __all__ = [
     "percorrer",
     "perguntas_do_percurso",
     "respondidas",
+    "secoes_nao_suportadas",
 ]
 
 
@@ -85,19 +86,24 @@ def _com_regra(secao: ConteudoSecao) -> list[ConteudoPergunta]:
     return [p for p in secao.perguntas if any(o.regra for o in p.opcoes)]
 
 
+def secoes_nao_suportadas(conteudo: ConteudoVersao) -> tuple[ConteudoSecao, ...]:
+    """As Seções, na ordem, fora da capacidade de execução desta feature: mais de uma
+    Pergunta com regra de navegação (006 FR-016; DP-604). Nenhuma precedência entre regras é
+    inventada. É limitação da execução, não do modelo de instrumento da 002. Pura: a mesma
+    verificação que `percorrer` aplica e que o editor (009) apenas consulta."""
+    return tuple(secao for secao in conteudo.secoes if len(_com_regra(secao)) > 1)
+
+
 def _exigir_suporte(conteudo: ConteudoVersao) -> None:
-    """Seção com mais de uma Pergunta com regra está fora da capacidade de execução desta
-    feature (006 FR-016; DP-604): nenhuma precedência entre regras é inventada. Verifica a
-    Versão inteira, para que toda Participação da Campanha tenha o mesmo resultado. É
-    limitação da execução, não do modelo de instrumento da 002."""
+    """Rejeita a Versão com alguma Seção não suportada. Verifica a Versão inteira, para que
+    toda Participação da Campanha tenha o mesmo resultado."""
     violacoes = [
         Violacao(
             Motivo.ESTRUTURA_NAO_SUPORTADA,
             "secao",
-            f"Seção {secao.id} tem {quantas} Perguntas com regra de navegação",
+            f"Seção {secao.id} tem {len(_com_regra(secao))} Perguntas com regra de navegação",
         )
-        for secao in conteudo.secoes
-        if (quantas := len(_com_regra(secao))) > 1
+        for secao in secoes_nao_suportadas(conteudo)
     ]
     if violacoes:
         raise ParticipacaoRejeitada(violacoes)

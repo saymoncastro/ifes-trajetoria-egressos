@@ -1,0 +1,2 @@
+{% if not primeiro %}<form method="post" action="{{ mover }}" class="em-linha">{% csrf_token %}<button type="submit" name="direcao" value="cima" class="secundario compacto" aria-label="Subir a {{ rotulo_ordem }}">Subir</button></form>{% endif %}
+{% if not ultimo %}<form method="post" action="{{ mover }}" class="em-linha">{% csrf_token %}<button type="submit" name="direcao" value="baixo" class="secundario compacto" aria-label="Descer a {{ rotulo_ordem }}">Descer</button></form>{% endif %}

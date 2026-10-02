@@ -359,3 +359,23 @@ def test_pergunta_com_regra_sem_opcao_registrada_e_valor_vazio():
         percorrer(conteudo, {pergunta_id(conteudo, 1, 1): None})
     assert erro.value.motivos == (Motivo.VALOR_VAZIO,)
     assert str(pergunta_id(conteudo, 1, 1)) in erro.value.violacoes[0].detalhe
+
+
+def test_secoes_nao_suportadas_publica():
+    # Feature 009 (contracts/diagnostico.md §1): a verificação de capacidade da jornada é
+    # pública e pura, e é a mesma que `percorrer` aplica — o editor só a consulta.
+    assert "secoes_nao_suportadas" in percurso.__all__
+    assert percurso.secoes_nao_suportadas(_linear()) == ()
+    conteudo = versao_mem(
+        secao_mem(pergunta_mem(tipo=TEXTO)),
+        secao_mem(pergunta_mem(regras={"Sim": 4}), pergunta_mem(regras={"Não": FIM})),
+        secao_mem(pergunta_mem(regras={"Sim": 4}), pergunta_mem(regras={"Sim": 4})),
+        secao_mem(pergunta_mem(tipo=TEXTO)),
+    )
+    secoes = percurso.secoes_nao_suportadas(conteudo)
+    assert secoes == (conteudo.secoes[1], conteudo.secoes[2])
+    with pytest.raises(ParticipacaoRejeitada) as erro:
+        percorrer(conteudo, {})
+    assert [v.detalhe for v in erro.value.violacoes] == [
+        f"Seção {s.id} tem 2 Perguntas com regra de navegação" for s in secoes
+    ]

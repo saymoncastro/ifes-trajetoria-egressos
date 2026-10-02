@@ -1,0 +1,19 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ pesquisa.nome }}{% endblock %}
+{% block conteudo %}
+<h1>{{ pesquisa.nome }}</h1>
+<h2>Versões</h2>
+{% if versoes %}
+<ul class="lista-simples">
+  {% for versao in versoes %}<li>
+    <p><a href="/editor/versoes/{{ versao.pk }}/">{{ versao.designacao }}</a>
+    — <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }}{% else %}Rascunho{% endif %}</span>{% if versao.origem %}
+    <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}</p>
+    <ul class="lista-acoes"><li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir de «{{ versao.designacao }}»</a></li></ul>
+  </li>{% endfor %}
+</ul>
+{% else %}
+<p>Ainda não há Versões nesta Pesquisa.</p>
+{% endif %}
+<p><a class="botao" href="/editor/pesquisas/{{ pesquisa.pk }}/versoes/nova/">Criar Versão em rascunho</a></p>
+{% endblock %}
