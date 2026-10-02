@@ -5,6 +5,10 @@ migração ou automaticamente. Usa só as operações existentes: incorporação
 simulada (001), materialização da baseline (003), cópia e publicação de Versão (002),
 criação, configuração e abertura de Campanha (004). Nunca cria Participação nem Resposta.
 
+Também registra os vínculos de governança dos operadores fictícios do editor (010): A atua
+pela CPAEG, B pela CSAEG da unidade Vitória e C não tem vínculo. São fictícios e não
+representam designação institucional real (DP-1002).
+
 A publicação da cópia é técnica e local, como nos testes das 005–007; a baseline continua em
 RASCUNHO e nada disso é publicação institucional (002/DP-001). Idempotente: repetir não
 duplica nada. Recomeçar do zero é recriar o banco local — não existe operação para remover
@@ -24,16 +28,24 @@ from trajetoria.campanha import operacoes as op_campanha
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.campanha.models import Campanha
 from trajetoria.campanha.regras import CampanhaRejeitada
+from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.simulada import FonteSimulada
 from trajetoria.formulario_2024 import materializar
 from trajetoria.formulario_2024.materializacao import MaterializacaoRecusada
+from trajetoria.governanca import operacoes as op_governanca
+from trajetoria.governanca.consultas import vinculos_ativos
+from trajetoria.governanca.models import Papel, VinculoDeGovernanca
 from trajetoria.instrumento import operacoes as op_instrumento
 from trajetoria.instrumento.models import Versao
 from trajetoria.instrumento.regras import OperacaoRejeitada
 from trajetoria.participacao.entrada import ResolucaoDaEntrada, situacao_de_entrada
 
 DESIGNACAO_DEMONSTRACAO = "Demonstração — cópia da referência 2024"
+VINCULOS = (
+    ("demonstracao:operador-a", Papel.CPAEG, ""),
+    ("demonstracao:operador-b", Papel.CSAEG, "Vitória"),
+)
 DURACAO = timedelta(days=180)
 CAMPANHAS = {
     "Demonstração — coleta ampla": {
@@ -79,6 +91,12 @@ def preparar() -> Resumo:
             "O banco contém dados que não são da fonte simulada. O cenário de demonstração só "
             "é preparado num banco local com dados fictícios."
         )
+    ficticios = [o.identificador for o in OPERADORES_FICTICIOS]
+    if VinculoDeGovernanca.objects.exclude(identificador_operador__in=ficticios).exists():
+        raise PreparoRecusado(
+            "O banco contém vínculos de governança que não são fictícios. O cenário de "
+            "demonstração só é preparado num banco local com dados fictícios."
+        )
     _exigir_campanhas_em_coleta()
     try:
         with transaction.atomic():
@@ -88,7 +106,13 @@ def preparar() -> Resumo:
             for nome, criterios in CAMPANHAS.items():
                 if not Campanha.objects.filter(nome=nome).exists():
                     _abrir_campanha(nome, versao, criterios)
-    except (MaterializacaoRecusada, OperacaoRejeitada, CampanhaRejeitada) as erro:
+            _garantir_vinculos()
+    except (
+        MaterializacaoRecusada,
+        OperacaoRejeitada,
+        CampanhaRejeitada,
+        op_governanca.VinculoRejeitado,
+    ) as erro:
         # Recusa de uma operação de domínio: a transação foi desfeita; nada ficou gravado.
         raise PreparoRecusado(
             f"Uma operação do preparo foi recusada ({erro}). Recrie o banco local e execute o "
@@ -117,6 +141,14 @@ def _versao_de_demonstracao() -> Versao:
     op_instrumento.publicar(copia)
     copia.refresh_from_db()
     return copia
+
+
+def _garantir_vinculos() -> None:
+    """Registra só o que ainda não está ativo: repetir o preparo não muda nada."""
+    for identificador, papel, unidade in VINCULOS:
+        ativos = vinculos_ativos(identificador)
+        if not any(v.papel == papel and v.unidade == unidade for v in ativos):
+            op_governanca.registrar_vinculo(identificador, papel, unidade)
 
 
 def _abrir_campanha(nome: str, versao: Versao, criterios: dict) -> None:

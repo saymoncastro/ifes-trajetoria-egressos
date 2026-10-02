@@ -8,8 +8,10 @@ import re
 from html.parser import HTMLParser
 
 from django.apps import apps
+from django.core import signing
 
 from tests.participacao.construcao import FIM, SecaoMem, _textos_das_opcoes
+from trajetoria.demonstracao.operador import COOKIE, OPERADORES_FICTICIOS, SALT
 from trajetoria.instrumento import operacoes as op
 from trajetoria.instrumento import regras as regras_002
 from trajetoria.instrumento.conteudo import Escala, conteudo_da_versao
@@ -23,6 +25,15 @@ PADROES_TECNICOS = (
         r"\b(" + "|".join(m.name for m in regras_002.Motivo) + r"|ESTRUTURA_NAO_SUPORTADA)\b"
     ),
 )
+
+
+A, B, C = (o.identificador for o in OPERADORES_FICTICIOS)
+
+
+def atuar_como(cliente, identificador: str):
+    """Grava o cookie assinado do operador fictício, como faz a escolha de operador (010)."""
+    cliente.cookies[COOKIE] = signing.get_cookie_signer(salt=COOKIE + SALT).sign(identificador)
+    return cliente
 
 
 def retrato(versao) -> tuple:

@@ -54,6 +54,7 @@ SO_NO_CENARIO = (
     "trajetoria.academico.incorporacao",
     "trajetoria.fonte_academica.cenarios",
     "trajetoria.participacao.entrada",
+    "trajetoria.governanca.operacoes",
 )
 
 

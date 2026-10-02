@@ -1,0 +1,30 @@
+{% extends "interface/base.html" %}
+{% block titulo %}Atuar como operador fictício{% endblock %}
+{% block conteudo %}
+<h1>Atuar como operador fictício</h1>
+<p>Esta é uma demonstração do editor institucional do instrumento com dados inteiramente fictícios. Escolher um operador não é login e não comprova identidade.</p>
+<p>A escolha identifica o operador apenas para demonstração. O que ele pode fazer no editor decorre dos vínculos de governança registrados, e não desta escolha.</p>
+{% if rotulo_em_uso %}<p class="aviso" role="status">Atuando agora como {{ rotulo_em_uso }}.</p>{% endif %}
+<ul class="lista-simples">
+  {% for operador in operadores %}
+  <li>
+    <h2>{{ operador.rotulo }}</h2>
+    {% if operador.atuacoes %}
+    <ul>{% for atuacao in operador.atuacoes %}<li>{{ atuacao }}</li>{% endfor %}</ul>
+    {% else %}
+    <p>Sem atuação institucional ativa.</p>
+    {% endif %}
+    <form method="post" action="/demonstracao/operador/escolher/">{% csrf_token %}
+      <input type="hidden" name="operador" value="{{ operador.identificador }}">
+      <button type="submit" class="primario">Atuar como {{ operador.rotulo }}</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+<p><a href="/editor/">Ir para o editor</a></p>
+{% if rotulo_em_uso %}
+<form method="post" action="/demonstracao/operador/encerrar/">{% csrf_token %}
+  <button type="submit">Encerrar a atuação como {{ rotulo_em_uso }}</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -21,12 +21,16 @@ def _caminhos():
 
 
 def test_modo_desligado_nenhuma_rota_responde(client, settings):
+    # 010: nem o cookie do operador A (CPAEG, gravado pela fixture), nem cabeçalho, parâmetro
+    # ou campo com identificador de operador abrem o editor fora do modo de demonstração.
     settings.TRAJETORIA_DEMONSTRACAO = False
     caminhos = list(_caminhos())
     assert len(caminhos) == len(urls.urlpatterns) > 20
+    operador = {"operador": ce.A, "texto": "X"}
+    cabecalho = {"HTTP_X_OPERADOR": ce.A}
     for caminho in caminhos:
-        assert client.get(caminho).status_code == 404, caminho
-        assert client.post(caminho, {"texto": "X"}).status_code == 404, caminho
+        assert client.get(caminho, operador, **cabecalho).status_code == 404, caminho
+        assert client.post(caminho, operador, **cabecalho).status_code == 404, caminho
 
 
 @pytest.mark.django_db

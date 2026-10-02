@@ -32,6 +32,7 @@ PERMITIDOS = {
     "trajetoria.instrumento.conteudo": None,
     "trajetoria.instrumento.regras": {"Motivo", "OperacaoRejeitada", "verificar_completude"},
     "trajetoria.instrumento.models": {
+        "EstadoVersao",
         "Pesquisa",
         "Versao",
         "Secao",
@@ -42,6 +43,14 @@ PERMITIDOS = {
     "trajetoria.participacao.percurso": {"secoes_nao_suportadas"},
     "trajetoria.participacao.regras": {"Motivo"},
     "trajetoria.interface.formularios": {"FormularioDaSecao"},
+    # 010: identificação (só em acesso.py) e as três regras; nunca operações de vínculo.
+    "trajetoria.demonstracao.operador": {"operador_em_uso"},
+    "trajetoria.governanca.consultas": {"vinculos_ativos"},
+    "trajetoria.governanca.regras": {
+        "pode_consultar_publicado",
+        "pode_consultar_rascunho",
+        "pode_elaborar_instrumento",
+    },
 }
 
 
@@ -69,6 +78,14 @@ def test_importacoes_permitidas():
                 continue  # `from trajetoria.instrumento import operacoes as op`
             assert modulo in PERMITIDOS, (arquivo.name, modulo)
             assert PERMITIDOS[modulo] is None or nome in PERMITIDOS[modulo], (arquivo.name, nome)
+
+
+def test_identificacao_so_em_acesso_e_nenhuma_escrita_de_vinculo():
+    for arquivo in _fontes((".py",)):
+        for modulo, _nome in _importacoes(arquivo):
+            if modulo == "trajetoria.demonstracao.operador":
+                assert arquivo.name == "acesso.py", arquivo.name
+            assert modulo not in ("trajetoria.governanca.operacoes", "trajetoria.governanca.models")
 
 
 def test_so_operacoes_da_002_e_nunca_publicar():

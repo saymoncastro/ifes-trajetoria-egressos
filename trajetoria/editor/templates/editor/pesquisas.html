@@ -2,6 +2,7 @@
 {% block titulo %}Pesquisas{% endblock %}
 {% block conteudo %}
 <h1>Pesquisas</h1>
+{% if somente_publicadas %}<p class="nota">{{ somente_publicadas_texto }}</p>{% endif %}
 {% if pesquisas %}
 <ul class="lista-simples">
   {% for pesquisa, quantidade in pesquisas %}<li><a href="/editor/pesquisas/{{ pesquisa.pk }}/">{{ pesquisa.nome }}</a> <span class="detalhe">— {{ quantidade }}</span></li>{% endfor %}
@@ -9,5 +10,5 @@
 {% else %}
 <p>Ainda não há Pesquisas.</p>
 {% endif %}
-<p><a class="botao" href="/editor/pesquisas/nova/">Criar Pesquisa</a></p>
+{% if atuacao.elaborar %}<p><a class="botao" href="/editor/pesquisas/nova/">Criar Pesquisa</a></p>{% endif %}
 {% endblock %}

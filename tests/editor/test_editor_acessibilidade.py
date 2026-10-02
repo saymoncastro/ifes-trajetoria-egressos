@@ -121,3 +121,14 @@ def test_nomes_acessiveis_e_estados_em_texto(client, rascunho):
     assert "Rascunho" in texto and "Obrigatória" in texto
     assert 'nav class="trilha" aria-label="Você está em"' in html
     assert html.count("<h1") == 1
+
+
+def test_recusas_de_acesso(cliente_sem_vinculo, cliente_csaeg, rascunho):
+    # 010: sem atuação; vínculo que não permite (leitura de rascunho e elaboração).
+    for resposta in (
+        cliente_sem_vinculo.get("/editor/"),
+        cliente_csaeg.get(f"/editor/versoes/{rascunho.pk}/"),
+        cliente_csaeg.get("/editor/pesquisas/nova/"),
+    ):
+        assert resposta.status_code == 403
+        assert verificar(resposta) == [], resposta.content.decode()[:200]
