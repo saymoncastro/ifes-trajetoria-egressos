@@ -40,6 +40,11 @@ O preparo garante, além do cenário da 008:
 | Operador fictício B | CSAEG, unidade Vitória, ativo |
 | Operador fictício C | nenhum |
 
+A partir da Feature 011, o preparo também cria a Campanha fictícia "Demonstração —
+acompanhamento Serra e Vitória" (nunca aberta, sem período, Versão de referência em
+rascunho), para o acompanhamento da coleta. Os operadores acima não mudam, e a Campanha não
+admite Participação ([quickstart da 011](../011-acompanhamento-operacional-coleta/quickstart.md)).
+
 A única migração nova é `governanca/0001_initial`. Depois de aplicada:
 
 ```bash

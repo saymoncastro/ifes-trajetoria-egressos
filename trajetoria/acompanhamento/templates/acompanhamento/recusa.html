@@ -1,0 +1,10 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p>{{ texto }}</p>
+<ul class="lista-acoes">
+  {% if atuacao %}<li><a href="/acompanhamento/">Voltar ao acompanhamento</a></li>{% endif %}
+  <li><a href="/demonstracao/operador/?destino=acompanhamento">Trocar operador fictício</a></li>
+</ul>
+{% endblock %}

@@ -1,6 +1,7 @@
 """Telas do adaptador de demonstração: escolher e encerrar a Pessoa fictícia (008;
 contracts/rotas.md, "Demonstração") e o operador fictício do editor (010;
-contracts/demonstracao-operador.md). Nada de domínio é criado ou alterado (FR-009)."""
+contracts/demonstracao-operador.md) e do acompanhamento da coleta (011). Nada de domínio é
+criado ou alterado (FR-009)."""
 
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -56,9 +57,14 @@ def encerrar(request):
 # --- Operador fictício do editor (010) --------------------------------------------------------
 
 
+# Destinos fechados depois da escolha (011 research R13): nunca um endereço vindo do cliente.
+_DESTINOS = {"acompanhamento": "/acompanhamento/"}
+
+
 @require_GET
 def operadores(request):
     em_uso = operador_em_uso(request)
+    destino = request.GET.get("destino")
     lista = [
         {
             "identificador": operador.identificador,
@@ -72,7 +78,11 @@ def operadores(request):
     return render(
         request,
         "demonstracao/operador.html",
-        {"operadores": lista, "rotulo_em_uso": rotulo_em_uso},
+        {
+            "operadores": lista,
+            "rotulo_em_uso": rotulo_em_uso,
+            "destino": destino if destino in _DESTINOS else None,
+        },
     )
 
 
@@ -81,8 +91,8 @@ def escolher_operador(request):
     operador = operador_ficticio(request.POST.get("operador"))
     if operador is None:
         raise Http404
-    # Sempre o início do editor: não há endereço de retorno (Clarifications 2026-10-02).
-    resposta = redirect("/editor/")
+    # Destino fechado: editor (padrão) ou acompanhamento; sem endereço vindo do cliente.
+    resposta = redirect(_DESTINOS.get(request.POST.get("destino"), "/editor/"))
     usar_operador(resposta, operador)
     return resposta
 

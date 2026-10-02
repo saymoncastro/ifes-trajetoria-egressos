@@ -44,8 +44,7 @@ PERMITIDOS = {
     "trajetoria.participacao.regras": {"Motivo"},
     "trajetoria.interface.formularios": {"FormularioDaSecao"},
     # 010: identificação (só em acesso.py) e as três regras; nunca operações de vínculo.
-    "trajetoria.demonstracao.operador": {"operador_em_uso"},
-    "trajetoria.governanca.consultas": {"vinculos_ativos"},
+    "trajetoria.demonstracao.operador": {"vinculos_do_operador_em_uso"},
     "trajetoria.governanca.regras": {
         "pode_consultar_publicado",
         "pode_consultar_rascunho",
