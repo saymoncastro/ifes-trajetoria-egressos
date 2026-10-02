@@ -93,6 +93,7 @@ def test_entrada_resolvida_um_unico_botao_sem_escolha(client, inst):
     campanha = c.campanha_aberta(inst.versao)
     resposta, texto = _tela(client, "SIM-P-0001")
     assert "Esta pesquisa refere-se à sua formação:" in texto
+    assert "você pode parar e continuar depois" in texto  # como o salvamento funciona
     assert "Tecnologia em Análise e Desenvolvimento de Sistemas" in texto and "Serra" in texto
     assert "Forma de oferta" not in texto  # não informada pela fonte: omitida
     assert [b for b in _botoes(resposta) if "pesquisa" in b] == ["Iniciar a pesquisa"]
@@ -111,6 +112,7 @@ def test_selecao_necessaria_uma_acao_por_formacao_sem_ranking(client, inst):
     campanha = c.campanha_aberta(inst.versao)
     resposta, texto = _tela(client, "SIM-P-0003")
     assert "Sobre qual formação do Ifes você responderá esta pesquisa?" in texto
+    assert "respondida separadamente para cada formação" in texto
     pessoa = ce.pessoa_da_fonte("SIM-P-0003")
     esperadas = [str(f.conclusao.pk) for f in situacao_de_entrada(pessoa).pendentes]
     assert _formacoes_nos_botoes(resposta) == esperadas and len(esperadas) == 2

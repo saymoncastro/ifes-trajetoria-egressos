@@ -66,7 +66,7 @@ Construído a partir de `ConteudoSecao` + `respostas`. Campos por Pergunta (posi
 | `p<n>` | texto curto | texto exatamente como digitado (`strip=False`) | só espaços = ausente |
 | `p<n>` | escala | inteiro entre `inicio` e `fim` | rádios |
 | `p<n>-complemento` | escolha com Opção `complemento_textual` | texto (`strip=False`) | só espaços = ausente |
-| `p<n>-remover` | escolha única em rádio e escala, **com Resposta gravada** | booleano | prevalece sobre `p<n>` |
+| `p<n>-remover` | escolha única em rádio e escala **não obrigatórias** | booleano | prevalece sobre `p<n>` |
 
 Todos `required=False`. Validação de forma: Opção existente, ponto de escala existente,
 complemento só com a Opção que o admite marcada. Contrato completo em

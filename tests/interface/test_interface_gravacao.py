@@ -90,7 +90,23 @@ def test_substituir_e_remover(client, cenario, ana):
     assert _resposta(ana, b.q(6)).opcao.posicao == 2
     _post(client, ana, 2, _dados_s2(p2="   ", **{"p5-remover": "1", "p5": "2"}))
     assert _resposta(ana, b.q(3)) is None  # só espaços = sem resposta
-    assert _resposta(ana, b.q(6)) is None  # "Remover minha resposta" prevalece
+    assert _resposta(ana, b.q(6)) is None  # "Deixar esta pergunta sem resposta" prevalece
+
+
+def test_sem_resposta_desfaz_marcacao_ainda_nao_gravada(client, cenario, ana):
+    b = cenario.base
+    _ate(ana, b, [1])
+    resposta = _post(client, ana, 2, _dados_s2(**{"p5": "2", "p5-remover": "1"}))
+    assert resposta.status_code == 302
+    assert _resposta(ana, b.q(6)) is None  # nada gravado para a opcional
+    assert _resposta(ana, b.q(2)) is not None  # as demais seguem gravadas
+
+
+def test_sem_resposta_nao_existe_em_obrigatoria(client, cenario, ana):
+    b = cenario.base
+    _ate(ana, b, [1, 2])
+    _post(client, ana, 2, _dados_s2(**{"p1-remover": "1"}))
+    assert _resposta(ana, b.q(2)) is not None  # campo inexistente: ignorado
 
 
 def test_multipla_sem_opcao_remove(client, cenario, ana):
@@ -158,7 +174,7 @@ def test_complemento_sem_a_opcao(client, cenario, ana, com_opcao):
     dados["p7-complemento"] = "Texto fictício"
     resposta = _post(client, ana, 8, dados)
     assert resposta.status_code == 200
-    assert "Para descrever, marque a opção «Outro:»." in ci.texto_visivel(resposta)
+    assert "Para descrever, marque a opção «Outro»." in ci.texto_visivel(resposta)
     assert c.retrato(ana) == antes
 
 
