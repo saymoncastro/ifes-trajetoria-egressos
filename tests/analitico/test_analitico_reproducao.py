@@ -277,7 +277,9 @@ def _importa_analitico(arquivo: Path) -> bool:
 
 def test_nenhum_outro_app_importa_o_analitico():
     raiz = Path(trajetoria.__file__).parent
-    ignorados = ("analitico", "__pycache__")
+    # `exportacao` (Feature 013) é a consumidora prevista da fronteira de leitura (spec 012
+    # FR-070); a proibição continua para todos os outros apps.
+    ignorados = ("analitico", "exportacao", "__pycache__")
     outros = [p for p in raiz.iterdir() if p.is_dir() and p.name not in ignorados]
     assert outros
     for app in outros:

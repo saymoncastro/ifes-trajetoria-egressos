@@ -11,6 +11,7 @@ Imports de `trajetoria.analitico.*` ficam dentro das funções, para que este m�
 antes de os modelos existirem.
 """
 
+from dataclasses import dataclass
 from datetime import timedelta
 from itertools import count
 
@@ -20,10 +21,12 @@ from tests.acompanhamento.construcao import (
     hoje,
     momento_em,
 )
-from tests.participacao.construcao import preencher_instrumento
+from tests.participacao.construcao import Instrumento, preencher_instrumento
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.campanha import operacoes as op_campanha
+from trajetoria.campanha.models import Campanha
 from trajetoria.fonte_academica.contrato import CAMPOS_DE_CONTEXTO
+from trajetoria.participacao.models import Participacao
 from trajetoria.participacao.operacoes import (
     concluir,
     iniciar_participacao,
@@ -137,3 +140,73 @@ def contagens() -> dict:
         for m in apps.get_app_config(nome).get_models()
     ]
     return {m._meta.label: m.objects.count() for m in modelos}
+
+
+# --- Cenário de referência (compartilhado pelas Features 012 e 013) ----------------------------
+
+
+@dataclass
+class Cenario:
+    inst: Instrumento
+    campanha: Campanha
+    serra_info: ConclusaoAcademica  # concluída
+    vitoria_info: ConclusaoAcademica  # concluída por recusa; curso homônimo
+    serra_eng: ConclusaoAcademica  # rascunho com Resposta fora do percurso
+    vitoria_sem_atributos: ConclusaoAcademica  # elegível sem Participação
+    serra_sem_participacao: ConclusaoAcademica  # elegível sem Participação
+    cefor: ConclusaoAcademica  # fora do critério
+    sem_unidade: ConclusaoAcademica  # fora do critério
+    concluida: Participacao
+    recusa: Participacao
+    rascunho: Participacao
+
+    @property
+    def elegiveis(self):
+        return {
+            self.serra_info.pk,
+            self.vitoria_info.pk,
+            self.serra_eng.pk,
+            self.vitoria_sem_atributos.pk,
+            self.serra_sem_participacao.pk,
+        }
+
+
+def cenario_de_referencia(inst) -> Cenario:
+    campanha = campanha_aberta_no_passado(inst.versao, unidades=["Serra", "Vitória"])
+    serra_info = conclusao(
+        unidade="Serra",
+        curso="Técnico em Informática",
+        nivel="Técnico",
+        modalidade="Presencial",
+        forma_oferta="Subsequente",
+        ano=2022,
+    )
+    vitoria_info = conclusao(
+        unidade="Vitória",
+        curso="Técnico em Informática",
+        nivel="Técnico",
+        modalidade="Presencial",
+        forma_oferta="Integrado",
+        ano=2021,
+    )
+    serra_eng = conclusao(
+        unidade="Serra", curso="Engenharia", nivel="Graduação", modalidade="Presencial", ano=2020
+    )
+    vitoria_sem_atributos = conclusao(unidade="Vitória")
+    serra_sem_participacao = conclusao(unidade="Serra", curso="Engenharia", ano=2022)
+    cefor = conclusao(unidade="Cefor", curso="Especialização", ano=2022)
+    sem_unidade = conclusao(curso="Técnico em Informática", ano=2022)
+    return Cenario(
+        inst=inst,
+        campanha=campanha,
+        serra_info=serra_info,
+        vitoria_info=vitoria_info,
+        serra_eng=serra_eng,
+        vitoria_sem_atributos=vitoria_sem_atributos,
+        serra_sem_participacao=serra_sem_participacao,
+        cefor=cefor,
+        sem_unidade=sem_unidade,
+        concluida=concluida(campanha, serra_info, inst),
+        recusa=concluida_por_recusa(campanha, vitoria_info, inst),
+        rascunho=rascunho_com_resposta_fora_do_percurso(campanha, serra_eng, inst),
+    )

@@ -25,7 +25,7 @@ from django.db.models import Count, Exists, OuterRef, QuerySet
 
 from trajetoria.analitico.models import RegistroDoSnapshot, SnapshotAnalitico
 from trajetoria.fonte_academica.contrato import CAMPOS_DE_CONTEXTO
-from trajetoria.instrumento.conteudo import conteudo_da_versao
+from trajetoria.instrumento.conteudo import ConteudoVersao, conteudo_da_versao
 from trajetoria.instrumento.models import Opcao, Pergunta
 from trajetoria.participacao.models import Participacao, Resposta
 from trajetoria.participacao.percurso import (
@@ -116,7 +116,12 @@ class LinhaDoDataset:
     as inativas); para não concluída, as Perguntas com Resposta preservada fora do percurso;
     `None` quando o percurso não é determinável: Versão com estrutura não suportada (006
     FR-016) ou Respostas que a 006 rejeita ao percorrer (só por escrita fora das operações).
-    Nada é descartado em nenhum dos casos."""
+    Nada é descartado em nenhum dos casos.
+
+    `perguntas_do_percurso` (acréscimo da 013, research R6): as Perguntas das Seções do
+    percurso que as regras da 006 determinam para as Respostas da Participação — o final, se
+    concluída; até a Seção que ainda não podia ser deixada, se não. `None` sem Participação ou
+    com percurso não determinável. É o que a exportação usa para a aplicabilidade."""
 
     conclusao_id: UUID
     elegivel_no_snapshot: bool
@@ -124,12 +129,15 @@ class LinhaDoDataset:
     participacao: ParticipacaoNoDataset | None
     respostas: MappingProxyType  # id da Pergunta → RespostaNoDataset
     fora_do_percurso: frozenset | None
+    perguntas_do_percurso: frozenset | None = None
 
 
 _SEM_RESPOSTAS = MappingProxyType({})
 
 
-def linhas_do_dataset(snapshot: SnapshotAnalitico) -> Iterator[LinhaDoDataset]:
+def linhas_do_dataset(
+    snapshot: SnapshotAnalitico, *, conteudo: ConteudoVersao | None = None
+) -> Iterator[LinhaDoDataset]:
     """Uma linha por registro, em ordem de `conclusao_id` (só determinismo).
 
     Consultas em número fixo, independente do número de registros: a Versão e seu conteúdo,
@@ -137,9 +145,15 @@ def linhas_do_dataset(snapshot: SnapshotAnalitico) -> Iterator[LinhaDoDataset]:
     das tabelas da 005 e convertidas em objetos de valor; nada é gravado (spec FR-071,
     FR-121). Volume: Participações e Respostas da Campanha são carregadas numa só passada;
     ler em blocos, se o volume real exigir, é mudança local, sem alterar o contrato
-    (research R12)."""
+    (research R12).
+
+    `conteudo`: o conteúdo da Versão da Campanha, quando quem chama já o leu (a exportação
+    da 013), para não lê-lo de novo. Precisa ser o da Versão da Campanha do snapshot."""
     campanha = snapshot.campanha
-    conteudo = conteudo_da_versao(campanha.versao)
+    if conteudo is None:
+        conteudo = conteudo_da_versao(campanha.versao)
+    elif conteudo.id != campanha.versao_id:
+        raise ValueError("conteudo não é o da Versão da Campanha do snapshot")
     # A estrutura é da Versão inteira: verificada uma vez, não por rascunho (006 FR-016).
     percurso_executavel = not secoes_nao_suportadas(conteudo)
     registros = list(
@@ -169,18 +183,20 @@ def linhas_do_dataset(snapshot: SnapshotAnalitico) -> Iterator[LinhaDoDataset]:
     for conclusao_id, elegivel, *contexto in registros:
         participacao = participacoes.get(conclusao_id)
         if participacao is None:
-            no_dataset, da_participacao, fora = None, _SEM_RESPOSTAS, frozenset()
+            no_dataset, da_participacao = None, _SEM_RESPOSTAS
+            fora, percurso = frozenset(), None
         else:
             no_dataset = ParticipacaoNoDataset(
                 participacao.id, participacao.iniciada_em, participacao.concluida_em
             )
             da_participacao = MappingProxyType(respostas.get(participacao.id, {}))
+            percurso = _percurso(conteudo, da_participacao) if percurso_executavel else None
             if no_dataset.concluida:
                 fora = frozenset()
-            elif percurso_executavel:
-                fora = _fora_do_percurso(conteudo, da_participacao)
-            else:
+            elif percurso is None:
                 fora = None
+            else:
+                fora = frozenset(da_participacao) - percurso
         yield LinhaDoDataset(
             conclusao_id=conclusao_id,
             elegivel_no_snapshot=elegivel,
@@ -188,19 +204,20 @@ def linhas_do_dataset(snapshot: SnapshotAnalitico) -> Iterator[LinhaDoDataset]:
             participacao=no_dataset,
             respostas=da_participacao,
             fora_do_percurso=fora,
+            perguntas_do_percurso=percurso,
         )
 
 
-def _fora_do_percurso(conteudo, respostas) -> frozenset | None:
-    """A mesma composição de `situacao_da_jornada` (006), sobre as funções puras do
-    percurso; nenhuma segunda implementação da jornada (research R9). Uma Participação cujas
-    Respostas a 006 rejeita (Opção ausente ou alheia na Pergunta com regra) fica com percurso
-    não determinável, sem interromper a leitura das demais linhas."""
+def _percurso(conteudo, respostas) -> frozenset | None:
+    """As Perguntas do percurso, pela mesma composição de `situacao_da_jornada` (006), sobre
+    as funções puras do percurso; nenhuma segunda implementação da jornada (research R9). Uma
+    Participação cujas Respostas a 006 rejeita (Opção ausente ou alheia na Pergunta com
+    regra) fica com percurso não determinável, sem interromper a leitura das demais linhas."""
     try:
         passagens = percorrer(conteudo, respondidas(respostas))
     except ParticipacaoRejeitada:
         return None
-    return frozenset(respostas) - perguntas_do_percurso(passagens)
+    return perguntas_do_percurso(passagens)
 
 
 # --- Indicadores ---------------------------------------------------------------------------------
