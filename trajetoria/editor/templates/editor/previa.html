@@ -1,0 +1,15 @@
+{% extends "editor/base.html" %}
+{% block titulo %}Pré-visualização — {{ versao.designacao }}{% endblock %}
+{% block conteudo %}
+<h1>Pré-visualização — {{ versao.designacao }}</h1>
+<p class="aviso" role="note">Pré-visualização — nada é gravado; os desvios não são executados.</p>
+<h2>{{ conteudo.titulo|default:"Sem título apresentado" }}</h2>
+{% if conteudo.texto_abertura %}<div class="abertura">{{ conteudo.texto_abertura|linebreaks }}</div>{% else %}<p>Sem texto de abertura.</p>{% endif %}
+<h2>Seções, na ordem</h2>
+{% if secoes %}<ol>
+  {% for ordinal, rotulo in secoes %}<li><a href="/editor/versoes/{{ versao.pk }}/previa/secoes/{{ ordinal }}/">{{ rotulo }}</a></li>{% endfor %}
+</ol>{% else %}<p>Esta Versão ainda não tem Seções.</p>{% endif %}
+<h2>Encerramento</h2>
+{% if conteudo.texto_encerramento %}<div>{{ conteudo.texto_encerramento|linebreaks }}</div>{% else %}<p>Sem texto de encerramento.</p>{% endif %}
+<p><a href="/editor/versoes/{{ versao.pk }}/">Voltar à estrutura da Versão</a></p>
+{% endblock %}

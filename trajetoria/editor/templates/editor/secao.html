@@ -1,0 +1,30 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ dados.rotulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ dados.rotulo }}</h1>
+<p><span class="estado">{% if editavel %}Rascunho{% else %}Publicada — não pode ser alterada{% endif %}</span>
+  Versão «{{ versao.designacao }}».</p>
+{% for problema in dados.problemas %}<p class="problema">Problema: {{ problema }}</p>{% endfor %}
+<p><strong>Texto introdutório:</strong> {% if secao.texto %}</p><div class="texto-secao">{{ secao.texto|linebreaks }}</div>{% else %}sem texto introdutório</p>{% endif %}
+<p><strong>Depois desta Seção:</strong> {{ dados.destino }}.</p>
+{% if editavel %}<ul class="lista-acoes">
+  <li><a href="{{ dados.endereco }}editar/">Editar dados da Seção</a></li>
+  <li><a href="{{ dados.endereco }}remover/" aria-label="Remover a {{ dados.rotulo }}">Remover a Seção</a></li>
+</ul>{% endif %}
+<h2>Perguntas: {{ dados.quantidade }}</h2>
+{% if editavel %}<p><a class="botao" href="{{ dados.endereco }}perguntas/nova/">Adicionar Pergunta</a></p>{% endif %}
+{% if dados.perguntas %}
+<ol class="itens">
+  {% for pergunta in dados.perguntas %}<li id="pergunta-{{ pergunta.ordinal }}">
+    <p><a href="{{ pergunta.endereco }}">{{ pergunta.texto }}</a>
+    <span class="detalhe">— {{ pergunta.tipo }}; {{ pergunta.obrigatoriedade }}{% if pergunta.resumo %}; {{ pergunta.resumo }}{% endif %}</span></p>
+    {% for desvio in pergunta.desvios %}<p class="detalhe">Desvio: {{ desvio }}</p>{% endfor %}
+    {% for problema in pergunta.problemas %}<p class="problema">Problema: {{ problema }}</p>{% endfor %}
+    {% if editavel %}<div class="lista-acoes">{% include "editor/_ordem.html" with mover=pergunta.endereco|add:"mover/" primeiro=forloop.first ultimo=forloop.last rotulo_ordem=pergunta.rotulo %}
+      <a href="{{ pergunta.endereco }}remover/" aria-label="Remover a {{ pergunta.rotulo }}">Remover</a></div>{% endif %}
+  </li>{% endfor %}
+</ol>
+{% else %}
+<p>Esta Seção ainda não tem Perguntas.</p>
+{% endif %}
+{% endblock %}

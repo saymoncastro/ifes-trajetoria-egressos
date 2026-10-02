@@ -1,0 +1,39 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ versao.designacao }}{% endblock %}
+{% block conteudo %}
+<h1>{{ versao.designacao }}</h1>
+<p>Pesquisa: {{ versao.pesquisa.nome }}.
+  <span class="estado">{% if versao.publicada %}Publicada em {{ versao.publicada_em|date:"d/m/Y" }} — não pode ser alterada{% else %}Rascunho{% endif %}</span>{% if versao.origem %}
+  <span class="detalhe">— criada a partir de «{{ versao.origem.designacao }}»</span>{% endif %}</p>
+<ul class="lista-acoes">
+  {% if editavel %}<li><a href="/editor/versoes/{{ versao.pk }}/dados/">Editar dados da Versão</a></li>
+  <li><a href="/editor/versoes/{{ versao.pk }}/diagnostico/">Diagnóstico técnico</a></li>{% endif %}
+  <li><a href="/editor/versoes/{{ versao.pk }}/previa/">Pré-visualizar</a></li>
+  <li><a href="/editor/versoes/{{ versao.pk }}/nova-a-partir/">Criar nova Versão a partir desta</a></li>
+</ul>
+{% if editavel %}<p class="nota">{{ trabalhe_em_copia }}</p>{% endif %}
+{% block diagnostico %}{% if diagnostico %}{% include "editor/_diagnostico.html" with resumo=True %}{% endif %}{% endblock %}
+<h2>Textos da Versão</h2>
+<p><strong>Título apresentado:</strong> {{ versao.titulo|default:"sem título apresentado" }}</p>
+<p><strong>Texto de abertura:</strong> {% if versao.texto_abertura %}</p><div class="texto-secao">{{ versao.texto_abertura|linebreaks }}</div>{% else %}sem texto de abertura</p>{% endif %}
+<p><strong>Texto de encerramento:</strong> {% if versao.texto_encerramento %}</p><div class="texto-secao">{{ versao.texto_encerramento|linebreaks }}</div>{% else %}sem texto de encerramento</p>{% endif %}
+<h2>Estrutura: {{ total_secoes }}, {{ total_perguntas }}</h2>
+{% if editavel %}<p><a class="botao" href="/editor/versoes/{{ versao.pk }}/secoes/nova/">Adicionar Seção</a></p>{% endif %}
+{% if secoes %}
+<ol class="estrutura">
+  {% for secao in secoes %}<li id="secao-{{ secao.ordinal }}">
+    <h3><a href="{{ secao.endereco }}">{{ secao.rotulo }}</a></h3>
+    <p class="detalhe">{{ secao.quantidade }}; depois desta Seção: {{ secao.destino }}.{% for problema in secao.problemas %} <span class="problema">Problema: {{ problema }}</span>{% endfor %}</p>
+    {% if editavel %}<div class="lista-acoes">{% include "editor/_ordem.html" with mover=secao.endereco|add:"mover/" primeiro=forloop.first ultimo=forloop.last rotulo_ordem=secao.rotulo %}
+      <a href="{{ secao.endereco }}remover/" aria-label="Remover a {{ secao.rotulo }}">Remover</a></div>{% endif %}
+    {% if secao.perguntas %}<ol>
+      {% for pergunta in secao.perguntas %}<li><a href="{{ pergunta.endereco }}">{{ pergunta.texto }}</a>
+        <span class="detalhe">— {{ pergunta.tipo }}; {{ pergunta.obrigatoriedade }}{% if pergunta.resumo %}; {{ pergunta.resumo }}{% endif %}{% if pergunta.tem_desvio %}; tem desvio de navegação{% endif %}</span>{% for problema in pergunta.problemas %} <span class="problema">Problema: {{ problema }}</span>{% endfor %}</li>
+      {% endfor %}
+    </ol>{% endif %}
+  </li>{% endfor %}
+</ol>
+{% else %}
+<p>Esta Versão ainda não tem Seções.</p>
+{% endif %}
+{% endblock %}

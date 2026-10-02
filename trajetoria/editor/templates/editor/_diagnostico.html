@@ -1,0 +1,18 @@
+{% if resumo %}<h2>Diagnóstico técnico</h2>{% endif %}
+<p class="situacao"><strong>Situação:</strong>
+{% if not diagnostico.estrutura_valida %}Com problemas de estrutura{% elif not diagnostico.compativel_com_jornada %}Estrutura válida, mas incompatível com a jornada atual{% else %}Sem impedimentos técnicos conhecidos{% endif %}.</p>
+{% if diagnostico.sem_impedimentos_conhecidos %}<p>{{ sem_impedimentos }}</p>{% endif %}
+{% if resumo %}
+{% if not diagnostico.sem_impedimentos_conhecidos %}<p>{{ diagnostico.estrutura|length }} problema(s) de estrutura; {{ diagnostico.jornada|length }} incompatibilidade(s) com a jornada atual. Os elementos com problema estão marcados abaixo.</p>{% endif %}
+<p><a href="/editor/versoes/{{ versao.pk }}/diagnostico/">Ver o diagnóstico técnico completo</a></p>
+{% else %}
+<h2>Estrutura válida</h2>
+{% if diagnostico.estrutura %}<ul>
+  {% for problema in diagnostico.estrutura %}<li>{{ problema.texto }} <a href="{{ problema.elemento.endereco }}">Corrigir em: {{ problema.elemento.rotulo }}</a></li>{% endfor %}
+</ul>{% else %}<p>Sim: nenhum problema de estrutura.</p>{% endif %}
+<h2>Compatível com a jornada atual</h2>
+{% if diagnostico.jornada %}<ul>
+  {% for problema in diagnostico.jornada %}<li>{{ problema.texto }} <a href="{{ problema.elemento.endereco }}">Corrigir em: {{ problema.elemento.rotulo }}</a></li>{% endfor %}
+</ul>{% else %}<p>Sim: nenhuma incompatibilidade com a jornada atual.</p>{% endif %}
+<p class="nota">{{ semantica }}</p>
+{% endif %}

@@ -1,0 +1,9 @@
+{% extends "editor/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<div role="status">{% for paragrafo in mensagem %}<p>{{ paragrafo }}</p>{% endfor %}</div>
+<ul class="lista-acoes">
+  {% for rotulo, endereco in ligacoes %}<li><a href="{{ endereco }}">{{ rotulo }}</a></li>{% endfor %}
+</ul>
+{% endblock %}

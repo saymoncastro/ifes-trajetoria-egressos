@@ -1,0 +1,17 @@
+{% if campo.is_hidden %}{{ campo }}{% elif campo.field.widget.input_type == "radio" %}<fieldset class="campo{% if campo.errors %} com-erro{% endif %}" id="campo-{{ campo.name }}">
+  <legend>{{ campo.label }}</legend>
+  {% if campo.help_text %}<p class="explicacao" id="{{ campo.auto_id }}-ajuda">{{ campo.help_text }}</p>{% endif %}
+  {% if campo.errors %}<p class="erro" id="{{ campo.auto_id }}-erro">{% for erro in campo.errors %}<span>Erro: {{ erro }}</span> {% endfor %}</p>{% endif %}
+  {% for opcao in campo %}<div class="opcao">{{ opcao.tag }}<label for="{{ opcao.id_for_label }}">{{ opcao.choice_label }}</label></div>
+  {% endfor %}
+</fieldset>{% elif campo.field.widget.input_type == "checkbox" %}<fieldset class="campo{% if campo.errors %} com-erro{% endif %}" id="campo-{{ campo.name }}">
+  <legend>{{ campo.label }}</legend>
+  {% if campo.help_text %}<p class="explicacao" id="{{ campo.auto_id }}-ajuda">{{ campo.help_text }}</p>{% endif %}
+  {% if campo.errors %}<p class="erro" id="{{ campo.auto_id }}-erro">{% for erro in campo.errors %}<span>Erro: {{ erro }}</span> {% endfor %}</p>{% endif %}
+  <div class="opcao">{{ campo }}<label for="{{ campo.id_for_label }}">Sim</label></div>
+</fieldset>{% else %}<div class="campo{% if campo.errors %} com-erro{% endif %}" id="campo-{{ campo.name }}">
+  <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+  {% if campo.help_text %}<p class="explicacao" id="{{ campo.auto_id }}-ajuda">{{ campo.help_text }}</p>{% endif %}
+  {% if campo.errors %}<p class="erro" id="{{ campo.auto_id }}-erro">{% for erro in campo.errors %}<span>Erro: {{ erro }}</span> {% endfor %}</p>{% endif %}
+  {{ campo }}
+</div>{% endif %}

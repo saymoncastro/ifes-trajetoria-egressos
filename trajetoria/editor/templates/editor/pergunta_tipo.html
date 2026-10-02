@@ -1,0 +1,13 @@
+{% extends "editor/base.html" %}
+{% block titulo %}Adicionar Pergunta{% endblock %}
+{% block conteudo %}
+<h1>Adicionar Pergunta</h1>
+<p>Escolha o tipo. Ele não poderá ser trocado depois.</p>
+<form method="get" action="{{ acao }}">
+  {% with campo=formulario.tipo %}{% include "editor/_campo.html" %}{% endwith %}
+  <div class="acoes">
+    <button type="submit" class="primario">Continuar</button>
+    <a href="{{ cancelar }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

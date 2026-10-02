@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if ha_erros %}Erro: {% endif %}{% block titulo %}{% endblock %} — Editor — Trajetória Ifes</title>
+<style>{% include "interface/estilo.css" %}
+{% include "editor/estilo.css" %}</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="faixa-demonstracao" role="note">
+  <p class="coluna">{{ banner }}</p>
+</div>
+<header class="cabecalho">
+  <div class="coluna"><a href="/editor/">Trajetória Ifes — Editor do instrumento</a></div>
+</header>
+<main id="conteudo" tabindex="-1">
+{% if ha_erros %}{% include "editor/_erros.html" %}{% endif %}
+  <div class="coluna">
+{% include "editor/_trilha.html" %}
+{% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
+{% block conteudo %}{% endblock %}
+  </div>
+</main>
+<footer>
+  <div class="coluna"><p>Trajetória Ifes — editor do instrumento, ambiente local não produtivo.</p></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,35 @@
+/* Editor do instrumento (009) — acréscimos à folha da 008, sem redesenhá-la (research R15).
+   Mesmas cores e foco; sem larguras fixas acima de 320 px. */
+
+.coluna { max-width: 56rem; }
+
+.trilha ol { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; list-style: none; padding: 0; margin: 0 0 1rem; font-size: 0.9375rem; }
+.trilha li + li::before { content: "›"; margin-right: 0.5rem; }
+
+.estado { display: inline-block; font-weight: 600; border: 2px solid #565c65; padding: 0 0.5rem; }
+.problema { color: #b50909; font-weight: 600; }
+
+.campo { margin: 0 0 1.25rem; padding: 0; border: 0; min-width: 0; }
+.campo > label, .campo legend { display: block; font-weight: 600; margin: 0 0 0.25rem; padding: 0; }
+.campo.com-erro { border-left: 4px solid #b50909; padding-left: 0.75rem; }
+
+textarea, input[type="number"] {
+  display: block; width: 100%; max-width: 100%;
+  font: inherit; padding: 0.5rem; min-height: 2.75rem;
+  border: 2px solid #565c65; border-radius: 0; background: #ffffff; color: #1b1b1b;
+}
+textarea { min-height: 6rem; }
+.com-erro textarea, .com-erro input[type="number"] { border-color: #b50909; }
+
+.estrutura, .itens { padding-left: 1.5rem; }
+.estrutura > li, .itens > li { margin: 0 0 1rem; overflow-wrap: anywhere; }
+.estrutura ol { padding-left: 1.25rem; margin-top: 0.5rem; }
+.estrutura ol > li { margin: 0 0 0.25rem; }
+.detalhe { font-size: 0.9375rem; }
+
+.lista-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; list-style: none; padding: 0; margin: 0.25rem 0 0.75rem; }
+form.em-linha { display: inline; margin: 0; }
+button.compacto { min-height: 2.75rem; min-width: 2.75rem; padding: 0.25rem 0.75rem; }
+
+.previa .pergunta { margin-bottom: 0.5rem; }
+.anotacoes { margin: 0 0 1.75rem; padding-left: 1.25rem; font-size: 0.9375rem; }
