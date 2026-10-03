@@ -70,7 +70,11 @@ def test_tres_regras_do_editor_e_a_regra_de_acompanhamento():
         for n, o in vars(regras).items()
         if inspect.isfunction(o) and n[0] != "_" and o.__module__ == regras.__name__
     }
-    acompanhamento = {pode_acompanhar_coleta.__name__, escopo_de_acompanhamento.__name__}
+    acompanhamento = {
+        pode_acompanhar_coleta.__name__,
+        escopo_de_acompanhamento.__name__,
+        "pode_simular_comunicacao",
+    }
     assert publicas == {r.__name__ for r in REGRAS} | acompanhamento
     assert set(regras.__all__) == publicas | {"EscopoDeAcompanhamento"}
 
@@ -130,3 +134,18 @@ def test_acompanhamento_depende_so_dos_vinculos(settings):
     ligado = _escopo([CSAEG_VITORIA, SERRA])
     settings.TRAJETORIA_DEMONSTRACAO = False
     assert _escopo([CSAEG_VITORIA, SERRA]) == ligado
+
+
+@pytest.mark.parametrize(
+    "papel,ativo,esperado",
+    [
+        ("CPAEG", True, True),
+        ("CSAEG", True, True),
+        ("CPAEG", False, False),
+        ("CSAEG", False, False),
+        ("tecnico", True, False),
+    ],
+)
+def test_capacidade_simulacao_explicitamente_nomeada(papel, ativo, esperado):
+    assert regras.pode_simular_comunicacao([_v(papel, "Vitória", ativo)]) is esperado
+    assert not regras.pode_simular_comunicacao([])

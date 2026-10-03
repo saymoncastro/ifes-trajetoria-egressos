@@ -63,6 +63,6 @@ def test_somente_get(ref, cliente_cpaeg):
 
 def test_toda_rota_exige_o_gate_de_acompanhamento():
     rotas = [p for p in urls.urlpatterns if isinstance(p, URLPattern)]
-    assert len(rotas) == len(urls.urlpatterns) == 2
+    assert len(rotas) == len(urls.urlpatterns) == 4
     for rota in rotas:
         assert getattr(rota.callback, "acompanhamento", False) is True, rota.pattern

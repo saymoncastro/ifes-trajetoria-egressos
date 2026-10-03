@@ -23,6 +23,8 @@
 </dl>
 {% if not resumo.elegiveis %}<p>{{ sem_elegiveis }}</p>{% endif %}
 
+<p><a href="/acompanhamento/campanhas/{{ item.campanha.pk }}/comunicacao/">Comunicação simulada</a></p>
+
 {% include "acompanhamento/_tabela_recorte.html" %}
 <p class="nota">Números calculados em {{ momento|date:"d/m/Y H:i" }}.</p>
 {% endblock %}

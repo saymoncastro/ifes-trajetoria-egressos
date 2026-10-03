@@ -5,8 +5,11 @@ resolver qualquer rota."""
 from django.urls import path
 
 from trajetoria.acompanhamento import views
+from trajetoria.comunicacao import views as comunicacao
 
 urlpatterns = [
     path("", views.campanhas),
+    path("campanhas/<uuid:campanha>/comunicacao/", comunicacao.preparar),
+    path("campanhas/<uuid:campanha>/comunicacao/simular/", comunicacao.simular),
     path("campanhas/<uuid:campanha>/", views.campanha),
 ]
