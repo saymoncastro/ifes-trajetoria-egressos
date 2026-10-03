@@ -597,3 +597,48 @@ def test_raio_unico_nos_controles(secao_8):
         assert ci.resolver(por_seletor[seletor]["border-radius"], ci.tokens(secao_8)) == raio, (
             seletor
         )
+
+
+# --- T015: assinatura do Ifes (FR-017, FR-018; research R3) ----------------------------------
+# Ativo derivado do EPS oficial, aceito pelo solicitante; usado byte a byte (SHA-256).
+
+ASSINATURA = DIR_INTERFACE / "assinatura.svg"
+SHA256_DA_ASSINATURA = "bb35783718560dca4ce1a6a20a8fca283881b9371fceb1b4a72f57ce7f387fc7"
+NOME_ACESSIVEL = "Instituto Federal do Espírito Santo"
+
+
+def test_ativo_da_assinatura_e_o_recebido_sem_alteracao():
+    import hashlib
+
+    assert hashlib.sha256(ASSINATURA.read_bytes()).hexdigest() == SHA256_DA_ASSINATURA
+
+
+def test_assinatura_antes_do_nome_em_toda_tela_da_jornada(telas_da_jornada):
+    svg = ASSINATURA.read_text(encoding="utf-8").strip()
+    for nome, html in telas_da_jornada.items():
+        cabecalho = _parte(html, "header")
+        m = re.search(
+            rf'<span class="assinatura" role="img" aria-label="{NOME_ACESSIVEL}">'
+            r"\s*(.*?)\s*</span>",
+            cabecalho,
+            re.S,
+        )
+        assert m, nome
+        assert m[1] == svg, nome  # incluída inline, sem alteração
+        assert cabecalho.index('class="assinatura"') < cabecalho.index("Trajetória Ifes"), nome
+
+
+def test_assinatura_ausente_fora_da_jornada(telas_fora_da_jornada):
+    for nome, html in telas_fora_da_jornada.items():
+        assert 'class="assinatura"' not in html and "<svg" not in html, nome
+
+
+def test_dimensao_da_assinatura_garante_simbolo_minimo(client, cenario):
+    """Altura fixa em px: símbolo ≥ 30 px (Manual da Marca); a área de proteção é a margem
+    do próprio ativo, sem recorte (research R3)."""
+    ci.entrar_como(client, cenario.pessoa("SIM-P-0001"))
+    html = _html(client.get("/formacoes/"))
+    altura = ci.valor(html, {"assinatura"}, "", "svg", "height")
+    assert altura and altura.endswith("px")
+    assert float(altura[:-2]) * (219.234375 - 56.375) / 284 >= 30  # símbolo no viewBox 709×284
+    assert ci.valor(html, {"assinatura"}, "", "svg", "width") == "auto"

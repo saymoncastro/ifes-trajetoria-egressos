@@ -86,11 +86,17 @@
   border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
 }
 .produto .coluna {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
-  padding-top: var(--espaco-3); padding-bottom: var(--espaco-3);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--espaco-4);
 }
+/* Assinatura: altura fixa em px (não cresce nem encolhe com a fonte). 54 px → símbolo de
+   31 px (mínimo do Manual: 30 px); as margens do próprio ativo (≥ 7,8 px) são a área de
+   proteção de 1 módulo (6,7 px) — por isso o cabeçalho não tem respiro vertical próprio e
+   nada é posto dentro dessa margem. */
+.assinatura { display: block; flex: none; line-height: 0; }
+.assinatura svg { display: block; height: 54px; width: auto; }
 .produto-nome {
-  margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--espaco-3);
+  margin: 0; padding: var(--espaco-2) 0; display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 0 var(--espaco-3);
 }
 /* O separador só existe entre a assinatura e o nome (sem a assinatura, não aparece). */
 .assinatura + .produto-nome {

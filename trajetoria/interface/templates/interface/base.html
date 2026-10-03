@@ -20,9 +20,12 @@
     {% endif %}
   </div>
 </div>
-{# Cabeçalho do produto (015 FR-015, FR-016; contracts/shell.md). A assinatura oficial do Ifes entra antes do nome quando houver o SVG oficial (D-03; tasks T015): nada a substitui. #}
+{# Cabeçalho do produto (015 FR-015 a FR-017; contracts/shell.md). Assinatura do Ifes antes do nome, inline e sem alteração (research R3; validação pela ACS: D-03). #}
 <header class="produto">
   <div class="coluna">
+    <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo">
+{% include "interface/assinatura.svg" %}
+    </span>
     <p class="produto-nome"><span class="nome">Trajetória Ifes</span> <span class="subtitulo">Acompanhamento de egressos</span></p>
   </div>
 </header>
