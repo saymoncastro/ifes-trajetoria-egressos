@@ -5,8 +5,12 @@ description: "Tasks da Feature 015 — Foundations e validação da identidade v
 
 # Tasks: Foundations e validação da identidade visual da jornada do egresso
 
-> **Estado (2026-10-03, rodada 2): gate de critérios objetivos APROVADO — 46/46 tasks.**
+> **Estado (2026-10-03, rodada 3): gate de critérios objetivos APROVADO — 46/46 tasks.**
 >
+> - Rodada 3 (revisão do solicitante, refinamento na mesma branch, como T040): assinatura
+>   com símbolo de 36 px a partir de 352 px (cabeçalho de 68 px; FR-016 atualizado) e
+>   48 px entre a confirmação e a ficha (FR-029). Verde do fio × verde do ativo levado à
+>   ACS em D-03 (c), sem mudança.
 > - T015 (assinatura) e T041 (rodada final) concluídas com o SVG **derivado do EPS
 >   oficial e aceito pelo solicitante** (research R3; SHA-256 `bb357837…387fc7`). Não é um
 >   SVG fornecido pela ACS.

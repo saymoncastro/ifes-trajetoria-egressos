@@ -4,8 +4,12 @@ Formato: [contracts/registro-validacao.md](contracts/registro-validacao.md). **S
 As capturas **não são versionadas**: ficam fora do repositório e serão anexadas ao PR pelos
 identificadores abaixo (`R{rodada}-G{situação}-{A|B}-{largura}-{fonte}`).
 
-> **Estado (2026-10-03, rodada 2): gate de critérios objetivos APROVADO — 46/46 tasks.**
+> **Estado (2026-10-03, rodada 3): gate de critérios objetivos APROVADO — 46/46 tasks.**
 >
+> - Rodada 3 (revisão do solicitante): assinatura com símbolo de 36 px a partir de 352 px
+>   (cabeçalho de 68 px; FR-016 atualizado com o limite medido) e 48 px entre a
+>   confirmação e a ficha (FR-029). Verde do fio × verde do ativo: pergunta para a ACS em
+>   D-03 (c), sem mudança.
 > - T015 (assinatura) e T041 (rodada final) concluídas com o SVG **derivado do EPS
 >   oficial e aceito pelo solicitante** (research R3; SHA-256 `bb357837…387fc7`). Não é um
 >   SVG fornecido pela ACS.
@@ -186,3 +190,125 @@ rodada 1 para os aspectos que não dependem da assinatura).
   PDG): **abertas**.
 - Itens para a propagação futura: shell em 403/404/500; shell do editor e do
   acompanhamento.
+
+---
+
+## Rodada 3 — 2026-10-03 (revisão do solicitante: assinatura, shell e confirmação)
+
+Refinamento na mesma branch depois da revisão das capturas das rodadas 1 e 2. Foco:
+assinatura, shell e confirmação; os demais critérios foram repetidos nos 7 estados.
+
+### Cabeçalho
+
+| Item | Valor |
+|---|---|
+| Código medido | `claude/feature-015-identidade-visual` em `ad612a8` + rodada 3 (working tree antes do commit) |
+| Navegador e banco | Os mesmos das rodadas 1 e 2 (painel do navegador do app; `trajetoria_015`, dados fictícios). Capturas nítidas com Chromium headless a 2× |
+| Direção mergeada | **B** |
+| Assinatura | O mesmo ativo da rodada 2 (SHA-256 inalterado); só a altura de exibição muda |
+| Estados | G1a a G4f com o `<style>` servido pelo sistema; G1a e G4f recapturados ao vivo (Maria já concluiu uma formação, então G1a mostra a entrada direta) |
+
+### Comparação da assinatura: símbolo de 31 × 36 × 38 px
+
+Medida com a mesma página e o mesmo CSS, trocando só a altura do ativo (54, 63 e 66 px).
+"Conjunto" = da borda esquerda da assinatura ao fim do nome do produto; a coluna útil tem
+343 px a 375 e 288 px a 320.
+
+| Medida | Símbolo 31 px (54 px) | Símbolo 36 px (63 px) | Símbolo 38 px (66 px) |
+|---|---|---|---|
+| Símbolo real | 31,0 px | 36,1 px | 37,8 px |
+| Largura da assinatura | 134,8 px | 157,3 px | 164,8 px |
+| Cabeçalho a 375 / 1280 px, fonte 100% | 59 / 59 px | 68 / 68 px | 71 / 71 px |
+| "Trajetória Ifes" a 375 px, 100% | ao lado, 1 linha | ao lado, 1 linha | ao lado, 1 linha |
+| Conjunto a 375 px, 100% | 286 px | 309 px | 316 px |
+| A 320 px, 100% | ao lado, 1 linha; conjunto 286 px; cabeçalho 59 px | **nome abaixo da assinatura**, com o separador solto à esquerda; cabeçalho 107 px | **nome abaixo**; cabeçalho 110 px |
+| A 375 px, 200% | nome abaixo, 1 linha; cabeçalho 136 px | nome abaixo, 1 linha; 145 px | nome abaixo, 1 linha; 148 px |
+| A 320 px, 200% | nome abaixo, 2 linhas ("Trajetória" / "Ifes"); 181 px | igual; 190 px | igual; 193 px |
+| A 1280 px, 200% | ao lado; 85 px | ao lado; 85 px | ao lado; 85 px |
+| Sobreposição | nenhuma | nenhuma | nenhuma |
+| Rolagem horizontal | nenhuma | nenhuma | nenhuma |
+| Assinatura na 1ª viewport a 375 × 667, 100%, com a faixa | y até 224 px | y até 233 px | y até 236 px |
+| Primeira ação de Maria a 375 × 667, sem a faixa | 499 px | 508 px | 511 px |
+| Leitura do texto da assinatura a 375 px (2×) | "Espírito Santo" no limite, parece miniatura | legível, sem parecer miniatura | legível; ganho pequeno sobre 36 px |
+
+**Escolha: símbolo de 36 px (63 px de altura) a partir de 22em (352 px); 31 px abaixo
+disso.**
+
+- 36 px é o menor tamanho em que o texto da assinatura deixa de parecer miniatura; 38 px
+  quase não melhora a leitura e aumenta o cabeçalho em mais 3 px.
+- A 320 px, 36 e 38 px empurram o nome para baixo da assinatura, com o separador solto à
+  esquerda: visualmente inadequado, embora caiba. Por isso, abaixo de 352 px a assinatura
+  continua com 54 px (símbolo de 31 px, acima do mínimo de 30 px) e o nome fica ao lado.
+  Com 63 px, o conjunto precisa de 341 px de largura; 352 px deixa folga para fontes do
+  sistema mais largas.
+- FR-016 passa de 64 px (hipótese) para **68 px**, o valor medido; o teto experimental de
+  72 px não foi usado.
+- O SVG e o texto do nome do produto não mudaram.
+
+Capturas: `R3-assinatura-31-36-38-375`, `R3-assinatura-31-36-38-320`,
+`R3-assinatura-31-36-38-375-200`.
+
+### Confirmação: separação entre o bloco de sucesso e a ficha
+
+Comparadas 24 px (atual), 32 px e 48 px a 375 px (`R3-G4f-separacao-24-32-48`). Com 24 e
+32 px, os fios de sucesso e da marca, alinhados na mesma coluna, ainda parecem uma linha
+interrompida; com 48 px leem como dois blocos.
+
+**Escolha: 48 px** (`--espaco-7`, a mesma separação usada entre Perguntas), aplicada só
+ao bloco de sucesso quando a ficha vem logo abaixo (`.confirmacao:has(+ .contexto)`). A
+ficha, suas cores, o fio e a paleta não mudam. Quando a Versão não tem texto de
+encerramento, o agradecimento fica entre os dois blocos e a separação continua de 24 px.
+Medido: 48 px a 320–1280 px com fonte a 100% (96 px a 200%, porque o token é em rem).
+Teste: `test_confirmacao_separada_da_ficha_sem_mudar_a_ficha`.
+
+### Verde do fio × verde do ativo
+
+Nada alterado. Pergunta registrada em D-03 (c) para a ACS: "O fio de marca do produto deve
+usar o HEX #2f9e41 publicado no Manual ou o #37a033 efetivamente presente no arquivo
+oficial EPS utilizado para derivar a assinatura SVG?"
+
+### Medidas
+
+7 estados (G1a, G1b, G2, G3p, G3e, G4c, G4f) × 320, 360, 375, 390, 430 e 1280 px × fonte
+100% e 200% (84 combinações).
+
+| Critério | Resultado | Medida |
+|---|---|---|
+| SC-001 — assinatura | **Aprovado** | Símbolo 36,1 px a ≥ 352 px e 31 px a 320 px (≥ 30 px); módulo 7,8 px coberto pelas margens do ativo; a 375 × 667, assinatura até y = 233 px mesmo com a faixa de demonstração |
+| SC-002 — cabeçalho ≤ 68 / ≤ 80 px; rodapé ≤ 120 px | **Aprovado** | Cabeçalho **68 px** a 360, 375, 390, 430 e 1280 px; **59 px** a 320 px; rodapé 76 px. A 200% (informativo): 145 px a 360–430 px e 181 px a 320 px, com o nome abaixo da assinatura (como na rodada 2); 85 px a 1280 px |
+| Nome do produto | Aprovado | 0 sobreposições em 84 combinações; com fonte a 100%, "Trajetória Ifes" fica ao lado da assinatura, em 1 linha, em todas as larguras |
+| SC-003 — contraste | Aprovado | Texto ≥ 6,74:1 e contornos ≥ 6,74:1; 0 abaixo |
+| SC-004 — foco | Aprovado | Regras de foco inalteradas; nenhum elemento focável no cabeçalho; teste do foco do resumo verde |
+| SC-005 — sem rolagem horizontal | Aprovado | 0 nas 84 combinações |
+| SC-006 — primeira ação na 1ª tela (014 SC-010) | Aprovado | A 375 × 667, descontada a faixa: Maria 508 px, Diego 485 px (≤ 667) |
+| SC-007 a SC-011 | Aprovados | Inventário do verde idêntico ao da rodada 2 (fio do cabeçalho, contexto e ficha, sucesso) |
+| Confirmação (FR-029) | Aprovado | 48 px entre o bloco de sucesso e a ficha; ficha inalterada |
+| SC-012 — administração | Aprovado | Impressões de estilos computados contra a base anterior à 015: editor e acompanhamento **idênticos** a 375 e 1280 px; prévia muda só dentro das Perguntas (8 px entre Perguntas mantidos) |
+| SC-013 — suíte e fronteiras | Aprovado | `uv run pytest`: **1848 passed**; `ruff check` limpo; `makemigrations --check` sem mudanças; sem JavaScript nem recurso externo; ativo idêntico ao recebido |
+| SC-014 — registro completo | Aprovado | Este documento (rodadas 1 a 3) |
+
+**Peso inline:** `jornada.css` ≈ 7,0 KB (era ≈ 6,5 KB; o acréscimo é quase todo de
+comentários que registram as decisões desta rodada).
+
+### Observações para a revisão perceptiva
+
+- Com fonte a 200%, o nome do produto passa para baixo da assinatura e o separador
+  vertical fica à esquerda dele, sem nada ao lado. Já era assim na rodada 2 e não depende
+  do tamanho escolhido; o spec permite o nome abaixo da assinatura nesse caso.
+- Com a fonte padrão do navegador aumentada (e não só a da página), a regra de 22em passa
+  a valer em larguras maiores; nas larguras menores a assinatura fica em 54 px. Os dois
+  tamanhos atendem aos critérios.
+
+### Capturas desta rodada (fora do repositório)
+
+`R3-G1a-B-375-100`, `R3-G1a-B-320-100`, `R3-G1b-B-375-100`, `R3-G4f-B-375-100`,
+`R3-G1a-B-375-200-cabecalho`, `R3-G1a-B-1280-100`, `R3-assinatura-31-36-38-375`,
+`R3-assinatura-31-36-38-320`, `R3-assinatura-31-36-38-375-200`,
+`R3-G4f-separacao-24-32-48`.
+
+### Resultado da rodada 3
+
+- **Critérios objetivos SC-001 a SC-014: aprovados. Gate aprovado.**
+- Revisão perceptiva: **pendente**.
+- D-03 (validação do ativo, uso em publicação/produção e verde do fio) e D-02 (aplicação
+  do PDG): **abertas**. Direção B continua o valor provisório.

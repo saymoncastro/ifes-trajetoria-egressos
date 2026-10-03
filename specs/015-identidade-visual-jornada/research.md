@@ -131,10 +131,11 @@ reconstrói a marca. Fica registrado:
 | Conteúdo | 39 `<path>`; símbolo IF + "INSTITUTO FEDERAL / Espírito Santo"; sem metadados |
 | Cores no ativo | verde `#37a033`, vermelho `#cf181f`, texto `#231f20` — **diferentes** dos HEX do Manual (`#2f9e41`, `#cd191e`, preto); provável efeito da conversão do CMYK do EPS. Registrado, não corrigido (o ativo não é alterado) |
 | Uso no projeto | `interface/assinatura.svg`, **byte a byte igual** ao recebido (teste por SHA-256), incluído inline por `{% include %}` |
-| Dimensionamento | altura 54 px (largura ≈ 135 px): símbolo 31 px (≥ 30 px); as margens do próprio ativo (7,8 a 12,3 px) cobrem a área de proteção de 1 módulo (6,7 px) em todos os lados; nada é posto dentro dela |
+| Dimensionamento | altura 54 px (largura ≈ 135 px): símbolo 31 px (≥ 30 px); as margens do próprio ativo (7,8 a 12,3 px) cobrem a área de proteção de 1 módulo (6,7 px) em todos os lados; nada é posto dentro dela. **Gate, rodada 3:** a partir de 22em (352 px), altura 63 px (largura ≈ 157 px): símbolo 36 px, módulo 7,8 px, cabeçalho de 68 px; abaixo de 352 px continua em 54 px, porque com 63 px o nome passaria para baixo da assinatura (validacao.md, rodada 3) |
 
 **D-03 continua aberta** quanto à validação do ativo e do uso em publicação/produção pela
-ACS; a troca por um SVG fornecido pela ACS é a substituição de um arquivo (e do SHA-256 no
+ACS, e quanto ao verde do fio de marca (`#2f9e41` do Manual × `#37a033` do ativo; pergunta
+registrada no spec, D-03 (c)); a troca por um SVG fornecido pela ACS é a substituição de um arquivo (e do SHA-256 no
 teste).
 
 **Alternativas rejeitadas (por regra do solicitante):** usar o PNG oficial embutido;

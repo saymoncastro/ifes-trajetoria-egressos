@@ -41,6 +41,7 @@ próprias).
 
 | Medida | Limite | Condição |
 |---|---|---|
-| Altura do cabeçalho | ≤ 64 px a 375 px; ≤ 80 px a 1280 px | Fonte a 100%; faixa de demonstração fora da medida |
+| Altura do cabeçalho | ≤ 68 px a 375 px; ≤ 80 px a 1280 px | Fonte a 100%; faixa de demonstração fora da medida (gate, rodada 3: era 64 px) |
+| Tamanho da assinatura | 63 px de altura (símbolo de 36 px) a partir de 22em (352 px); 54 px (símbolo de 31 px) abaixo disso | O nome do produto fica ao lado da assinatura com fonte a 100% |
 | Altura do rodapé | ≤ 120 px a 375 px | Sem a linha de demonstração |
 | Rolagem horizontal | 0 | 320 a 1280 px, fonte de 100% a 200% |

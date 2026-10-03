@@ -109,6 +109,14 @@ Esta feature responde:
   autorização) só tem EPS, JPG e PNG. Sem SVG, a parte da assinatura fica bloqueada por
   D-03 e o formato deve ser pedido à ACS; nenhum formato é convertido nem redesenhado
   (FR-017, FR-018; research R3).
+- Q: (Revisão do solicitante após a rodada 2) A assinatura pode crescer além do limite de
+  64 px do cabeçalho? → A: Sim, se for necessário para a leitura; comparar símbolo de 31,
+  36 e 38 px e ficar com o menor adequado, sem alterar o SVG nem o nome do produto, e só
+  então fixar o limite. Resultado da rodada 3: 36 px a partir de 352 px de largura e 31 px
+  abaixo disso; cabeçalho de 68 px (FR-016).
+- Q: Como tratar os dois verdes vizinhos na confirmação? → A: Só com separação vertical
+  entre o bloco de sucesso e a ficha, sem mudar a ficha, suas cores, o fio ou a paleta
+  (FR-029). A diferença entre o verde do fio (Manual) e o do ativo vai para a ACS (D-03).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -134,7 +142,7 @@ redor; abrir 403/404 e conferir o shell conforme a decisão do plan (D8).
 
 1. **Given** qualquer tela da jornada a 375 px, **When** carregada, **Then** a
    assinatura oficial do Ifes está na primeira viewport, legível, com o símbolo de pelo
-   menos 30 px e a área de proteção livre, e o cabeçalho do produto tem no máximo 64 px
+   menos 30 px e a área de proteção livre, e o cabeçalho do produto tem no máximo 68 px
    de altura (descontados a faixa e os controles de demonstração).
 2. **Given** a mesma tela a 1280 px, **When** carregada, **Then** o cabeçalho tem no
    máximo 80 px e mostra também o subtítulo "Acompanhamento de egressos".
@@ -300,7 +308,7 @@ administrativas listadas em SC-012; suítes da 009 e da 011.
 
 - **320 px com fonte a 200%**: assinatura e nome do produto não podem gerar rolagem
   horizontal; se não couberem lado a lado, o nome passa para baixo da assinatura,
-  mantendo a assinatura acima do limite mínimo; o limite de 64 px vale para fonte a
+  mantendo a assinatura acima do limite mínimo; o limite de 68 px vale para fonte a
   100%.
 - **Espaço insuficiente para a assinatura no tamanho mínimo**: a assinatura nunca é
   reduzida abaixo de 30 px de símbolo nem recortada; é o nome do produto que se adapta.
@@ -410,9 +418,13 @@ auditoria (**Aud. §n**), **[014 FR-nnn]**, **[008 …]**, **[Const.]**, **[Soli
   de 4 px no topo, na cor da marca; a assinatura oficial do Ifes à esquerda; um separador
   vertical; o nome "Trajetória Ifes" em texto (18 px, peso 700); e, a partir de 480 px, o
   subtítulo "Acompanhamento de egressos" (15 px, texto secundário). [IV-01; Aud. §17.1]
-- **FR-016**: O cabeçalho DEVE ter no máximo 64 px de altura a 375 px e 80 px a 1280 px,
+- **FR-016**: O cabeçalho DEVE ter no máximo 68 px de altura a 375 px e 80 px a 1280 px,
   com fonte a 100%, descontados a faixa e os controles de demonstração; NÃO DEVE ter
-  navegação. [Aud. §17.1]
+  navegação. Onde a assinatura cabe ao lado do nome do produto (a partir de 352 px), o
+  símbolo tem 36 px; abaixo disso, 31 px, para o nome não passar para baixo da
+  assinatura. [Aud. §17.1; gate, rodada 3: os 64 px iniciais eram hipótese; com símbolo
+  de 31 px o texto da assinatura ficava pequeno demais a 375 px, e 68 px é o necessário
+  para o símbolo de 36 px]
 - **FR-017**: A assinatura DEVE: (a) ser a **sistêmica/Reitoria** do Ifes, obtida de fonte
   oficial; (b) não ser redesenhada, recolorida, distorcida, recortada, contornada nem
   composta com o nome do produto; (c) ter o símbolo com pelo menos 30 px; (d) manter
@@ -469,7 +481,10 @@ auditoria (**Aud. §n**), **[014 FR-nnn]**, **[008 …]**, **[Const.]**, **[Soli
 - **FR-028**: O resumo de pendência ou erro, quando focado ao carregar, DEVE ter
   indicação visual de foco. [IV-15; 014 FR-027]
 - **FR-029**: A confirmação "Pesquisa concluída" DEVE ter tratamento de sucesso no topo
-  (fio de acento na cor de sucesso), sem animação, ilustração ou texto novo. [IV-06]
+  (fio de acento na cor de sucesso), sem animação, ilustração ou texto novo. Quando a
+  ficha "Sobre a sua formação" vem logo abaixo, os dois blocos DEVEM ficar separados por
+  48 px, sem mudança na ficha. [IV-06; gate, rodada 3: os dois fios verdes vizinhos
+  pareciam uma linha só]
 - **FR-030**: Ícones são opcionais; se usados, DEVEM ser no máximo três (visto,
   informação, alerta), inline, de traço uniforme, sempre ao lado de texto e ocultos de
   tecnologias assistivas, só em avisos, resumos e confirmação, sem biblioteca. [IV-14;
@@ -566,7 +581,7 @@ Todos medidos nas quatro situações do gate, nas Direções A e B, salvo indica
 
 - **SC-001**: Em 100% das telas da jornada a 375 px, a assinatura oficial está na
   primeira viewport, com símbolo ≥ 30 px e área de proteção livre.
-- **SC-002**: Cabeçalho ≤ 64 px a 375 px e ≤ 80 px a 1280 px (fonte a 100%, sem os
+- **SC-002**: Cabeçalho ≤ 68 px a 375 px e ≤ 80 px a 1280 px (fonte a 100%, sem os
   elementos de demonstração); rodapé ≤ 120 px a 375 px.
 - **SC-003**: 100% dos textos com contraste ≥ 4,5:1; 100% dos contornos de controle,
   marcas de estado e células da escala com ≥ 3:1; 0 usos do verde da marca como texto.
@@ -670,7 +685,10 @@ indicado):
   competente: ACS. Impacto: FR-015, FR-017, SC-001. Tratamento provisório: (a) SVG
   **derivado do EPS oficial e aceito pelo solicitante** (2026-10-03), usado sem alteração
   (research R3); a troca por um SVG da ACS é a substituição de um arquivo; (b) uso local,
-  interno e não publicado, respeitando o Manual da Marca.
+  interno e não publicado, respeitando o Manual da Marca; (c) pergunta para a ACS: "O fio
+  de marca do produto deve usar o HEX #2f9e41 publicado no Manual ou o #37a033
+  efetivamente presente no arquivo oficial EPS utilizado para derivar a assinatura SVG?"
+  — até a resposta, o fio continua em `#2f9e41` e o SVG não é recolorido.
 
 **Validação posterior registrada (não é decisão institucional)**: revisão perceptiva do
 reconhecimento como produto do Ifes (FR-043).
