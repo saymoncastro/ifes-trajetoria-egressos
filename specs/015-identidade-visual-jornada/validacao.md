@@ -4,7 +4,9 @@ Formato: [contracts/registro-validacao.md](contracts/registro-validacao.md). **S
 As capturas **não são versionadas**: ficam fora do repositório e serão anexadas ao PR pelos
 identificadores abaixo (`R{rodada}-G{situação}-{A|B}-{largura}-{fonte}`).
 
-> **Estado (2026-10-03, rodada 3): gate de critérios objetivos APROVADO — 46/46 tasks.**
+> **Estado (2026-10-03, rodada 3, final): gate de critérios objetivos APROVADO — 46/46 tasks.**
+> Identidade visual implementada e tecnicamente validada para a jornada; validação
+> institucional para produção pendente (DP-801, D-02, D-03).
 >
 > - Rodada 3 (revisão do solicitante): assinatura com símbolo de 36 px a partir de 352 px
 >   (cabeçalho de 68 px; FR-016 atualizado com o limite medido) e 48 px entre a
@@ -193,7 +195,7 @@ rodada 1 para os aspectos que não dependem da assinatura).
 
 ---
 
-## Rodada 3 — 2026-10-03 (revisão do solicitante: assinatura, shell e confirmação)
+## Rodada 3 — 2026-10-03 (final; revisão do solicitante: assinatura, shell e confirmação)
 
 Refinamento na mesma branch depois da revisão das capturas das rodadas 1 e 2. Foco:
 assinatura, shell e confirmação; os demais critérios foram repetidos nos 7 estados.
@@ -308,7 +310,10 @@ comentários que registram as decisões desta rodada).
 
 ### Resultado da rodada 3
 
-- **Critérios objetivos SC-001 a SC-014: aprovados. Gate aprovado.**
+- **Critérios objetivos SC-001 a SC-014: aprovados. Gate aprovado. Rodada final da 015.**
+- Situação: identidade visual **implementada e tecnicamente validada** para a jornada do
+  egresso; a validação institucional para produção continua pendente em DP-801, D-02 e
+  D-03. Não é identidade definitiva aprovada institucionalmente.
 - Revisão perceptiva: **pendente**.
 - D-03 (validação do ativo, uso em publicação/produção e verde do fio) e D-02 (aplicação
   do PDG): **abertas**. Direção B continua o valor provisório.
