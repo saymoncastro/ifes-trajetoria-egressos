@@ -29,6 +29,7 @@ __all__ = [
     "EscopoDeAcompanhamento",
     "escopo_de_acompanhamento",
     "pode_acompanhar_coleta",
+    "pode_simular_comunicacao",
     "pode_consultar_publicado",
     "pode_consultar_rascunho",
     "pode_elaborar_instrumento",
@@ -69,3 +70,8 @@ def escopo_de_acompanhamento(vinculos) -> EscopoDeAcompanhamento | None:
     if unidades:
         return EscopoDeAcompanhamento(institucional=False, unidades=unidades)
     return None
+
+
+def pode_simular_comunicacao(vinculos) -> bool:
+    """Capacidade exclusiva da demonstração 016; não concede comunicação real."""
+    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)

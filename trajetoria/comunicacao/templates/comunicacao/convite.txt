@@ -1,0 +1,10 @@
+{% autoescape off %}{{ saudacao }}
+
+Você está convidado(a) a conhecer a demonstração da pesquisa {{ campanha }}.
+Este convite foi produzido em ambiente local, com dados e contatos fictícios.
+Esta mensagem não identifica você nem concede acesso à pesquisa. A disponibilidade da coleta segue as regras da Campanha.
+
+Abrir a demonstração: {{ url }}
+
+{{ assinatura }}
+{% endautoescape %}

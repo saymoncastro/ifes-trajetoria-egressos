@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "trajetoria.editor",
     "trajetoria.acompanhamento",
     "trajetoria.analitico",
+    "trajetoria.comunicacao",
 ]
 
 MIDDLEWARE = [
@@ -99,3 +100,23 @@ LOGGING = {
         "django.request": {"handlers": ["console"], "level": "ERROR"},
     },
 }
+
+TRAJETORIA_URL_ENTRADA_DEMONSTRACAO = os.environ.get(
+    "TRAJETORIA_URL_ENTRADA_DEMONSTRACAO", "http://127.0.0.1:8000/demonstracao/"
+)
+
+# Comunicação simulada 016: só configuração SMTP local explícita habilita transporte.
+# A operação aplica guards independentes antes de construir qualquer backend.
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "127.0.0.1")
+_email_porta = os.environ.get("EMAIL_PORT", "1025")
+EMAIL_PORT = int(_email_porta) if _email_porta.isdigit() else -1
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+# Valores não reconhecidos são tratados como ativação e recusados, sem default permissivo.
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0") not in ("", "0")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0") not in ("", "0")
+EMAIL_TIMEOUT = 5
+DEFAULT_FROM_EMAIL = "trajetoria@example.invalid"
+# Sem variável pública de ambiente: locmem só é permitido por override_settings na suíte.
+TRAJETORIA_COMUNICACAO_TESTE = False
