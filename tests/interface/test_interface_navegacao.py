@@ -59,7 +59,7 @@ def test_obrigatoria_em_branco_volta_com_a_pendencia_da_006(client, cenario, ana
     b = cenario.base
     _enviar(client, ana, b, 1, {"Q1": "Sim"})
     resposta = _enviar(client, ana, b, 2, p2=None)  # Q3 (texto) em branco
-    assert resposta["Location"] == _url(ana, 2, "?pendencias=1&salvo=1")
+    assert resposta["Location"] == _url(ana, 2, "?pendencias=1")
     pendentes = situacao_da_jornada(ana).passagens[-1].pendentes
     esperadas = {
         f"p{p.posicao}" for p in ci.secao_do_conteudo(b.versao, 2).perguntas if p.id in pendentes
@@ -67,8 +67,8 @@ def test_obrigatoria_em_branco_volta_com_a_pendencia_da_006(client, cenario, ana
     tela = client.get(resposta["Location"])
     html = tela.content.decode()
     assert _pendencias_na_tela(html) == esperadas == {"p2"}
-    assert "<title>Erro: " in html
-    assert "O que já foi preenchido nesta seção foi salvo." in ci.texto_visivel(tela)
+    assert "<title>Faltam respostas: " in html  # pendência não é erro (014 FR-007)
+    assert "O que você respondeu nesta seção está salvo." in ci.texto_visivel(tela)
     assert b.q(2).id in situacao_da_jornada(ana).respostas  # demais respostas gravadas
 
 
@@ -160,9 +160,9 @@ def test_mensagem_de_salvo_so_depois_de_gravar(client, cenario, ana):
     _enviar(client, ana, b, 1, {"Q1": "Sim"})
     texto = ci.texto_visivel(client.get(_url(ana, 2, "?pendencias=1")))
     assert "Esta pergunta é obrigatória." in texto
-    assert "preenchido nesta seção foi salvo" not in texto
+    assert "nesta seção está salvo" not in texto  # nada gravado na Seção 2 ainda (014 FR-008)
     destino = _enviar(client, ana, b, 2, p2=None)["Location"]
-    assert "O que já foi preenchido nesta seção foi salvo." in ci.texto_visivel(
+    assert "O que você respondeu nesta seção está salvo." in ci.texto_visivel(
         client.get(destino)
     )
 

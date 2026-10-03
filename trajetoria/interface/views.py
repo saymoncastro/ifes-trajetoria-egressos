@@ -18,7 +18,11 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.demonstracao.entrada import pessoa_em_uso
 from trajetoria.interface import mensagens
-from trajetoria.interface.apresentacao import contexto_da_formacao, resumo_da_formacao
+from trajetoria.interface.apresentacao import (
+    complemento_da_formacao,
+    contexto_da_formacao,
+    resumo_da_formacao,
+)
 from trajetoria.interface.formularios import FormularioDaSecao
 from trajetoria.interface.gravacao import salvar_secao
 from trajetoria.participacao.consultas import situacao_da_jornada
@@ -114,39 +118,36 @@ _ACAO = {
     SituacaoDaFormacao.DISPONIVEL_PARA_INICIAR: "Iniciar a pesquisa",
     SituacaoDaFormacao.DISPONIVEL_PARA_RETOMAR: "Continuar a pesquisa",
 }
+# Mensagem de estado por situação, informada uma vez (014 FR-036); o título é sempre o da
+# trajetória (FR-030).
 _TELA_DE_FORMACOES = {
     ResolucaoDaEntrada.SEM_FORMACAO: (
-        "Suas formações",
-        "Não encontramos formações concluídas no Ifes associadas a você.",
+        "Não encontramos formações concluídas no Ifes associadas a você."
     ),
     ResolucaoDaEntrada.SEM_PESQUISA: (
-        "Suas formações",
-        "No momento, não há pesquisa disponível para as suas formações.",
+        "No momento, não há pesquisa disponível para as suas formações."
     ),
-    ResolucaoDaEntrada.SEM_ENTRADA_PENDENTE: (
-        "Suas formações",
-        "Não há pesquisa pendente para você neste momento.",
-    ),
-    ResolucaoDaEntrada.ENTRADA_RESOLVIDA: ("Sua pesquisa", None),
-    ResolucaoDaEntrada.SELECAO_NECESSARIA: (
-        "Sobre qual formação do Ifes você responderá esta pesquisa?",
-        None,
-    ),
+    ResolucaoDaEntrada.SEM_ENTRADA_PENDENTE: "Não há pesquisa pendente para você neste momento.",
+    ResolucaoDaEntrada.ENTRADA_RESOLVIDA: None,
+    ResolucaoDaEntrada.SELECAO_NECESSARIA: None,
 }
 
 
 _COM_ACAO = (ResolucaoDaEntrada.ENTRADA_RESOLVIDA, ResolucaoDaEntrada.SELECAO_NECESSARIA)
 
 
-def _aviso(request, permitido: str) -> str | None:
+def _aviso(request, *permitidos: str) -> str | None:
     """Faixa de aviso por código de lista fechada; qualquer outro valor é ignorado."""
-    return mensagens.AVISOS[permitido] if request.GET.get("aviso") == permitido else None
+    codigo = request.GET.get("aviso")
+    return mensagens.AVISOS[codigo] if codigo in permitidos else None
 
 
 def _formacao_apresentada(formacao) -> dict:
+    """Forma compacta (014 FR-034): linha principal e complementar, só com o informado."""
     return {
         "pk": formacao.conclusao.pk,
-        "contexto": contexto_da_formacao(formacao.conclusao),
+        "linha": resumo_da_formacao(formacao.conclusao),
+        "complemento": complemento_da_formacao(formacao.conclusao),
         "situacao": mensagens.SITUACAO_DA_FORMACAO[formacao.situacao],
         "acao": _ACAO.get(formacao.situacao),
     }
@@ -160,14 +161,23 @@ def formacoes(request):
     situacao = situacao_de_entrada(pessoa)
     destaque = situacao.pendentes if situacao.resolucao in _COM_ACAO else ()
     chaves = {f.conclusao.pk for f in destaque}
-    titulo, mensagem = _TELA_DE_FORMACOES[situacao.resolucao]
+    mensagem = _TELA_DE_FORMACOES[situacao.resolucao]
+    # Na ordem devolvida pela 007, sem reordenar (014 FR-035).
     pendentes = [_formacao_apresentada(f) for f in destaque]
+    linha = pendentes[0]["linha"] if pendentes else ""
     return render(
         request,
         "interface/formacoes.html",
         {
-            "titulo": titulo,
+            "titulo": mensagens.TITULO_TRAJETORIA,
             "mensagem": mensagem,
+            "entrada_fato": (
+                mensagens.ENTRADA_FATO.format(linha=linha)
+                if linha
+                else mensagens.ENTRADA_SEM_ATRIBUTOS
+            ),
+            "entrada_continuacao": mensagens.ENTRADA_CONTINUACAO,
+            "selecao": mensagens.SELECAO,
             "resolucao": situacao.resolucao.value,
             "principal": pendentes[0] if pendentes else None,
             "pendentes": pendentes,
@@ -176,7 +186,8 @@ def formacoes(request):
                 for f in situacao.formacoes
                 if f.conclusao.pk not in chaves
             ],
-            "aviso": _aviso(request, "situacao"),
+            "aviso": _aviso(request, "situacao", "salvo", "saida"),
+            "entrada_operacional": mensagens.ENTRADA_OPERACIONAL,
         },
     )
 
@@ -267,7 +278,7 @@ def _passagem(participacao, jornada, posicao):
 
 
 def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=None, *,
-                   salvo=False):  # fmt: skip
+                   pendencias=False):  # fmt: skip
     # Título e abertura vêm da Versão já carregada com a Participação (sem reler o conteúdo);
     # a primeira passagem do percurso é sempre a primeira Seção da Versão (006 FR-014).
     versao = participacao.campanha.versao
@@ -280,6 +291,10 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
         for item in itens
         for erro in item.erros
     ]
+    # Pendência (envio aceito, falta resposta) e erro de forma (envio recusado, nada gravado)
+    # nunca coexistem numa reapresentação; só muda a apresentação (014 FR-003 a FR-008).
+    tipo = ("pendencias" if pendencias else "erros") if resumo else None
+    textos = mensagens.RESUMO.get(tipo, {})
     return render(
         request,
         "interface/secao.html",
@@ -292,10 +307,18 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
             "passagem": passagem,
             "itens": itens,
             "resumo_erros": resumo,
-            "ha_erros": bool(resumo),
-            "salvo": salvo,
+            "tipo_resumo": tipo,
+            "titulo_resumo": textos.get("titulo"),
+            "prefixo_titulo": textos.get("prefixo_titulo", ""),
+            "prefixo_item": textos.get("prefixo_item"),
+            "frase_salvo": (
+                mensagens.SECAO_SALVA
+                if tipo == "pendencias" and _ha_resposta_na_secao(jornada, passagem.secao)
+                else None
+            ),
             "aviso": _aviso(request, "percurso"),
             "anterior": anterior and _base(participacao) + f"secoes/{anterior}/",
+            "sair_sem_salvar_nota": mensagens.SAIR_SEM_SALVAR_NOTA,
         },
     )
 
@@ -314,10 +337,17 @@ def secao(request, participacao, posicao):
     pendencias = None
     if request.GET.get("pendencias") == "1" and passagem is jornada.passagens[-1]:
         pendencias = _pendencias(passagem)
-    salvo = bool(pendencias) and request.GET.get("salvo") == "1"
     return _tela_da_secao(
-        request, participacao, jornada, passagem, formulario, pendencias, salvo=salvo
-    )
+        request, participacao, jornada, passagem, formulario, pendencias,
+        pendencias=bool(pendencias),
+    )  # fmt: skip
+
+
+def _ha_resposta_na_secao(jornada, secao) -> bool:
+    """Se alguma Pergunta da Seção tem Resposta gravada (005), segundo a jornada já lida.
+    Única base para dizer ao egresso que algo "está salvo" (014 FR-008): nunca um
+    indicador do endereço."""
+    return any(p.id in jornada.respostas for p in secao.perguntas)
 
 
 def _pendencias(passagem) -> dict[int, list[str]]:
@@ -347,9 +377,14 @@ def _salvar(request, participacao, jornada, passagem):
     # O próximo passo é sempre o que a 006 calcula agora, com as Respostas gravadas.
     jornada = _jornada(request, participacao)
     passagem = _passagem(participacao, jornada, passagem.secao.posicao)
+    if request.POST.get("depois") == "sair":
+        # "Salvar e sair" (014 FR-011, FR-012): mesma validação e gravação; só o destino
+        # muda. O aviso só diz que algo está salvo se há Resposta gravada na Seção (FR-008).
+        salvo = _ha_resposta_na_secao(jornada, passagem.secao)
+        return redirect("/formacoes/?aviso=" + ("salvo" if salvo else "saida"))
     secao = _base(participacao) + f"secoes/{passagem.secao.posicao}/"
     if not passagem.satisfeita:
-        return redirect(secao + "?pendencias=1&salvo=1")
+        return redirect(secao + "?pendencias=1")
     if passagem.destino is Saida.FINALIZACAO:
         return redirect(_base(participacao) + "concluir/")
     # Seção satisfeita com destino determinado: o percurso da 006 segue para ele, que é,
@@ -420,11 +455,18 @@ def concluida(request, participacao):
     participacao = _participacao_da_pessoa(request, participacao)
     if participacao.concluida_em is None:
         return redirect(_base(participacao))
+    curso = participacao.conclusao.curso
+    encerramento = participacao.campanha.versao.texto_encerramento
     return render(
         request,
         "interface/concluida.html",
         {
+            "registro": (
+                mensagens.REGISTRADAS_CURSO.format(curso=curso) if curso else mensagens.REGISTRADAS
+            ),
+            # O texto de encerramento da Versão já agradece: um agradecimento só (014 FR-040).
+            "agradecimento": None if encerramento else mensagens.AGRADECIMENTO,
             "contexto_formacao": contexto_da_formacao(participacao.conclusao),
-            "texto_encerramento": participacao.campanha.versao.texto_encerramento,
+            "texto_encerramento": encerramento,
         },
     )

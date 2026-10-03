@@ -10,7 +10,11 @@ from tests.participacao import construcao as c
 from tests.participacao import construcao_entrada as ce
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica.simulada import FonteSimulada
-from trajetoria.interface.apresentacao import contexto_da_formacao, resumo_da_formacao
+from trajetoria.interface.apresentacao import (
+    complemento_da_formacao,
+    contexto_da_formacao,
+    resumo_da_formacao,
+)
 from trajetoria.participacao.entrada import situacao_de_entrada
 
 # --- Contexto da formação: puro, sem banco -------------------------------------------------
@@ -43,6 +47,17 @@ def test_contexto_sem_atributos_e_vazio():
 def test_resumo_usa_o_ano_da_data_quando_so_ha_data():
     conclusao = ConclusaoAcademica(curso="Curso", data_conclusao=date(2020, 7, 10))
     assert resumo_da_formacao(conclusao) == "Curso · 2020"
+
+
+def test_complemento_da_formacao_so_com_o_informado():
+    """014 FR-034: nível · modalidade · forma de oferta, só os informados (007/DP-702)."""
+    from types import SimpleNamespace as Conclusao
+
+    todos = Conclusao(nivel="Técnico", modalidade="Presencial", forma_oferta="Integrado")
+    assert complemento_da_formacao(todos) == "Técnico · Presencial · Integrado"
+    parte = Conclusao(nivel="Graduação", modalidade=None, forma_oferta=None)
+    assert complemento_da_formacao(parte) == "Graduação"
+    assert complemento_da_formacao(Conclusao(nivel=None, modalidade=None, forma_oferta=None)) == ""
 
 
 def test_contexto_omite_o_que_nao_foi_informado():
@@ -92,10 +107,12 @@ def _conclusao(id_externo, curso):
 def test_entrada_resolvida_um_unico_botao_sem_escolha(client, inst):
     campanha = c.campanha_aberta(inst.versao)
     resposta, texto = _tela(client, "SIM-P-0001")
-    assert "Esta pesquisa refere-se à sua formação:" in texto
-    assert "você pode parar e continuar depois" in texto  # como o salvamento funciona
+    assert (
+        "Você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas · Serra · 2022." in texto
+    )  # 014 FR-031
+    assert "mesmo sem terminar a seção, e continuar depois" in texto  # 014 FR-002
     assert "Tecnologia em Análise e Desenvolvimento de Sistemas" in texto and "Serra" in texto
-    assert "Forma de oferta" not in texto  # não informada pela fonte: omitida
+    assert "Forma de oferta" not in texto and "Curso" not in texto  # sem a ficha (014 FR-034)
     assert [b for b in _botoes(resposta) if "pesquisa" in b] == ["Iniciar a pesquisa"]
     assert _formacoes_nos_botoes(resposta) == []
     assert campanha.nome not in texto and ci.tecnicos_em(texto) == []
@@ -111,8 +128,7 @@ def test_entrada_resolvida_com_rascunho_continua(client, inst):
 def test_selecao_necessaria_uma_acao_por_formacao_sem_ranking(client, inst):
     campanha = c.campanha_aberta(inst.versao)
     resposta, texto = _tela(client, "SIM-P-0003")
-    assert "Sobre qual formação do Ifes você responderá esta pesquisa?" in texto
-    assert "respondida separadamente para cada formação" in texto
+    assert "Cada formação tem sua própria pesquisa." in texto  # 014 FR-033
     pessoa = ce.pessoa_da_fonte("SIM-P-0003")
     esperadas = [str(f.conclusao.pk) for f in situacao_de_entrada(pessoa).pendentes]
     assert _formacoes_nos_botoes(resposta) == esperadas and len(esperadas) == 2
@@ -143,7 +159,9 @@ def test_outras_formacoes_informadas_com_sua_situacao(client, inst):
     resposta, texto = _tela(client, "SIM-P-0004")
     assert "Mestrado Profissional em Química" in texto
     assert "Suas outras formações" in texto
-    assert texto.count("Sem pesquisa disponível no momento.") == 2
+    # 014 FR-036: "sem pesquisa" não se repete por formação; as formações continuam listadas.
+    assert "Sem pesquisa disponível no momento." not in texto
+    assert "Técnico em Química" in texto and "Licenciatura em Química" in texto
 
 
 def test_sem_formacao(client, inst):
@@ -199,7 +217,8 @@ def test_rascunho_de_campanha_encerrada_nao_e_oferecido(client, inst, relogio):
     ce.participacao_em_rascunho(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get())
     relogio.agora = c.DEPOIS_DO_FIM
     resposta, texto = _tela(client, "SIM-P-0001")
-    assert "Sem pesquisa disponível no momento." in texto
+    assert "No momento, não há pesquisa disponível para as suas formações." in texto
+    assert "Sem pesquisa disponível no momento." not in texto  # 014 FR-036
     assert "Continuar a pesquisa" not in texto
 
 
@@ -215,7 +234,7 @@ def _ambigua_e_outra(inst):
 def test_ambiguidade_e_local_e_neutra(client, inst):
     _, ambigua, outra = _ambigua_e_outra(inst)
     resposta, texto = _tela(client, "SIM-P-0003")
-    assert "Esta pesquisa refere-se à sua formação:" in texto  # a outra, sem escolha
+    assert "Você concluiu " in texto  # a outra, sem escolha (014 FR-031)
     assert _formacoes_nos_botoes(resposta) == []
     assert [b for b in _botoes(resposta) if "pesquisa" in b] == ["Iniciar a pesquisa"]
     assert (
@@ -240,3 +259,119 @@ def test_entrada_pela_ambigua_nao_cria_nada(client, inst):
     resposta = client.post("/formacoes/entrar/", {"formacao": str(ambigua.pk)})
     assert resposta["Location"] == "/formacoes/?aviso=situacao"
     assert ce.linhas() == antes
+
+
+# --- 014 US1: a entrada diz que se pode salvar a Seção incompleta (FR-002) ----------------
+
+FRASE_SALVAR = (
+    "Você responde uma seção de cada vez. Pode salvar a qualquer momento, mesmo sem terminar "
+    "a seção, e continuar depois."
+)
+
+
+@pytest.mark.parametrize("id_externo", ["SIM-P-0001", "SIM-P-0003"])
+def test_entrada_diz_que_se_pode_salvar_secao_incompleta(client, inst, id_externo):
+    c.campanha_aberta(inst.versao)
+    _, texto = _tela(client, id_externo)
+    assert FRASE_SALVAR in texto
+
+
+# --- 014 US2: avisos de saída por "Salvar e sair" (FR-012), lista fechada ------------------
+
+
+def _aviso(client, consulta):
+    ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0001"))
+    resposta = client.get(f"/formacoes/{consulta}")
+    m = re.search(r'<p class="aviso" role="status">(.*?)</p>', resposta.content.decode(), re.S)
+    return m and m.group(1).strip()
+
+
+def test_aviso_de_saida_com_respostas_salvas(client, inst):
+    c.campanha_aberta(inst.versao)
+    assert _aviso(client, "?aviso=salvo") == (
+        "O que você respondeu nesta seção está salvo. Você pode continuar a pesquisa quando "
+        "quiser."
+    )
+
+
+def test_aviso_de_saida_sem_respostas_e_neutro(client, inst):
+    c.campanha_aberta(inst.versao)
+    aviso = _aviso(client, "?aviso=saida")
+    assert aviso == "Você pode continuar a pesquisa quando quiser." and "salvo" not in aviso
+
+
+def test_avisos_fora_da_lista_sao_ignorados(client, inst):
+    c.campanha_aberta(inst.versao)
+    assert _aviso(client, "?aviso=situacao") == (
+        "A situação da pesquisa mudou. Veja abaixo a situação atual."
+    )
+    assert _aviso(client, "?aviso=qualquer") is None
+    assert _aviso(client, "?aviso=percurso") is None
+
+
+# --- 014 US6: "Sua trajetória no Ifes" (FR-030 a FR-037) -------------------------------------
+
+
+def _h1(resposta):
+    return re.findall(r"<h1>\s*(.*?)\s*</h1>", resposta.content.decode())
+
+
+def test_titulo_trajetoria_em_todas_as_situacoes(client, inst):
+    campanha = c.campanha_aberta(inst.versao)
+    for id_externo in ("SIM-P-0001", "SIM-P-0003", "SIM-P-0002"):  # resolvida, seleção, sem pesq.
+        assert _h1(_tela(client, id_externo)[0]) == ["Sua trajetória no Ifes"], id_externo
+    ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
+    assert _h1(_tela(client, "SIM-P-0001")[0]) == ["Sua trajetória no Ifes"]  # sem pendente
+    pessoa = Pessoa.objects.create(fonte="simulada", id_externo="SIM-P-T", nome="Teste Exemplo")
+    ci.entrar_como(client, pessoa)
+    assert _h1(client.get("/formacoes/")) == ["Sua trajetória no Ifes"]  # sem formação
+
+
+def test_entrada_resolvida_parte_do_fato_e_da_continuacao(client, inst):
+    c.campanha_aberta(inst.versao)
+    resposta, texto = _tela(client, "SIM-P-0001")
+    conclusao = ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get()
+    assert f"Você concluiu {resumo_da_formacao(conclusao)}." in texto
+    assert "O Ifes quer saber como sua trajetória seguiu depois disso." in texto
+    assert "campus" not in texto.lower()  # 014 FR-032: nenhuma qualificação fixa da unidade
+
+
+def test_entrada_sem_atributos_usa_texto_neutro(client, inst, monkeypatch):
+    c.campanha_aberta(inst.versao)
+    monkeypatch.setattr("trajetoria.interface.views.resumo_da_formacao", lambda conclusao: "")
+    _, texto = _tela(client, "SIM-P-0001")
+    assert "Encontramos uma formação sua no Ifes." in texto
+    assert "Você concluiu" not in texto
+
+
+def test_selecao_sem_contagem_e_na_ordem_da_007(client, inst):
+    c.campanha_aberta(inst.versao)
+    resposta, texto = _tela(client, "SIM-P-0003")
+    assert "Cada formação tem sua própria pesquisa." in texto
+    assert not re.search(r"\b(duas|três|\d+) formações\b", texto)
+    pessoa = ce.pessoa_da_fonte("SIM-P-0003")
+    esperadas = [str(f.conclusao.pk) for f in situacao_de_entrada(pessoa).pendentes]
+    assert _formacoes_nos_botoes(resposta) == esperadas
+    for palavra in ("cronológ", "mais recente", "principal", "atual"):
+        assert palavra not in texto.lower(), palavra
+
+
+def test_formacao_compacta_com_ano_e_complemento(client, inst):
+    c.campanha_aberta(inst.versao)
+    resposta, texto = _tela(client, "SIM-P-0003")
+    assert "Data de conclusão" not in texto and "Ano de conclusão" not in texto  # 014 FR-034
+    for formacao in ce.pessoa_da_fonte("SIM-P-0003").conclusoes.all():
+        assert resumo_da_formacao(formacao) in texto
+        if complemento_da_formacao(formacao):
+            assert complemento_da_formacao(formacao) in texto
+    assert "2025" in texto  # o ano da data de conclusão da Especialização
+
+
+def test_ordem_das_outras_formacoes_e_a_da_007(client, inst):
+    c.campanha_aberta(inst.versao, niveis=["Pós-graduação"])
+    resposta, texto = _tela(client, "SIM-P-0004")
+    pessoa = ce.pessoa_da_fonte("SIM-P-0004")
+    linhas = [resumo_da_formacao(f.conclusao) for f in situacao_de_entrada(pessoa).formacoes]
+    outras = [linha for linha in linhas if f"Você concluiu {linha}." not in texto]
+    posicoes = [texto.index(linha) for linha in outras]
+    assert posicoes == sorted(posicoes) and len(outras) == 2

@@ -5,6 +5,7 @@ interface não.
 """
 
 import re
+from html.parser import HTMLParser
 
 import pytest
 from django.db import connection
@@ -56,7 +57,7 @@ def test_primeira_secao_com_titulo_abertura_e_q1(client, cenario, ana):
     resposta = _get(client, ana, 1)
     assert resposta.status_code == 200
     html, texto = _html(resposta), ci.texto_visivel(resposta)
-    assert re.search(r"<h1>\s*Egresso Ifes\s*</h1>", html)
+    assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == ["Termos e condições"]  # 014 FR-023
     assert "É com muita satisfação" in texto  # texto de abertura da Versão
     assert "Termos e condições" in texto
     q1 = _bloco(html, 1)
@@ -118,17 +119,19 @@ def test_s3_sem_pre_preenchimento_pela_conclusao(client, cenario, ana):
         '<option value="" selected', ""
     )
     assert 'value="2022"' not in formulario
-    assert "Sobre a sua formação" in ci.texto_visivel(resposta)
-    assert html.index("Sobre a sua formação") < html.index(_formulario(html)[:40])
+    assert "Você está respondendo sobre:" in ci.texto_visivel(resposta)
+    assert html.index("Você está respondendo sobre:") < html.index(_formulario(html)[:40])
 
 
 def test_contexto_compacto_e_resumo_de_erros_no_topo(client, cenario, ana):
     resposta = client.post(f"/participacoes/{ana.pk}/secoes/1/", {"p1": "99"})
     html, texto = _html(resposta), ci.texto_visivel(resposta)
-    assert "Sobre a sua formação: Tecnologia em Análise e Desenvolvimento de Sistemas" in texto
+    assert (
+        "Você está respondendo sobre: Tecnologia em Análise e Desenvolvimento de Sistemas" in texto
+    )
     assert "Unidade" not in texto and "Modalidade" not in texto  # sem a lista completa
     resumo = html.index('class="resumo-erros"')
-    assert html.index("<h1>") < resumo < html.index("Sobre a sua formação")
+    assert html.index("<h1>") < resumo < html.index("Você está respondendo sobre:")
     assert resumo < html.index("É com muita satisfação")  # antes do texto de abertura
     assert "Você concorda com os termos acima? — Selecione uma das opções" in texto
 
@@ -138,6 +141,10 @@ def test_secao_sem_titulo_nao_ganha_h2_inventado(client, cenario, ana):
     html = _html(_get(client, ana, 13))
     principal = _formulario(html)
     assert "<h2" not in principal
+    # 014 FR-023: sem título na Versão, o título principal é o da pesquisa — nada inventado —
+    # e o título da aba mantém a regra atual, único por tela.
+    assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == ["Egresso Ifes"]
+    assert re.search(r"<title>Seção 13 — ", html)
 
 
 def test_sem_resposta_so_para_radio_e_escala_nao_obrigatorios(client, cenario, ana):
@@ -164,8 +171,14 @@ def test_formulario_salvar_primeiro_csrf_e_cache(client, cenario, ana):
     resposta = _get(client, ana, 1)
     html = _html(resposta)
     formulario = _formulario(html)
-    primeiro = re.search(r"<button[^>]*>([^<]+)</button>", formulario).group(1)
-    assert primeiro.strip() == "Salvar e continuar"
+    # O primeiro botão de envio é o bloqueador oculto do envio implícito (014 FR-016); o
+    # primeiro **visível** continua sendo "Salvar e continuar".
+    visiveis = [
+        texto
+        for atributos, texto in re.findall(r"<button([^>]*)>([^<]+)</button>", formulario)
+        if "hidden" not in atributos
+    ]
+    assert visiveis[0].strip() == "Salvar e continuar"
     assert 'method="post"' in formulario and "csrfmiddlewaretoken" in formulario
     assert "no-store" in resposta["Cache-Control"]
 
@@ -251,3 +264,176 @@ def test_consultas_da_secao_nao_crescem_com_as_respostas(client, cenario, ana):
             assert _get(client, ana, 8).status_code == 200
         contagens.append(len(consultas))
     assert contagens[0] == contagens[1] <= 11  # medido: 11 (sem reler o conteúdo da Versão)
+
+
+# --- 014 US1: Seção incompleta, pendência × erro (FR-001 a FR-008) -------------------------
+
+
+def _envio_parcial_s2(client, cenario, ana, quantas=3):
+    """Envia a Seção 2 com só as `quantas` primeiras Perguntas obrigatórias respondidas."""
+    _preencher(ana, cenario.base, [1])
+    dados = ci.dados_validos(ci.secao_do_conteudo(cenario.base.versao, 2))
+    primeiras = sorted(dados, key=lambda campo: int(campo[1:]))[:quantas]
+    return client.post(f"/participacoes/{ana.pk}/secoes/2/", {k: dados[k] for k in primeiras})
+
+
+def _pendentes_s2(cenario, ana) -> list[int]:
+    from trajetoria.participacao.consultas import situacao_da_jornada
+
+    pendentes = situacao_da_jornada(ana).passagens[-1].pendentes
+    secao = ci.secao_do_conteudo(cenario.base.versao, 2)
+    return [p.posicao for p in secao.perguntas if p.id in pendentes]
+
+
+def test_secao_incompleta_e_gravada_e_volta_como_pendencia(client, cenario, ana):
+    from trajetoria.participacao.models import Resposta
+
+    _preencher(ana, cenario.base, [1])
+    antes = Resposta.objects.filter(participacao=ana).count()
+    resposta = _envio_parcial_s2(client, cenario, ana)
+    assert resposta.status_code == 302
+    assert resposta["Location"] == f"/participacoes/{ana.pk}/secoes/2/?pendencias=1"
+    assert Resposta.objects.filter(participacao=ana).count() == antes + 3
+
+
+def test_pendencia_nao_e_apresentada_como_erro(client, cenario, ana):
+    _envio_parcial_s2(client, cenario, ana)
+    tela = _get(client, ana, 2, "?pendencias=1")
+    html, texto = _html(tela), ci.texto_visivel(tela)
+    assert "Ainda faltam estas perguntas:" in texto
+    assert "O que você respondeu nesta seção está salvo." in texto
+    assert "Há problemas" not in texto and "Erro" not in texto
+    assert re.search(r"<title>Faltam respostas: ", html)
+    pendentes = _pendentes_s2(cenario, ana)
+    assert pendentes
+    for n in pendentes:
+        bloco = _bloco(html, n)
+        assert "Falta responder: Esta pergunta é obrigatória." in bloco
+        assert 'aria-invalid="true"' in bloco and f'id="p{n}-erro"' in bloco
+
+
+def test_secao_vazia_nao_afirma_salvamento(client, cenario, ana):
+    resposta = client.post(f"/participacoes/{ana.pk}/secoes/1/", {})
+    assert resposta["Location"] == f"/participacoes/{ana.pk}/secoes/1/?pendencias=1"
+    texto = ci.texto_visivel(client.get(resposta["Location"]))
+    assert "Ainda faltam estas perguntas:" in texto
+    assert "nesta seção está salvo" not in texto and "nesta seção foi salvo" not in texto
+
+
+def test_indicador_salvo_no_endereco_e_ignorado(client, cenario, ana):
+    texto = ci.texto_visivel(_get(client, ana, 1, "?pendencias=1&salvo=1"))
+    assert "Ainda faltam estas perguntas:" in texto
+    assert "nesta seção está salvo" not in texto and "nesta seção foi salvo" not in texto
+
+
+# --- 014 US4: grupo de rádios só com as Opções (UX-19; FR-018, FR-022) ---------------------
+
+
+class _Arvore(HTMLParser):
+    """Para cada `input`, os atributos dos ancestrais (do mais externo ao mais interno)."""
+
+    VAZIOS = ("input", "br", "meta", "link", "img", "hr")
+
+    def __init__(self):
+        super().__init__()
+        self.pilha, self.inputs, self.elementos = [], [], []
+
+    def handle_starttag(self, tag, attrs):
+        atributos = dict(attrs)
+        self.elementos.append((tag, atributos))
+        if tag == "input":
+            self.inputs.append((atributos, [dict(a, _tag=t) for t, a in self.pilha]))
+        if tag not in self.VAZIOS:
+            self.pilha.append((tag, atributos))
+
+    def handle_endtag(self, tag):
+        for i in range(len(self.pilha) - 1, -1, -1):
+            if self.pilha[i][0] == tag:
+                del self.pilha[i:]
+                break
+
+
+def _estrutura(html):
+    arvore = _Arvore()
+    arvore.feed(html)
+    return arvore
+
+
+def _verificar_grupo_exclusivo(html, nome, *, obrigatoria):
+    arvore = _estrutura(html)
+    fieldset = next(a for t, a in arvore.elementos if t == "fieldset" and a.get("id") == nome)
+    assert "role" not in fieldset and "aria-required" not in fieldset
+    assert ("legend", {"id": f"{nome}-enunciado"}) in arvore.elementos
+    radios = [(a, anc) for a, anc in arvore.inputs if a.get("name") == nome]
+    assert radios
+    for _, ancestrais in radios:
+        grupo = [a for a in ancestrais if a.get("role") == "radiogroup"]
+        assert len(grupo) == 1 and grupo[0]["aria-labelledby"] == f"{nome}-enunciado"
+        assert (grupo[0].get("aria-required") == "true") == obrigatoria
+        assert any(a.get("id") == nome and a["_tag"] == "fieldset" for a in ancestrais)
+    return arvore
+
+
+def test_escala_obrigatoria_tem_radiogroup_so_com_os_pontos(client, cenario, ana):
+    _preencher(ana, cenario.base, [1, 2, 3, 6])
+    html = _html(_get(client, ana, 8))
+    arvore = _verificar_grupo_exclusivo(html, "p1", obrigatoria=True)
+    grupo = next(a for t, a in arvore.elementos if a.get("aria-labelledby") == "p1-enunciado")
+    assert grupo.get("class") == "escala"
+
+
+def test_remover_fica_na_pergunta_mas_fora_do_grupo(client, cenario, ana):
+    _preencher(ana, cenario.base, [1, 2, 3, 6, 8, 10])
+    html = _html(_get(client, ana, 11))  # p3 = escala opcional (Q48), com a caixa de remoção
+    arvore = _verificar_grupo_exclusivo(html, "p3", obrigatoria=False)
+    remover = [anc for a, anc in arvore.inputs if a.get("name") == "p3-remover"]
+    assert len(remover) == 1
+    ancestrais = remover[0]
+    assert any(a.get("id") == "p3" and a["_tag"] == "fieldset" for a in ancestrais)
+    assert not any(a.get("role") == "radiogroup" for a in ancestrais)
+    fieldset = next(a for t, a in arvore.elementos if t == "fieldset" and a.get("id") == "p3")
+    assert "aria-describedby" in fieldset  # descrição da escala continua ligada
+
+
+def test_radio_opcional_tem_grupo_e_remover_fora_dele(client, cenario, ana):
+    _preencher(ana, cenario.base, [1])
+    html = _html(_get(client, ana, 2))  # p5 = escolha única opcional em rádios
+    arvore = _verificar_grupo_exclusivo(html, "p5", obrigatoria=False)
+    remover = [anc for a, anc in arvore.inputs if a.get("name") == "p5-remover"]
+    assert remover and not any(a.get("role") == "radiogroup" for a in remover[0])
+
+
+def test_escolha_multipla_e_lista_sem_radiogroup(client, cenario, ana):
+    _preencher(ana, cenario.base, [1])
+    html = _html(_get(client, ana, 2))
+    assert 'id="p7-enunciado"' not in html  # p7 = lista suspensa: sem mudança
+    _preencher(ana, cenario.base, [2, 3, 6])
+    arvore = _estrutura(_html(_get(client, ana, 8)))
+    caixas = [anc for a, anc in arvore.inputs if a.get("name") == "p7"]  # múltipla
+    assert caixas and not any(a.get("role") == "radiogroup" for anc in caixas for a in anc)
+
+
+# --- 014 US5: título principal da Seção e "Você está respondendo sobre:" (FR-023 a FR-025) --
+
+
+def test_titulo_principal_e_o_da_secao_em_todo_o_percurso(client, cenario, ana):
+    titulos = {
+        1: "Termos e condições", 2: "Informações Pessoais", 3: "Informações do curso",
+        6: "Graduação", 8: "Avaliação", 10: "Egresso que não trabalha", 11: "Estudo",
+    }  # fmt: skip
+    feitas = []
+    for posicao, titulo in titulos.items():
+        _preencher(ana, cenario.base, feitas)
+        html = _html(_get(client, ana, posicao))
+        assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == [titulo], posicao
+        assert not re.search(rf"<h2[^>]*>\s*{re.escape(titulo)}\s*</h2>", html)
+        assert "<h1>Egresso Ifes</h1>" not in html
+        feitas.append(posicao)
+
+
+def test_contexto_diz_sobre_qual_formacao_se_responde(client, cenario, ana):
+    texto = ci.texto_visivel(_get(client, ana, 1))
+    assert "Você está respondendo sobre: Tecnologia em Análise e Desenvolvimento de Sistemas" in (
+        texto
+    )
+    assert "Sobre a sua formação" not in texto

@@ -1,7 +1,8 @@
-<fieldset class="pergunta{% if item.erros %} com-erro{% endif %}" id="{{ item.nome }}" role="radiogroup"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
-  <legend>{% include "interface/perguntas/_enunciado.html" %}</legend>
+<fieldset class="pergunta{% if item.erros %} com-erro{% if tipo_resumo == "pendencias" %} com-pendencia{% endif %}{% endif %}" id="{{ item.nome }}"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
+  <legend id="{{ item.nome }}-enunciado">{% include "interface/perguntas/_enunciado.html" %}</legend>
   {% include "interface/perguntas/_cabecalho.html" %}
-  <div class="escala">
+  {# Só os pontos formam o grupo exclusivo; a caixa de remoção fica fora (014 FR-022). #}
+  <div class="escala" role="radiogroup" aria-labelledby="{{ item.nome }}-enunciado"{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}>
     {% for opcao in item.opcoes %}
     <div class="opcao">
       <input type="radio" id="{{ opcao.id }}" name="{{ item.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}>

@@ -2,8 +2,9 @@
 {% block titulo %}Pesquisa concluída{% endblock %}
 {% block conteudo %}
 <h1>Pesquisa concluída</h1>
-<p>Obrigado pela sua participação.</p>
+<p>{{ registro }}</p>
+{% if agradecimento %}<p>{{ agradecimento }}</p>{% endif %}
 {% include "interface/contexto.html" %}
 {% if texto_encerramento %}<div class="encerramento">{{ texto_encerramento|linebreaks }}</div>{% endif %}
-<p><a href="/formacoes/">Voltar às suas formações</a></p>
+<p><a href="/formacoes/">Ver sua trajetória no Ifes</a></p>
 {% endblock %}
