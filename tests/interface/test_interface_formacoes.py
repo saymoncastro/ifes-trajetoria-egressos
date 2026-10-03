@@ -282,7 +282,7 @@ def test_entrada_diz_que_se_pode_salvar_secao_incompleta(client, inst, id_extern
 def _aviso(client, consulta):
     ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0001"))
     resposta = client.get(f"/formacoes/{consulta}")
-    m = re.search(r'<p class="aviso" role="status">(.*?)</p>', resposta.content.decode(), re.S)
+    m = re.search(r'<p class="aviso[^"]*" role="status">(.*?)</p>', resposta.content.decode(), re.S)
     return m and m.group(1).strip()
 
 

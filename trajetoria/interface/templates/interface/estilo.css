@@ -1,7 +1,62 @@
-/* Trajetória Ifes — folha única, incluída inline (008 research R13, R14).
-   Neutra e sóbria; sem identidade institucional presumida (DP-801). Contraste AA:
+/* Trajetória Ifes — folha compartilhada, incluída inline (008 research R13, R14) pela
+   jornada, pelo editor (009), pelo acompanhamento (011) e por 403/404/500. Contraste AA:
    texto #1b1b1b/#fff ≈ 17:1; botão #fff/#1a4480 ≈ 9.6:1; erro #b50909/#fff ≈ 7:1;
-   faixa #1b1b1b/#fff1d2 ≈ 15.4:1; bordas #565c65/#fff ≈ 6.7:1. */
+   faixa #1b1b1b/#fff1d2 ≈ 15.4:1; bordas #565c65/#fff ≈ 6.7:1.
+
+   015 (research R1): aqui ficam só os tokens (:root) e as regras sob .pergunta/.escala/
+   .opcoes ou de classes exclusivas da jornada. Seletores usados também pela administração
+   (a, button, .aviso, .lista-simples, .erro, .resumo-erros…) mantêm valores literais; a
+   identidade da jornada fica em interface/jornada.css, que só a jornada inclui.
+   Identidade definitiva: DP-801; cor de ação: Direção B provisória (D-02). */
+
+/* Tokens (contracts/tokens.md). A Direção A × B troca exclusivamente --cor-acao e
+   --cor-acao-forte; nenhum outro token depende dela. Contraste contra #fff, salvo indicação. */
+:root {
+  --cor-marca: #2f9e41;          /* 3.45:1 — só gráfico (fio); nunca texto nem fundo */
+  --cor-acao: #1351b4;           /* 7.3:1 — Direção B (PDG), provisória; A: verde #195128, 9.3:1 */
+  --cor-acao-forte: #0c326f;     /* 12.3:1 — Direção B; A: #00420c, 11.8:1 */
+  --cor-sucesso: #195128;        /* 9.3:1 — fixo nas duas direções */
+  --cor-institucional: #eef7f0;  /* fundo da voz institucional; #1b1b1b sobre ele ≈ 15.8:1 */
+  --cor-selecao: #f2f4f7;        /* fundo tonal de seleção/hover, complementar; texto ≈ 16:1 */
+  --cor-texto: #1b1b1b;          /* 17.2:1 */
+  --cor-texto-suave: #565c65;    /* 6.7:1 */
+  --cor-fundo: #ffffff;          /* fundo da página */
+  --cor-borda-forte: #565c65;    /* 6.7:1 — campos, células, contornos de controle */
+  --cor-borda-suave: #c6cace;    /* 1.65:1 — só divisores decorativos */
+  --cor-info: #1a4480;           /* 9.6:1 — informação e pendência */
+  --cor-erro: #b50909;           /* 7.0:1 */
+  --cor-foco: #1b1b1b;           /* contorno do foco; 12.8:1 contra o halo */
+  --cor-foco-halo: #ffdd00;      /* halo do foco */
+  --cor-demonstracao: #fff1d2;   /* só a faixa de demonstração; texto ≈ 15.4:1 */
+
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fonte-1: 1.75rem;    /* 28 px */
+  --fonte-2: 1.375rem;   /* 22 px */
+  --fonte-3: 1.125rem;   /* 18 px */
+  --fonte-4: 1rem;       /* 16 px */
+  --fonte-5: 0.9375rem;  /* 15 px */
+  --peso-normal: 400;
+  --peso-medio: 600;
+  --peso-forte: 700;
+  --entrelinha-titulo: 1.25;
+  --entrelinha-enunciado: 1.4;
+  --entrelinha-corpo: 1.5;
+
+  --espaco-1: 0.25rem;  /* 4 px */
+  --espaco-2: 0.5rem;   /* 8 px */
+  --espaco-3: 0.75rem;  /* 12 px */
+  --espaco-4: 1rem;     /* 16 px */
+  --espaco-5: 1.5rem;   /* 24 px */
+  --espaco-6: 2rem;     /* 32 px */
+  --espaco-7: 3rem;     /* 48 px */
+
+  --raio: 4px;
+  --borda-fina: 1px;
+  --borda-controle: 2px;
+  --borda-acento: 4px;
+  --coluna: 40rem;
+  --alvo: 44px;          /* px, não rem: alvo físico (014 R6) */
+}
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -79,14 +134,25 @@ p, ul, ol, dl { margin: 0 0 1rem; }
 .lista-simples > li { border-top: 1px solid #565c65; padding: 1rem 0; }
 .lista-simples > li:last-child { border-bottom: 1px solid #565c65; }
 
-.pergunta { margin: 0 0 1.75rem; padding: 0; border: 0; min-width: 0; }
+/* 015 — Ritmo e tipografia da Pergunta (FR-022, FR-023): 48 px entre Perguntas, 8 px do
+   enunciado à resposta; enunciado 18/600; auxiliares 15 px em texto secundário. Vale para a
+   jornada e para a prévia do editor, que mantém o próprio espaço entre Perguntas (FR-040). */
+.pergunta { margin: 0 0 var(--espaco-7); padding: 0; border: 0; min-width: 0; }
 .pergunta legend, .pergunta > label.enunciado {
-  display: block; font-weight: 600; margin: 0 0 0.5rem; padding: 0; overflow-wrap: anywhere;
+  display: block; font-size: var(--fonte-3); font-weight: var(--peso-medio);
+  line-height: var(--entrelinha-enunciado); margin: 0 0 var(--espaco-2); padding: 0;
+  overflow-wrap: anywhere;
 }
-.pergunta.com-erro { border-left: 4px solid #b50909; padding-left: 0.75rem; }
+.pergunta.com-erro {
+  border-left: var(--borda-acento) solid var(--cor-erro); padding-left: var(--espaco-3);
+}
 .obrigatoria, .pergunta legend .nota { font-weight: 400; }
 .explicacao, .descricao-escala { margin: 0 0 0.5rem; color: #1b1b1b; }
 .erro { color: #b50909; font-weight: 600; margin: 0 0 0.5rem; }
+.pergunta .explicacao, .pergunta .descricao-escala, .pergunta .obrigatoria,
+.pergunta legend .nota {
+  font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
 
 .opcao { display: flex; align-items: flex-start; gap: 0.5rem; min-height: 2.75rem; padding: 0.25rem 0; }
 .opcao input { margin: 0.25rem 0 0; width: 1.25rem; height: 1.25rem; flex: none; }
@@ -97,15 +163,38 @@ p, ul, ol, dl { margin: 0 0 1rem; }
    contêiner. Restrito a `.pergunta` (jornada e prévia do editor), nunca ao `.opcao` do editor.
    A escala fica em colunas de pelo menos 44 px CSS (px, não rem: o alvo é físico e não cresce
    com a fonte), número sob o controle; cabe numa linha quando cabe e, senão, quebra alinhada. */
-.pergunta .opcao { position: relative; }
+.pergunta .opcao { position: relative; padding-left: var(--espaco-3); }
 .pergunta .opcao label::after { content: ""; position: absolute; inset: 0; }
 .escala {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
-  gap: 0.25rem 0; max-width: 30rem;
+  gap: var(--espaco-1); max-width: 30rem;
 }
 .escala .opcao { flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
 .escala .opcao input { margin: 0; }
 .escala .opcao label { flex: none; text-align: center; padding: 0; }
+
+/* 015 — Estados dos controles (FR-025). Controle marcado na cor de ação; linha ou célula com
+   o controle marcado ganha marca de acento de 4 px (inset: não desloca nada nem muda a área
+   ativável) e fundo tonal complementar. Sem :has(), resta o controle marcado; em cores
+   forçadas, sombra e fundo somem e o controle nativo continua o sinal. A célula da escala é
+   delimitada por contorno forte (6,7:1). */
+.pergunta input { accent-color: var(--cor-acao); }
+/* Raio único dos controles (gate, rodada 1 — FR-008, FR-044): 4 px, escolhido contra 0 px. */
+.pergunta input[type="text"], .pergunta select { border-radius: var(--raio); }
+.pergunta .complemento { margin-left: calc(1.75rem + var(--espaco-3)); }
+.pergunta .opcao:has(input:checked) {
+  background: var(--cor-selecao); box-shadow: inset var(--borda-acento) 0 0 var(--cor-acao);
+}
+@media (hover: hover) {
+  .pergunta .opcao:hover { background: var(--cor-selecao); }
+}
+.pergunta .escala .opcao {
+  border: var(--borda-fina) solid var(--cor-borda-forte); border-radius: var(--raio);
+  padding: var(--espaco-1) 0;
+}
+.pergunta .escala .opcao:has(input:checked) {
+  border-color: var(--cor-acao); box-shadow: inset 0 0 0 var(--borda-fina) var(--cor-acao);
+}
 
 input[type="text"], select {
   display: block; width: 100%; max-width: 100%;
@@ -142,13 +231,13 @@ footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375r
 
 /* 014 — Pendência não é erro (FR-005, FR-006): mesmo resumo e mesma marca por Pergunta,
    com destaque azul institucional em vez do vermelho de erro; o texto distingue os dois. */
-.resumo-pendencias { border-color: #1a4480; }
-.resumo-pendencias h2 { color: #1a4480; }
-.pergunta.com-pendencia { border-left-color: #1a4480; }
-.com-pendencia input[type="text"], .com-pendencia select { border-color: #1a4480; }
+.resumo-pendencias { border-color: var(--cor-info); }
+.resumo-pendencias h2 { color: var(--cor-info); }
+.pergunta.com-pendencia { border-left-color: var(--cor-info); }
+.com-pendencia input[type="text"], .com-pendencia select { border-color: var(--cor-info); }
 /* Auditoria de identidade visual, IV-03: a frase "Falta responder: …" da Pergunta pendente
    também deixa o vermelho de erro (#1a4480/#fff ≈ 9.6:1). */
-.com-pendencia .erro { color: #1a4480; }
+.com-pendencia .erro { color: var(--cor-info); }
 
 /* 014 — Rodapé da Seção (FR-009, FR-015; research R10). Principal e secundária empilhadas,
    em largura total até 480 px; terciárias (navegação que não grava) separadas por distância e

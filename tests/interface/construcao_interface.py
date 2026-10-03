@@ -159,3 +159,138 @@ def texto_visivel(resposta) -> str:
 
 def tecnicos_em(texto: str) -> list[str]:
     return [m.group(0) for padrao in PADROES_TECNICOS for m in padrao.finditer(texto)]
+
+
+# --- Leitura das folhas de estilo da página (015; sem navegador) ----------------------------
+# A cascata é aproximada, suficiente para as folhas do projeto: regras de classe e de tag,
+# combinador descendente (">" tratado como descendente), um nível de @media, `var()` pelos
+# tokens do `:root`. Seletores com pseudo-classe, atributo, "+" ou "~" no último composto não
+# casam com o alvo (são inspecionados diretamente por `regras`).
+
+
+@dataclass(frozen=True)
+class Regra:
+    media: str  # prelúdio do @media, ou "" fora de @media
+    seletor: str
+    declaracoes: dict[str, str]
+
+
+def folhas(html: str) -> str:
+    """O CSS de todos os `<style>` da página, sem comentários."""
+    blocos = re.findall(r"<style>(.*?)</style>", html, re.S)
+    return re.sub(r"/\*.*?\*/", "", "\n".join(blocos), flags=re.S)
+
+
+def _declaracoes(corpo: str) -> dict[str, str]:
+    pares = (d.split(":", 1) for d in corpo.split(";") if ":" in d)
+    return {nome.strip().lower(): valor.strip() for nome, valor in pares}
+
+
+def _blocos(css: str, media: str = "") -> list[Regra]:
+    saida, i = [], 0
+    while True:
+        abre = css.find("{", i)
+        if abre == -1:
+            return saida
+        preludio = css[i:abre].strip()
+        nivel, j = 1, abre + 1
+        while nivel:
+            nivel += {"{": 1, "}": -1}.get(css[j], 0)
+            j += 1
+        corpo = css[abre + 1 : j - 1]
+        if preludio.startswith("@media"):
+            saida += _blocos(corpo, preludio[len("@media") :].strip())
+        else:
+            for seletor in preludio.split(","):
+                saida.append(Regra(media, " ".join(seletor.split()), _declaracoes(corpo)))
+        i = j
+
+
+def regras(html: str) -> list[Regra]:
+    """As regras das folhas da página, na ordem do documento."""
+    return _blocos(folhas(html))
+
+
+def tokens(html: str) -> dict[str, str]:
+    return {
+        nome: valor
+        for regra in regras(html)
+        if regra.seletor == ":root"
+        for nome, valor in regra.declaracoes.items()
+        if nome.startswith("--")
+    }
+
+
+def resolver(valor: str, mapa: dict[str, str]) -> str:
+    """Substitui `var(--x)` (e `var(--x, reserva)`) pelos valores dos tokens."""
+    padrao = re.compile(r"var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*))?\)")
+    for _ in range(10):
+        novo = padrao.sub(lambda m: mapa.get(m[1], m[2] or m[0]), valor)
+        if novo == valor:
+            return " ".join(valor.split())
+        valor = novo
+    return valor
+
+
+_COMPOSTO = re.compile(r"^([a-z][\w-]*)?((?:\.[\w-]+)*)$")
+
+
+def _casa(composto: str, tag: str, classes: set[str]) -> bool:
+    m = _COMPOSTO.match(composto)
+    if not m:
+        return False
+    proprias = set(re.findall(r"\.([\w-]+)", m[2] or ""))
+    return bool((not m[1] or m[1] == tag) and proprias <= classes and (m[1] or proprias))
+
+
+def _casa_ancestral(composto: str, ancestrais: set[str]) -> bool:
+    """Ancestral por classes e tag (`ancestrais` mistura nomes de classes e de tags)."""
+    m = _COMPOSTO.match(composto)
+    if not m or not (m[1] or m[2]):
+        return False
+    return (not m[1] or m[1] in ancestrais) and set(
+        re.findall(r"\.([\w-]+)", m[2] or "")
+    ) <= ancestrais
+
+
+def _especificidade(seletor: str) -> tuple[int, int]:
+    partes = [p for p in seletor.replace(">", " ").split()]
+    classes = sum(p.count(".") + p.count("[") + p.count(":") - 2 * p.count("::") for p in partes)
+    tags = sum(1 for p in partes if re.match(r"^[a-z]", p))
+    return classes, tags
+
+
+def valor(
+    html: str,
+    ancestrais: set[str],
+    classe: str = "",
+    tag: str = "",
+    propriedades: str | tuple[str, ...] = "color",
+    media: str | None = None,
+) -> str | None:
+    """Valor efetivo (tokens resolvidos) de um elemento `tag.classe` (classes separadas por
+    espaço) dentro de ancestrais com as classes/tags `ancestrais`.
+
+    `propriedades`: um nome ou uma tupla de nomes concorrentes (ex.: um lado de borda e seus
+    atalhos); vence a declaração de maior especificidade, depois a última. `media`: inclui
+    também as regras de @media cujo prelúdio contém esse texto.
+    """
+    nomes = (propriedades,) if isinstance(propriedades, str) else propriedades
+    classes = set(classe.split())
+    melhor, chave = None, (-1, -1, -1)
+    for ordem, regra in enumerate(regras(html)):
+        if regra.media and (media is None or media not in regra.media):
+            continue
+        if "+" in regra.seletor or "~" in regra.seletor:
+            continue
+        *antes, ultimo = regra.seletor.replace(">", " ").split()
+        if not _casa(ultimo, tag, classes):
+            continue
+        if not all(_casa_ancestral(parte, ancestrais) for parte in antes):
+            continue
+        for nome in nomes:
+            if nome in regra.declaracoes:
+                k = (*_especificidade(regra.seletor), ordem)
+                if k >= chave:
+                    melhor, chave = regra.declaracoes[nome], k
+    return resolver(melhor, tokens(html)) if melhor is not None else None

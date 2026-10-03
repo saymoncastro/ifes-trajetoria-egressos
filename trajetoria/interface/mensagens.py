@@ -42,6 +42,13 @@ AVISOS = {
     ),
     "saida": "Você pode continuar a pesquisa quando quiser.",
 }
+# Variante visual fixa de cada aviso (015 FR-026): sucesso só quando algo foi salvo.
+VARIANTE_DO_AVISO = {
+    "situacao": "informacao",
+    "percurso": "informacao",
+    "salvo": "sucesso",
+    "saida": "informacao",
+}
 # Nota de "Sair sem salvar esta seção" (014 FR-013).
 SAIR_SEM_SALVAR_NOTA = "O que já foi salvo antes continua guardado."
 

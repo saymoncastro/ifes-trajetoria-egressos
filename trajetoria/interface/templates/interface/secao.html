@@ -1,7 +1,7 @@
 {% extends "interface/base.html" %}
 {% block titulo %}{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}Seção {{ passagem.secao.posicao }}{% endif %}{% endblock %}
 {% block conteudo %}
-{% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
+{% if aviso %}<p class="aviso aviso-{{ aviso.variante }}" role="status">{{ aviso.texto }}</p>{% endif %}
 {# Título principal = a Seção; sem título na Versão, o da pesquisa (014 FR-023; nada inventado). #}
 <h1>{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}{{ titulo_pesquisa }}{% endif %}</h1>
 {% if resumo_erros %}

@@ -115,3 +115,16 @@ def test_previa_da_publicada_e_sem_pessoa(client, publicada):
     resposta = client.get(f"/editor/versoes/{publicada.pk}/previa/secoes/1/")
     assert resposta.status_code == 200
     assert "Pessoa fictícia" not in ce.texto_visivel(resposta)
+
+
+def test_previa_herda_so_o_tratamento_interno_da_pergunta(client, baseline):
+    """015 FR-040: tipografia, estados e controles da jornada; não o ritmo nem o shell."""
+    from tests.interface import construcao_interface as ci
+
+    html = client.get(f"/editor/versoes/{baseline.pk}/previa/secoes/8/").content.decode()
+    assert "Camada da jornada do egresso (015)" not in html
+    assert ci.valor(html, {"pergunta", "fieldset"}, "", "legend", "font-size") == "1.125rem"
+    acao = ci.tokens(html)["--cor-acao"]
+    assert ci.valor(html, {"pergunta", "opcao"}, "", "input", "accent-color") == acao
+    margem = ci.valor(html, {"previa"}, "pergunta", "fieldset", ("margin", "margin-bottom"))
+    assert margem == "0.5rem"  # composição do editor: Perguntas intercaladas com anotações

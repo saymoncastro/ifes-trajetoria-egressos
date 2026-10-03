@@ -4,21 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ prefixo_titulo }}{% block titulo %}{% endblock %} — Trajetória Ifes (demonstração)</title>
-<style>{% include "interface/estilo.css" %}</style>
+<style>{% include "interface/estilo.css" %}
+{% include "interface/jornada.css" %}</style>
 </head>
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+{# Faixa de demonstração: ambiente fictício e controles de demonstração, fora do produto (015 FR-021; research R4). #}
 <div class="faixa-demonstracao" role="note">
-  <p class="coluna"><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. Não há autenticação: a escolha de uma pessoa não comprova identidade.</p>
-</div>
-<header class="cabecalho">
   <div class="coluna">
-    <span>Trajetória Ifes</span>
+    <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. Não há autenticação: a escolha de uma pessoa não comprova identidade.</p>
     {% if pessoa_demonstracao %}
     <p class="pessoa">Pessoa fictícia: {{ pessoa_demonstracao.nome|default:"sem nome informado" }}</p>
     <a href="/demonstracao/">Trocar de pessoa</a>
     <form method="post" action="/demonstracao/encerrar/">{% csrf_token %}<button type="submit">Encerrar demonstração</button></form>
     {% endif %}
+  </div>
+</div>
+{# Cabeçalho do produto (015 FR-015 a FR-017; contracts/shell.md). Assinatura do Ifes antes do nome, inline e sem alteração (research R3; validação pela ACS: D-03). #}
+<header class="produto">
+  <div class="coluna">
+    <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo">
+{% include "interface/assinatura.svg" %}
+    </span>
+    <p class="produto-nome"><span class="nome">Trajetória Ifes</span> <span class="subtitulo">Acompanhamento de egressos</span></p>
   </div>
 </header>
 <main id="conteudo" tabindex="-1">
@@ -26,8 +34,11 @@
 {% block conteudo %}{% endblock %}
   </div>
 </main>
-<footer>
-  <div class="coluna"><p>Trajetória Ifes — demonstração local com dados fictícios.</p></div>
+<footer class="rodape">
+  <div class="coluna">
+    <p>Instituto Federal do Espírito Santo</p>
+    <p class="ambiente">Trajetória Ifes — demonstração local com dados fictícios.</p>
+  </div>
 </footer>
 </body>
 </html>

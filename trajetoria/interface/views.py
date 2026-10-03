@@ -136,10 +136,13 @@ _TELA_DE_FORMACOES = {
 _COM_ACAO = (ResolucaoDaEntrada.ENTRADA_RESOLVIDA, ResolucaoDaEntrada.SELECAO_NECESSARIA)
 
 
-def _aviso(request, *permitidos: str) -> str | None:
-    """Faixa de aviso por código de lista fechada; qualquer outro valor é ignorado."""
+def _aviso(request, *permitidos: str) -> dict | None:
+    """Faixa de aviso por código de lista fechada; qualquer outro valor é ignorado. A variante
+    visual é derivada do código (015 FR-026)."""
     codigo = request.GET.get("aviso")
-    return mensagens.AVISOS[codigo] if codigo in permitidos else None
+    if codigo not in permitidos:
+        return None
+    return {"texto": mensagens.AVISOS[codigo], "variante": mensagens.VARIANTE_DO_AVISO[codigo]}
 
 
 def _formacao_apresentada(formacao) -> dict:
@@ -165,16 +168,19 @@ def formacoes(request):
     # Na ordem devolvida pela 007, sem reordenar (014 FR-035).
     pendentes = [_formacao_apresentada(f) for f in destaque]
     linha = pendentes[0]["linha"] if pendentes else ""
+    # A linha da formação vai destacada na frase, sem mudar o texto (015 FR-032).
+    antes_da_linha, depois_da_linha = mensagens.ENTRADA_FATO.split("{linha}")
     return render(
         request,
         "interface/formacoes.html",
         {
             "titulo": mensagens.TITULO_TRAJETORIA,
             "mensagem": mensagem,
-            "entrada_fato": (
-                mensagens.ENTRADA_FATO.format(linha=linha)
+            "entrada_fato": None if linha else mensagens.ENTRADA_SEM_ATRIBUTOS,
+            "entrada_destaque": (
+                {"antes": antes_da_linha, "linha": linha, "depois": depois_da_linha}
                 if linha
-                else mensagens.ENTRADA_SEM_ATRIBUTOS
+                else None
             ),
             "entrada_continuacao": mensagens.ENTRADA_CONTINUACAO,
             "selecao": mensagens.SELECAO,
