@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.http import require_GET, require_POST
 
+from trajetoria.acompanhamento import apresentacao as ap
 from trajetoria.acompanhamento.acesso import recusa
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.comunicacao.acesso import RecusaComunicacao, campanha_autorizada, comunicacao
@@ -14,6 +15,24 @@ from trajetoria.comunicacao.convite import renderizar_convite
 from trajetoria.comunicacao.operacoes import simular_comunicacao
 
 BANNER = "Demonstração local com contatos fictícios; nenhum envio real."
+RECUSAS = {
+    "conteudo_inseguro": (
+        "Preparação recusada: o nome da Campanha ou de uma Pessoa contém link ou marcação "
+        "não permitidos no convite. Zero mensagens submetidas."
+    ),
+}
+
+
+def pagina(request, template, dados, status=200):
+    """Toda resposta da 016 é transitória: nunca guardada em cache."""
+    resposta = render(
+        request,
+        template,
+        {"banner": BANNER, "atuacao": request.atuacao, **dados},
+        status=status,
+    )
+    resposta["Cache-Control"] = "no-store"
+    return resposta
 
 
 def erro(request, recusa_):
@@ -21,24 +40,13 @@ def erro(request, recusa_):
         raise Http404
     if recusa_.status == 403:
         return recusa(request, "Comunicação não autorizada para esta atuação ou escopo.")
-    resposta = render(
-        request,
-        "comunicacao/resultado.html",
-        {
-            "banner": BANNER,
-            "atuacao": request.atuacao,
-            "erro": "Preparação recusada. Zero mensagens submetidas.",
-        },
-        status=recusa_.status,
-    )
-    resposta["Cache-Control"] = "no-store"
-    return resposta
+    texto = RECUSAS.get(recusa_.categoria, "Preparação recusada. Zero mensagens submetidas.")
+    return pagina(request, "comunicacao/resultado.html", {"erro": texto}, recusa_.status)
 
 
-def contexto(request, campanha, agora):
+def contexto(campanha, agora):
+    situacao = estado(campanha, agora=agora)
     return {
-        "banner": BANNER,
-        "atuacao": request.atuacao,
         "campanha": campanha,
         "momento": timezone.localtime(agora),
         "trilha": [
@@ -46,8 +54,8 @@ def contexto(request, campanha, agora):
             (campanha.nome, f"/acompanhamento/campanhas/{campanha.pk}/"),
             ("Comunicação simulada", None),
         ],
-        "situacao": estado(campanha, agora=agora).name.replace("_", " "),
-        "pode_simular": estado(campanha, agora=agora) != EstadoCampanha.ENCERRADA,
+        "situacao": ap.situacao(situacao),
+        "pode_simular": situacao != EstadoCampanha.ENCERRADA,
     }
 
 
@@ -68,63 +76,52 @@ def preparar(request, campanha):
         return erro(request, exc)
     except Exception:
         return erro(request, RecusaComunicacao("falha_preparacao", 422))
-    resposta = render(
+    return pagina(
         request,
         "comunicacao/comunicacao.html",
         {
-            **contexto(request, visivel, agora),
+            **contexto(visivel, agora),
             "totais": publico.totais,
             "convite": convite,
             "destinatario": representante.contato if representante else None,
         },
     )
-    resposta["Cache-Control"] = "no-store"
-    return resposta
 
 
 @comunicacao
 @require_POST
 def simular(request, campanha):
+    # A operação autoriza operador e Campanha por conta própria (R2); a view não repete.
     try:
-        visivel = campanha_autorizada(campanha, request.comunicacao)
         resultado = simular_comunicacao(campanha, request.comunicacao.operador)
     except RecusaComunicacao as exc:
-        if exc.status == 409:
-            resposta = render(
-                request,
-                "comunicacao/resultado.html",
-                {
-                    **contexto(request, visivel, timezone.now()),
-                    "erro": "Campanha encerrada. Simulação recusada; zero mensagens submetidas.",
-                },
-                status=409,
-            )
-            resposta["Cache-Control"] = "no-store"
-            return resposta
-        return erro(request, exc)
-    except Exception:
-        resposta = render(
+        if exc.status != 409:
+            return erro(request, exc)
+        visivel = campanha_autorizada(campanha, request.comunicacao)
+        return pagina(
             request,
             "comunicacao/resultado.html",
             {
-                "banner": BANNER,
-                "atuacao": request.atuacao,
-                "erro": "Falha inesperada. Não foi possível confirmar o resultado do transporte.",
+                **contexto(visivel, timezone.now()),
+                "erro": "Campanha encerrada. Simulação recusada; zero mensagens submetidas.",
             },
-            status=500,
+            409,
         )
-        resposta["Cache-Control"] = "no-store"
-        return resposta
+    except Exception:
+        return pagina(
+            request,
+            "comunicacao/resultado.html",
+            {"erro": "Falha inesperada. Não foi possível confirmar o resultado do transporte."},
+            500,
+        )
     # Coleção individual nunca entra no contexto do template.
-    resposta = render(
+    return pagina(
         request,
         "comunicacao/resultado.html",
         {
-            **contexto(request, visivel, resultado.momento),
+            **contexto(resultado.campanha, resultado.momento),
             "totais": resultado.totais,
             "interrompida": resultado.interrompida,
         },
-        status=500 if resultado.interrompida else 200,
+        500 if resultado.interrompida else 200,
     )
-    resposta["Cache-Control"] = "no-store"
-    return resposta

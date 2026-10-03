@@ -26,6 +26,7 @@ class SituacaoIndividual:
 
 @dataclass(frozen=True)
 class Resultado:
+    campanha: object
     momento: object
     escopo: object
     totais: dict
@@ -40,7 +41,8 @@ def simular_comunicacao(campanha_id, operador_id):
     if estado(campanha, agora=agora) == EstadoCampanha.ENCERRADA:
         raise RecusaComunicacao("campanha_encerrada", 409)
     try:
-        # Todo contato/render é validado antes mesmo de construir uma conexão.
+        # Todo contato/render é validado antes mesmo de construir uma conexão:
+        # `Convite.mensagem` aplica `validar_mensagem` a cada mensagem construída.
         publico = publico_atual(campanha, contexto.escopo)
         transporte = transporte_local()
         mensagens = {
@@ -52,8 +54,6 @@ def simular_comunicacao(campanha_id, operador_id):
             for i in publico.itens
             if i.contato is not None
         }
-        for msg in mensagens.values():
-            validar_mensagem(msg)
     except RecusaComunicacao:
         raise
     except Exception:
@@ -69,12 +69,15 @@ def simular_comunicacao(campanha_id, operador_id):
         else:
             msg = mensagens[item.pessoa.pk]
             conexao = None
-            situacao = "falha"
+            # Só é tentativa de transporte (submetida/falha) a partir do send; um erro antes
+            # dele interrompe a execução sem que a mensagem tenha saído.
+            situacao = "nao_tentada"
             try:
                 # Segunda barreira no destinatário final, não delegada ao host/Mailpit.
                 validar_mensagem(msg)
                 conexao = transporte.conexao()
                 msg.connection = conexao
+                situacao = "falha"
                 if msg.send(fail_silently=False) == 1:
                     situacao = "submetida"
             except (SMTPException, OSError):
@@ -100,4 +103,4 @@ def simular_comunicacao(campanha_id, operador_id):
         "falhas": falhas,
         "nao_tentadas": sum(i.situacao == "nao_tentada" for i in individuais),
     }
-    return Resultado(agora, contexto.escopo, totais, tuple(individuais), interrompida)
+    return Resultado(campanha, agora, contexto.escopo, totais, tuple(individuais), interrompida)

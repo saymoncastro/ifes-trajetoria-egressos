@@ -106,6 +106,22 @@ def transporte_local():
     return TransporteLocal(backend, settings.EMAIL_HOST, settings.EMAIL_PORT)
 
 
+def validar_conteudo(texto, html):
+    """Mesmo critério na prévia e no envio: nome de Campanha ou Pessoa com link ou markup
+    ativo recusa o convite inteiro, em vez de aparecer só no POST."""
+    import re
+
+    if re.search(
+        r"<\s*(script|img|link|iframe|object|embed|base)\b|\bon\w+\s*=|url\s*\(|@import", html, re.I
+    ):
+        raise RecusaComunicacao("conteudo_inseguro", 422)
+    for url in re.findall(r'https?://[^\s<>"\']+', texto + "\n" + html):
+        try:
+            validar_url(url)
+        except RecusaComunicacao:
+            raise RecusaComunicacao("conteudo_inseguro", 422) from None
+
+
 def validar_mensagem(msg):
     if (
         msg.from_email != REMETENTE
@@ -117,17 +133,8 @@ def validar_mensagem(msg):
     ):
         raise RecusaComunicacao("mensagem_insegura", 422)
     validar_endereco(msg.to[0])
-    validar_endereco(MAILBOX_REMETENTE)
     if len(msg.alternatives) != 1 or msg.alternatives[0].mimetype != "text/html":
         raise RecusaComunicacao("mensagem_insegura", 422)
     if any(c in msg.subject for c in "\r\n"):
         raise RecusaComunicacao("mensagem_insegura", 422)
-    import re
-
-    html = msg.alternatives[0].content
-    if re.search(
-        r"<\s*(script|img|link|iframe|object|embed|base)\b|\bon\w+\s*=|url\s*\(|@import", html, re.I
-    ):
-        raise RecusaComunicacao("conteudo_inseguro", 422)
-    for url in re.findall(r'https?://[^\s<>"\']+', msg.body + "\n" + html):
-        validar_url(url)
+    validar_conteudo(msg.body, msg.alternatives[0].content)

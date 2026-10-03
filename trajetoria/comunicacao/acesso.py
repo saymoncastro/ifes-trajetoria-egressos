@@ -68,8 +68,7 @@ def campanha_autorizada(campanha_id, contexto):
 def comunicacao(view):
     @wraps(view)
     def envolvida(request, *args, **kwargs):
-        if not settings.TRAJETORIA_DEMONSTRACAO:
-            raise RecusaComunicacao("modo_desligado", 404)
+        # Fora do modo de demonstração, o middleware da 008 já respondeu 404 (como na 011).
         vinculos = vinculos_do_operador_em_uso(request)
         if vinculos is None:
             return redirect("/demonstracao/operador/?destino=acompanhamento")
@@ -81,6 +80,7 @@ def comunicacao(view):
         request.atuacao = contexto.atuacao
         return view(request, *args, **kwargs)
 
-    # Compatibilidade com o inventário de rotas institucionais da 011; a capacidade é própria.
-    envolvida.acompanhamento = True
+    # Marcador próprio: o inventário de /acompanhamento/ distingue as duas barreiras, em vez
+    # de esta se passar pela `@acompanhamento` da 011.
+    envolvida.comunicacao = True
     return envolvida

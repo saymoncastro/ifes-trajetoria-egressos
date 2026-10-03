@@ -213,3 +213,22 @@ da informação documental de autorização/execução. Checklist de qualidade m
 registro de revisão, sem alterar seus arquivos ou marcadores. `.specify/extensions.yml`
 ausente antes e depois da implementação; nenhum hook aplicável. Serviços iniciados para
 validação foram encerrados ao final; o banco fictício isolado foi mantido.
+
+## Code review (2026-10-03)
+
+Correções após revisão de código, cada uma com regressão que falhava antes:
+
+- Barreira das rotas: `@comunicacao` passa a ter marcador próprio, em vez de se apresentar
+  como `@acompanhamento`; o inventário da 011 e o da 016 distinguem as duas barreiras.
+- Contagem: erro antes do send (barreira final, conexão) deixa a mensagem **não tentada**;
+  submetidas/falhas contam só tentativas reais de transporte.
+- Situação da Campanha com o rótulo da 011 ("Em preparação"), não o nome do enum.
+- Link ou markup ativo no nome da Campanha recusa prévia **e** simulação pelo mesmo critério
+  (`validar_conteudo`), com mensagem explicativa, em vez de recusar só o POST.
+- Limpeza: verificação de modo morta no decorator (o middleware já responde 404), validação
+  repetida por mensagem, autorização duplicada na view do POST e respostas no-store num helper.
+- Mantida: `pode_simular_comunicacao` como regra nomeada própria (R2), mesmo com o critério
+  igual ao do acompanhamento.
+
+`uv run pytest -q` — **1954 passed, 1 deselected**; `ruff check`, `manage.py check` e
+`makemigrations --check` limpos.

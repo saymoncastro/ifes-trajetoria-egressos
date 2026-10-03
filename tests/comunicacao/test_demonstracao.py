@@ -22,7 +22,10 @@ pytestmark = pytest.mark.django_db
 def test_inventario_protegido(campanha, clientes):
     rotas = [p for p in urls.urlpatterns if isinstance(p, URLPattern)]
     assert len(rotas) == 4
-    assert all(getattr(p.callback, "acompanhamento", False) for p in rotas)
+    comunicacao = [p for p in rotas if "/comunicacao/" in str(p.pattern)]
+    assert len(comunicacao) == 2
+    assert all(getattr(p.callback, "comunicacao", False) for p in comunicacao)
+    assert not any(getattr(p.callback, "acompanhamento", False) for p in comunicacao)
     raiz = f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/"
     for caminho, metodo in [(raiz, "get"), (raiz + "simular/", "post")]:
         assert getattr(clientes[C], metodo)(caminho).status_code == 403

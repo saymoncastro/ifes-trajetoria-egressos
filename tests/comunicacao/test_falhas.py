@@ -83,3 +83,38 @@ def test_timeout_pode_ter_mensagem(campanha, monkeypatch):
     r = simular_comunicacao(campanha.pk, A)
     assert r.totais["aceitas"] == 0 and r.totais["falhas"] == 4
     assert len(mail.outbox) == 4
+
+
+@pytest.mark.parametrize("etapa", ["barreira_final", "conexao"])
+def test_erro_antes_do_send_nao_conta_tentativa(campanha, monkeypatch, etapa):
+    """Interrupção antes do send: a mensagem não saiu, logo não é submetida nem falha."""
+    from trajetoria.comunicacao import operacoes
+    from trajetoria.comunicacao.seguranca import TransporteLocal
+
+    n = 0
+    alvo = (
+        (operacoes, "validar_mensagem")
+        if etapa == "barreira_final"
+        else (
+            TransporteLocal,
+            "conexao",
+        )
+    )
+    original = getattr(*alvo)
+
+    def quebrar(*args):
+        nonlocal n
+        n += 1
+        if n == 2:
+            raise RuntimeError("SENTINELA-credencial")
+        return original(*args)
+
+    monkeypatch.setattr(*alvo, quebrar)
+    r = simular_comunicacao(campanha.pk, A)
+    assert (
+        r.totais["submetidas"],
+        r.totais["aceitas"],
+        r.totais["falhas"],
+        r.totais["nao_tentadas"],
+    ) == (1, 1, 0, 3)
+    assert r.interrompida and len(mail.outbox) == 1

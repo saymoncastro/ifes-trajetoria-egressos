@@ -74,3 +74,22 @@ def test_texto_da_previa_escapa_markup_do_nome(campanha, clientes):
     resposta = clientes[A].get(f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/")
     assert b"<script>" not in resposta.content
     assert b"Ol\xc3\xa1, &lt;script&gt;alert(1)&lt;/script&gt;!" in resposta.content
+
+
+def test_situacao_com_rotulo_do_acompanhamento(campanha, clientes):
+    resposta = clientes[A].get(f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/")
+    assert resposta.context["situacao"] == "Em preparação"
+    assert "Em preparação" in resposta.content.decode()
+
+
+def test_link_no_nome_da_campanha_recusa_previa_e_simulacao(campanha, clientes):
+    campanha.nome = "Egressos 2026 https://ifes.edu.br"
+    campanha.save()
+    pagina = f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/"
+    previa = clientes[A].get(pagina)
+    assert previa.status_code == 422
+    assert "link ou marcação" in previa.content.decode()
+    simulacao = clientes[A].post(pagina + "simular/")
+    assert simulacao.status_code == 422
+    assert "link ou marcação" in simulacao.content.decode()
+    assert not getattr(mail, "outbox", [])

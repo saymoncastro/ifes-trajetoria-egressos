@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from trajetoria.comunicacao.seguranca import (
     NOME_REMETENTE,
     REMETENTE,
-    validar_endereco,
+    validar_conteudo,
     validar_mensagem,
     validar_url,
 )
@@ -23,7 +23,6 @@ class Convite:
     remetente: str = REMETENTE
 
     def mensagem(self, destinatario, *, connection=None):
-        validar_endereco(destinatario)
         msg = EmailMultiAlternatives(
             self.assunto, self.texto, self.remetente, [destinatario], connection=connection
         )
@@ -42,9 +41,7 @@ def renderizar_convite(nome_pessoa, nome_campanha, url_entrada):
         "url": url_entrada,
         "assinatura": NOME_REMETENTE,
     }
-    return Convite(
-        f"Convite para a pesquisa — {nome_campanha}",
-        render_to_string("comunicacao/convite.txt", dados),
-        render_to_string("comunicacao/convite.html", dados),
-        url_entrada,
-    )
+    texto = render_to_string("comunicacao/convite.txt", dados)
+    html = render_to_string("comunicacao/convite.html", dados)
+    validar_conteudo(texto, html)
+    return Convite(f"Convite para a pesquisa — {nome_campanha}", texto, html, url_entrada)
