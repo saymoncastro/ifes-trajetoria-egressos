@@ -402,6 +402,37 @@ def test_topo_da_confirmacao_com_acento_de_sucesso(client, cenario):
     assert _borda_esquerda(html, "confirmacao") == f"4px solid {ci.tokens(html)['--cor-sucesso']}"
 
 
+def test_confirmacao_separada_da_ficha_sem_mudar_a_ficha(client, cenario):
+    """Gate, rodada 3: com a ficha logo abaixo, os fios de sucesso e da marca pareciam uma
+    linha só. Só o bloco de sucesso ganha 48 px abaixo, e só quando a ficha vem em seguida;
+    a ficha (fio, fundo, espaçamento) não muda."""
+    resposta = ci.iniciar(client, cenario.pessoa("SIM-P-0001"))
+    ana = Participacao.objects.get(pk=ci.participacao_de(resposta))
+    ci.percorrer_pela_interface(
+        client, ana.pk, cenario.base.versao, ci.escolhas_por_id(cenario.base, COMPLETO)
+    )
+    client.post(f"/participacoes/{ana.pk}/concluir/")
+    html = _html(client.get(f"/participacoes/{ana.pk}/concluida/"))
+    mapa, regras = ci.tokens(html), ci.regras(html)
+
+    separacao = [r for r in regras if r.seletor == ".confirmacao:has(+ .contexto)"]
+    assert len(separacao) == 1 and not separacao[0].media
+    assert separacao[0].declaracoes == {"margin-bottom": "var(--espaco-7)"}
+    assert mapa["--espaco-7"] == "3rem"  # 48 px
+    # Fora dessa vizinhança (ex.: agradecimento entre os dois), o bloco mantém 24 px.
+    assert ci.valor(html, set(), "confirmacao", "div", "margin") == f"0 0 {mapa['--espaco-5']}"
+    # A ficha continua a mesma.
+    ficha = [r for r in regras if "contexto" in r.seletor]
+    assert all(r.seletor.startswith((".contexto", ".confirmacao:has")) for r in ficha)
+    assert ci.valor(html, set(), "contexto", "section", "margin") == f"0 0 {mapa['--espaco-5']}"
+    assert ci.valor(html, set(), "contexto", "section", "border-left") == (
+        f"4px solid {mapa['--cor-marca']}"
+    )
+    assert ci.valor(html, set(), "contexto", "section", "background") == mapa["--cor-institucional"]
+    # A vizinhança existe quando não há agradecimento entre os blocos.
+    assert re.search(r'</div>\s*(<p>[^<]*</p>\s*)?<section class="contexto"', html)
+
+
 # --- US4: trajetória, contexto, ação principal e divisores (FR-031 a FR-035) ----------------
 
 
@@ -642,3 +673,20 @@ def test_dimensao_da_assinatura_garante_simbolo_minimo(client, cenario):
     assert altura and altura.endswith("px")
     assert float(altura[:-2]) * (219.234375 - 56.375) / 284 >= 30  # símbolo no viewBox 709×284
     assert ci.valor(html, {"assinatura"}, "", "svg", "width") == "auto"
+
+
+def test_assinatura_maior_onde_cabe_ao_lado_do_nome(client, cenario):
+    """Gate, rodada 3: a partir de 22em (352 px), símbolo de 36 px (63 px de altura) e
+    cabeçalho de até 68 px (FR-016). Abaixo disso, 54 px (símbolo de 31 px): com 63 px o nome
+    passaria para baixo da assinatura a 320 px."""
+    ci.entrar_como(client, cenario.pessoa("SIM-P-0001"))
+    html = _html(client.get("/formacoes/"))
+    simbolo = (219.234375 - 56.375) / 284  # fração do viewBox 709×284 ocupada pelo símbolo
+    base = ci.valor(html, {"assinatura"}, "", "svg", "height")
+    maior = ci.valor(html, {"assinatura"}, "", "svg", "height", media="min-width: 22em")
+    assert base == "54px" and maior == "63px"
+    assert 36 <= 63 * simbolo < 37
+    fios = 4 + 1  # fio de marca no topo + divisa inferior; sem respiro vertical próprio
+    assert 63 + fios <= 68
+    medias = [r.media for r in ci.regras(html) if r.seletor == ".assinatura svg"]
+    assert medias == ["", "(min-width: 22em)"]

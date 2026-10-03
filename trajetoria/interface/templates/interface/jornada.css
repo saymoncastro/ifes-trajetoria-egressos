@@ -38,6 +38,9 @@
   padding-left: var(--espaco-4); margin: 0 0 var(--espaco-5);
 }
 .confirmacao p:last-child { margin-bottom: 0; }
+/* Gate, rodada 3: com a ficha logo abaixo, o fio de sucesso e o da marca pareciam uma linha
+   só. Só o bloco de sucesso se afasta; a ficha não muda. */
+.confirmacao:has(+ .contexto) { margin-bottom: var(--espaco-7); }
 
 /* Trajetória, contexto e divisores (FR-031 a FR-035). Identificação → metadado → situação
    → ação; espaço simétrico no item; divisores suaves (nenhum significado depende deles). A
@@ -91,9 +94,14 @@
 /* Assinatura: altura fixa em px (não cresce nem encolhe com a fonte). 54 px → símbolo de
    31 px (mínimo do Manual: 30 px); as margens do próprio ativo (≥ 7,8 px) são a área de
    proteção de 1 módulo (6,7 px) — por isso o cabeçalho não tem respiro vertical próprio e
-   nada é posto dentro dessa margem. */
+   nada é posto dentro dessa margem. Gate, rodada 3: a 31 px o texto da assinatura ficava
+   pequeno demais; onde cabe ao lado do nome (≥ 22em), 63 px → símbolo de 36 px e cabeçalho
+   de 68 px. Abaixo disso, com 63 px, o nome passaria para baixo da assinatura. */
 .assinatura { display: block; flex: none; line-height: 0; }
 .assinatura svg { display: block; height: 54px; width: auto; }
+@media (min-width: 22em) {
+  .assinatura svg { height: 63px; }
+}
 .produto-nome {
   margin: 0; padding: var(--espaco-2) 0; display: flex; flex-wrap: wrap; align-items: baseline;
   gap: 0 var(--espaco-3);
