@@ -1154,7 +1154,7 @@ A folha tem 162 linhas; uma sequência longa seria desproporcional. Sequência p
 |---|---|---|
 | **D-01 / DP-801** | Identidade visual e linguagem definitivas (008/DP-801; instância: Proex/CPAEG com comunicação e TI) | Toda a direção desta auditoria é **proposta** para essa decisão; a PoC é o insumo para decidir |
 | **D-02** | Esclarecimento institucional de **como** o Padrão Digital de Governo se aplica ao Trajetória (há evidência normativa de aplicabilidade a sistemas com serviços ao cidadão no Executivo Federal — seção 8) e **qual margem existe** para incorporar a identidade visual do Ifes; idem para barra gov.br/VLibras | Decide entre a Direção A (ação em verde Ifes) e a B (ação conforme o PDG) e os demais desvios da seção 8; não bloqueia a PoC, que compara A e B por um único token |
-| **D-03** | Arquivo oficial da assinatura (Reitoria/sistêmica) via ACS/download de marcas; forma de inclusão sem `staticfiles` (008 R14) — SVG inline ou equivalente | Bloqueia IV-01 em produção; a PoC pode usar o arquivo público com aval da ACS |
+| **D-03** | Arquivo oficial da assinatura (Reitoria/sistêmica) via ACS/download de marcas; forma de inclusão sem `staticfiles` (008 R14) — SVG inline ou equivalente | Bloqueia IV-01 em publicação, propagação e produção; a PoC local, interna e não publicada pode usar o arquivo oficial público como insumo de prototipação, respeitando o Manual da Marca (seção 30) |
 | **D-04** | Política de estáticos (008 R14; FR-082) | Mantém `system-ui` e impede fonte externa; reavaliar só se estáticos vierem por outro motivo |
 | **D-05** | Regra da 014 FR-045 (estilo restrito à jornada) | Toda mudança de token deve ser escopada até a Etapa D |
 | **D-06** | Contrato `telas.md` da 014 | Recomendações de trajetória e confirmação são visuais; mudar estrutura de conteúdo seria revisão do contrato |
@@ -1197,9 +1197,11 @@ solução):
 | 4 | Pendência continua azul (014) | — (já decidida na 014) | Manter; só renomear o papel e corrigir IV-03 |
 | 5 | Raio 4 px ou 0 | Equipe do produto, na PoC | Decidir pela comparação lado a lado |
 
-Os itens 1 e 2 **precisam de aprovação antes** de qualquer propagação; para a PoC local,
-basta uma confirmação de que é aceitável usar o arquivo público da assinatura em
-ambiente de demonstração.
+Os itens 1 e 2 **precisam de aprovação antes** de qualquer propagação. Para uma PoC
+local, interna e não publicada, pode-se utilizar o arquivo oficial disponibilizado
+publicamente pelo Ifes como insumo de prototipação, respeitando integralmente as regras do
+Manual da Marca. A validação institucional pela ACS e pela CPAEG/Proex é necessária antes
+de publicação, propagação ou uso em produção.
 
 ---
 
