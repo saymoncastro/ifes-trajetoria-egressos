@@ -31,3 +31,11 @@ def resumo_da_formacao(conclusao) -> str:
         ano = conclusao.data_conclusao.year
     partes = (conclusao.curso, conclusao.unidade, None if ano is None else str(ano))
     return " · ".join(p for p in partes if p)
+
+
+def complemento_da_formacao(conclusao) -> str:
+    """Linha complementar da formação na trajetória (014 FR-034): nível · modalidade · forma
+    de oferta, só os informados. Vazio se nada foi informado. Sem desempate entre formações
+    nem atributo deduzido (007/DP-702)."""
+    partes = (conclusao.nivel, conclusao.modalidade, conclusao.forma_oferta)
+    return " · ".join(p for p in partes if p)

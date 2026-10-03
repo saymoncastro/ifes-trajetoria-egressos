@@ -2,11 +2,13 @@
 {% block titulo %}{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}Seção {{ passagem.secao.posicao }}{% endif %}{% endblock %}
 {% block conteudo %}
 {% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
-<h1>{{ titulo_pesquisa }}</h1>
+{# Título principal = a Seção; sem título na Versão, o da pesquisa (014 FR-023; nada inventado). #}
+<h1>{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}{{ titulo_pesquisa }}{% endif %}</h1>
 {% if resumo_erros %}
-<div class="resumo-erros" role="alert" aria-labelledby="titulo-erros">
-  <h2 id="titulo-erros">Há problemas nesta seção</h2>
-  {% if salvo %}<p>O que já foi preenchido nesta seção foi salvo.</p>{% endif %}
+{# Foco ao carregar, sem JavaScript, mantendo o anúncio (014 FR-027, FR-028; MF-10). #}
+<div class="resumo-erros{% if tipo_resumo == "pendencias" %} resumo-pendencias{% endif %}" role="alert" aria-labelledby="titulo-erros" tabindex="-1" autofocus>
+  <h2 id="titulo-erros">{{ titulo_resumo }}</h2>
+  {% if frase_salvo %}<p>{{ frase_salvo }}</p>{% endif %}
   <ul>
     {% for erro in resumo_erros %}<li><a href="#{{ erro.ancora }}">{{ erro.texto }}</a></li>{% endfor %}
   </ul>
@@ -14,9 +16,10 @@
 {% endif %}
 {% include "interface/contexto_compacto.html" %}
 {% if primeira and texto_abertura %}<div class="abertura">{{ texto_abertura|linebreaks }}</div>{% endif %}
-{% if passagem.secao.titulo %}<h2>{{ passagem.secao.titulo }}</h2>{% endif %}
 {% if passagem.secao.texto %}<div class="texto-secao">{{ passagem.secao.texto|linebreaks }}</div>{% endif %}
 <form method="post" action="{{ acao }}" novalidate>{% csrf_token %}
+  {# Botão padrão desabilitado: Enter/"Ir" num campo não envia a Seção (014 FR-016; research R2). #}
+  <button type="submit" disabled hidden>Salvar</button>
   {% for item in itens %}
     {% if item.modo == "texto" %}{% include "interface/perguntas/texto_curto.html" %}
     {% elif item.modo == "lista" %}{% include "interface/perguntas/escolha_unica.html" %}
@@ -24,12 +27,13 @@
     {% elif item.modo == "caixas" %}{% include "interface/perguntas/escolha_multipla.html" %}
     {% else %}{% include "interface/perguntas/escala.html" %}{% endif %}
   {% endfor %}
-  <div class="acoes">
+  <div class="acoes acoes-secao">
     <button type="submit" class="primario">Salvar e continuar</button>
+    <button type="submit" name="depois" value="sair" class="secundario">Salvar e sair</button>
   </div>
 </form>
-{% if anterior %}
-<p><a href="{{ anterior }}">Voltar à seção anterior</a><br><span class="nota">Alterações não salvas nesta página serão descartadas.</span></p>
-{% endif %}
-<p><a href="/formacoes/">Sair e continuar depois</a><br><span class="nota">O que já foi salvo fica guardado. O que foi marcado nesta página e ainda não foi salvo será descartado.</span></p>
+<div class="saidas">
+  {% if anterior %}<p><a href="{{ anterior }}">Voltar à seção anterior</a><br><span class="nota">Alterações não salvas nesta página serão descartadas.</span></p>{% endif %}
+  <p><a href="/formacoes/">Sair sem salvar esta seção</a><br><span class="nota">{{ sair_sem_salvar_nota }}</span></p>
+</div>
 {% endblock %}

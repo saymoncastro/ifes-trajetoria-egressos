@@ -71,6 +71,9 @@ p, ul, ol, dl { margin: 0 0 1rem; }
   border: 3px solid #b50909; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
 }
 .resumo-erros h2 { margin-top: 0; font-size: 1.125rem; color: #b50909; }
+/* 014 FR-027: o resumo recebe o foco ao carregar; a rolagem desse foco para antes do título
+   da Seção, que continua visível (não desloca para além do topo do conteúdo). */
+.resumo-erros { scroll-margin-top: 8rem; }
 
 .lista-simples { list-style: none; padding: 0; }
 .lista-simples > li { border-top: 1px solid #565c65; padding: 1rem 0; }
@@ -89,8 +92,20 @@ p, ul, ol, dl { margin: 0 0 1rem; }
 .opcao input { margin: 0.25rem 0 0; width: 1.25rem; height: 1.25rem; flex: none; }
 .opcao label { flex: 1; overflow-wrap: anywhere; padding: 0.125rem 0; cursor: pointer; }
 
-.escala { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
-.escala .opcao { min-width: 2.75rem; }
+/* 014 — Controles: uma única correção (MF-04 + MF-05 + UX-19; FR-018 a FR-022).
+   A linha (rádio, caixa) ou a célula (escala) inteira ativa o controle: o rótulo cobre o
+   contêiner. Restrito a `.pergunta` (jornada e prévia do editor), nunca ao `.opcao` do editor.
+   A escala fica em colunas de pelo menos 44 px CSS (px, não rem: o alvo é físico e não cresce
+   com a fonte), número sob o controle; cabe numa linha quando cabe e, senão, quebra alinhada. */
+.pergunta .opcao { position: relative; }
+.pergunta .opcao label::after { content: ""; position: absolute; inset: 0; }
+.escala {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: 0.25rem 0; max-width: 30rem;
+}
+.escala .opcao { flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
+.escala .opcao input { margin: 0; }
+.escala .opcao label { flex: none; text-align: center; padding: 0; }
 
 input[type="text"], select {
   display: block; width: 100%; max-width: 100%;
@@ -124,3 +139,24 @@ button.secundario { background: #ffffff; color: #1a4480; }
 .nota { font-size: 0.9375rem; }
 
 footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375rem; }
+
+/* 014 — Pendência não é erro (FR-005, FR-006): mesmo resumo e mesma marca por Pergunta,
+   com destaque azul institucional em vez do vermelho de erro; o texto distingue os dois. */
+.resumo-pendencias { border-color: #1a4480; }
+.resumo-pendencias h2 { color: #1a4480; }
+.pergunta.com-pendencia { border-left-color: #1a4480; }
+.com-pendencia input[type="text"], .com-pendencia select { border-color: #1a4480; }
+
+/* 014 — Rodapé da Seção (FR-009, FR-015; research R10). Principal e secundária empilhadas,
+   em largura total até 480 px; terciárias (navegação que não grava) separadas por distância e
+   divisor. Classes próprias: `.acoes` e `button` continuam como no editor e no acompanhamento. */
+.acoes-secao { flex-direction: column; align-items: flex-start; }
+@media (max-width: 30em) {
+  .acoes-secao { align-items: stretch; }
+  .acoes-secao button { width: 100%; }
+}
+.saidas { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #565c65; font-size: 0.9375rem; }
+
+/* 014 — Ligações da tela de conclusão com alvo de toque de 44 px (FR-026; MF-13). */
+.lista-secoes { list-style: none; padding: 0; }
+.lista-secoes a { display: block; min-height: 2.75rem; padding: 0.625rem 0; }

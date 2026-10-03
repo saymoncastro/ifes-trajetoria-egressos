@@ -1,12 +1,11 @@
 {% extends "interface/base.html" %}
 {% block titulo %}Concluir a pesquisa{% endblock %}
 {% block conteudo %}
-<h1>{{ titulo_pesquisa }}</h1>
+<h1>Concluir a pesquisa</h1>
 {% include "interface/contexto.html" %}
-<h2>Concluir a pesquisa</h2>
 <p>Você chegou ao fim da pesquisa. Depois de concluída, ela não poderá ser alterada.</p>
 <p>Se quiser revisar alguma resposta antes de concluir, volte a uma das seções:</p>
-<ul>
+<ul class="lista-secoes">
   {% for secao in secoes %}<li><a href="{{ secao.endereco }}">{{ secao.nome }}</a></li>{% endfor %}
 </ul>
 <form method="post" action="{{ acao }}">{% csrf_token %}

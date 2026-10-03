@@ -157,6 +157,9 @@ def test_todos_os_erros_de_uma_vez_e_nada_gravado(client, cenario, ana):
     html, texto = resposta.content.decode(), ci.texto_visivel(resposta)
     assert "<title>Erro: " in html
     assert "Há problemas nesta seção" in texto
+    # Erro de forma continua erro (014 FR-004): nunca a apresentação de pendência.
+    assert "Ainda faltam" not in texto and "Falta responder" not in texto
+    assert "Erro: Selecione uma das opções apresentadas." in texto
     assert texto.count("Selecione uma das opções apresentadas.") >= 2
     assert 'href="#p1"' in html and 'href="#p7"' in html
     assert 'value="valor digitado"' in html  # valores reapresentados

@@ -152,6 +152,15 @@ def test_csrf_em_toda_escrita(cenario, ana):
         assert sem_token.post(rota).status_code == 403, rota
 
 
+def test_falha_de_csrf_nao_manda_recarregar(cenario, ana):
+    """014 FR-029 (MF-09): recarregar descartaria as marcações; a instrução é voltar e enviar."""
+    resposta = Client(enforce_csrf_checks=True).post(f"/participacoes/{ana.pk}/secoes/1/")
+    texto = ci.texto_visivel(resposta)
+    assert resposta.status_code == 403
+    assert "Volte à página anterior e envie novamente." in texto
+    assert "recarregue" not in texto.lower()
+
+
 @pytest.mark.django_db
 def test_metodos(client, cenario, ana):
     base = f"/participacoes/{ana.pk}/"

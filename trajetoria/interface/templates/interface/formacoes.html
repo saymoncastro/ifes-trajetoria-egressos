@@ -3,22 +3,20 @@
 {% block conteudo %}
 {% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
 <h1>{{ titulo }}</h1>
-{% if resolucao == "entrada_resolvida" or resolucao == "selecao_necessaria" %}
-  <p>Esta é a pesquisa do Ifes com seus egressos. Você responde uma seção de cada vez; o que for salvo fica guardado, e você pode parar e continuar depois.</p>
-{% endif %}
 {% if resolucao == "entrada_resolvida" %}
-  <p>Esta pesquisa refere-se à sua formação:</p>
-  <div class="contexto">{% include "interface/dados_formacao.html" with itens=principal.contexto %}</div>
+  <p>{{ entrada_fato }} {{ entrada_continuacao }}</p>
+  <p>{{ entrada_operacional }}</p>
   <form method="post" action="/formacoes/entrar/">{% csrf_token %}
     <button type="submit" class="primario">{{ principal.acao }}</button>
   </form>
 {% elif resolucao == "selecao_necessaria" %}
-  <p>A pesquisa é respondida separadamente para cada formação. Escolha por qual começar ou continuar; as outras continuam disponíveis aqui.</p>
+  <p>{{ entrada_operacional }}</p>
+  <p>{{ selecao }}</p>
   <ul class="lista-simples">
     {% for formacao in pendentes %}
     <li>
-      {% include "interface/dados_formacao.html" with itens=formacao.contexto %}
-      <p>{{ formacao.situacao }}</p>
+      {% include "interface/formacao.html" %}
+      {% if formacao.situacao %}<p>{{ formacao.situacao }}</p>{% endif %}
       <form method="post" action="/formacoes/entrar/">{% csrf_token %}
         <input type="hidden" name="formacao" value="{{ formacao.pk }}">
         <button type="submit" class="primario">{{ formacao.acao }} desta formação</button>
@@ -34,8 +32,8 @@
   <ul class="lista-simples">
     {% for formacao in outras %}
     <li>
-      {% include "interface/dados_formacao.html" with itens=formacao.contexto %}
-      <p><strong>{{ formacao.situacao }}</strong></p>
+      {% include "interface/formacao.html" %}
+      {% if formacao.situacao %}<p><strong>{{ formacao.situacao }}</strong></p>{% endif %}
     </li>
     {% endfor %}
   </ul>

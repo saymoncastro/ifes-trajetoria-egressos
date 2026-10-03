@@ -918,11 +918,11 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   ("Esta pesquisa refere-se a …") e oferecer **uma única** ação — "Iniciar a pesquisa"
   quando disponível para iniciar, "Continuar a pesquisa" quando disponível para retomar —
   sem pedir escolha de formação. Outras formações da Pessoa PODEM aparecer como
-  informação, com sua situação, sem ação. [Solicitante; 007 FR-020; Const. — XIV]
+  informação, com sua situação, sem ação. [Solicitante; 007 FR-020; Const. — XIV] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-021**: **Seleção necessária**: a tela DEVE perguntar sobre qual formação o egresso
   responderá e oferecer uma ação para cada formação com entrada pendente, na ordem
   devolvida pela 007, sem destaque, pré-seleção, sugestão ou ranking. Formações
-  concluídas ou ambíguas PODEM aparecer como informação, sem ação. [007 FR-021]
+  concluídas ou ambíguas PODEM aparecer como informação, sem ação. [007 FR-021] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-022**: **Sem entrada pendente**, **sem pesquisa disponível** e **sem formação
   disponível**: a tela DEVE informar a situação em linguagem simples, sem ação de
   preenchimento e sem tratá-la como erro. [007 FR-018, FR-019, FR-022]
@@ -930,7 +930,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   "pesquisa já respondida"; ambiguidade operacional → "a pesquisa referente a esta
   formação não está disponível neste momento"; sem pesquisa → "sem pesquisa disponível
   no momento". NÃO DEVEM ser nomeadas, contadas ou descritas Campanhas, nem expostos
-  critérios ou motivos de inelegibilidade. [007 FR-015, FR-028; 007/DP-701]
+  critérios ou motivos de inelegibilidade. [007 FR-015, FR-028; 007/DP-701] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-024**: A apresentação DEVE ser sempre da **formação**. NÃO DEVE ser pedido ao
   egresso que escolha Campanha nem mostrado nome, período, identificador ou existência
   de Campanha. [Const. — VII, XIV; 007 FR-028]
@@ -975,7 +975,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   com o título e o texto introdutório da Seção quando existirem e, em seguida, **todas**
   as suas Perguntas, na ordem da Versão aplicada. Na primeira Seção da Versão, o texto de
   abertura da Versão, quando existir, DEVE acompanhá-la. [006 FR-010, FR-047 c;
-  Herdado — texto de abertura; Const. — XIII]
+  Herdado — texto de abertura; Const. — XIII] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-033**: Textos de Versão, Seção, Pergunta, Opção, texto explicativo e rótulos de
   escala DEVEM ser apresentados exatamente como na Versão aplicada, inclusive grafias
   preservadas pela 003, e escapados como texto. Rótulo ausente NÃO DEVE ser inventado
@@ -1048,7 +1048,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
 - **FR-049**: Em caso de erro de preenchimento, pendência ou rejeição, a mesma Seção DEVE
   ser reapresentada com os valores informados na submissão, um resumo no topo com
   ligações para as Perguntas afetadas e uma mensagem compreensível associada a cada
-  Pergunta. [Solicitante; Const. — XX]
+  Pergunta. [Solicitante; Const. — XX] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 
 **Obrigatoriedade e navegação (consumo da 006)**
 
@@ -1056,7 +1056,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   agir somente sobre o resultado: se a Seção enviada não pode ser deixada, reapresentá-la
   com as **pendências indicadas pela 006**; se pode, apresentar o **destino** dessa Seção
   calculado pela 006 — outra Seção ou, quando o destino é a finalização, a tela de
-  conclusão. [Solicitante; 006 FR-012, FR-014, FR-019, FR-047 d]
+  conclusão. [Solicitante; 006 FR-012, FR-014, FR-019, FR-047 d] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-051**: A interface NÃO DEVE calcular destino, avaliar regra, encaminhamento ou
   ordem de Seções, nem decidir obrigatoriedade no percurso. NÃO DEVE existir, no código
   ou nos modelos de tela da interface, condição sobre resposta a Pergunta específica
@@ -1105,7 +1105,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
 
 - **FR-062**: A confirmação DEVE ser simples: "Pesquisa concluída", agradecimento, o
   contexto da formação e, se existir, o texto de encerramento da Versão. [Solicitante;
-  Herdado — texto de encerramento]
+  Herdado — texto de encerramento] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-063**: A confirmação NÃO DEVE conter resumo de respostas, valores declarados,
   certificado, comprovante, protocolo, PDF, download, identificador técnico, nem ação de
   editar ou reabrir. [Solicitante; Const. — XVI; 006/DP-603]
@@ -1149,7 +1149,7 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
 
 - **FR-071**: Toda página DEVE declarar o idioma português, ter título de página único que
   identifique a etapa (e indique a existência de erros, quando houver) e estrutura de
-  títulos em hierarquia coerente. [Const. — XX; WCAG 2.1 AA]
+  títulos em hierarquia coerente. [Const. — XX; WCAG 2.1 AA] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-072**: DEVE ser usado HTML semântico: regiões de cabeçalho, conteúdo principal e
   rodapé; formulários com botões reais; Perguntas de escolha e de escala agrupadas com o
   enunciado como legenda do grupo; listas para listas. [Const. — XX]
@@ -1163,11 +1163,11 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   componentes DEVE atender WCAG 2.1 AA. [Const. — XX]
 - **FR-076**: Ao reapresentar uma Seção com erros ou pendências, o resumo DEVE ser
   anunciado a tecnologias assistivas ou receber o foco, e cada item DEVE levar à Pergunta
-  correspondente. [Const. — XX]
+  correspondente. [Const. — XX] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-077**: As páginas DEVEM ser responsivas: utilizáveis de 320 pixels CSS de largura
   até desktop, sem rolagem horizontal da página, com largura de linha confortável para
   leitura, controles com área de toque adequada e suporte a ampliação de texto até 200%
-  sem perda de conteúdo ou função. [Const. — XXI; WCAG 2.1 AA]
+  sem perda de conteúdo ou função. [Const. — XXI; WCAG 2.1 AA] *(Revisado pela 014 — ver `specs/014-polish-jornada-egresso/spec.md`.)*
 - **FR-078**: A interface DEVE ser compatível razoavelmente com leitores de tela
   correntes; a verificação é por inspeção, verificação automatizada de acessibilidade e
   roteiro manual de teclado e leitor de tela, sem auditoria completa nesta feature.

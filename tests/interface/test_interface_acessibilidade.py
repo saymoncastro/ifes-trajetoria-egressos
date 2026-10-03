@@ -69,8 +69,10 @@ def verificar(resposta) -> list[str]:
     titulo = titulos[0].texto.strip() if len(titulos) == 1 else ""
     if not titulo:
         falhas.append("title ausente ou repetido")
-    tem_erros = any(e.attrs.get("role") == "alert" for e in els)
-    if tem_erros != titulo.startswith("Erro:"):
+    # Um resumo (alerta) existe exatamente quando o título o anuncia: "Erro:" para erro de
+    # forma, "Faltam respostas:" para pendências (014 FR-007; pendência não é erro).
+    tem_resumo = any(e.attrs.get("role") == "alert" for e in els)
+    if tem_resumo != titulo.startswith(("Erro:", "Faltam respostas:")):
         falhas.append(f"título e erros incoerentes: {titulo!r}")
     if len(tag("h1")) != 1:
         falhas.append(f"{len(tag('h1'))} h1")
@@ -160,6 +162,11 @@ def telas(client, cenario, relogio):
     resultado["s8-complemento"] = client.post(
         url + "secoes/8/", {"p7-complemento": "x", "p1": "9"}
     )
+    resultado["s8-sair-com-erro"] = client.post(  # 014: "Salvar e sair" com erro de forma
+        url + "secoes/8/", {"p7-complemento": "x", "p1": "9", "depois": "sair"}
+    )
+    resultado["formacoes-aviso-salvo"] = client.get("/formacoes/?aviso=salvo")  # 014 FR-012
+    resultado["formacoes-aviso-saida"] = client.get("/formacoes/?aviso=saida")
     c.preencher(ana, b, [8], escolhas)
     resultado["s10"] = client.get(url + "secoes/10/")
     c.preencher(ana, b, [10], escolhas)
@@ -172,9 +179,19 @@ def telas(client, cenario, relogio):
     client.post(url + "concluir/")
     resultado["concluida"] = client.get(url + "concluida/")
     resultado["aviso-ja-respondida"] = client.get(url + "secoes/1/")
+    resultado["s1-pendencias-vazia"] = _pendencias_sem_resposta(client, cenario)  # troca de Pessoa
     resultado["404"] = client.get("/nao-existe/")
     resultado["403"] = Client(enforce_csrf_checks=True).post("/demonstracao/encerrar/")
     return resultado
+
+
+def _pendencias_sem_resposta(client, cenario):
+    """Seção 1 enviada vazia por uma Participação nova de outra Pessoa (Carla, SIM-P-0010):
+    pendência sem nenhuma Resposta gravada na Seção. Troca a Pessoa em uso: fica no fim."""
+    pk = ci.participacao_de(ci.iniciar(client, cenario.pessoa("SIM-P-0010")))
+    url = f"/participacoes/{pk}/secoes/1/"
+    client.post(url, {})
+    return client.get(url + "?pendencias=1")
 
 
 def _como(client, id_externo, url):
@@ -188,9 +205,17 @@ def test_todas_as_telas_passam_no_verificador(telas):
 
 
 def test_telas_com_erros_tem_resumo_e_titulo_de_erro(telas):
-    for nome in ("s1-erros", "s2-pendencias", "s8-complemento"):
+    for nome in ("s1-erros", "s8-complemento"):
         html = telas[nome].content.decode()
         assert "<title>Erro: " in html and 'role="alert"' in html, nome
+
+
+def test_telas_com_pendencias_tem_resumo_e_titulo_sem_erro(telas):
+    """014 FR-005 a FR-007: pendência é anunciada, mas não como erro."""
+    for nome in ("s2-pendencias", "s1-pendencias-vazia"):
+        html = telas[nome].content.decode()
+        assert "<title>Faltam respostas: " in html and 'role="alert"' in html, nome
+        assert "Erro" not in ci.texto_visivel(telas[nome]), nome
 
 
 def test_titulos_distintos_por_tela(telas):
@@ -203,6 +228,7 @@ def test_obrigatoriedade_e_estado_nao_dependem_de_cor(client, telas):
     assert "(obrigatória)" in ci.texto_visivel(telas["s1"])
     assert "Erro: " in ci.texto_visivel(telas["s1-erros"])
     # Depois da conclusão (feita em `telas`), o estado da formação é texto, não cor.
+    ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0001"))  # `telas` termina com outra Pessoa
     assert "Pesquisa já respondida." in ci.texto_visivel(client.get("/formacoes/"))
 
 
@@ -226,3 +252,23 @@ def test_o_verificador_detecta_violacoes():
         "recurso externo", "botão sem texto",
     ):  # fmt: skip
         assert esperado in falhas, esperado
+
+
+def test_resumo_recebe_o_foco_ao_carregar(telas):
+    """014 FR-027 (MF-10): um único elemento com foco automático, o resumo, focável por
+    programa e ainda anunciável; nenhuma outra tela da jornada tem foco automático."""
+    com_resumo = (
+        "s1-erros", "s2-pendencias", "s1-pendencias-vazia", "s8-complemento", "s8-sair-com-erro",
+    )  # fmt: skip
+    for nome, resposta in telas.items():
+        arvore = _Arvore()
+        arvore.feed(resposta.content.decode())
+        focados = [e for e in arvore.elementos if "autofocus" in e.attrs]
+        if nome in com_resumo:
+            assert len(focados) == 1, nome
+            resumo = focados[0]
+            assert "resumo-erros" in resumo.attrs.get("class", ""), nome
+            assert resumo.attrs.get("tabindex") == "-1" and resumo.attrs.get("role") == "alert"
+            assert any(e.tag == "a" and resumo in e.ancestrais for e in arvore.elementos), nome
+        else:
+            assert focados == [], nome

@@ -1,0 +1,2 @@
+{# Formação na trajetória, forma compacta (014 FR-034): curso · unidade · ano e, se houver, nível · modalidade · forma de oferta. #}
+<p class="formacao"><strong>{{ formacao.linha|default:"Dados da formação não informados pela fonte." }}</strong>{% if formacao.complemento %}<br><span class="nota">{{ formacao.complemento }}</span>{% endif %}</p>

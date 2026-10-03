@@ -4,6 +4,8 @@ Concluir é só a operação da 006; a interface não grava momento, não remove
 valida percurso por conta própria.
 """
 
+import re
+
 import pytest
 
 from tests.interface import construcao_interface as ci
@@ -13,6 +15,7 @@ from tests.participacao.construcao import FIM, pergunta_mem, secao_mem
 from trajetoria.fonte_academica.simulada import FonteSimulada
 from trajetoria.instrumento.models import TipoPergunta
 from trajetoria.participacao import operacoes as op
+from trajetoria.participacao.consultas import situacao_da_jornada
 from trajetoria.participacao.models import Participacao, Resposta
 
 pytestmark = pytest.mark.django_db
@@ -127,7 +130,9 @@ def test_confirmacao_simples_sem_respostas(client, cenario, ana):
     resposta = client.get(client.post(_url(ana, "concluir/"))["Location"])
     assert resposta.status_code == 200
     texto = ci.texto_visivel(resposta)
-    assert "Pesquisa concluída" in texto and "Obrigado pela sua participação." in texto
+    assert "Pesquisa concluída" in texto
+    # 014 FR-040: a Versão tem texto de encerramento, que é o agradecimento; o fixo não aparece.
+    assert "Obrigado pela sua participação." not in texto
     assert "Sobre a sua formação" in texto and "Serra" in texto
     assert "Este formulário chegou ao fim!" in texto  # texto de encerramento da Versão
     assert ci.TEXTO_FICTICIO not in texto
@@ -135,7 +140,7 @@ def test_confirmacao_simples_sem_respostas(client, cenario, ana):
     assert ana.concluida_em.strftime("%d/%m/%Y") not in texto
     assert not [p for p in PROIBIDAS_NA_CONFIRMACAO if p in texto.lower()]
     html = resposta.content.decode()
-    assert 'href="/formacoes/">Voltar às suas formações' in html
+    assert 'href="/formacoes/">Ver sua trajetória no Ifes' in html  # 014 FR-030
     assert "<form" not in html.split('<main id="conteudo"')[1]
 
 
@@ -187,10 +192,74 @@ def test_motivo_que_nao_e_pendencia_vira_pesquisa_indisponivel(client, cenario, 
     assert "Esta pesquisa não está disponível no momento." in ci.texto_visivel(resposta)
 
 
-def test_pendencia_vinda_da_conclusao_nao_diz_que_salvou(client, cenario, ana):
+def test_pendencia_vinda_da_conclusao_segue_a_regra_de_verdade(client, cenario, ana):
     _percorrer(client, cenario, ana)
     op.remover_resposta(ana, cenario.base.q(54))
     destino = client.post(_url(ana, "concluir/"))["Location"]
     texto = ci.texto_visivel(client.get(destino))
     assert "Esta pergunta é obrigatória." in texto
-    assert "preenchido nesta seção foi salvo" not in texto
+    # 014 FR-008: a frase depende só do que está gravado na Seção, não de onde se veio.
+    secao = situacao_da_jornada(ana).passagens[-1].secao
+    gravada = any(p.id in situacao_da_jornada(ana).respostas for p in secao.perguntas)
+    assert ("O que você respondeu nesta seção está salvo." in texto) == gravada
+
+
+def test_titulo_principal_da_conclusao(client, cenario, ana):
+    """014 FR-023: o título principal é a etapa, não o título da pesquisa."""
+    _percorrer(client, cenario, ana)
+    html = client.get(_url(ana, "concluir/")).content.decode()
+    assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == ["Concluir a pesquisa"]
+    assert not re.search(r"<h2[^>]*>\s*Concluir a pesquisa", html)
+    assert re.search(r"<h2[^>]*>\s*Sobre a sua formação", html)  # contexto completo mantido
+
+
+# --- 014 US8: encerramento que fecha a conversa (FR-038 a FR-041) ---------------------------
+
+
+def _confirmacao(client, participacao):
+    return client.get(client.post(_url(participacao, "concluir/"))["Location"])
+
+
+def test_confirmacao_diz_o_que_foi_registrado(client, cenario, ana):
+    _percorrer(client, cenario, ana)
+    texto = ci.texto_visivel(_confirmacao(client, ana))
+    assert (
+        "Suas respostas sobre Tecnologia em Análise e Desenvolvimento de Sistemas foram "
+        "registradas." in texto
+    )
+    assert texto.count("Obrigado") == 0 and "Este formulário chegou ao fim!" in texto
+    for proibida in ("entrar em contato", "próxima pesquisa", "daqui a", "anos", "finalidade"):
+        assert proibida not in texto.lower(), proibida
+
+
+def test_confirmacao_sem_curso_nao_fabrica_texto(client, cenario, ana):
+    from trajetoria.academico.models import ConclusaoAcademica
+
+    _percorrer(client, cenario, ana)
+    ConclusaoAcademica.objects.filter(pk=ana.conclusao_id).update(curso=None)
+    texto = ci.texto_visivel(_confirmacao(client, ana))
+    assert "Suas respostas foram registradas." in texto
+    assert "Suas respostas sobre" not in texto
+
+
+def test_sem_texto_de_encerramento_agradece_uma_vez(client, db):
+    ce.incorporar(FonteSimulada(), "SIM-P-0001")
+    inst = c.instrumento()  # Versão sem texto de encerramento
+    c.campanha_aberta(inst.versao)
+    pk = ci.participacao_de(ci.iniciar(client, ce.pessoa_da_fonte("SIM-P-0001")))
+    participacao = Participacao.objects.get(pk=pk)
+    c.preencher_instrumento(participacao, inst)
+    resposta = _confirmacao(client, participacao)
+    texto = ci.texto_visivel(resposta)
+    assert texto.count("Obrigado pela sua participação.") == 1
+    principal = resposta.content.decode().split('<main id="conteudo"')[1].split("</main>")[0]
+    assert re.findall(r"<a [^>]*>([^<]+)</a>", principal) == ["Ver sua trajetória no Ifes"]
+
+
+def test_ligacoes_da_conclusao_em_lista_com_alvo_de_toque(client, cenario, ana):
+    """014 FR-026 (MF-13): as ligações para revisar Seções ficam numa lista com alvo de 44 px
+    (medido no quickstart §2.4); aqui, a marcação que recebe esse estilo."""
+    _percorrer(client, cenario, ana)
+    html = client.get(_url(ana, "concluir/")).content.decode()
+    lista = re.search(r'<ul class="lista-secoes">(.*?)</ul>', html, re.S)
+    assert lista and f'href="{_url(ana, "secoes/1/")}"' in lista.group(1)

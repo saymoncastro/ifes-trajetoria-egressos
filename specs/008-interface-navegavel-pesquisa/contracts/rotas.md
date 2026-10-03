@@ -54,7 +54,9 @@ substitui o cookie. Ambos aparecem em todas as páginas com Pessoa (FR-011).
 
 `situacao_de_entrada(pessoa)` (007) → tela conforme data-model §4 ("Situação de
 entrada"). Nunca grava (FR-031). `?aviso=situacao` → faixa "A situação da pesquisa mudou.
-Veja abaixo a situação atual."
+Veja abaixo a situação atual." *Revisado pela 014:* título "Sua trajetória no Ifes",
+formação em forma compacta, na ordem da 007, e avisos `salvo`/`saida` de "Salvar e sair"
+([telas](../../014-polish-jornada-egresso/contracts/telas.md#trajetória-formacoeshtml)).
 
 ### `POST /formacoes/entrar/` — exige Pessoa
 
@@ -96,28 +98,36 @@ disponível no momento."
 | Seção `posicao` ∉ `passagens` (inclusive posição inexistente) | 302 Seção atual, `?aviso=percurso` (ou `/concluir/` se finalizada) |
 | senão | 200 Seção com `FormularioDaSecao` (valores de `respostas`) |
 
-Conteúdo da página de Seção (FR-027, FR-032 a FR-039, FR-054):
+Conteúdo da página de Seção (FR-027, FR-032 a FR-039, FR-054). *Revisado pela 014*
+([telas](../../014-polish-jornada-egresso/contracts/telas.md),
+[rodapé](../../014-polish-jornada-egresso/contracts/rodape-secao.md)):
 
 1. Faixa de demonstração e cabeçalho (Pessoa em uso, trocar, encerrar).
-2. `h1` = título da Versão (ou "Pesquisa").
+2. `h1` = título da Seção; sem título na Versão, o título da Versão (ou "Pesquisa")
+   (014 FR-023).
 3. Resumo de erros/pendências (se houver), logo abaixo do `h1` — antes do contexto e do
-   texto de abertura, para ficar visível sem rolar também no celular.
-4. "Sobre a sua formação" — contexto da Conclusão em **uma linha** (curso · unidade ·
-   ano, `resumo_da_formacao`); a lista completa fica no início, na conclusão e na
-   confirmação.
+   texto de abertura, para ficar visível sem rolar também no celular. Recebe o foco ao
+   carregar (014 FR-027). Pendência e erro de forma têm títulos distintos (014 FR-004 a
+   FR-007).
+4. "Você está respondendo sobre:" — contexto da Conclusão em **uma linha** (curso ·
+   unidade · ano, `resumo_da_formacao`); a lista completa fica na conclusão e na
+   confirmação (014 FR-025).
 5. Se é a primeira Seção da Versão: `texto_abertura`.
-6. `h2` = título da Seção (se houver) e texto introdutório (se houver).
+6. Texto introdutório da Seção (se houver); o título da Seção é o `h1` (item 2).
 7. Perguntas, na ordem da Versão (contrato do formulário).
-8. Botão **"Salvar e continuar"** (primeiro botão do formulário).
-9. Se há Seção anterior em `passagens`: ligação "Voltar à seção anterior", com a nota
-   "Alterações não salvas nesta página serão descartadas."
-10. Ligação "Sair e continuar depois" → `/formacoes/` (nota: "O que já foi salvo fica
-    guardado. O que foi marcado nesta página e ainda não foi salvo será descartado.").
+8. Primeiro elemento do formulário: botão de envio desabilitado e oculto, que impede o
+   envio implícito por Enter/"Ir" num campo de digitação (014 FR-016). Botões
+   **"Salvar e continuar"** (principal) e **"Salvar e sair"** (secundária,
+   `depois=sair`) no fim do formulário.
+9. Fora do formulário, separadas: se há Seção anterior em `passagens`, ligação "Voltar à
+   seção anterior", com a nota "Alterações não salvas nesta página serão descartadas.";
+   e a ligação "Sair sem salvar esta seção" → `/formacoes/` (nota: "O que já foi salvo
+   antes continua guardado.").
 
 `?pendencias=1` → se a Seção é a última de `passagens` e tem `pendentes`, mostra as
-pendências (resumo + mensagem por Pergunta); caso contrário, ignora. `&salvo=1`
-(acrescentado só pelo redirecionamento de um envio aceito) acrescenta "O que já foi
-preenchido nesta seção foi salvo.". `?aviso=percurso` →
+pendências (resumo + mensagem por Pergunta); caso contrário, ignora. A frase "O que você
+respondeu nesta seção está salvo." aparece só se a Seção tem Resposta gravada (014
+FR-008); `&salvo=1` deixou de existir e é ignorado. `?aviso=percurso` →
 faixa "As respostas anteriores mudaram o caminho da pesquisa. Esta é a seção a responder
 agora."
 
@@ -135,7 +145,9 @@ Passos (research R8):
    encerrado"; `PARTICIPACAO_INEXISTENTE` → 404. `erros_por_pergunta` → 200 Seção com
    erros e valores enviados. **Nada gravado** em qualquer desses casos.
 4. Jornada de novo; `Passagem` da Seção `posicao`:
-   - `pendentes` → 302 mesma Seção `?pendencias=1&salvo=1`;
+   - `depois=sair` (014 "Salvar e sair") → 302 `/formacoes/?aviso=salvo` se a Seção tem
+     Resposta gravada, senão `?aviso=saida`, qualquer que seja o destino;
+   - `pendentes` → 302 mesma Seção `?pendencias=1`;
    - `destino` = id de Seção → 302 Seção de destino, que é a passagem seguinte do
      percurso da 006;
    - `destino` = `Saida.FINALIZACAO` → 302 `/concluir/`.

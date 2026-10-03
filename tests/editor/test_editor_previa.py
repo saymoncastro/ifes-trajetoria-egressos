@@ -62,6 +62,10 @@ def test_controles_por_tipo_e_sem_envio(client, pesquisa):
     assert "<form" not in html and 'type="submit"' not in html
     assert "Descreva: «Outro»" in html  # rótulo da 008 (UX-14), reutilizado na prévia
     assert not resposta.cookies
+    # 014 (FR-018 a FR-022): a prévia acompanha os controles da jornada — o grupo exclusivo
+    # da escala é o próprio contêiner dos pontos, não o fieldset.
+    assert re.search(r'<div class="escala" role="radiogroup" aria-labelledby="p4-enunciado"', html)
+    assert not re.search(r'<fieldset[^>]*role="radiogroup"', html)
 
 
 def test_lista_longa_usa_a_forma_compacta_da_008(client, pesquisa):

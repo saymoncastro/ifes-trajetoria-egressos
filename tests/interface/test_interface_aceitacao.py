@@ -50,7 +50,7 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     ci.entrar_como(client, ana)
     # 4. A formação com pesquisa é encontrada, sem escolha artificial.
     formacoes = ci.texto_visivel(client.get("/formacoes/"))
-    assert "Esta pesquisa refere-se à sua formação:" in formacoes
+    assert "Você concluiu " in formacoes  # 014 FR-031
     assert "Iniciar a pesquisa" in formacoes
     # 5. Iniciar: Participação pela 007/005, S1 com o texto de abertura.
     entrada = client.post("/formacoes/entrar/")
@@ -61,7 +61,7 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     assert _enviar(client, participacao, 1, escolhas)["Location"] == _url(participacao, "secoes/2/")
     # 7. Ramos reais; uma pendência; "Outro:" com complemento em S8.
     pendente = _enviar(client, participacao, 2, escolhas, p2=None)
-    assert pendente["Location"] == _url(participacao, "secoes/2/?pendencias=1&salvo=1")
+    assert pendente["Location"] == _url(participacao, "secoes/2/?pendencias=1")
     assert "Esta pergunta é obrigatória." in ci.texto_visivel(client.get(pendente["Location"]))
     for posicao, destino in ((2, 3), (3, 6), (6, 8)):
         resposta = _enviar(client, participacao, posicao, escolhas)
@@ -141,13 +141,13 @@ def test_e2e_3_selecao_entre_formacoes(client, demonstracao):
     maria = ce.pessoa_da_fonte("SIM-P-0003")
     ci.entrar_como(client, maria)
     tela = client.get("/formacoes/")
-    assert "Sobre qual formação do Ifes você responderá esta pesquisa?" in ci.texto_visivel(tela)
+    assert "Cada formação tem sua própria pesquisa." in ci.texto_visivel(tela)  # 014 FR-033
     primeira, segunda = maria.conclusoes.all()
     resposta = client.post("/formacoes/entrar/", {"formacao": str(primeira.pk)})
     p1 = Participacao.objects.get(pk=ci.participacao_de(resposta))
     _enviar(client, p1, 1, {"Q1": "Sim"})
     texto = ci.texto_visivel(client.get("/formacoes/"))
-    assert "Sobre qual formação do Ifes você responderá esta pesquisa?" in texto
+    assert "Cada formação tem sua própria pesquisa." in texto
     assert "Continuar a pesquisa desta formação" in texto
     assert "Iniciar a pesquisa desta formação" in texto
     resposta = client.post("/formacoes/entrar/", {"formacao": str(segunda.pk)})

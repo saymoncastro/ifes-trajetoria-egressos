@@ -54,7 +54,9 @@ def test_envio_depois_do_encerramento(client, cenario, ana, relogio, forma):
     ana.refresh_from_db()
     assert ana.concluida_em is None and c.retrato(ana) == antes
     formacoes = ci.texto_visivel(client.get("/formacoes/"))
-    assert "Sem pesquisa disponível no momento." in formacoes
+    # 014 FR-036: a situação geral aparece uma vez; "sem pesquisa" não se repete por formação.
+    assert "No momento, não há pesquisa disponível para as suas formações." in formacoes
+    assert "Sem pesquisa disponível no momento." not in formacoes
     assert "prazo" not in formacoes.lower()
 
 
