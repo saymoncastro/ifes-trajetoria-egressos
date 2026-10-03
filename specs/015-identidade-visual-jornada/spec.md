@@ -667,9 +667,10 @@ indicado):
   no código mergeado (FR-014); a Direção A é produzida e comparada no gate.
 - **Auditoria D-03** — DECISÃO PENDENTE: (a) formato digital oficial (SVG) da assinatura
   sistêmica — o ZIP oficial não o contém; (b) uso em publicação e produção. Instância
-  competente: ACS. Impacto: FR-015, FR-017, SC-001. Tratamento provisório: (a)
-  **bloqueia** a inclusão da assinatura e o fechamento do gate; pedido do SVG à ACS pelo
-  solicitante; (b) uso local, interno e não publicado, respeitando o Manual da Marca.
+  competente: ACS. Impacto: FR-015, FR-017, SC-001. Tratamento provisório: (a) SVG
+  **derivado do EPS oficial e aceito pelo solicitante** (2026-10-03), usado sem alteração
+  (research R3); a troca por um SVG da ACS é a substituição de um arquivo; (b) uso local,
+  interno e não publicado, respeitando o Manual da Marca.
 
 **Validação posterior registrada (não é decisão institucional)**: revisão perceptiva do
 reconhecimento como produto do Ifes (FR-043).

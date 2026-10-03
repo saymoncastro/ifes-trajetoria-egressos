@@ -120,6 +120,23 @@ reconstrói a marca. Fica registrado:
    (nenhum marcador provisório, desenho substituto ou imagem fictícia — FR-038) e o
    ativo entra numa tarefa própria.
 
+**Ativo adotado (2026-10-03, decisão do solicitante).** O solicitante forneceu um SVG
+**derivado do EPS oficial** e o **aceitou** para uso nesta feature:
+
+| Item | Valor |
+|---|---|
+| Arquivo recebido | `ifes-horizontal-cor.svg` (pasta `_ifes/` do ZIP oficial extraído; criado em 03/10/2026) |
+| Origem | Conversão de `_ifes/eps/ifes-horizontal-cor.eps` (mesma caixa 709 × 284 pt), feita fora do projeto; **não é SVG fornecido pela ACS** |
+| SHA-256 | `bb35783718560dca4ce1a6a20a8fca283881b9371fceb1b4a72f57ce7f387fc7` (28.063 bytes) |
+| Conteúdo | 39 `<path>`; símbolo IF + "INSTITUTO FEDERAL / Espírito Santo"; sem metadados |
+| Cores no ativo | verde `#37a033`, vermelho `#cf181f`, texto `#231f20` — **diferentes** dos HEX do Manual (`#2f9e41`, `#cd191e`, preto); provável efeito da conversão do CMYK do EPS. Registrado, não corrigido (o ativo não é alterado) |
+| Uso no projeto | `interface/assinatura.svg`, **byte a byte igual** ao recebido (teste por SHA-256), incluído inline por `{% include %}` |
+| Dimensionamento | altura 54 px (largura ≈ 135 px): símbolo 31 px (≥ 30 px); as margens do próprio ativo (7,8 a 12,3 px) cobrem a área de proteção de 1 módulo (6,7 px) em todos os lados; nada é posto dentro dela |
+
+**D-03 continua aberta** quanto à validação do ativo e do uso em publicação/produção pela
+ACS; a troca por um SVG fornecido pela ACS é a substituição de um arquivo (e do SHA-256 no
+teste).
+
 **Alternativas rejeitadas (por regra do solicitante):** usar o PNG oficial embutido;
 converter o EPS para SVG; redesenhar. Ficam registradas só para a decisão de D-03, caso a
 ACS não forneça SVG — essa decisão volta ao solicitante.

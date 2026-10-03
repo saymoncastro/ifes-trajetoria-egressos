@@ -130,7 +130,7 @@ pendente e tratamento provisório reversível.
 |----|------------------|----------------------|-------------------------------|---------------|
 | 008/DP-801 | Identidade visual e linguagem definitivas | Proex/CPAEG, ACS, TI | Direção da auditoria implementada como código de produção na jornada; propagação depende da decisão | Alterar tokens e `jornada.css`; nada funcional depende delas |
 | Aud. D-02 | Aplicação do Padrão Digital de Governo ao Trajetória; margem para a identidade do Ifes; barra gov.br/VLibras | Proex/CPAEG, TI, ACS | **Direção B** mergeada; A comparada no gate | Trocar duas linhas de token |
-| Aud. D-03 | (a) **Formato digital oficial (SVG) da assinatura sistêmica** — o ZIP oficial não tem SVG; (b) uso em publicação e produção | ACS | (a) **Bloqueia** a tarefa da assinatura e o fechamento do gate (SC-001); pedido do SVG à ACS pelo solicitante; nada substituto no cabeçalho. (b) Uso local, interno e não publicado, respeitando o Manual | (a) Incluir o SVG quando recebido; (b) remover o include ou trocar o arquivo |
+| Aud. D-03 | (a) **Formato digital oficial (SVG) da assinatura sistêmica** — o ZIP oficial não tem SVG; (b) uso em publicação e produção | ACS | (a) Resolvido provisoriamente em 2026-10-03: SVG **derivado do EPS oficial, aceito pelo solicitante**, usado sem alteração (research R3); validação do ativo pela ACS pendente. (b) Uso local, interno e não publicado, respeitando o Manual | (a) Incluir o SVG quando recebido; (b) remover o include ou trocar o arquivo |
 
 Hipóteses de produto reversíveis: limites de 64/80/120 px, 48 px entre Perguntas, raio,
 divisor, ausência de ícones — todas em tokens ou numa regra de `jornada.css`.
@@ -240,6 +240,9 @@ administrativa.
 - **Spec 015, D8**: resolvida por R5 (403/404/500 fora); registrar no fechamento.
 - **Gate, rodada 1** ([validacao.md](validacao.md)): critérios objetivos sem a assinatura
   aprovados após uma correção (títulos com palavra longa, SC-005); raio 4 px nos controles;
-  sem divisor; **SC-001 impossível sem o SVG oficial (D-03)** — gate não aprovado.
+  sem divisor; SC-001 impossível sem a assinatura (D-03).
+- **Gate, rodada 2**: com o SVG derivado do EPS oficial e aceito pelo solicitante, T015 e
+  T041 concluídas; critérios objetivos SC-001 a SC-014 aprovados; revisão perceptiva e
+  validação do ativo pela ACS pendentes.
 - **014**: nenhum requisito revisado; SC-014 da 014 quanto à entrada e ao operador da
   demonstração é superado por D7 (registrado acima).

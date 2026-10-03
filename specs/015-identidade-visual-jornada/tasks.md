@@ -5,18 +5,17 @@ description: "Tasks da Feature 015 — Foundations e validação da identidade v
 
 # Tasks: Foundations e validação da identidade visual da jornada do egresso
 
-> **Estado (2026-10-03): Feature 015 INCOMPLETA — NÃO pronta para merge.**
+> **Estado (2026-10-03, rodada 2): gate de critérios objetivos APROVADO — 46/46 tasks.**
 >
-> - **44/46 tasks concluídas.**
-> - **T015 BLOQUEADA por D-03** (assinatura oficial: o ZIP oficial do Ifes não contém SVG;
->   nenhum substituto, PNG ou EPS convertido é usado).
-> - **T041 BLOQUEADA por D-03** (rodada final do gate depende da assinatura).
-> - **Gate final NÃO aprovado.** SC-001 é impossível e SC-002 só parcialmente medível sem o
->   ativo oficial.
-> - As capturas e medições atuais foram feitas **sem a assinatura oficial** e validam
->   **apenas** os aspectos que não dependem dela ([validacao.md](validacao.md)).
-> - Ao receber o SVG: retomar nesta branch → T015 → T041 (remedir SC-001 e SC-002 com o
->   ativo real) → suíte completa e regressões → atualizar `validacao.md` → só então o PR.
+> - T015 (assinatura) e T041 (rodada final) concluídas com o SVG **derivado do EPS
+>   oficial e aceito pelo solicitante** (research R3; SHA-256 `bb357837…387fc7`). Não é um
+>   SVG fornecido pela ACS.
+> - **D-03 continua aberta**: validação do ativo e do uso em publicação/produção pela ACS;
+>   as cores do ativo diferem dos HEX do Manual (registrado, não alterado).
+> - **Revisão perceptiva pendente** (ACS, CPAEG/Proex; se possível, egressos) — não
+>   bloqueia o merge (FR-043), mas não foi feita.
+> - Direção B mergeável como valor provisório (D-02 aberta); A comparada.
+> - Propagação para editor, acompanhamento e 403/404/500: decisão posterior ao merge.
 
 **Input**: Design documents from `specs/015-identidade-visual-jornada/`
 
@@ -205,7 +204,7 @@ cabeçalho, faixa e rodapé conforme [contracts/shell.md](contracts/shell.md).
 - [X] T014 [US1] Rodar `tests/interface` e `tests/editor`; ajustar **só** asserções que
   fixavam a posição antiga dos controles de demonstração (ex.:
   `tests/interface/test_interface_demonstracao.py`), sem remover verificação.
-- [ ] T015 ⛔ BLOCKED D-03 [US1] Assinatura oficial, **somente após** a ACS fornecer o SVG
+- [X] T015 [US1] Assinatura oficial, **somente após** a ACS fornecer o SVG
   horizontal colorido da marca sistêmica: (a) registrar em `research.md` R3 nome,
   origem e SHA-256 do arquivo recebido; (b) escrever teste (deve falhar) em
   `test_interface_identidade.py`: toda tela da jornada contém o SVG dentro de um elemento
@@ -410,7 +409,7 @@ A 015 só fica pronta para merge com uma rodada aprovada (FR-042).
 - [X] T040 Para cada critério reprovado: corrigir na mesma branch (na tarefa/arquivo de
   origem), rodar a suíte e abrir nova rodada no `validacao.md`. Repetir até todos os
   critérios objetivos passarem, exceto SC-001 se T015 ainda estiver bloqueada.
-- [ ] T041 ⛔ BLOCKED D-03 Depois de T015: rodada final com SC-001 e SC-002 (cabeçalho com a
+- [X] T041 Depois de T015: rodada final com SC-001 e SC-002 (cabeçalho com a
   assinatura, ≤ 64/80 px) e repetição dos demais critérios em G1–G4; **gate aprovado só
   aqui**.
 - [X] T042 Registrar a revisão perceptiva como **pendente** (ou realizada, com quem e

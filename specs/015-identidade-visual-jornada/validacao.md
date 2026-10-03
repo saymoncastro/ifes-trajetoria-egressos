@@ -4,27 +4,26 @@ Formato: [contracts/registro-validacao.md](contracts/registro-validacao.md). **S
 As capturas **não são versionadas**: ficam fora do repositório e serão anexadas ao PR pelos
 identificadores abaixo (`R{rodada}-G{situação}-{A|B}-{largura}-{fonte}`).
 
-> **Estado (2026-10-03): Feature 015 INCOMPLETA — NÃO pronta para merge.**
+> **Estado (2026-10-03, rodada 2): gate de critérios objetivos APROVADO — 46/46 tasks.**
 >
-> - **44/46 tasks concluídas.**
-> - **T015 BLOQUEADA por D-03** (assinatura oficial: o ZIP oficial do Ifes não contém SVG;
->   nenhum substituto, PNG ou EPS convertido é usado).
-> - **T041 BLOQUEADA por D-03** (rodada final do gate depende da assinatura).
-> - **Gate final NÃO aprovado.** SC-001 é impossível e SC-002 só parcialmente medível sem o
->   ativo oficial.
-> - As capturas e medições atuais foram feitas **sem a assinatura oficial** e validam
->   **apenas** os aspectos que não dependem dela ([validacao.md](validacao.md)).
-> - Ao receber o SVG: retomar nesta branch → T015 → T041 (remedir SC-001 e SC-002 com o
->   ativo real) → suíte completa e regressões → atualizar `validacao.md` → só então o PR.
+> - T015 (assinatura) e T041 (rodada final) concluídas com o SVG **derivado do EPS
+>   oficial e aceito pelo solicitante** (research R3; SHA-256 `bb357837…387fc7`). Não é um
+>   SVG fornecido pela ACS.
+> - **D-03 continua aberta**: validação do ativo e do uso em publicação/produção pela ACS;
+>   as cores do ativo diferem dos HEX do Manual (registrado, não alterado).
+> - **Revisão perceptiva pendente** (ACS, CPAEG/Proex; se possível, egressos) — não
+>   bloqueia o merge (FR-043), mas não foi feita.
+> - Direção B mergeável como valor provisório (D-02 aberta); A comparada.
+> - Propagação para editor, acompanhamento e 403/404/500: decisão posterior ao merge.
 
-**Situação do gate: NÃO APROVADO — bloqueado por D-03.** Todos os critérios objetivos
-mensuráveis sem a assinatura passaram na rodada 1 (após uma correção na própria branch);
-SC-001 e a parte de SC-002 que depende da assinatura são **impossíveis** sem o SVG oficial
-(research R3). A 015 não está pronta para merge.
+**Situação do gate: APROVADO na rodada 2 (critérios objetivos SC-001 a SC-014).** A
+rodada 1 foi feita sem a assinatura e ficou bloqueada por D-03; a rodada 2 repetiu tudo com
+o ativo aceito pelo solicitante. Revisão perceptiva e validação do ativo pela ACS seguem
+pendentes (não bloqueiam o merge).
 
 ---
 
-## Rodada 1 — 2026-10-03
+## Rodada 1 — 2026-10-03 (sem a assinatura; histórico)
 
 ### Cabeçalho
 
@@ -124,3 +123,66 @@ rodapé 150–195 px.
   automatizada; não bloqueia o fechamento, mas também não foi feita.
 - **Itens para a propagação futura:** shell em 403/404/500 (handlers globais — research
   R5); shell do editor e do acompanhamento.
+
+---
+
+## Rodada 2 — 2026-10-03 (final, com a assinatura)
+
+### Cabeçalho
+
+| Item | Valor |
+|---|---|
+| Código medido | `claude/feature-015-identidade-visual` em `20bc38b` + T015 (working tree antes do commit da rodada) |
+| Navegador e banco | Os mesmos da rodada 1 |
+| Direção mergeada | **B** |
+| Assinatura | `interface/assinatura.svg` = `ifes-horizontal-cor.svg` **derivado do EPS oficial, aceito pelo solicitante**, byte a byte (SHA-256 `bb35783718560dca4ce1a6a20a8fca283881b9371fceb1b4a72f57ce7f387fc7`, 28.063 bytes), incluído inline (research R3) |
+| Estados | Os mesmos de G1a a G4f, com o `<style>` e o `<header>` atuais servidos pelo sistema (o cabeçalho é o mesmo template em todas as telas) |
+
+### Medidas
+
+| Critério | Resultado | Medida |
+|---|---|---|
+| SC-001 — assinatura na 1ª viewport a 375 px, símbolo ≥ 30 px, área de proteção | **Aprovado** | Altura do ativo 54 px → **símbolo 31 px**; módulo 6,7 px; margens do próprio ativo 7,8–12,3 px em todos os lados (≥ 1 módulo), nada dentro delas. A 375 × 667 com a faixa de demonstração acima, a assinatura ocupa y 170–224 px (na 1ª viewport). A 375 px com fonte a 200%, só a faixa de demonstração (674 px de altura) a empurra para fora da dobra; sem a faixa (produção), fica no topo |
+| SC-002 — cabeçalho ≤ 64 / ≤ 80 px; rodapé ≤ 120 px | **Aprovado** | Cabeçalho **59 px** a 375, 390, 430 e 1280 px; rodapé 76 px (a 200%: cabeçalho 85–181 px, com o nome abaixo da assinatura a ≤ 430 px; informativo) |
+| SC-003 — contraste | Aprovado | Texto ≥ 6,74:1 e contornos ≥ 6,74:1 em 7 estados × 9 combinações; 0 abaixo |
+| SC-004 — foco | Aprovado | Regras inalteradas desde a rodada 1 |
+| SC-005 — sem rolagem horizontal | Aprovado | 0 em 320–1280 px, 100–200%, nos 7 estados |
+| SC-006 — 014 SC-006 a SC-010 | Aprovado | Primeira ação na 1ª tela de 375 × 667 descontada a faixa: Maria 499 px, Diego 476 px; escala e alvos inalterados |
+| SC-007 a SC-011 | Aprovados | Sem mudança desde a rodada 1; inventário do verde idêntico (fio do cabeçalho, contexto e ficha, sucesso); vermelho da marca só dentro da assinatura |
+| SC-012 — administração | Aprovado | Impressões de estilos computados repetidas com o código final: editor e acompanhamento **idênticos**; prévia muda só dentro das Perguntas (8 px entre Perguntas mantidos) |
+| SC-013 — suíte e fronteiras | Aprovado | `uv run pytest`: **1846 passed**; `ruff check` limpo; sem migração, JavaScript ou recurso externo; ativo idêntico ao recebido (teste por SHA-256) |
+| SC-014 — registro completo | Aprovado | Este documento (rodadas 1 e 2), com A × B, raio, divisor e estado da revisão perceptiva |
+
+**Peso inline:** assinatura 28.063 bytes (alvo ≤ 30 KB); `jornada.css` ≈ 6,5 KB após o
+dimensionamento da assinatura (alvo de ≤ 6 KB ultrapassado em ≈ 0,4 KB — hipótese de plan,
+não critério de sucesso; registrado).
+
+### Comparação A × B com a assinatura
+
+Mesma troca exclusiva de `--cor-acao`/`--cor-acao-forte` aplicada ao CSS servido:
+`R2-G1b-A-375-100` × `R1-G1b-B-375-100` (o cabeçalho é idêntico nas duas direções — a
+assinatura e o fio não dependem da cor de ação).
+
+### Observações para a revisão perceptiva
+
+- No tamanho mínimo do Manual (símbolo de 31 px), o lettering do próprio ativo
+  ("INSTITUTO FEDERAL / Espírito Santo") fica **muito pequeno** a 375 px. Aumentá-lo
+  exigiria passar do limite de 64 px do cabeçalho (FR-016, hipótese reversível). Decisão
+  de produto/ACS.
+- As cores do ativo (verde `#37a033`, vermelho `#cf181f`) diferem levemente do verde da
+  marca usado no fio (`#2f9e41`), que vem do Manual.
+- Mantêm-se as observações da rodada 1 (dois verdes vizinhos na confirmação).
+
+### Capturas desta rodada (fora do repositório)
+
+`R2-G1a-B-375-100`, `R2-G4f-B-375-100`, `R2-G1b-A-375-100`, `R2-G3p-B-1280-100` (mais as da
+rodada 1 para os aspectos que não dependem da assinatura).
+
+### Resultado da rodada 2
+
+- **Critérios objetivos SC-001 a SC-014: aprovados. Gate aprovado → 015 pronta para PR.**
+- Revisão perceptiva: **pendente**.
+- D-03 (validação do ativo e uso em publicação/produção pela ACS) e D-02 (aplicação do
+  PDG): **abertas**.
+- Itens para a propagação futura: shell em 403/404/500; shell do editor e do
+  acompanhamento.
