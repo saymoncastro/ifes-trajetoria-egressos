@@ -1,0 +1,133 @@
+/* Trajetória Ifes — Camada da jornada do egresso (015). Incluída inline, depois de
+   estilo.css, SÓ por interface/base.html (jornada e telas da demonstração que a estendem);
+   nunca pelo editor, pelo acompanhamento nem por 403/404/500 (research R1, R5). Usa só os
+   tokens de estilo.css; refina aqui, para a jornada, seletores que a administração também
+   usa. Identidade definitiva: DP-801. */
+
+/* Feedback (FR-026 a FR-029). Fio de acento de 4 px na cor do papel, sempre com o texto
+   atual: sucesso só para "salvo" e para a confirmação; informação para os demais avisos e
+   para a pendência; erro para o erro de forma. A forma é a mesma; título e prefixo distinguem
+   pendência de erro sem depender de cor. */
+.aviso {
+  border: var(--borda-fina) solid var(--cor-borda-suave);
+  border-left: var(--borda-acento) solid var(--cor-borda-forte);
+  padding: var(--espaco-3) var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.aviso-sucesso { border-left: var(--borda-acento) solid var(--cor-sucesso); }
+.aviso-informacao { border-left: var(--borda-acento) solid var(--cor-info); }
+
+.resumo-erros {
+  border: var(--borda-fina) solid var(--cor-erro);
+  border-left: var(--borda-acento) solid var(--cor-erro);
+}
+.resumo-erros h2 { color: var(--cor-erro); }
+.resumo-pendencias {
+  border: var(--borda-fina) solid var(--cor-info);
+  border-left: var(--borda-acento) solid var(--cor-info);
+}
+.resumo-pendencias h2 { color: var(--cor-info); }
+/* O foco programático (autofocus, 014 FR-027) não ativa :focus-visible: o resumo mostra o
+   mesmo foco de todos os elementos (FR-028). */
+.resumo-erros:focus {
+  outline: 3px solid var(--cor-foco); outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--cor-foco-halo);
+}
+
+.confirmacao {
+  border-left: var(--borda-acento) solid var(--cor-sucesso);
+  padding-left: var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.confirmacao p:last-child { margin-bottom: 0; }
+
+/* Trajetória, contexto e divisores (FR-031 a FR-035). Identificação → metadado → situação
+   → ação; espaço simétrico no item; divisores suaves (nenhum significado depende deles). A
+   voz institucional (contexto e ficha da formação) usa o fio da marca e o fundo verde claro,
+   iguais nas duas direções. */
+.lista-simples > li { border-top: var(--borda-fina) solid var(--cor-borda-suave); padding: var(--espaco-4) 0; }
+.lista-simples > li:last-child { border-bottom: var(--borda-fina) solid var(--cor-borda-suave); }
+.lista-simples > li > :last-child { margin-bottom: 0; }
+.formacao strong { font-weight: var(--peso-medio); }
+.formacao .nota { font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.situacao { font-weight: var(--peso-normal); }
+
+.contexto {
+  border-left: var(--borda-acento) solid var(--cor-marca);
+  background: var(--cor-institucional);
+  padding: var(--espaco-2) var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.saidas { border-top: var(--borda-fina) solid var(--cor-borda-suave); }
+
+@media (max-width: 30em) {
+  .contexto dl { grid-template-columns: 1fr; gap: 0; }
+  .contexto dd { margin-bottom: var(--espaco-2); }
+  main form button.primario { width: 100%; }
+}
+
+/* Shell da jornada (FR-015 a FR-021; contracts/shell.md). Faixa de demonstração com os
+   controles de demonstração, sem marca nem ação; cabeçalho branco com fio de marca e o nome
+   do produto em texto (a assinatura oficial entra antes dele — D-03); rodapé mínimo. */
+.faixa-demonstracao .coluna {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--espaco-4);
+}
+.faixa-demonstracao p { margin: 0; }
+.faixa-demonstracao .coluna > p:first-child { flex-basis: 100%; }
+.faixa-demonstracao .pessoa { font-weight: var(--peso-medio); }
+.faixa-demonstracao form { display: inline; margin: 0; }
+.faixa-demonstracao a, .faixa-demonstracao a:hover, .faixa-demonstracao button {
+  color: var(--cor-texto); text-decoration: underline;
+}
+.faixa-demonstracao button {
+  background: none; border: 0; padding: 0; font-weight: var(--peso-normal);
+}
+
+.produto {
+  background: var(--cor-fundo);
+  border-top: var(--borda-acento) solid var(--cor-marca);
+  border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
+}
+.produto .coluna {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
+  padding-top: var(--espaco-3); padding-bottom: var(--espaco-3);
+}
+.produto-nome {
+  margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--espaco-3);
+}
+/* O separador só existe entre a assinatura e o nome (sem a assinatura, não aparece). */
+.assinatura + .produto-nome {
+  border-left: var(--borda-fina) solid var(--cor-borda-suave); padding-left: var(--espaco-4);
+}
+.produto .nome {
+  font-size: var(--fonte-3); font-weight: var(--peso-forte); line-height: var(--entrelinha-titulo);
+}
+.produto .subtitulo { display: none; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+@media (min-width: 30em) {
+  .produto .subtitulo { display: inline; }
+}
+
+footer {
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  padding: var(--espaco-4) 0 var(--espaco-6);
+  font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+footer p { margin: 0 0 var(--espaco-1); }
+
+/* Ações da jornada (a Direção A × B troca só --cor-acao e --cor-acao-forte). */
+a { color: var(--cor-acao); }
+a:hover { color: var(--cor-acao-forte); text-decoration-thickness: 2px; }
+button.primario {
+  background: var(--cor-acao); border-color: var(--cor-acao); color: var(--cor-fundo);
+  border-radius: var(--raio);
+}
+button.primario:hover, button.primario:active {
+  background: var(--cor-acao-forte); border-color: var(--cor-acao-forte);
+}
+button.secundario {
+  border-color: var(--cor-acao); color: var(--cor-acao); border-radius: var(--raio);
+}
+button.secundario:hover, button.secundario:active {
+  border-color: var(--cor-acao-forte); color: var(--cor-acao-forte);
+}
+
+/* Gate, rodada 1 (SC-005): título com palavra longa ("Informações") não cabia a 320 px com
+   fonte a 200% e gerava rolagem horizontal; quebra a palavra só quando ela não cabe. */
+h1, h2 { overflow-wrap: break-word; hyphens: auto; }

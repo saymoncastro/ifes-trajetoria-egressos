@@ -327,29 +327,15 @@ def test_indicador_salvo_no_endereco_e_ignorado(client, cenario, ana):
 
 
 # --- Auditoria de identidade visual, IV-03: a cor da pendência não é a do erro --------------
-# Sem navegador: a cor resulta da cascata da folha incluída na própria página, aplicada às
-# classes que a página dá aos ancestrais. Basta para as regras de classe desta folha.
+# Sem navegador: a cor resulta da cascata das folhas incluídas na própria página, aplicada às
+# classes que a página dá aos ancestrais (leitor em `construcao_interface`).
 
 
 def _cor(html: str, ancestrais: set[str], classe: str, tag: str = "") -> str:
-    """`color` de um elemento `tag.classe` cujos ancestrais têm as classes `ancestrais`."""
-    folha = re.sub(r"/\*.*?\*/", "", re.search(r"<style>(.*?)</style>", html, re.S)[1], flags=re.S)
-    alvos = {f".{classe}", f"{tag}.{classe}"} if classe else {tag}
-    melhor, peso = None, -1
-    for seletores, corpo in re.findall(r"([^{}]+)\{([^}]*)\}", folha):
-        cor = re.search(r"(?:^|;)\s*color:\s*([^;]+)", corpo)
-        if not cor:
-            continue
-        for seletor in seletores.split(","):
-            *antes, ultimo = seletor.split()
-            compostos = [set(re.findall(r"\.([\w-]+)", parte)) for parte in antes]
-            if ultimo not in alvos or not all(c and c <= ancestrais for c in compostos):
-                continue
-            especificidade = seletor.count(".")  # só classes; a última regra empatada vence
-            if especificidade >= peso:
-                melhor, peso = cor[1].strip(), especificidade
-    assert melhor, (ancestrais, classe, tag)
-    return melhor
+    """`color` efetivo de `tag.classe` sob ancestrais com as classes `ancestrais`."""
+    cor = ci.valor(html, ancestrais, classe, tag)
+    assert cor, (ancestrais, classe, tag)
+    return cor
 
 
 def _classes_da_pergunta(html: str, n: int) -> set[str]:

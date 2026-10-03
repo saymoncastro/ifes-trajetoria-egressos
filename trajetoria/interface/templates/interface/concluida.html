@@ -1,8 +1,10 @@
 {% extends "interface/base.html" %}
 {% block titulo %}Pesquisa concluída{% endblock %}
 {% block conteudo %}
+<div class="confirmacao">
 <h1>Pesquisa concluída</h1>
 <p>{{ registro }}</p>
+</div>
 {% if agradecimento %}<p>{{ agradecimento }}</p>{% endif %}
 {% include "interface/contexto.html" %}
 {% if texto_encerramento %}<div class="encerramento">{{ texto_encerramento|linebreaks }}</div>{% endif %}
