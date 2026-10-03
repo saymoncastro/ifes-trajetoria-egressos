@@ -146,6 +146,9 @@ footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375r
 .resumo-pendencias h2 { color: #1a4480; }
 .pergunta.com-pendencia { border-left-color: #1a4480; }
 .com-pendencia input[type="text"], .com-pendencia select { border-color: #1a4480; }
+/* Auditoria de identidade visual, IV-03: a frase "Falta responder: …" da Pergunta pendente
+   também deixa o vermelho de erro (#1a4480/#fff ≈ 9.6:1). */
+.com-pendencia .erro { color: #1a4480; }
 
 /* 014 — Rodapé da Seção (FR-009, FR-015; research R10). Principal e secundária empilhadas,
    em largura total até 480 px; terciárias (navegação que não grava) separadas por distância e

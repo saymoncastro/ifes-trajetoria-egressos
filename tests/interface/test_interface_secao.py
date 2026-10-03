@@ -326,6 +326,81 @@ def test_indicador_salvo_no_endereco_e_ignorado(client, cenario, ana):
     assert "nesta seção está salvo" not in texto and "nesta seção foi salvo" not in texto
 
 
+# --- Auditoria de identidade visual, IV-03: a cor da pendência não é a do erro --------------
+# Sem navegador: a cor resulta da cascata da folha incluída na própria página, aplicada às
+# classes que a página dá aos ancestrais. Basta para as regras de classe desta folha.
+
+
+def _cor(html: str, ancestrais: set[str], classe: str, tag: str = "") -> str:
+    """`color` de um elemento `tag.classe` cujos ancestrais têm as classes `ancestrais`."""
+    folha = re.sub(r"/\*.*?\*/", "", re.search(r"<style>(.*?)</style>", html, re.S)[1], flags=re.S)
+    alvos = {f".{classe}", f"{tag}.{classe}"} if classe else {tag}
+    melhor, peso = None, -1
+    for seletores, corpo in re.findall(r"([^{}]+)\{([^}]*)\}", folha):
+        cor = re.search(r"(?:^|;)\s*color:\s*([^;]+)", corpo)
+        if not cor:
+            continue
+        for seletor in seletores.split(","):
+            *antes, ultimo = seletor.split()
+            compostos = [set(re.findall(r"\.([\w-]+)", parte)) for parte in antes]
+            if ultimo not in alvos or not all(c and c <= ancestrais for c in compostos):
+                continue
+            especificidade = seletor.count(".")  # só classes; a última regra empatada vence
+            if especificidade >= peso:
+                melhor, peso = cor[1].strip(), especificidade
+    assert melhor, (ancestrais, classe, tag)
+    return melhor
+
+
+def _classes_da_pergunta(html: str, n: int) -> set[str]:
+    return set(re.search(rf'class="([^"]*)" id="p{n}"', html)[1].split())
+
+
+def _classes_do_resumo(html: str) -> set[str]:
+    return set(re.search(r'<div class="(resumo-erros[^"]*)"', html)[1].split())
+
+
+def _secao_2_com_erro_de_forma(client, cenario, ana) -> str:
+    _preencher(ana, cenario.base, [1])
+    dados = ci.dados_validos(ci.secao_do_conteudo(cenario.base.versao, 2))
+    dados["p1"] = "99"  # posição de Opção inexistente: erro de forma, nada gravado
+    resposta = client.post(f"/participacoes/{ana.pk}/secoes/2/", dados)
+    assert resposta.status_code == 200
+    return _html(resposta)
+
+
+def test_pergunta_pendente_nao_usa_a_cor_de_erro(client, cenario, ana):
+    _envio_parcial_s2(client, cenario, ana)
+    html = _html(_get(client, ana, 2, "?pendencias=1"))
+    pendentes = _pendentes_s2(cenario, ana)
+    assert pendentes
+    cor_do_erro = _cor(html, set(), "erro")
+    cor_da_pendencia = _cor(html, _classes_do_resumo(html), "", "h2")
+    assert cor_da_pendencia != cor_do_erro
+    for n in pendentes:
+        classes = _classes_da_pergunta(html, n)
+        assert "com-pendencia" in classes
+        assert _cor(html, classes, "erro") == cor_da_pendencia
+
+
+def test_pergunta_com_erro_de_forma_continua_com_a_cor_de_erro(client, cenario, ana):
+    html = _secao_2_com_erro_de_forma(client, cenario, ana)
+    classes = _classes_da_pergunta(html, 1)
+    assert "com-erro" in classes and "com-pendencia" not in classes
+    assert _cor(html, classes, "erro") == _cor(html, set(), "erro")
+
+
+def test_resumos_de_pendencia_e_de_erro_continuam_distintos(client, cenario, ana):
+    _envio_parcial_s2(client, cenario, ana)
+    pendencia = _html(_get(client, ana, 2, "?pendencias=1"))
+    erro = _secao_2_com_erro_de_forma(client, cenario, ana)
+    classes_p, classes_e = _classes_do_resumo(pendencia), _classes_do_resumo(erro)
+    assert classes_p == {"resumo-erros", "resumo-pendencias"} and classes_e == {"resumo-erros"}
+    assert "Ainda faltam estas perguntas:" in pendencia and "Há problemas nesta seção" in erro
+    assert _cor(pendencia, classes_p, "", "h2") != _cor(erro, classes_e, "", "h2")
+    assert _cor(erro, classes_e, "", "h2") == _cor(erro, set(), "erro")
+
+
 # --- 014 US4: grupo de rádios só com as Opções (UX-19; FR-018, FR-022) ---------------------
 
 
