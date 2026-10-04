@@ -63,11 +63,20 @@ Pessoa ───────────── NÃO é unidade de elegibilidade 
 Futuro (005): Campanha 1 ── 0..N Participação N ── 1 Conclusão Acadêmica
 ```
 
+> **Revisão semântica — ADR 0004 (2026-10-03).** Os critérios desta spec expressam a
+> **abrangência do instrumento**: "esta Versão se aplica a estas formações". Nesta spec,
+> ELEGÍVEL significa **na abrangência da Campanha** — não é a definição de egresso
+> (Const. — II) nem pertença a uma coorte que se quer mobilizar. Foco de mobilização
+> (coorte, campus, curso, situação de contato) não é configuração de Campanha e nunca
+> decide quem pode responder; pertencerá ao futuro Lote de mobilização. A Campanha sem
+> critério (população ampla) é o padrão. Comportamento, modelo e contratos permanecem os
+> mesmos. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)*
+
 ### Princípios desta spec
 
 1. **A população é definida por critérios, não por lista.** A Campanha preserva a
    *definição* de quem pertence à população; ela não guarda um rol de pessoas ou de
-   conclusões e não exige convite.
+   conclusões e não exige convite. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)*
 2. **A elegibilidade é avaliada sobre a Conclusão Acadêmica.** A mesma Pessoa pode ter uma
    conclusão elegível e outra não.
 3. **Critérios explícitos e poucos.** Seis campos opcionais com semântica fixa substituem
@@ -81,6 +90,7 @@ Futuro (005): Campanha 1 ── 0..N Participação N ── 1 Conclusão Acadê
 
 - **Critérios de população**: o conjunto fixo de restrições opcionais da Campanha
   (FR-018). "Critério definido" é um critério com valor; "critério ausente" não restringe.
+  Expressam a abrangência do instrumento, nunca foco de mobilização. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)*
 - **População ampla**: Campanha sem nenhum critério definido; abrange todas as Conclusões
   Acadêmicas existentes no NIAE.
 - **População conhecida**: as Conclusões Acadêmicas existentes no NIAE que, num dado
@@ -242,7 +252,9 @@ anos") não são armazenados; a instituição converte-os em anos concretos, e a
 histórica continua significando a mesma população.
 
 **Why this priority**: o recorte temporal é o critério mais provável de uma rodada de
-acompanhamento e precisa ser historicamente estável.
+acompanhamento e precisa ser historicamente estável. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* O recorte por ano só é critério
+de Campanha quando o instrumento se aplica apenas àquelas formações; concentrar a
+divulgação em uma coorte é foco de mobilização e não restringe quem responde.
 
 **Independent Test**: avaliar Conclusões de 2019, 2020, 2024, 2025 e sem ano contra
 Campanhas com limites 2020–2024, "a partir de 2020", "até 2024" e sem limites.
@@ -334,7 +346,9 @@ precisam ser atendidos. Não existe outra composição.
 
 **Why this priority**: recortes por unidade ou nível são plausíveis (inclusive por
 aplicação das CSAEGs), mas não são o caso da experiência atual. Por isso vêm depois da
-população ampla e do recorte temporal.
+população ampla e do recorte temporal. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* Só valem como abrangência do instrumento (por
+exemplo, um questionário próprio da pós-graduação). A atuação da CSAEG por unidade é
+escopo de governança (010), não critério de Campanha.
 
 **Independent Test**: com a fonte simulada, avaliar Conclusões de Serra, Vitória e Cefor,
 de níveis distintos, contra Campanhas restritas a uma unidade, a várias unidades e a um
@@ -626,7 +640,9 @@ a ser representável, não como regra.
   (a) **ano de conclusão mínimo**; (b) **ano de conclusão máximo**; (c) **unidades**;
   (d) **níveis**; (e) **modalidades**; (f) **formas de oferta**. Os itens (c) a (f) são
   conjuntos de valores. Nenhum outro critério DEVE existir nesta feature. [Arquitetura;
-  Const. — XXII]
+  Const. — XXII] *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* Os critérios DEVEM ser usados só para expressar a abrangência do
+  instrumento e NÃO DEVEM ser apresentados nem documentados como mecanismo de segmentação
+  da divulgação.
 - **FR-019**: Critério ausente NÃO DEVE restringir a população. Campanha sem nenhum
   critério definido DEVE ser válida e abranger todas as Conclusões Acadêmicas existentes
   no NIAE (**população ampla**), e DEVE ser descrita como tal. [Const. — XXII; Escopo]
@@ -781,7 +797,8 @@ a ser representável, não como regra.
   Conclusão somente se estiver EM COLETA **e** a Conclusão for ELEGÍVEL. Campanha EM
   PREPARAÇÃO ou ENCERRADA NÃO DEVE admitir nova Participação. Condições adicionais (por
   exemplo, uma ou várias Participações por Conclusão na mesma Campanha) pertencem à 005.
-  [Const. — I, VII]
+  [Const. — I, VII] *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* ELEGÍVEL aqui é compatibilidade da formação com a abrangência da
+  Campanha; uma resposta espontânea fora do foco de mobilização é admitida.
 - **FR-054**: Nada nesta feature DEVE impedir a relação futura: Campanha 1 — 0..N
   Participações; cada Participação com exatamente uma Campanha e exatamente uma Conclusão
   Acadêmica. [Const. — I, VII]

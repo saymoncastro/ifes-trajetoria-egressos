@@ -115,11 +115,11 @@ Cada roteiro corresponde a um cenário ponta a ponta da spec. Faça-os também c
 
 ### Outras situações
 
-- **Diego Exemplo**: uma formação pendente (Licenciatura) com ação; o Mestrado aparece como
-  "não está disponível neste momento" (ambiguidade), sem nomear Campanhas; o Técnico,
-  "sem pesquisa".
-- **Bruno Exemplo** ou **Carla Exemplo (Pedagogia)**: "No momento, não há pesquisa
-  disponível para as suas formações."
+- **Diego Exemplo**: duas formações pendentes (Técnico e Licenciatura) com ação; o Mestrado
+  aparece como "não está disponível neste momento" (ambiguidade), sem nomear Campanhas.
+- **Bruno Exemplo**: seleção entre as duas formações; **Carla Exemplo (Pedagogia)**: entrada
+  direta. Na demonstração ninguém com formação fica "sem pesquisa": a coleta ampla não tem
+  critério. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)*
 - **Homônimas**: as duas "Carla Exemplo" aparecem distintas pelo resumo das formações.
 - **Pessoa sem nome**: aparece como "Pessoa fictícia sem nome informado".
 - **Modo desligado**: reinicie o `runserver` sem `TRAJETORIA_DEMONSTRACAO=1`; toda página

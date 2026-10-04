@@ -9,7 +9,7 @@ from trajetoria.governanca.regras import EscopoDeAcompanhamento
 pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.parametrize("operador,contagens", [(A, (6, 5, 4, 1, 4)), (B, (3, 2, 1, 1, 1))])
+@pytest.mark.parametrize("operador,contagens", [(A, (13, 9, 8, 1, 8)), (B, (3, 2, 1, 1, 1))])
 def test_publico_atual(campanha, operador, contagens, snapshot):
     antes = snapshot()
     p = publico_atual(campanha, autorizar_operador(operador).escopo)
@@ -31,7 +31,7 @@ def test_recorte_antes_da_deduplicacao(campanha):
 
 def test_inelegiveis_unidade_nula_e_zero(campanha):
     assert (
-        publico_atual(campanha, EscopoDeAcompanhamento(False, frozenset({"Cefor"}))).totais[
+        publico_atual(campanha, EscopoDeAcompanhamento(False, frozenset({"Viana"}))).totais[
             "pessoas"
         ]
         == 0

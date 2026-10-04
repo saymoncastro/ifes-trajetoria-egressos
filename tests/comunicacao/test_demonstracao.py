@@ -39,7 +39,7 @@ def test_vinculo_misto_revogacao_e_multiplas_unidades(campanha, clientes):
     VinculoDeGovernanca.objects.create(identificador_operador=A, papel="CSAEG", unidade="Vitória")
     assert autorizar_operador(A).escopo.institucional
     pagina = f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/"
-    assert clientes[A].get(pagina).context["totais"]["pessoas"] == 5
+    assert clientes[A].get(pagina).context["totais"]["pessoas"] == 9
     VinculoDeGovernanca.objects.filter(identificador_operador=A, papel="CPAEG").update(ativo=False)
     assert clientes[A].post(pagina + "simular/").context["totais"]["pessoas"] == 2
 

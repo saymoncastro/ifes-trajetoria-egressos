@@ -30,7 +30,7 @@ def test_modo_off(campanha, settings):
 def test_visibilidade(campanha):
     contexto = autorizar_operador(B)
     assert campanha_autorizada(campanha.pk, contexto).pk == campanha.pk
-    outra = campanha.__class__.objects.get(nome="Demonstração — coleta ampla")
+    outra = campanha.__class__.objects.get(nome="Demonstração — coleta sobreposta")
     with pytest.raises(RecusaComunicacao) as erro:
         campanha_autorizada(outra.pk, contexto)
     assert erro.value.status == 403

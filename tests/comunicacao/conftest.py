@@ -20,7 +20,7 @@ def ambiente(settings):
 @pytest.fixture
 def campanha(db):
     call_command("preparar_demonstracao", stdout=StringIO())
-    return Campanha.objects.get(nome="Demonstração — acompanhamento Serra e Vitória")
+    return Campanha.objects.get(nome="Demonstração — rodada em preparação")
 
 
 @pytest.fixture

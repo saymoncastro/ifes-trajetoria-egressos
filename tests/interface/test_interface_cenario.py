@@ -71,11 +71,10 @@ def test_prepara_o_cenario_so_com_as_operacoes_existentes():
         assert campanha.versao == demo
         assert (campanha.inicio, campanha.fim) == (hoje, hoje + timedelta(days=180))
         assert estado(campanha) is EstadoCampanha.EM_COLETA
-    assert ampla.ano_minimo == 2015 and ampla.ano_maximo is None
-    # A 004 guarda o conjunto ordenado (research R11 da 004).
-    unidades = ["Serra", "Cefor", "Vila Velha", "Alegre", "Cariacica", "Colatina"]
-    assert ampla.unidades == sorted(unidades)
-    assert ampla.niveis is None
+    # Ampla de fato: nenhum critério (ADR 0004). A sobreposta é o único cenário com
+    # abrangência restrita do instrumento.
+    criterios = ("ano_minimo", "ano_maximo", "unidades", "niveis", "modalidades", "formas_oferta")
+    assert all(getattr(ampla, c) is None for c in criterios)
     assert sobreposta.unidades == ["Vila Velha"] and sobreposta.niveis == ["Pós-graduação"]
     assert sobreposta.ano_minimo is None
     assert not Participacao.objects.exists() and not Resposta.objects.exists()
@@ -96,15 +95,15 @@ def test_situacoes_da_tabela_r17():
     assert _situacao("SIM-P-0001").resolucao is R.ENTRADA_RESOLVIDA
     assert _situacao("SIM-P-0003").resolucao is R.SELECAO_NECESSARIA
     diego = _situacao("SIM-P-0004")
-    assert diego.resolucao is R.ENTRADA_RESOLVIDA
+    assert diego.resolucao is R.SELECAO_NECESSARIA
     assert _por_curso(diego) == {
-        "Técnico em Química": F.SEM_PESQUISA,
+        "Técnico em Química": F.DISPONIVEL_PARA_INICIAR,
         "Licenciatura em Química": F.DISPONIVEL_PARA_INICIAR,
         "Mestrado Profissional em Química": F.AMBIGUIDADE_OPERACIONAL,
     }
-    for id_externo in ("SIM-P-0002", "SIM-P-0010"):
-        assert _situacao(id_externo).resolucao is R.SEM_PESQUISA
-    for id_externo in ("SIM-P-0011", "SIM-P-0005", "SIM-P-0007", "SIM-P-0009"):
+    assert _situacao("SIM-P-0002").resolucao is R.SELECAO_NECESSARIA
+    # Ninguém com Conclusão fica sem pesquisa: a coleta ampla não recorta ano nem unidade.
+    for id_externo in ("SIM-P-0010", "SIM-P-0011", "SIM-P-0005", "SIM-P-0007", "SIM-P-0009"):
         assert _situacao(id_externo).resolucao is R.ENTRADA_RESOLVIDA
 
 

@@ -10,9 +10,11 @@ pela CPAEG, B pela CSAEG da unidade Vitória e C não tem vínculo. São fictíc
 representam designação institucional real (DP-1002).
 
 Para o acompanhamento da coleta (011), acrescenta uma Campanha fictícia **nunca aberta e sem
-período**, com a Versão de referência em rascunho e critério de unidades {Serra, Vitória}, para
-que B (CSAEG Vitória) tenha uma Campanha relevante. Nunca aberta, ela não admite Participação
-(004 FR-053) e não entra em `campanhas_em_coleta_para`: a jornada da 007/008 não muda.
+período**, com a Versão de referência em rascunho e sem critério. Nunca aberta, ela não admite
+Participação (004 FR-053) e não entra em `campanhas_em_coleta_para`.
+
+A "coleta ampla" não tem critério; a "coleta sobreposta" é o único cenário com abrangência
+restrita (pós-graduação de Vila Velha) e mantém a ambiguidade operacional da 007 (ADR 0004).
 
 A publicação da cópia é técnica e local, como nos testes das 005–007; a baseline continua em
 RASCUNHO e nada disso é publicação institucional (002/DP-001). Idempotente: repetir não
@@ -52,16 +54,13 @@ VINCULOS = (
     ("demonstracao:operador-b", Papel.CSAEG, "Vitória"),
 )
 DURACAO = timedelta(days=180)
+# Critério de Campanha é abrangência do instrumento, nunca foco de mobilização (ADR 0004).
 # Fora de `CAMPANHAS`: nunca é aberta, então `_exigir_campanhas_em_coleta` não a verifica.
-CAMPANHA_ACOMPANHAMENTO = (
-    "Demonstração — acompanhamento Serra e Vitória",
-    {"unidades": ["Serra", "Vitória"]},
-)
+CAMPANHA_ACOMPANHAMENTO = ("Demonstração — rodada em preparação", {})
 CAMPANHAS = {
-    "Demonstração — coleta ampla": {
-        "ano_minimo": 2015,
-        "unidades": ["Serra", "Cefor", "Vila Velha", "Alegre", "Cariacica", "Colatina"],
-    },
+    # Ampla de fato: sem critério, admite qualquer Conclusão Acadêmica.
+    "Demonstração — coleta ampla": {},
+    # O único cenário restrito: um instrumento que só se aplica à pós-graduação de Vila Velha.
     "Demonstração — coleta sobreposta": {
         "unidades": ["Vila Velha"],
         "niveis": ["Pós-graduação"],
