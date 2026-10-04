@@ -1,0 +1,7 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Ação não disponível{% endblock %}
+{% block conteudo %}
+<h1>Ação não disponível</h1>
+<p role="alert">{{ texto }}</p>
+<p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/">Voltar à Campanha</a></p>
+{% endblock %}

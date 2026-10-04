@@ -62,11 +62,17 @@ def test_somente_get(ref, cliente_cpaeg):
 
 
 def test_toda_rota_exige_o_gate_de_acompanhamento():
-    """As rotas da 011 usam `@acompanhamento`; as da comunicação simulada (016), a barreira
-    própria `@comunicacao`. Nenhuma rota sem barreira e nenhuma com as duas marcas."""
-    rotas = [p for p in urls.urlpatterns if isinstance(p, URLPattern)]
-    assert len(rotas) == len(urls.urlpatterns) == 4
-    for rota in rotas:
-        comunicacao = "/comunicacao/" in str(rota.pattern)
-        assert getattr(rota.callback, "acompanhamento", False) is not comunicacao, rota.pattern
-        assert getattr(rota.callback, "comunicacao", False) is comunicacao, rota.pattern
+    for rota in urls.urlpatterns:
+        assert isinstance(rota, URLPattern)
+        marcas = [
+            m
+            for m in ("acompanhamento", "comunicacao", "gestao")
+            if getattr(rota.callback, m, False)
+        ]
+        caminho = str(rota.pattern)
+        esperada = "acompanhamento"
+        if "/comunicacao/" in caminho:
+            esperada = "comunicacao"
+        elif any(f"/{acao}/" in caminho for acao in ("nova", "editar", "abrir", "encerrar")):
+            esperada = "gestao"
+        assert marcas == [esperada], caminho

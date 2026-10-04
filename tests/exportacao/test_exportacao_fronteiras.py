@@ -119,6 +119,7 @@ def test_nenhuma_regra_de_governanca_nova():
         "pode_consultar_rascunho",
         "pode_elaborar_instrumento",
         "pode_simular_comunicacao",  # capacidade administrativa introduzida pela 016
+        "pode_gerir_campanha",  # gestão na demonstração introduzida pela 017
     }
 
 

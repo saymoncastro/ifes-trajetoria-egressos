@@ -1,0 +1,8 @@
+<section aria-labelledby="gestao-titulo">
+<h2 id="gestao-titulo">Gestão da Campanha</h2>
+{% if aviso_gestao %}<p role="status">{{ aviso_gestao }}</p>{% endif %}
+{% if painel.impedimentos %}<h3>Para abrir a coleta</h3><ul>{% for impedimento in painel.impedimentos %}<li>{{ impedimento }}</li>{% endfor %}</ul>{% endif %}
+{% if painel.encerramento_previsto %}<p>Encerramento previsto: {{ painel.encerramento_previsto|date:"d/m/Y" }}.</p>{% endif %}
+{% if painel.abrangencia_restrita %}<aside aria-label="Abrangência restrita"><p>{{ painel.texto_abrangencia }}</p><ul>{% for criterio in painel.abrangencia_restrita %}<li>{{ criterio }}</li>{% endfor %}</ul></aside>{% endif %}
+{% for acao, rotulo in painel.acoes %}<p><a href="/acompanhamento/campanhas/{{ item.campanha.pk }}/{{ acao }}/">{{ rotulo }}</a></p>{% endfor %}
+</section>

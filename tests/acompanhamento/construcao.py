@@ -82,7 +82,9 @@ def campanha(versao, *, estado="em_coleta", nome=None, **criterios):
     if criterios:
         op_campanha.definir_criterios(c, **criterios)
     d = hoje()
-    if estado == "em_coleta":
+    if estado == "pronta":
+        op_campanha.definir_periodo(c, d - timedelta(days=1), d + timedelta(days=30))
+    elif estado == "em_coleta":
         op_campanha.definir_periodo(c, d - timedelta(days=10), d + timedelta(days=30))
         op_campanha.abrir(c)
     elif estado == "em_preparacao":
@@ -162,3 +164,9 @@ def tabela_do_recorte(resposta) -> dict:
     linhas = [celulas(tr) for tr in re.findall(r"<tr>(.*?)</tr>", corpo, re.S)]
     total = celulas(re.search(r"<tfoot>(.*?)</tfoot>", html, re.S).group(1))
     return {"cabecalhos": cabecalhos, "linhas": linhas, "total": total}
+
+
+def versao_em_rascunho(inst):
+    from trajetoria.instrumento.operacoes import criar_versao
+
+    return criar_versao(inst.versao.pesquisa, f"Rascunho de gestão {next(_sequencia)}")

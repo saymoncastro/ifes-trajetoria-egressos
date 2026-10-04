@@ -243,6 +243,8 @@ class CampanhaAcompanhada:
 
     @property
     def situacao(self) -> str:
+        if self.estado is EstadoCampanha.ENCERRADA and self.campanha.aberta_em is None:
+            return ap.SITUACAO_NUNCA_ABERTA
         return ap.situacao(self.estado)
 
     @property

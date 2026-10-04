@@ -21,13 +21,13 @@ from django.db import transaction
 
 from trajetoria.campanha.consultas import (
     EstadoCampanha,
-    data_de_referencia,
     estado,
+    impedimentos_de_abertura,
     momento_de_referencia,
 )
 from trajetoria.campanha.models import Campanha
 from trajetoria.campanha.regras import CampanhaRejeitada, Motivo, Violacao
-from trajetoria.instrumento.models import EstadoVersao, Versao
+from trajetoria.instrumento.models import Versao
 
 __all__ = [
     "SituacaoAbertura",
@@ -39,6 +39,7 @@ __all__ = [
     "definir_periodo",
     "encerrar",
     "remover_campanha",
+    "violacoes_de_periodo",
 ]
 
 _ANO_MAXIMO = 32767  # limite de PositiveSmallIntegerField
@@ -125,17 +126,26 @@ def alterar_campanha(campanha: Campanha, *, nome=_MANTER, versao=_MANTER) -> Cam
     return _sincronizar(campanha, gravada, campos)
 
 
+def violacoes_de_periodo(inicio: date | None, fim: date | None) -> tuple[Violacao, ...]:
+    """Regra única de período válido (FR-012), pura e sem gravar. `definir_periodo` a aplica
+    sob bloqueio; a gestão da 017 a consulta quando ainda não há Campanha a quem aplicá-la."""
+    inicio, fim = _data(inicio, "inicio"), _data(fim, "fim")
+    if inicio is None or fim is None:
+        ausente = "inicio" if inicio is None else "fim"
+        return (Violacao(Motivo.PERIODO_INCOMPLETO, ausente, "o período exige as duas datas"),)
+    if inicio > fim:
+        return (Violacao(Motivo.PERIODO_INVERTIDO, "inicio", f"{inicio} é posterior a {fim}"),)
+    return ()
+
+
 def definir_periodo(campanha: Campanha, inicio: date | None, fim: date | None) -> Campanha:
     """Datas civis, ambas incluídas; sem período padrão (FR-011–FR-014). Pode corrigir o
     período de Campanha nunca aberta e expirada: isso não é reabertura (FR-039)."""
     inicio, fim = _data(inicio, "inicio"), _data(fim, "fim")
     with transaction.atomic():
         gravada = _bloquear_nunca_aberta(campanha)
-        if inicio is None or fim is None:
-            ausente = "inicio" if inicio is None else "fim"
-            _rejeitar(Motivo.PERIODO_INCOMPLETO, ausente, "o período exige as duas datas")
-        if inicio > fim:
-            _rejeitar(Motivo.PERIODO_INVERTIDO, "inicio", f"{inicio} é posterior a {fim}")
+        if violacoes := violacoes_de_periodo(inicio, fim):
+            raise CampanhaRejeitada(violacoes)
         gravada.inicio, gravada.fim = inicio, fim
         gravada.save(update_fields=["inicio", "fim"])
     return _sincronizar(campanha, gravada, ["inicio", "fim"])
@@ -225,7 +235,6 @@ def abrir(campanha: Campanha, *, agora: datetime | None = None) -> SituacaoAbert
     referência dentro do período; rejeita com todas as condições não satisfeitas (FR-036).
     Nunca publica a Versão (FR-009) e nunca agenda nada (FR-042)."""
     agora = momento_de_referencia(agora)
-    hoje = data_de_referencia(agora)
     recebida = campanha
     with transaction.atomic():
         campanha = _bloquear(campanha)
@@ -234,24 +243,7 @@ def abrir(campanha: Campanha, *, agora: datetime | None = None) -> SituacaoAbert
             if estado(campanha, agora=agora) is EstadoCampanha.ENCERRADA:
                 return SituacaoAbertura.JA_ENCERRADA
             return SituacaoAbertura.JA_EM_COLETA
-        violacoes = []
-        # Relida dentro da transação; a publicação é irreversível (002 FR-013).
-        if Versao.objects.get(pk=campanha.versao_id).estado != EstadoVersao.PUBLICADA:
-            violacoes.append(
-                Violacao(Motivo.VERSAO_NAO_PUBLICADA, "versao", "a Versão está em rascunho")
-            )
-        if campanha.inicio is None:
-            violacoes.append(
-                Violacao(Motivo.PERIODO_NAO_DEFINIDO, "inicio", "a Campanha não tem período")
-            )
-        elif not campanha.inicio <= hoje <= campanha.fim:
-            violacoes.append(
-                Violacao(
-                    Motivo.FORA_DO_PERIODO,
-                    "inicio",
-                    f"{hoje} fora de {campanha.inicio} a {campanha.fim}",
-                )
-            )
+        violacoes = impedimentos_de_abertura(campanha, agora=agora)
         if violacoes:
             raise CampanhaRejeitada(violacoes)
         campanha.aberta_em = agora
