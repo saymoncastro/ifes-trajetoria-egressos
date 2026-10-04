@@ -11,6 +11,8 @@
 </dl>
 {% for aviso in item.avisos %}<p class="aviso" role="status">{{ aviso }}</p>{% endfor %}
 
+{% if atuacao.gerir_campanha %}{% include "acompanhamento/gestao/_painel.html" %}{% endif %}
+
 <h2>Resumo</h2>
 <p>{{ contagem_por_formacao }}</p>
 <dl class="dados">

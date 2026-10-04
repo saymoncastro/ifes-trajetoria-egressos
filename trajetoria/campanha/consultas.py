@@ -13,6 +13,8 @@ from django.utils import timezone
 
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.campanha.models import Campanha
+from trajetoria.campanha.regras import Motivo, Violacao
+from trajetoria.instrumento.models import EstadoVersao, Versao
 
 __all__ = [
     "Criterio",
@@ -24,10 +26,12 @@ __all__ = [
     "Resultado",
     "admite_participacao",
     "avaliar",
+    "campanhas_em_coleta",
     "campanhas_em_coleta_para",
     "data_de_referencia",
     "encerramento",
     "estado",
+    "impedimentos_de_abertura",
     "momento_de_referencia",
     "populacao_no_momento",
 ]
@@ -236,15 +240,45 @@ def admite_participacao(
     )
 
 
+def campanhas_em_coleta(*, agora: datetime | None = None) -> QuerySet[Campanha]:
+    """As Campanhas EM_COLETA no momento: o predicado de `estado` visto no banco."""
+    agora = momento_de_referencia(agora)
+    return Campanha.objects.filter(
+        Q(encerrada_em__isnull=True) | Q(encerrada_em__gt=agora),
+        aberta_em__lte=agora,
+        fim__gte=data_de_referencia(agora),
+    )
+
+
 def campanhas_em_coleta_para(
     conclusao: ConclusaoAcademica, *, agora: datetime | None = None
 ) -> tuple[Campanha, ...]:
     """Todas as Campanhas EM_COLETA em que a Conclusão é ELEGÍVEL. A ordem (inicio, id) é
     só determinística: sem prioridade, ranking ou exclusividade (FR-051, FR-052; DP-404)."""
-    agora = momento_de_referencia(agora)
-    em_coleta = Campanha.objects.filter(
-        Q(encerrada_em__isnull=True) | Q(encerrada_em__gt=agora),
-        aberta_em__lte=agora,
-        fim__gte=data_de_referencia(agora),
-    )
+    em_coleta = campanhas_em_coleta(agora=agora)
     return tuple(em_coleta.filter(_campanhas_que_admitem(conclusao)).order_by("inicio", "id"))
+
+
+def impedimentos_de_abertura(campanha: Campanha, *, agora=None) -> tuple[Violacao, ...]:
+    """Regra única de abertura, sem escrita nem bloqueio (017). Fora de `abrir`, o resultado
+    só orienta a interface: a garantia vem de `abrir`, que a chama sob bloqueio da linha."""
+    hoje = data_de_referencia(agora)
+    violacoes = []
+    # Relida no banco, não na instância: a publicação é irreversível (002 FR-013).
+    if Versao.objects.get(pk=campanha.versao_id).estado != EstadoVersao.PUBLICADA:
+        violacoes.append(
+            Violacao(Motivo.VERSAO_NAO_PUBLICADA, "versao", "a Versão está em rascunho")
+        )
+    if campanha.inicio is None:
+        violacoes.append(
+            Violacao(Motivo.PERIODO_NAO_DEFINIDO, "inicio", "a Campanha não tem período")
+        )
+    elif not campanha.inicio <= hoje <= campanha.fim:
+        violacoes.append(
+            Violacao(
+                Motivo.FORA_DO_PERIODO,
+                "inicio",
+                f"{hoje} fora de {campanha.inicio} a {campanha.fim}",
+            )
+        )
+    return tuple(violacoes)

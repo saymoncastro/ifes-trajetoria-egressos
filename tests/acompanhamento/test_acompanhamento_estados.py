@@ -59,6 +59,7 @@ def test_encerrada_por_consulta_direta_com_agora_posterior(ref):
 def test_nunca_aberta_e_expirada(inst, cliente_cpaeg):
     campanha = k.campanha(inst.versao, estado="expirada_sem_abertura")
     texto = _texto(cliente_cpaeg, campanha)
+    assert "Período encerrado — Campanha nunca aberta" in texto
     assert "Esta Campanha não chegou a entrar em coleta." in texto
     assert "Aberta em" not in texto and "Encerrada em" in texto
 

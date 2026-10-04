@@ -21,6 +21,7 @@ def test_cpaeg_ve_todas_as_campanhas(ref, cliente_cpaeg):
     texto = texto_visivel(resposta)
     for nome in ("Campanha I", "Campanha R", "Campanha P", "Campanha E", expirada.nome):
         assert nome in texto
+    assert "Período encerrado — Campanha nunca aberta" in _linha(texto, expirada.nome)
     html = resposta.content.decode()
     for campanha in (ref.I, ref.R, ref.P, ref.E):
         assert f'href="/acompanhamento/campanhas/{campanha.pk}/"' in html

@@ -1,0 +1,8 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Confirmar encerramento da coleta{% endblock %}
+{% block conteudo %}
+<h1>Confirmar encerramento da coleta</h1>
+<h2>{{ campanha.nome }}</h2>
+<p>{{ confirmacao }}</p>
+<form method="post">{% csrf_token %}<button type="submit">Encerrar coleta</button> <a href="/acompanhamento/campanhas/{{ campanha.pk }}/">Cancelar</a></form>
+{% endblock %}
