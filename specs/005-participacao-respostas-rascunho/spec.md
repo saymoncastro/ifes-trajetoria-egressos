@@ -27,6 +27,8 @@ As quatro primeiras features estabeleceram:
 - **004** — **Campanha → Versão aplicada**, com período de coleta, população elegível por
   critérios e o contrato de admissão: uma Campanha admite nova Participação de uma
   Conclusão se, e somente se, está EM COLETA e a Conclusão é ELEGÍVEL (004 FR-053).
+  *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* ELEGÍVEL significa compatível com a abrangência do instrumento da Campanha, não
+  pertença a uma coorte de mobilização.
 
 Falta o elo que fecha a cadeia longitudinal da Constituição (Princípio I):
 
@@ -109,7 +111,8 @@ ser decisões desta feature.
   correção acadêmica posterior, e não recebe fotografia da elegibilidade. As escritas
   verificam apenas se a Campanha ainda admite coleta. Isso preserva o fato histórico de
   que a Participação foi admitida naquele momento. A consequência de correção acadêmica
-  continua em DP-507. (FR-034)
+  continua em DP-507. (FR-034) *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* O gate é de abrangência do instrumento: ele não
+  recusa quem está fora do foco de mobilização de uma rodada.
 - **Escolha múltipla vazia** → Confirmado. Conjunto não vazio = existe Resposta; remover
   todas as Opções = remover a Resposta; Resposta com conjunto vazio nunca é gravada. "Não
   respondida" e "resposta com zero Opções" não são estados distintos nesta feature, e não
@@ -627,6 +630,7 @@ atual não tem conceito de Participação nem de rascunho.
   tem Participação, ela DEVE ser criada somente se, no momento de referência, a Campanha
   admite nova Participação daquela Conclusão segundo a 004 (Campanha EM COLETA e Conclusão
   ELEGÍVEL — 004 FR-053), registrando o momento de início. [Const. — I; 004 FR-053]
+  *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)*
 - **FR-012**: Se a admissão falhar, o início DEVE ser rejeitado informando **todas** as
   condições não satisfeitas — coleta não admitida e/ou Conclusão não elegível, esta com as
   pendências da avaliação da 004 — e nada DEVE ser criado. [Arquitetura; 004 FR-026]
