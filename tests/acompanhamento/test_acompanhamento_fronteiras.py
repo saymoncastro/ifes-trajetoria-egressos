@@ -95,7 +95,7 @@ def test_nenhuma_acao_de_gestao_comunicacao_ou_exportacao(client, db, settings):
     cliente = k.atuar_como(client, k.A)
     campanha = k.campanha(versao_publicada())
     proibidos = (
-        "Criar Campanha", "Abrir", "Encerrar", "Reabrir", "Excluir", "Convite", "Lembrete",
+        "Criar Campanha", "Reabrir", "Excluir", "Convite", "Lembrete",
         "E-mail", "WhatsApp", "não respondentes", "Exportar", "CSV", "XLSX",
     )  # fmt: skip
     from tests.editor.construcao_editor import texto_visivel

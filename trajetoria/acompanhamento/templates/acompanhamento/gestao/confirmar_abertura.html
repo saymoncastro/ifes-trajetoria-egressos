@@ -1,0 +1,19 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Confirmar abertura da coleta{% endblock %}
+{% block conteudo %}
+<h1>Confirmar abertura da coleta</h1>
+<h2>{{ campanha.nome }}</h2>
+{% if ja_aberta %}<p>{{ ja_aberta }}</p>{% endif %}
+{% if painel.impedimentos %}<ul role="alert">{% for impedimento in painel.impedimentos %}<li>{{ impedimento }}</li>{% endfor %}</ul><p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/editar/">Editar configuração</a></p>{% endif %}
+{% if confirmar %}
+<dl class="dados">
+<dt>Nome que fica fixado</dt><dd>{{ campanha.nome }}</dd>
+<dt>Versão que fica fixada</dt><dd>{{ campanha.versao.pesquisa.nome }} — {{ campanha.versao.designacao }}</dd>
+<dt>Período que fica fixado</dt><dd>{{ campanha.inicio|date:"d/m/Y" }} a {{ campanha.fim|date:"d/m/Y" }}</dd>
+</dl>
+<p>{{ confirmacao }}</p>
+{% if ultimo_dia %}<p>A coleta se encerra ao fim de hoje ({{ campanha.fim|date:"d/m/Y" }}).</p>{% endif %}
+{% if outras %}<aside aria-label="Outras Campanhas em coleta"><p>{{ sobreposicao }}</p><ul>{% for nome in outras %}<li>{{ nome }}</li>{% endfor %}</ul></aside>{% endif %}
+<form method="post">{% csrf_token %}<button type="submit">Abrir coleta</button> <a href="/acompanhamento/campanhas/{{ campanha.pk }}/">Cancelar</a></form>
+{% else %}<p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/">Voltar à Campanha</a></p>{% endif %}
+{% endblock %}

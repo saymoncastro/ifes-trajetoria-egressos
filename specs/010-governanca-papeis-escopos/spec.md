@@ -917,6 +917,7 @@ capacidade nova do instrumento ou etapa de fluxo.
   em contagens. A página DEVE informar que somente Versões publicadas são exibidas para
   a sua atuação. Uma Pesquisa sem Versão publicada DEVE aparecer com essa indicação.
   [Hipótese; Const. — XVI]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Aplicação no editor e recusas**
 
@@ -1079,6 +1080,7 @@ capacidade nova do instrumento ou etapa de fluxo.
   identificador de operador. [Const. — Observabilidade, XVI, XXII; 009/DP-903]
 - **FR-075**: Esta feature NÃO DEVE criar multi-tenancy: base por unidade, banco por
   campus, endereço por unidade nem configuração por unidade. [Const. — XII]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Interface, linguagem e acessibilidade**
 

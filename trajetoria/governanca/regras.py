@@ -18,7 +18,8 @@ Acompanhamento da coleta (011): a CPAEG planeja, executa e avalia as atividades 
 CSAEG ativo → acompanhamento das suas unidades; nenhum → nada. As duas atuações são
 **nomeadas**: um papel novo não recebe acompanhamento por omissão. É interpretação
 operacional (011, B1–B4), não competência autônoma; não concede gestão de Campanha nem
-acesso a dado individual. Aqui, e só aqui, a unidade do vínculo tem consumidor.
+acesso a dado individual. A 017 concede gestão mínima pela regra independente
+`pode_gerir_campanha` (C1, demonstração, DP-402 aberta).
 """
 
 from dataclasses import dataclass
@@ -29,6 +30,7 @@ __all__ = [
     "EscopoDeAcompanhamento",
     "escopo_de_acompanhamento",
     "pode_acompanhar_coleta",
+    "pode_gerir_campanha",
     "pode_simular_comunicacao",
     "pode_consultar_publicado",
     "pode_consultar_rascunho",
@@ -75,3 +77,11 @@ def escopo_de_acompanhamento(vinculos) -> EscopoDeAcompanhamento | None:
 def pode_simular_comunicacao(vinculos) -> bool:
     """Capacidade exclusiva da demonstração 016; não concede comunicação real."""
     return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)
+
+
+def pode_gerir_campanha(vinculos) -> bool:
+    """017 C1: só CPAEG ativa, restrita à demonstração; DP-402 aberta.
+
+    Não concede publicação, critérios, remoção ou mobilização.
+    """
+    return any(v.ativo and v.papel == Papel.CPAEG for v in vinculos)

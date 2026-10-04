@@ -1,0 +1,17 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% if sem_publicada %}<p>{{ sem_publicada }}</p><p><a href="/acompanhamento/">Voltar às Campanhas</a></p>
+{% else %}
+{% if abrangencia %}<aside aria-label="Abrangência restrita"><p>{{ texto_abrangencia }}</p><ul>{% for criterio in abrangencia %}<li>{{ criterio }}</li>{% endfor %}</ul></aside>{% endif %}
+<p>O período pode ser definido depois; ele é necessário para abrir a coleta.</p>
+{% if formulario.errors %}<div tabindex="-1" id="erros">{% include "editor/_erros.html" %}</div>{% endif %}
+<form method="post" novalidate>
+{% csrf_token %}
+{% for campo in formulario %}{% include "editor/_campo.html" %}{% endfor %}
+<button type="submit">Salvar</button>
+<a href="{{ voltar }}">Cancelar</a>
+</form>
+{% endif %}
+{% endblock %}

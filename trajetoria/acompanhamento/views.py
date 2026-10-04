@@ -1,4 +1,4 @@
-"""Telas do acompanhamento da coleta (Feature 011; contracts/rotas.md). Somente leitura e GET.
+"""Telas da 011, somente leitura e GET; escrita da 017 no subpacote gestao.
 
 `@acompanhamento` é o mais externo: identifica, verifica vínculo e define o escopo antes de
 qualquer consulta. No detalhe, a existência e a visibilidade da Campanha são verificadas
@@ -18,6 +18,8 @@ from trajetoria.acompanhamento.consultas import (
     campanhas_acompanhadas,
     campanhas_visiveis,
 )
+from trajetoria.acompanhamento.gestao.mensagens import AVISOS
+from trajetoria.acompanhamento.gestao.painel import painel
 from trajetoria.campanha.models import Campanha
 
 _RAIZ = ("Acompanhamento da coleta", "/acompanhamento/")
@@ -96,6 +98,10 @@ def campanha(request, campanha):
             request,
             agora,
             item=item,
+            painel=painel(visivel, agora) if request.atuacao.gerir_campanha else None,
+            aviso_gestao=AVISOS.get(request.GET.get("aviso"))
+            if request.atuacao.gerir_campanha
+            else None,
             resumo=ap.numeros(item.indicadores),
             definicoes=ap.DEFINICOES,
             contagem_por_formacao=ap.CONTAGEM_POR_FORMACAO,

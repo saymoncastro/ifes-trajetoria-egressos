@@ -57,6 +57,7 @@ AVISO_POPULACAO_ATUAL = (
     "A população elegível apresentada corresponde aos dados institucionais atuais e pode "
     "diferir da população existente quando a coleta foi encerrada."
 )
+SITUACAO_NUNCA_ABERTA = "Período encerrado — Campanha nunca aberta"
 RECUSA_TITULO = "Acesso não permitido"
 RECUSA_SEM_ATUACAO = (
     "Não há vínculo institucional ativo para este operador. Sem vínculo ativo, o "

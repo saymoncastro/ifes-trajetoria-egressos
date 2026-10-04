@@ -718,6 +718,7 @@ da coleta.
 - **FR-003**: O acompanhamento NÃO DEVE ser apresentado como relatório estatístico
   oficial, dataset analítico, indicador da PAEG (Art. 10, III) ou Relatório Anual
   (Art. 14). Ele informa o andamento da coleta. [Const. — XIX; Escopo]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Capacidade e escopo de acompanhamento**
 
@@ -755,6 +756,7 @@ da coleta.
   individual, acesso a Resposta, comunicação com egressos nem acesso a outra unidade.
   Ela NÃO DEVE alterar as três capacidades da 010 nem o que cada atuação faz no editor.
   [Interpretação B5; 010 FR-030, FR-031]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Campanhas visíveis**
 
@@ -978,6 +980,7 @@ consulta:
 - **FR-101**: Esta feature NÃO DEVE criar envio de e-mail, WhatsApp, SMS, lembrete,
   convite, lista de destinatários ou de não respondentes, nem entidade Convite.
   [004 FR-048, FR-049; 004/DP-407; Const. — VI]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Sem avaliação de desempenho**
 
@@ -1368,3 +1371,9 @@ citadas como 00n/DP-nnn.
   Campanhas (FR-111).
 - **ADR 0003** (Q14 permanece declarada): respeitada; recorte por nível institucional
   declara a fonte (FR-060, FR-061).
+
+
+### Nota de apresentação revisada pela 017
+
+Campanha nunca aberta e expirada: "Período encerrado — Campanha nunca aberta", na lista
+ e no detalhe para todos os operadores; o estado de domínio permanece ENCERRADA.
