@@ -44,9 +44,14 @@ PGDATABASE=trajetoria_demo TRAJETORIA_DEMONSTRACAO=1 uv run python manage.py run
 
 | Campanha fictícia | Estado | Critério de unidades | Versão |
 |-------------------|--------|----------------------|--------|
-| Demonstração — coleta ampla (008) | EM COLETA | Serra, Cefor, Vila Velha, Alegre, Cariacica, Colatina (ano ≥ 2015) | cópia publicada |
+| Demonstração — coleta ampla (008) | EM COLETA | nenhum (população ampla) | cópia publicada |
 | Demonstração — coleta sobreposta (008) | EM COLETA | Vila Velha (Pós-graduação) | cópia publicada |
-| **Demonstração — acompanhamento Serra e Vitória** (011) | EM PREPARAÇÃO, nunca aberta, sem período | Serra, Vitória | baseline em RASCUNHO |
+| **Demonstração — rodada em preparação** (011) | EM PREPARAÇÃO, nunca aberta, sem período | nenhum | baseline em RASCUNHO |
+
+*(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* Critério de Campanha é abrangência do instrumento, não foco de mobilização. A Campanha
+nunca aberta se chamava "Demonstração — acompanhamento Serra e Vitória" e era restrita a
+essas unidades; a "coleta ampla" tinha ano ≥ 2015 e seis unidades. Os números do roteiro
+abaixo já refletem o cenário revisado.
 
 Confirme que não há migração nova:
 
@@ -82,15 +87,15 @@ Abra `http://localhost:8000/acompanhamento/`.
 | 1 | Abrir sem operador | Encaminhado à escolha de operador fictício. Depois de escolher, volta ao acompanhamento | US5.4 |
 | 2 | Escolher **C** | Recusa "sem vínculo institucional ativo", sem conteúdo | US5.3 |
 | 3 | Escolher **A** (CPAEG) | Lista com as três Campanhas, cada uma com situação, elegíveis atuais, iniciadas e concluídas. Sem taxas, cores ou ordenação por número | A, C; US1 |
-| 4 | Abrir "coleta ampla" | Resumo com os seis indicadores e suas definições; taxas 0,0%; aviso "momento da consulta"; 9 elegíveis atuais; recorte por unidade com as seis unidades do critério (Serra 3, Vila Velha 2, Cefor 1, Alegre 1, Cariacica 1, Colatina 1), soma igual ao total | A, B, H; US2, US7 |
+| 4 | Abrir "coleta ampla" | Resumo com os seis indicadores e suas definições; taxas 0,0%; aviso "momento da consulta"; 13 elegíveis atuais; recorte por unidade com as sete unidades que têm Conclusões (Serra 3, Vitória 3, Vila Velha 3, Cefor 1, Alegre 1, Cariacica 1, Colatina 1), soma igual ao total | A, B, H; US2, US7 |
 | 5 | Trocar para recorte por curso, nível, modalidade, forma de oferta e ano | Uma tabela por vez, troca por link, "não informado" onde faltar atributo (forma de oferta das graduações), soma igual ao total, ano em ordem crescente, rótulo "Ano de conclusão" | M; US8, US9 |
 | 6 | Editar o endereço para `?recorte=coorte` | 404 | FR-059 |
-| 7 | Abrir "acompanhamento Serra e Vitória" como A | "A coleta ainda não começou"; 6 elegíveis atuais (Serra 3, Vitória 3); instrumento identificado (baseline em rascunho), com link para o editor | US11; FR-042 |
-| 8 | Escolher **B** (CSAEG Vitória) | Lista **só** com "acompanhamento Serra e Vitória"; "coleta ampla" e "coleta sobreposta" ausentes | D, E; US3 |
+| 7 | Abrir "rodada em preparação" como A | "A coleta ainda não começou"; 13 elegíveis atuais; instrumento identificado (baseline em rascunho), com link para o editor | US11; FR-042 |
+| 8 | Escolher **B** (CSAEG Vitória) | Lista com "rodada em preparação" e "coleta ampla" (sem critério de unidades); "coleta sobreposta" ausente | D, E; US3 |
 | 9 | Abrir essa Campanha como B | 3 elegíveis atuais (só Vitória; nenhum valor de Serra); "Instrumento ainda não publicado", sem nome nem link; sem opção de recorte por unidade; recorte por curso sem coluna Unidade | D; US4; US11.2 |
-| 10 | Colar o endereço de "coleta ampla" como B | Recusa "fora do escopo", sem nome nem números da Campanha | N; US5.1 |
-| 11 | Em outra aba, escolher a Pessoa fictícia Ana Exemplo (Serra, 2022) em `/demonstracao/` e iniciar a pesquisa; como A, atualizar "coleta ampla" | Participações iniciadas 1; em andamento 1; taxa de início 11,1% | J; US6.2 |
-| 12 | Concluir a Participação da Ana pela jornada e atualizar | Concluídas 1; em andamento 0; taxa de conclusão 11,1%. Concluir só com "Não" na Q1 também conta como concluída | K; FR-033 |
+| 10 | Colar o endereço de "coleta sobreposta" como B | Recusa "fora do escopo", sem nome nem números da Campanha | N; US5.1 |
+| 11 | Em outra aba, escolher a Pessoa fictícia Ana Exemplo (Serra, 2022) em `/demonstracao/` e iniciar a pesquisa; como A, atualizar "coleta ampla" | Participações iniciadas 1; em andamento 1; taxa de início 7,7% | J; US6.2 |
+| 12 | Concluir a Participação da Ana pela jornada e atualizar | Concluídas 1; em andamento 0; taxa de conclusão 7,7%. Concluir só com "Não" na Q1 também conta como concluída | K; FR-033 |
 | 13 | Como A, ver o recorte por curso da "coleta ampla" | "Tecnologia em Análise e Desenvolvimento de Sistemas" na linha de Serra, com 2 elegíveis, 1 iniciada e 1 concluída. Nenhum nome de Pessoa em nenhuma página | SC-005 |
 | 14 | Navegar só por teclado; 320 px; zoom 200%; JavaScript desligado | Tudo operável; só a tabela rola horizontalmente; "—" anunciado como "não se aplica" | US13; SC-011 |
 | 15 | Desligar o modo (`TRAJETORIA_DEMONSTRACAO` ausente) | `/acompanhamento/` responde 404 | FR-157 |

@@ -76,7 +76,7 @@ def test_erros_http_sem_dados_sensiveis(
     assert "individuais" not in resposta.context and "resultado" not in resposta.context
     if tipo == "inesperada":
         assert resposta.context["totais"]["falhas"] == 1
-        assert resposta.context["totais"]["nao_tentadas"] == 3
+        assert resposta.context["totais"]["nao_tentadas"] == 7
     assert not getattr(mail, "outbox", [])
     assert snapshot() == antes
 

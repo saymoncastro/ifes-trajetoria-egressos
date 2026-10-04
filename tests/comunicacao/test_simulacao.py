@@ -8,7 +8,7 @@ from trajetoria.comunicacao.operacoes import simular_comunicacao
 pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.parametrize("operador,n", [(A, 4), (B, 1)])
+@pytest.mark.parametrize("operador,n", [(A, 8), (B, 1)])
 def test_execucoes_independentes(campanha, operador, n, snapshot):
     antes = snapshot()
     for _ in range(2):

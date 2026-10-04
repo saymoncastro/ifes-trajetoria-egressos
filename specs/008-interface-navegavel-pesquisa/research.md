@@ -505,6 +505,12 @@ Situações resultantes (calculadas pela 007, não pelo comando):
 "Disponível para retomar" e "já concluída" surgem do uso da interface (FR-015).
 Nenhuma Participação ou Resposta é criada pelo comando (FR-013).
 
+*(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* A "coleta ampla" deixou de ter critério. Mudam três linhas: Diego passa a "seleção
+necessária" (Téc. e Lic. disponíveis; Mestrado em ambiguidade); Bruno, a "seleção
+necessária"; Carla (Pedagogia), a "entrada resolvida". Nenhuma Pessoa com Conclusão fica
+"sem pesquisa"; esse estado continua coberto pelos testes da 007 e da 008 com dados
+próprios.
+
 **Justificativa**: FR-012 a FR-018 — comando explícito, fora de migrações, só operações
 existentes. Os critérios usam apenas valores presentes na fonte simulada (igualdade exata
 da 004). Duas Campanhas sobrepostas só em Vila Velha/Pós-graduação produzem exatamente uma

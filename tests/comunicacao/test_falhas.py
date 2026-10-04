@@ -39,11 +39,11 @@ def test_falha_parcial_nao_desfaz_anteriores(campanha, monkeypatch, caplog, snap
 
     monkeypatch.setattr(EmailBackend, "send_messages", enviar)
     r = simular_comunicacao(campanha.pk, A)
-    assert r.totais["submetidas"] == 4
-    assert r.totais["aceitas"] == 3 and r.totais["falhas"] == 1
+    assert r.totais["submetidas"] == 8
+    assert r.totais["aceitas"] == 7 and r.totais["falhas"] == 1
     assert r.totais["sem_contato"] == 1
-    assert len(mail.outbox) == 3 and len(set(calls)) == 4
-    assert len({id(c) for c in conexoes}) == 4
+    assert len(mail.outbox) == 7 and len(set(calls)) == 8
+    assert len({id(c) for c in conexoes}) == 8
     assert fechadas == conexoes
     assert "SENTINELA" not in caplog.text + repr(r)
     assert snapshot() == antes
@@ -67,7 +67,7 @@ def test_inesperada_interrompe_sem_retry(campanha, monkeypatch, caplog):
         r.totais["aceitas"],
         r.totais["falhas"],
         r.totais["nao_tentadas"],
-    ) == (2, 1, 1, 2)
+    ) == (2, 1, 1, 6)
     assert r.interrompida and len(mail.outbox) == 1
     assert "SENTINELA" not in caplog.text + repr(r)
 
@@ -81,8 +81,8 @@ def test_timeout_pode_ter_mensagem(campanha, monkeypatch):
 
     monkeypatch.setattr(EmailBackend, "send_messages", enviar)
     r = simular_comunicacao(campanha.pk, A)
-    assert r.totais["aceitas"] == 0 and r.totais["falhas"] == 4
-    assert len(mail.outbox) == 4
+    assert r.totais["aceitas"] == 0 and r.totais["falhas"] == 8
+    assert len(mail.outbox) == 8
 
 
 @pytest.mark.parametrize("etapa", ["barreira_final", "conexao"])
@@ -116,5 +116,5 @@ def test_erro_antes_do_send_nao_conta_tentativa(campanha, monkeypatch, etapa):
         r.totais["aceitas"],
         r.totais["falhas"],
         r.totais["nao_tentadas"],
-    ) == (1, 1, 0, 3)
+    ) == (1, 1, 0, 7)
     assert r.interrompida and len(mail.outbox) == 1

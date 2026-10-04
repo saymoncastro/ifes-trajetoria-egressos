@@ -69,7 +69,7 @@ Abrir `http://127.0.0.1:8000/acompanhamento/`, selecionar operador **B** pelo se
 
 | Passo | Ação | Resultado esperado |
 | --- | --- | --- |
-| 1 | Abrir “Demonstração — acompanhamento Serra e Vitória” | EM PREPARAÇÃO; instrumento rascunho continua oculto para B |
+| 1 | Abrir “Demonstração — rodada em preparação” | EM PREPARAÇÃO; instrumento rascunho continua oculto para B |
 | 2 | Seguir “Comunicação simulada” | Shell administrativo, aviso de demo, escopo Vitória, momento da consulta |
 | 3 | Conferir público | 3 Conclusões, 2 Pessoas, 1 com contato, 1 sem, 1 mensagem prevista |
 | 4 | Conferir prévia fixa | Bruno representativo, `sim-p-0002@example.invalid`, remetente institucional fictício; assunto Campanha; texto/HTML/CTA/URL neutra; sem editor |
@@ -81,8 +81,9 @@ Abrir `http://127.0.0.1:8000/acompanhamento/`, selecionar operador **B** pelo se
 | 10 | Voltar à Comunicação por GET | Nenhuma mensagem adicional; resultado anterior não é histórico recuperável |
 | 11 | Repetir simulação explicitamente | Mais uma mensagem; interface avisa duplicação entre execuções, sem retry automático |
 
-Agora escolher **A**, abrir mesma Campanha, voltar à Comunicação: 6 Conclusões, 5 Pessoas,
-4 com contato, 1 sem, 4 previstas. Simular: 4 submissões/aceites, 0 falhas. Carla Serra e
+Agora escolher **A**, abrir mesma Campanha, voltar à Comunicação: 13 Conclusões, 9 Pessoas,
+8 com contato, 1 sem, 8 previstas. Simular: 8 submissões/aceites, 0 falhas. *(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* A Campanha
+em preparação não tem critério; antes era restrita a Serra e Vitória. Carla Serra e
 Carla Vitória não são fundidas pelo nome; Carla Vitória segue sem contato. Inspecionar
 endereços distintos, todos `example.invalid`. Não somar caixa antiga como resultado atual.
 
@@ -98,7 +99,7 @@ muda domínio. Reiniciar Mailpit não reenvia automaticamente; nova ação deve 
 Falha após aceite remoto pode deixar mensagem na caixa: o aviso não promete ausência.
 
 Escolher C: recusa sem conteúdo da Campanha ou público. Como B, tentar URL direta da
-Comunicação da coleta ampla: 403 sem nome/números. Somente escolher Pessoa não autoriza.
+Comunicação da coleta sobreposta (Vila Velha): 403 sem nome/números. Somente escolher Pessoa não autoriza.
 Desligar modo demo e reiniciar app: páginas 404, operação recusada.
 
 ENCERRADA (por data ou fechamento), falha parcial seletiva, contato externo injetado,

@@ -88,8 +88,13 @@ Lógica em `trajetoria.demonstracao.cenario.preparar() -> Resumo`.
 
 | Nome | Critérios |
 |------|-----------|
-| `Demonstração — coleta ampla` | `ano_minimo=2015`, `unidades=["Serra", "Cefor", "Vila Velha", "Alegre", "Cariacica", "Colatina"]` |
+| `Demonstração — coleta ampla` | nenhum (população ampla) |
 | `Demonstração — coleta sobreposta` | `unidades=["Vila Velha"]`, `niveis=["Pós-graduação"]` |
+
+*(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* A "coleta ampla" não tem critério: critério de Campanha é abrangência do instrumento,
+não foco de mobilização. A "coleta sobreposta" é o único cenário com abrangência restrita
+(instrumento da pós-graduação de Vila Velha). Antes, a "coleta ampla" tinha `ano_minimo=2015`
+e seis unidades.
 
 5. Imprime o resumo: para cada Pessoa de demonstração, o nome e a situação de entrada
    calculada **pela 007** (`situacao_de_entrada`) — ex.: "Ana Exemplo — 1 formação com

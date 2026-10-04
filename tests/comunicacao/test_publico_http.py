@@ -17,7 +17,7 @@ def test_get_administrativo(campanha, clientes, snapshot):
     for i in (A, B):
         resposta = clientes[i].get(url(campanha))
         assert resposta.status_code == 200
-        assert resposta.context["totais"]["pessoas"] == (5 if i == A else 2)
+        assert resposta.context["totais"]["pessoas"] == (9 if i == A else 2)
     assert snapshot() == antes
     assert clientes[C].get(url(campanha)).status_code == 403
     assert Client().get(url(campanha)).status_code == 302
@@ -25,7 +25,7 @@ def test_get_administrativo(campanha, clientes, snapshot):
 
 
 def test_fora_escopo_inexistente_e_modo(campanha, clientes, settings):
-    outra = campanha.__class__.objects.get(nome="Demonstração — coleta ampla")
+    outra = campanha.__class__.objects.get(nome="Demonstração — coleta sobreposta")
     resposta = clientes[B].get(url(outra))
     assert resposta.status_code == 403
     assert outra.nome not in resposta.content.decode()
