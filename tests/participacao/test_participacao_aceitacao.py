@@ -155,7 +155,14 @@ def _campos(modelo) -> list[str]:
 
 def test_campos_dos_modelos_novos():
     # `concluida_em`: único campo acrescentado pela 006 (006 FR-001; research R16).
-    assert _campos(Participacao) == ["id", "campanha", "conclusao", "iniciada_em", "concluida_em"]
+    assert _campos(Participacao) == [
+        "id",
+        "campanha",
+        "conclusao",
+        "formacao_declarada",
+        "iniciada_em",
+        "concluida_em",
+    ]
     assert _campos(Resposta) == [
         "id",
         "participacao",

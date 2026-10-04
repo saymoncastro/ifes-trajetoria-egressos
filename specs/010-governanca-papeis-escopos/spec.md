@@ -1471,3 +1471,10 @@ citadas como 00n/DP-nnn.
   **008/DP-801**: não afetadas.
 - Demais decisões de identidade e autenticação do egresso das features 005 a 008:
   não afetadas; operador e egresso continuam separados (FR-008, FR-072).
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+A capacidade nomeada pode_validar_formacao admite CPAEG e CSAEG ativos na demonstração. CSAEG atua pela unidade declarada e só vincula Conclusão ou acervo das unidades do vínculo. DP-1901 e DP-1902 preservam a competência de atestar e o acesso real como decisões institucionais pendentes.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

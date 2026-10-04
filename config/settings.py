@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "trajetoria.academico",
     "trajetoria.instrumento",
     "trajetoria.campanha",
+    "trajetoria.declaracao",
     "trajetoria.participacao",
     "trajetoria.governanca",
     "trajetoria.interface",
@@ -152,3 +153,10 @@ TRAJETORIA_ACESSO_LIMITES = {
     "fator": 3,
     "espera_maxima": 300,
 }
+
+# 019: segredos Fernet independentes, sem padrão utilizável.
+TRAJETORIA_CHAVE_SELO_DECLARACAO = os.environ.get("TRAJETORIA_CHAVE_SELO_DECLARACAO", "")
+TRAJETORIA_CHAVE_CONSULTA_ACERVO = os.environ.get("TRAJETORIA_CHAVE_CONSULTA_ACERVO", "")
+TRAJETORIA_SELO_DECLARACAO_VALIDADE = timedelta(
+    minutes=int(os.environ.get("TRAJETORIA_SELO_DECLARACAO_VALIDADE", "30"))
+)

@@ -59,7 +59,7 @@ def test_nenhum_campo_guarda_instrumento_pessoa_ou_identificador_externo():
     proibidos = {
         "nome", "cpf", "email", "telefone", "matricula", "endereco", "fonte", "id_externo",
         "pessoa", "hash", "pseudonimo", "texto", "titulo", "designacao", "pergunta", "opcao",
-        "opcoes", "secao", "versao", "resposta", "participacao", "escala", "complemento",
+        "opcoes", "secao", "versao", "resposta", "escala", "complemento",
     }  # fmt: skip
     for modelo in (SnapshotAnalitico, RegistroDoSnapshot):
         campos = {f.name for f in modelo._meta.get_fields() if f.concrete}
@@ -147,7 +147,8 @@ def test_nenhuma_regra_de_governanca_nova():
         "pode_consultar_rascunho",
         "pode_elaborar_instrumento",
         "pode_simular_comunicacao",  # capacidade administrativa introduzida pela 016
-        "pode_gerir_campanha",  # gestão na demonstração introduzida pela 017
+        "pode_gerir_campanha",
+        "pode_validar_formacao",  # gestão na demonstração introduzida pela 017
     }
 
 

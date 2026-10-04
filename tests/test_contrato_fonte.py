@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from tests.fontes_de_teste import CASOS_DE_CONTRATO, FonteAlternativa
+from trajetoria.declaracao.acervo import FonteAcervoHistorico, registrar_referencia
 from trajetoria.fonte_academica.contrato import (
     ConclusaoEncontrada,
     ConclusaoInexistente,
@@ -20,21 +21,42 @@ from trajetoria.fonte_academica.contrato import (
 )
 from trajetoria.fonte_academica.simulada import FonteSimulada
 
+pytestmark = pytest.mark.django_db
+
 RAIZ = Path(__file__).resolve().parent.parent
 
 
-@pytest.fixture(params=[FonteSimulada, FonteAlternativa], ids=lambda c: c.__name__)
+@pytest.fixture(
+    params=[FonteSimulada, FonteAlternativa, FonteAcervoHistorico], ids=lambda c: c.__name__
+)
 def implementacao(request):
     return request.param
 
 
 @pytest.fixture
 def fonte(implementacao):
-    return implementacao()
+    fonte = implementacao()
+    if implementacao is FonteAcervoHistorico:
+        from tests.declaracao.construcao import DADOS
+        from tests.participacao.construcao import NO_PERIODO
+
+        fonte.referencia_de_teste = registrar_referencia(
+            {k: v for k, v in DADOS.items() if k != "nome"} | {"referencia": "Livro 3"},
+            operador="A",
+            agora=NO_PERIODO,
+        )
+    return fonte
 
 
 @pytest.fixture
-def casos(implementacao):
+def casos(implementacao, fonte):
+    if implementacao is FonteAcervoHistorico:
+        return {
+            "pessoa_com_conclusoes": f"acervo:{fonte.referencia_de_teste.pk}",
+            "pessoa_inexistente": "acervo:inexistente",
+            "conclusao_reconhecida": str(fonte.referencia_de_teste.pk),
+            "conclusao_inexistente": "inexistente",
+        }
     return CASOS_DE_CONTRATO[implementacao]
 
 
@@ -52,6 +74,8 @@ def test_pessoa_traz_so_conclusoes_reconhecidas(fonte, casos):
 
 
 def test_pessoa_sem_conclusao_e_encontrada_com_tupla_vazia(fonte, casos):
+    if "pessoa_sem_conclusao" not in casos:
+        pytest.skip("Acervo: cada referência atestada corresponde a uma conclusão.")
     resposta = fonte.obter_pessoa(casos["pessoa_sem_conclusao"])
 
     assert isinstance(resposta, PessoaEncontrada)
@@ -71,6 +95,8 @@ def test_conclusao_reconhecida_aponta_sua_pessoa(fonte, casos):
 
 
 def test_nao_reconhecido_e_distinto_de_inexistente(fonte, casos):
+    if "registro_nao_reconhecido" not in casos:
+        pytest.skip("Acervo só registra conclusões atestadas.")
     assert isinstance(
         fonte.obter_conclusao(casos["registro_nao_reconhecido"]),
         RegistroNaoReconhecidoComoConclusao,
@@ -88,10 +114,13 @@ def test_ausencia_e_none_e_ano_coerente_com_data(fonte, casos):
 
 def test_resultado_deterministico(fonte, casos):
     for chave in ("pessoa_com_conclusoes", "pessoa_sem_conclusao", "pessoa_inexistente"):
-        assert fonte.obter_pessoa(casos[chave]) == fonte.obter_pessoa(casos[chave])
+        if chave in casos:
+            assert fonte.obter_pessoa(casos[chave]) == fonte.obter_pessoa(casos[chave])
 
 
 def test_falha_da_fonte_e_excecao_propria(implementacao, casos):
+    if implementacao is FonteAcervoHistorico:
+        pytest.skip("Acervo é local; falha do banco não é indisponibilidade de fonte externa.")
     fonte = implementacao(indisponivel=True)
 
     with pytest.raises(FonteAcademicaIndisponivel):

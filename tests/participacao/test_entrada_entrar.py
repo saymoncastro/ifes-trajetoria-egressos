@@ -241,7 +241,14 @@ def test_s_l_dados_da_conclusao_nao_geram_resposta(inst):
     # Nem a Pergunta "campus" do instrumento de teste (análoga a Q11) recebe a unidade.
     assert not Resposta.objects.exists()
     campos = {f.name for f in Participacao._meta.concrete_fields}
-    assert campos == {"id", "campanha", "conclusao", "iniciada_em", "concluida_em"}
+    assert campos == {
+        "id",
+        "campanha",
+        "conclusao",
+        "formacao_declarada",
+        "iniciada_em",
+        "concluida_em",
+    }
     jornada = situacao_da_jornada(entrada.participacao, agora=NO_PERIODO)
     assert jornada.respostas == {}
     assert jornada.secao_atual.id == conteudo_da_versao(inst.versao).secoes[0].id

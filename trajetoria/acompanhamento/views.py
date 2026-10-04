@@ -21,6 +21,7 @@ from trajetoria.acompanhamento.consultas import (
 from trajetoria.acompanhamento.gestao.mensagens import AVISOS
 from trajetoria.acompanhamento.gestao.painel import painel
 from trajetoria.campanha.models import Campanha
+from trajetoria.declaracao.consultas import fila
 
 _RAIZ = ("Acompanhamento da coleta", "/acompanhamento/")
 
@@ -98,6 +99,12 @@ def campanha(request, campanha):
             request,
             agora,
             item=item,
+            # Só os itens da fila desta Campanha, no escopo do operador (019 FR-101).
+            validacoes_na_fila=(
+                fila(request.vinculos).filter(participacao__campanha=visivel).count()
+                if request.atuacao.validar_formacao
+                else None
+            ),
             painel=painel(visivel, agora) if request.atuacao.gerir_campanha else None,
             aviso_gestao=AVISOS.get(request.GET.get("aviso"))
             if request.atuacao.gerir_campanha

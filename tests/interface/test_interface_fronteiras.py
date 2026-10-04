@@ -46,7 +46,8 @@ PERMITIDOS_NA_INTERFACE = {
     "trajetoria.instrumento.conteudo": None,
     "trajetoria.instrumento.models": {"Pergunta", "Opcao", "TipoPergunta"},
     "trajetoria.academico.models": {"ConclusaoAcademica", "Pessoa"},
-    "trajetoria.acesso.sessao": {"pessoa_em_uso"},  # FR-005: só a Pessoa resolvida
+    "trajetoria.acesso.sessao": {"pessoa_em_uso"},  # 018: apenas a Pessoa resolvida
+    "trajetoria.declaracao.sessao": {"declaracoes_em_uso"},  # 019: apenas o declarante
 }
 SO_NO_CENARIO = (
     "trajetoria.campanha",

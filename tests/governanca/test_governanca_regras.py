@@ -75,6 +75,7 @@ def test_tres_regras_do_editor_e_a_regra_de_acompanhamento():
         escopo_de_acompanhamento.__name__,
         "pode_simular_comunicacao",
         "pode_gerir_campanha",
+        "pode_validar_formacao",
     }
     assert publicas == {r.__name__ for r in REGRAS} | acompanhamento
     assert set(regras.__all__) == publicas | {"EscopoDeAcompanhamento"}
@@ -169,3 +170,9 @@ def test_capacidade_de_gestao_pura(papeis, esperado):
     from trajetoria.governanca.regras import pode_gerir_campanha
 
     assert pode_gerir_campanha([SimpleNamespace(papel=p, ativo=a) for p, a in papeis]) is esperado
+
+
+@pytest.mark.parametrize('vinculos,esperado', [([],False),([CPAEG],True),
+    ([CSAEG_VITORIA],True),([_v(Papel.CPAEG,ativo=False)],False),([_v('OUTRO')],False)])
+def test_capacidade_validar_formacao(vinculos, esperado):
+    assert regras.pode_validar_formacao(vinculos) is esperado

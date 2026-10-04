@@ -5,7 +5,7 @@ Toda função recebe o snapshot explicitamente: não existe "snapshot atual", "v
 
 **Nunca o estado acadêmico atual** (spec FR-076, FR-080): nenhuma consulta lê a Conclusão
 nem a Pessoa. O contexto vem dos registros congelados; a Participação, imutável depois do
-encerramento, é encontrada pela Campanha do snapshot e pela `conclusao_id` do registro.
+encerramento, é referenciada diretamente pelo registro, congelada na captura (019).
 
 **Fronteira mínima** (spec FR-070, FR-074): objetos de valor pequenos e semânticos. Não é a
 013: sem schema tabular, colunas, serializador, achatamento, nomes externos, CSV ou GeN.
@@ -14,7 +14,7 @@ identificadores exportáveis (spec FR-047; 005/DP-505).
 """
 
 from collections.abc import Iterator
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from datetime import date, datetime
 from decimal import Decimal
 from enum import Enum
@@ -129,6 +129,7 @@ class LinhaDoDataset:
     participacao: ParticipacaoNoDataset | None
     respostas: MappingProxyType  # id da Pergunta → RespostaNoDataset
     fora_do_percurso: frozenset | None
+    origem_formacao: str | None = field(default=None, kw_only=True)
     perguntas_do_percurso: frozenset | None = None
 
 
@@ -159,14 +160,18 @@ def linhas_do_dataset(
     registros = list(
         RegistroDoSnapshot.objects.filter(snapshot=snapshot)
         .order_by("conclusao_id")
-        .values_list("conclusao_id", "elegivel_no_snapshot", *CAMPOS_DE_CONTEXTO)
+        .values_list(
+            "conclusao_id",
+            "elegivel_no_snapshot",
+            "participacao_id",
+            "origem_formacao",
+            *CAMPOS_DE_CONTEXTO,
+        )
     )
-    participacoes = {
-        p.conclusao_id: p for p in Participacao.objects.filter(campanha_id=campanha.pk)
-    }
+    participacoes = {p.pk: p for p in Participacao.objects.filter(pk__in=[r[2] for r in registros])}
     respostas: dict[UUID, dict[UUID, RespostaNoDataset]] = {}
     lidas = (
-        Resposta.objects.filter(participacao__campanha_id=campanha.pk)
+        Resposta.objects.filter(participacao_id__in=participacoes)
         .select_related("pergunta", "opcao")
         .prefetch_related("opcoes")
     )
@@ -180,8 +185,8 @@ def linhas_do_dataset(
             escala=r.escala,
             complemento=r.complemento,
         )
-    for conclusao_id, elegivel, *contexto in registros:
-        participacao = participacoes.get(conclusao_id)
+    for conclusao_id, elegivel, participacao_id, origem, *contexto in registros:
+        participacao = participacoes.get(participacao_id)
         if participacao is None:
             no_dataset, da_participacao = None, _SEM_RESPOSTAS
             fora, percurso = frozenset(), None
@@ -205,6 +210,7 @@ def linhas_do_dataset(
             respostas=da_participacao,
             fora_do_percurso=fora,
             perguntas_do_percurso=percurso,
+            origem_formacao=origem,
         )
 
 
@@ -289,9 +295,7 @@ def _contagens(snapshot: SnapshotAnalitico, campos: tuple[str, ...]) -> dict:
     `conclusao_id` do registro) aparece uma única vez no SQL; a separação por elegibilidade
     vem do agrupamento, não de filtros repetidos. Nenhuma tabela da 001 nem de Resposta entra
     no SQL."""
-    participacao = Participacao.objects.filter(
-        campanha_id=snapshot.campanha_id, conclusao_id=OuterRef("conclusao_id")
-    )
+    participacao = Participacao.objects.filter(pk=OuterRef("participacao_id"))
     agrupado = (
         RegistroDoSnapshot.objects.filter(snapshot=snapshot)
         .values(*campos, "elegivel_no_snapshot")

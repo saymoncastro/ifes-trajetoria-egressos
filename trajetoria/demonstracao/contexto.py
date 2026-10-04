@@ -7,9 +7,11 @@ nunca mostram faixa de demonstração nem nome de Pessoa (FR-001).
 from django.conf import settings
 
 from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.declaracao.sessao import declaracoes_em_uso
 
 
 def demonstracao(request) -> dict:
     if not settings.TRAJETORIA_DEMONSTRACAO:
         return {}
-    return {"modo_demonstracao": True, "pessoa_demonstracao": pessoa_em_uso(request)}
+    return {"modo_demonstracao": True, "pessoa_demonstracao": pessoa_em_uso(request),
+            "declarante_demonstracao": declaracoes_em_uso(request) is not None}

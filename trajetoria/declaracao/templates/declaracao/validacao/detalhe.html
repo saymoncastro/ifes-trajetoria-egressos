@@ -1,0 +1,29 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Validação da formação{% endblock %}
+{% block conteudo %}
+<h1>Validação da formação</h1>
+<p>Registra o resultado obtido junto à instância competente.</p>
+<section aria-labelledby="declarada"><h2 id="declarada">Formação informada pelo egresso</h2><p>{{ formacao.nome }}</p><p>{{ formacao.curso }} · {{ formacao.unidade }} · {{ formacao.nivel }} · {{ formacao.ano_conclusao }}</p><p>{{ formacao.declarada_em }} · {{ formacao.participacao.campanha.nome }} · Participação concluída</p></section>
+{% if erro %}<div class="resumo-erros" role="alert" tabindex="-1" autofocus><h2>Confira o registro</h2><p>{{ erro }}</p></div>{% endif %}
+{% if aviso %}<p role="status" tabindex="-1" autofocus>{{ aviso }}</p>{% endif %}
+<form method="post" action="/validacoes-formacao/{{ formacao.pk }}/revelar/">{% csrf_token %}<button type="submit">Mostrar dados para consulta ao acervo</button></form>
+{% if revelados %}<section aria-labelledby="dados-consulta" role="status" tabindex="-1" autofocus><h2 id="dados-consulta">Dados para consulta ao acervo</h2><p>{{ revelados.0 }} · {{ revelados.1 }} · {{ revelados.2|date:"d/m/Y" }}</p></section>{% endif %}
+{% if decisao %}<h2>Resultado registrado</h2><p>{{ decisao.get_resultado_display }}</p>{% if decisao.conflito_detectado_na_validacao %}<p>resolução administrativa pendente</p>{% elif decisao.fora_da_abrangencia_na_validacao %}<p>Formação fora da abrangência desta Campanha.</p>{% endif %}{% if diferencas %}<p>confirmada com dados diferentes</p><h3>Dados confirmados</h3><p>{{ decisao.conclusao.curso }} · {{ decisao.conclusao.unidade }} · {{ decisao.conclusao.nivel }} · {{ decisao.conclusao.ano_conclusao }}</p>{% endif %}
+{% else %}
+<form class="validacao-formacao" method="post" action="/validacoes-formacao/{{ formacao.pk }}/registrar/">{% csrf_token %}
+<fieldset><legend>Resultado obtido</legend><label><input type="radio" name="resultado" value="confirmada" required> Formação confirmada</label><label><input type="radio" name="resultado" value="nao_confirmada"> Formação não confirmada</label></fieldset>
+<fieldset><legend>Origem da confirmação (somente para formação confirmada)</legend>
+<label><input type="radio" name="origem" value="candidata"> Conclusão da fonte digital</label>
+<label for="candidata">Conclusão encontrada</label><select name="candidata" id="candidata"><option value="">Selecione</option>{% for item in candidatas %}<option value="{{ item.conclusao.pk }}">{{ item.conclusao.curso }} · {{ item.conclusao.unidade }} · {{ item.conclusao.ano_conclusao }}</option>{% endfor %}</select>
+{% for item in candidatas %}{% if item.conflito %}<p role="note">Existe outra Participação oficial para uma das Conclusões sugeridas. A nova ficará em conflito e fora dos dados oficiais.</p>{% endif %}{% endfor %}
+<label><input type="radio" name="origem" value="referencia_fonte"> Referência na fonte digital</label><label for="referencia-fonte">Referência da formação na fonte</label><input id="referencia-fonte" name="referencia_fonte" type="text">
+<label><input type="radio" name="origem" value="acervo"> Acervo histórico</label><p>Informe somente os dados encontrados no acervo. Os dados declarados permanecem acima para leitura.</p>
+{% if cpf_na_fonte_digital %}<p role="note">Há registro com o mesmo CPF na fonte digital. A referência do acervo será mantida separada; nenhuma Pessoa será reunida automaticamente.</p>{% endif %}
+{% for campo in acervo_form %}<div class="campo"><label for="{{ campo.id_for_label }}">{{ campo.label }}</label>{{ campo }}{% for erro in campo.errors %}<p class="erro" id="erro-acervo-{{ campo.name }}">{{ erro }}</p>{% endfor %}</div>{% endfor %}
+</fieldset>
+<p>A confirmação compatível e sem conflito passa a integrar os dados oficiais. A declaração e as respostas são preservadas em qualquer resultado.</p>
+<fieldset><legend>Confirmação do registro</legend><label><input type="checkbox" name="confirmar" value="1" required> Confirmo o registro do resultado obtido junto à instância competente.</label></fieldset><button type="submit">Registrar resultado</button></form>
+{% endif %}
+<h2>Outras formações informadas com o mesmo CPF</h2><ul>{% for f in outras %}<li><a href="/validacoes-formacao/{{ f.pk }}/">{{ f.curso }} · {{ f.unidade }} · {{ f.ano_conclusao }}</a></li>{% empty %}<li>Nenhuma outra declaração neste escopo.</li>{% endfor %}</ul>
+<p><a href="/validacoes-formacao/">Voltar à fila</a></p>
+{% endblock %}

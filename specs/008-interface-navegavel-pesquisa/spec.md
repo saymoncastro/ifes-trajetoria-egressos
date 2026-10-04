@@ -1624,3 +1624,10 @@ citadas como 00n/DP-nnn.
 - **005/DP-501** — várias formações elegíveis na mesma Campanha.
 - **003/DP-303**, **DP-304**, **DP-309** — Q6, Q42/Q44, dados sensíveis.
 - **001/DP-001**, **DP-003** — fonte acadêmica oficial e reconciliação de identidade.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-089 e FR-090 verificam o sujeito da sessão: Pessoa ou declarante. Pessoa acessa suas Conclusões; declarante acessa somente as declarações cujos UUIDs estão na sessão. O contexto declarado é rotulado como informado pelo egresso; após a conclusão nenhuma Resposta é exibida.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

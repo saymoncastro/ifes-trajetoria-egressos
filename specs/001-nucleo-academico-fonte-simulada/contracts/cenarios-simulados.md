@@ -50,6 +50,8 @@ EaD = A distância; "—" = `None` (não informado pela fonte).
 | Homônimos | SIM-P-0010 | Carla Exemplo | SIM-C-0012 | concluida | Licenciatura em Pedagogia | Vitória | Grad. | Pres. | — | 2016 (só ano) |
 | Homônimos | SIM-P-0011 | Carla Exemplo | SIM-C-0013 | concluida | Tecnologia em Redes de Computadores | Serra | Grad. | Pres. | — | 2023 (só ano) |
 
+| Declaração 019 | SIM-P-0012 | Helena Exemplo | SIM-C-0014 | concluida | Técnico em Informática | Serra | Téc. | Pres. | Subsequente | 2004 (só ano) |
+
 ## Cenários sem registro próprio
 
 | Cen. | Como é provocado | Resultado esperado |
@@ -94,3 +96,7 @@ Dados artificiais da 018; CPFs gerados com dígitos verificadores válidos, sem 
 | SIM-P-0009 sem nome | 000.000.007-87 | — | Sem data |
 | SIM-P-0010 Carla | 000.000.008-68 | 1992-05-05 | CPF compartilhado |
 | SIM-P-0011 Carla | 000.000.008-68 | 1995-10-19 | CPF compartilhado |
+
+| SIM-P-0012 Helena | 000.000.010-82 | 1980-06-30 | Fonte digital, excluída do preparo (019) |
+
+O par 000.000.009-49 / 2001-06-30 é fictício e inexistente na fonte, para testar declaração.

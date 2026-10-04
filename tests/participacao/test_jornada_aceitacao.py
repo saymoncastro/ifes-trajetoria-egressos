@@ -133,7 +133,14 @@ def test_10_nenhum_conceito_de_sessao_workflow_ou_progresso():
         "RespostaOpcao",
     }
     campos = [f.name for f in Participacao._meta.concrete_fields]
-    assert campos == ["id", "campanha", "conclusao", "iniciada_em", "concluida_em"]
+    assert campos == [
+        "id",
+        "campanha",
+        "conclusao",
+        "formacao_declarada",
+        "iniciada_em",
+        "concluida_em",
+    ]
     assert [f.name for f in Resposta._meta.concrete_fields] == [
         "id",
         "participacao",

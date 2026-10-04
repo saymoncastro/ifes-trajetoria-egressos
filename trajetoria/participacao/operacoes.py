@@ -123,6 +123,7 @@ def iniciar_participacao(campanha, conclusao, *, agora: datetime | None = None) 
 
     Se o par já tem Participação, devolve-a sem consultar estado nem elegibilidade e sem
     gravar, inclusive com a Campanha encerrada; isso não autoriza escrita de respostas.
+    Uma declaração oficial validada para o par também é JA_EXISTENTE (019 FR-092).
     Inícios simultâneos: o `UNIQUE (campanha, conclusao)` decide; quem perde a corrida
     relê e devolve a Participação da outra transação (research R11)."""
     _exigir(campanha, Campanha, "campanha")
@@ -133,6 +134,14 @@ def iniciar_participacao(campanha, conclusao, *, agora: datetime | None = None) 
             return Inicio(existente, SituacaoInicio.JA_EXISTENTE)
         campanha = _gravada(Campanha, campanha, "campanha")
         conclusao = _gravada(ConclusaoAcademica, conclusao, "conclusao")
+        conclusao = ConclusaoAcademica.objects.select_for_update().get(pk=conclusao.pk)
+        # A mesma trava serializa o início institucional e a confirmação (019 R10).
+        from trajetoria.participacao.consultas import participacoes_oficiais
+
+        existente = participacoes_oficiais().filter(
+            campanha=campanha, conclusao_efetiva_id=conclusao.pk).first()
+        if existente:
+            return Inicio(existente, SituacaoInicio.JA_EXISTENTE)
         if violacoes := _violacoes_de_admissao(campanha, conclusao, agora):
             raise ParticipacaoRejeitada(violacoes)
         try:

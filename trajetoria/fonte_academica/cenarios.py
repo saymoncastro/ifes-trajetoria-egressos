@@ -59,6 +59,8 @@ PESSOAS: tuple[PessoaSimulada, ...] = (
     # Homônimos com o mesmo CPF: colisão de cadastro
     PessoaSimulada("SIM-P-0010", "Carla Exemplo", "00000000868", date(1992, 5, 5)),
     PessoaSimulada("SIM-P-0011", "Carla Exemplo", "00000000868", date(1995, 10, 19)),
+    # 019: presente na fonte, excluída do preparo para validar por referência.
+    PessoaSimulada("SIM-P-0012", "Helena Exemplo", "00000001082", date(1980, 6, 30)),
 )
 
 REGISTROS: tuple[RegistroSimulado, ...] = (
@@ -146,4 +148,12 @@ REGISTROS: tuple[RegistroSimulado, ...] = (
         "SIM-C-0013", "SIM-P-0011", CONCLUIDA, "Tecnologia em Redes de Computadores", "Serra",
         GRAD, PRES, None, 2023,
     ),
+    RegistroSimulado(
+        "SIM-C-0014", "SIM-P-0012", CONCLUIDA, "Técnico em Informática", "Serra", TEC,
+        PRES, "Subsequente", 2004,
+    ),
 )
+
+# 019: credencial fictícia que não identifica nenhuma Pessoa da fonte.
+PAR_DECLARANTE = ("00000000949", date(2001, 6, 30))
+PESSOAS_NAO_PREPARADAS = frozenset({"SIM-P-0012"})

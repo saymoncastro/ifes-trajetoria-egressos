@@ -1265,3 +1265,10 @@ citadas como 00n/DP-nnn.
 - Interface pública de entrada e de seleção de formação, com acessibilidade e
   responsividade.
 - Acompanhamento operacional da coleta (inclusive DP-703).
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-010 continua proibindo formação declarada na entrada da Pessoa. A declaração tem outra entrada. A consulta dos pares considera participações oficiais por Conclusão efetiva: declarada validada conta; pendente, não confirmada, fora da abrangência e em conflito não afetam a entrada da Pessoa.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

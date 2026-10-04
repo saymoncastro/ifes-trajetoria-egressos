@@ -25,6 +25,7 @@ from enum import Enum
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.campanha.consultas import campanhas_em_coleta_para, momento_de_referencia
 from trajetoria.campanha.models import Campanha
+from trajetoria.participacao.consultas import participacoes_oficiais
 from trajetoria.participacao.models import Participacao
 from trajetoria.participacao.operacoes import SituacaoInicio, _exigir, iniciar_participacao
 
@@ -197,11 +198,13 @@ def _participacoes_dos_pares(pares: set) -> dict:
         return {}
     campanhas = {campanha for campanha, _ in pares}
     conclusoes = {conclusao for _, conclusao in pares}
-    encontradas = Participacao.objects.filter(campanha__in=campanhas, conclusao__in=conclusoes)
+    encontradas = participacoes_oficiais().filter(
+        campanha__in=campanhas, conclusao_efetiva_id__in=conclusoes
+    )
     return {
-        (p.campanha_id, p.conclusao_id): p
+        (p.campanha_id, p.conclusao_efetiva_id): p
         for p in encontradas
-        if (p.campanha_id, p.conclusao_id) in pares
+        if (p.campanha_id, p.conclusao_efetiva_id) in pares
     }
 
 

@@ -2,7 +2,13 @@
 
 from collections import Counter
 
-from trajetoria.fonte_academica.cenarios import CONCLUIDA, PESSOAS, REGISTROS
+from trajetoria.fonte_academica.cenarios import (
+    CONCLUIDA,
+    PAR_DECLARANTE,
+    PESSOAS,
+    PESSOAS_NAO_PREPARADAS,
+    REGISTROS,
+)
 
 
 def painel():
@@ -11,6 +17,8 @@ def painel():
     linhas = []
     for p in PESSOAS:
         notas = []
+        if p.id_externo in PESSOAS_NAO_PREPARADAS:
+            notas.append("Presente na fonte, não importada; informar formação")
         if not p.cpf:
             notas.append("Sem CPF")
         if not p.data_nascimento:
@@ -28,4 +36,8 @@ def painel():
                 "nota": "; ".join(notas),
             }
         )
+    cpf, data = PAR_DECLARANTE
+    linhas.append({"nome": "Declarante fictício fora da fonte",
+        "cpf": f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}",
+        "nascimento": data.strftime("%d/%m/%Y"), "nota": "Informar formação; acervo histórico"})
     return linhas

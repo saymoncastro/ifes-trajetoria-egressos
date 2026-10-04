@@ -34,6 +34,6 @@
 </form>
 <div class="saidas">
   {% if anterior %}<p><a href="{{ anterior }}">Voltar à seção anterior</a><br><span class="nota">Alterações não salvas nesta página serão descartadas.</span></p>{% endif %}
-  <p><a href="/formacoes/">Sair sem salvar esta seção</a><br><span class="nota">{{ sair_sem_salvar_nota }}</span></p>
+  <p><a href="{% if declarada %}/declaracao/{% else %}/formacoes/{% endif %}">Sair sem salvar esta seção</a><br><span class="nota">{{ sair_sem_salvar_nota }}</span></p>
 </div>
 {% endblock %}

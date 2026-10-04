@@ -1,4 +1,4 @@
 <section class="contexto" aria-labelledby="titulo-contexto">
-  <h2 id="titulo-contexto">Sobre a sua formação</h2>
+  <h2 id="titulo-contexto">{{ rotulo_formacao|default:"Sobre a sua formação" }}</h2>
   {% include "interface/dados_formacao.html" with itens=contexto_formacao %}
 </section>

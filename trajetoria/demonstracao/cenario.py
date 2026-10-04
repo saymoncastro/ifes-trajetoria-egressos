@@ -117,6 +117,8 @@ def preparar() -> Resumo:
     try:
         with transaction.atomic():
             for pessoa in cenarios.PESSOAS:
+                if pessoa.id_externo in cenarios.PESSOAS_NAO_PREPARADAS:
+                    continue
                 incorporar_com_material(fonte, pessoa.id_externo)
             baseline = materializar().versao
             versao = _versao_de_demonstracao(baseline)

@@ -24,6 +24,7 @@ Escrita só por `operacoes.py`; nenhuma operação altera ou remove (spec FR-050
 import uuid
 
 from django.db import models
+from django.db.models import Q
 
 
 class SnapshotAnalitico(models.Model):
@@ -55,6 +56,15 @@ class RegistroDoSnapshot(models.Model):
     conclusao = models.ForeignKey(
         "academico.ConclusaoAcademica", on_delete=models.PROTECT, related_name="+"
     )
+    class OrigemFormacao(models.TextChoices):
+        INSTITUCIONAL = "institucional"
+        FONTE_DIGITAL = "declarada_validada_fonte_digital"
+        ACERVO = "declarada_validada_acervo"
+
+    participacao = models.ForeignKey(
+        "participacao.Participacao", null=True, on_delete=models.PROTECT, related_name="+"
+    )
+    origem_formacao = models.CharField(max_length=40, null=True, choices=OrigemFormacao.choices)
     # Resultado congelado da 004 no momento da captura; sem default (spec FR-021).
     elegivel_no_snapshot = models.BooleanField()
     curso = models.TextField(null=True)
@@ -67,6 +77,13 @@ class RegistroDoSnapshot(models.Model):
 
     class Meta:
         constraints = [
+            models.CheckConstraint(
+                condition=(Q(participacao__isnull=True, origem_formacao__isnull=True)
+                    | Q(participacao__isnull=False, origem_formacao__in=[
+                        "institucional", "declarada_validada_fonte_digital",
+                        "declarada_validada_acervo"])),
+                name="registro_origem_com_participacao",
+            ),
             models.UniqueConstraint(
                 fields=["snapshot", "conclusao"], name="registro_conclusao_unica_no_snapshot"
             ),

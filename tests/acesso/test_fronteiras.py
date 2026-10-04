@@ -36,7 +36,7 @@ def test_dependencia_unidirecional_e_material_fora_de_operador():
                 ):
                     assert pasta == "interface" and p.name == "views.py"
                     assert no.module == "trajetoria.acesso.sessao"
-                    assert [a.name for a in no.names] == ["pessoa_em_uso"]
+                    assert {a.name for a in no.names} <= {"pessoa_em_uso"}
                 if isinstance(no, ast.Import):
                     assert not any(a.name.startswith("trajetoria.acesso") for a in no.names)
         if pasta in ("exportacao", "analitico", "acompanhamento", "comunicacao", "editor"):

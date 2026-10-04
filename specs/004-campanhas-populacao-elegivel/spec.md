@@ -1134,3 +1134,10 @@ citadas como 00n/DP-nnn.
   comparação exata de FR-022).
 - **001/DP-008** — critério operacional de conclusão na fonte real (define quem entra no
   universo de FR-017).
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-016, FR-017 e FR-053 continuam definindo população e elegibilidade sobre Conclusões. A entrada declarada tem compatibilidade provisória própria, sobre unidade, nível e ano, sem excluir por atributos não coletados; a confirmação usa a elegibilidade definitiva da Conclusão. Declarações não integram a população.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

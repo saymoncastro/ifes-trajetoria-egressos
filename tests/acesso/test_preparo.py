@@ -35,3 +35,16 @@ def test_preparo_idempotente_e_sem_claro(settings):
             assert d.cpf not in texto and d.cpf11 not in texto
         if d.data:
             assert d.data.isoformat() not in texto and d.nascimento not in texto
+
+
+def test_preparo_exclui_pessoa_019_e_nao_cria_declaracoes(settings):
+    from trajetoria.academico.models import Pessoa
+    from trajetoria.declaracao.models import FormacaoDeclarada, ValidacaoDaFormacao
+    from trajetoria.fonte_academica.simulada import FonteSimulada
+
+    settings.TRAJETORIA_DEMONSTRACAO = True
+    preparar()
+    assert FonteSimulada().obter_pessoa("SIM-P-0012").conclusoes
+    assert not Pessoa.objects.filter(id_externo="SIM-P-0012").exists()
+    assert not FormacaoDeclarada.objects.exists()
+    assert not ValidacaoDaFormacao.objects.exists()

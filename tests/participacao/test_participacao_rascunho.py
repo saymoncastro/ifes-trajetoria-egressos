@@ -74,7 +74,14 @@ def test_participacao_parcial_ou_completa_nao_e_conclusao(participacao, inst):
     # Zero, algumas e todas as respostas: escrever nunca conclui nem marca progresso (US7.6).
     # `concluida_em` existe desde a 006 e só `concluir` o grava (006 research R16).
     campos = {f.name for f in Participacao._meta.concrete_fields}
-    assert campos == {"id", "campanha", "conclusao", "iniciada_em", "concluida_em"}
+    assert campos == {
+        "id",
+        "campanha",
+        "conclusao",
+        "formacao_declarada",
+        "iniciada_em",
+        "concluida_em",
+    }
 
     def em_rascunho():
         gravada = Participacao.objects.get(pk=participacao.pk)

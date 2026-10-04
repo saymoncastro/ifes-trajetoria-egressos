@@ -10,7 +10,7 @@ from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.analitico.models import RegistroDoSnapshot, SnapshotAnalitico
 from trajetoria.fonte_academica.contrato import CAMPOS_DE_CONTEXTO
 from trajetoria.instrumento.models import Opcao, Pergunta, Secao, Versao
-from trajetoria.participacao.models import Participacao, Resposta
+from trajetoria.participacao.models import Resposta
 
 pytestmark = pytest.mark.django_db
 
@@ -29,6 +29,8 @@ def test_campos_exatos_do_registro():
         "snapshot",
         "conclusao",
         "elegivel_no_snapshot",
+        "participacao",
+        "origem_formacao",
         *CAMPOS_DE_CONTEXTO,
     }
 
@@ -70,9 +72,10 @@ def test_on_delete_e_related_name():
 
 def test_unica_constraint_e_a_do_grao():
     assert [c.name for c in RegistroDoSnapshot._meta.constraints] == [
+        "registro_origem_com_participacao",
         "registro_conclusao_unica_no_snapshot"
     ]
-    (unica,) = RegistroDoSnapshot._meta.constraints
+    unica = RegistroDoSnapshot._meta.constraints[1]
     assert isinstance(unica, models.UniqueConstraint)
     assert tuple(unica.fields) == ("snapshot", "conclusao")
     assert SnapshotAnalitico._meta.constraints == []
@@ -83,7 +86,7 @@ def test_ordem_do_snapshot_e_so_determinismo():
 
 
 def test_nenhuma_fk_para_dados_que_nao_derivam():
-    proibidos = {Pessoa, Participacao, Resposta, Versao, Secao, Pergunta, Opcao}
+    proibidos = {Pessoa, Resposta, Versao, Secao, Pergunta, Opcao}
     for modelo in (SnapshotAnalitico, RegistroDoSnapshot):
         for campo in modelo._meta.get_fields():
             if campo.is_relation and campo.concrete:

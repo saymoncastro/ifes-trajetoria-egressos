@@ -13,6 +13,7 @@
 
 {% if atuacao.gerir_campanha %}{% include "acompanhamento/gestao/_painel.html" %}{% endif %}
 
+{% if atuacao.validar_formacao %}<p><a href="/validacoes-formacao/">Validações de formação: {{ validacoes_na_fila }} na fila</a></p>{% endif %}
 <h2>Resumo</h2>
 <p>{{ contagem_por_formacao }}</p>
 <dl class="dados">

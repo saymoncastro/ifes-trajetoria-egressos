@@ -32,6 +32,7 @@ def estabelecer(request, confirmada, agora):
     request.session.clear()
     request.session.update(dados_de_sessao(confirmada.pessoa, confirmada.versao_material, agora))
     request._pessoa_de_acesso = confirmada.pessoa
+    request._declaracoes_de_acesso = None
 
 
 def pessoa_em_uso(request):
@@ -73,21 +74,24 @@ def pessoa_em_uso(request):
                     invalida = True
                 else:
                     pessoa = candidata
-                    if agora - ultimo >= timedelta(minutes=1) and not _post_de_entrada(request):
+                    if agora - ultimo >= timedelta(minutes=1) and not post_de_entrada(request):
                         sessao["acesso.ultimo_uso"] = agora.isoformat()
         except (ValidationError, ValueError, TypeError, KeyError):
             invalida = True
-    if invalida and not _post_de_entrada(request):
+    if invalida and not post_de_entrada(request):
         sessao.flush()
     request._pessoa_de_acesso = pessoa
     return pessoa
 
 
-def _post_de_entrada(request):
-    # Resultado sem confirmação nunca modifica a sessão anterior, nem por renderizar a faixa.
+def post_de_entrada(request):
+    """POST de `/acesso/`: um resultado sem confirmação nunca modifica a sessão anterior,
+    nem por renderizar a faixa. Público para o sujeito declarante da 019 (`declaracao.sessao`),
+    que segue a mesma regra."""
     return request.method == "POST" and request.path == "/acesso/"
 
 
 def encerrar(request):
     request.session.flush()
     request._pessoa_de_acesso = None
+    request._declaracoes_de_acesso = None

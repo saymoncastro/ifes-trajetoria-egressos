@@ -216,7 +216,8 @@ def test_makemigrations_sem_mudancas():
 
 def test_migracoes_da_participacao_inalteradas():
     arquivos = {p.name for p in (APP / "migrations").glob("0*.py")}
-    assert arquivos == {"0001_initial.py", "0002_participacao_concluida_em.py"}
+    assert arquivos == {"0001_initial.py", "0002_participacao_concluida_em.py",
+        "0003_participacao_formacao_declarada_and_more.py"}
 
 
 # --- Escrita protegida por comportamento -------------------------------------------------------

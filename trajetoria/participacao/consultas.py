@@ -16,6 +16,8 @@ from datetime import datetime
 from uuid import UUID
 
 from django.db import transaction
+from django.db.models import Q
+from django.db.models.functions import Coalesce
 
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.campanha.consultas import EstadoCampanha, estado
@@ -34,6 +36,10 @@ from trajetoria.participacao.regras import Violacao, coleta_nao_admitida
 
 __all__ = [
     "SituacaoDaJornada",
+    "atributo_efetivo",
+    "conflito_pendente",
+    "participacoes_oficiais",
+    "situacao_analitica",
     "admite_escrita",
     "localizar_participacao",
     "participacoes_da_conclusao",
@@ -149,3 +155,39 @@ def situacao_da_jornada(
         impedimentos=impedimentos,
         admite_escrita=escrita,
     )
+
+
+# 019: definição única das participações oficiais e da conclusão efetiva.
+def conflito_pendente():
+    return Q(formacao_declarada__validacao__conflito_detectado_na_validacao=True)
+
+
+def participacoes_oficiais():
+    confirmada = Q(
+        formacao_declarada__validacao__resultado="CONFIRMADA",
+        formacao_declarada__validacao__fora_da_abrangencia_na_validacao=False,
+    )
+    return Participacao.objects.filter(
+        Q(conclusao__isnull=False) | (confirmada & ~conflito_pendente())
+    ).annotate(
+        conclusao_efetiva_id=Coalesce("conclusao_id", "formacao_declarada__validacao__conclusao_id")
+    )
+
+
+def atributo_efetivo(campo):
+    return Coalesce(f"conclusao__{campo}", f"formacao_declarada__validacao__conclusao__{campo}")
+
+
+def situacao_analitica(participacao):
+    if participacao.conclusao_id:
+        return "INSTITUCIONAL"
+    decisao = getattr(participacao.formacao_declarada, "validacao", None)
+    if decisao is None:
+        return "DECLARADA_PENDENTE"
+    if decisao.resultado == "NAO_CONFIRMADA":
+        return "DECLARADA_NAO_CONFIRMADA"
+    if decisao.fora_da_abrangencia_na_validacao:
+        return "DECLARADA_FORA_DA_ABRANGENCIA"
+    if decisao.conflito_detectado_na_validacao:
+        return "DECLARADA_EM_CONFLITO"
+    return "DECLARADA_VALIDADA"

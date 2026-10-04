@@ -35,9 +35,10 @@ from trajetoria.campanha.consultas import (
     populacao_no_momento,
 )
 from trajetoria.campanha.models import Campanha
+from trajetoria.fonte_academica.acervo_historico import CODIGO as ACERVO_HISTORICO
 from trajetoria.fonte_academica.contrato import CAMPOS_DE_CONTEXTO
 from trajetoria.instrumento.models import EstadoVersao, Versao
-from trajetoria.participacao.models import Participacao
+from trajetoria.participacao.consultas import participacoes_oficiais
 
 __all__ = ["capturar_snapshot"]
 
@@ -57,6 +58,9 @@ def capturar_snapshot(campanha: Campanha) -> SnapshotAnalitico:
         if Versao.objects.get(pk=campanha.versao_id).estado != EstadoVersao.PUBLICADA:
             raise CapturaInconsistente(f"a Versão da Campanha {campanha.pk} não está publicada")
         universo = _universo(campanha)
+        participantes = _participantes_por_conclusao(campanha)
+        if participantes.keys() - universo.keys():
+            raise CapturaInconsistente("Participação oficial fora do universo lido.")
         snapshot = SnapshotAnalitico.objects.create(campanha=campanha, capturado_em=capturado_em)
         RegistroDoSnapshot.objects.bulk_create(
             (
@@ -64,6 +68,8 @@ def capturar_snapshot(campanha: Campanha) -> SnapshotAnalitico:
                     snapshot=snapshot,
                     conclusao_id=pk,
                     elegivel_no_snapshot=elegivel,
+                    participacao=participantes.get(pk),
+                    origem_formacao=_origem(participantes.get(pk)),
                     **dict(zip(CAMPOS_DE_CONTEXTO, contexto, strict=True)),
                 )
                 for pk, (elegivel, contexto) in universo.items()
@@ -92,7 +98,9 @@ def _elegiveis(campanha: Campanha):
 def _participantes(campanha: Campanha) -> set:
     """As Conclusões com Participação na Campanha, só pelo `pk`."""
     return set(
-        Participacao.objects.filter(campanha=campanha).values_list("conclusao_id", flat=True)
+        participacoes_oficiais()
+        .filter(campanha=campanha)
+        .values_list("conclusao_efetiva_id", flat=True)
     )
 
 
@@ -116,14 +124,45 @@ def _verificar(campanha: Campanha, snapshot: SnapshotAnalitico) -> None:
     confirmada depois da leitura do universo. O total de registros (FR-053 c) não precisa de
     verificação: o `bulk_create` grava todos ou levanta, e o `UNIQUE (snapshot, conclusao)`
     impede duplicata."""
-    registros = RegistroDoSnapshot.objects.filter(snapshot=snapshot)
+    # Só os registros com Participação: um `participacao_id` NULL dentro do `NOT IN` tornaria
+    # a comparação desconhecida para todas as linhas e a verificação nunca contaria nada.
+    congeladas = RegistroDoSnapshot.objects.filter(
+        snapshot=snapshot, participacao__isnull=False
+    ).values("participacao_id")
     sem_registro = (
-        Participacao.objects.filter(campanha=campanha)
-        .exclude(conclusao_id__in=registros.values("conclusao_id"))
-        .count()
+        participacoes_oficiais().filter(campanha=campanha).exclude(pk__in=congeladas).count()
     )
     if sem_registro:
         raise CapturaInconsistente(
             f"snapshot {snapshot.pk}: {sem_registro} Participação(ões) da Campanha "
             f"{campanha.pk} sem registro"
         )
+
+
+def _participantes_por_conclusao(campanha: Campanha) -> dict:
+    """`Conclusão efetiva → Participação oficial`. Duas oficiais com a mesma Conclusão efetiva
+    na Campanha violam 019 FR-093; a captura recusa em vez de congelar só uma delas."""
+    participantes = {}
+    oficiais = (
+        participacoes_oficiais()
+        .filter(campanha=campanha)
+        .select_related("formacao_declarada__validacao__conclusao")
+    )
+    for p in oficiais:
+        if p.conclusao_efetiva_id in participantes:
+            raise CapturaInconsistente(
+                f"Campanha {campanha.pk}: mais de uma Participação oficial para a Conclusão "
+                f"{p.conclusao_efetiva_id}"
+            )
+        participantes[p.conclusao_efetiva_id] = p
+    return participantes
+
+
+def _origem(participacao):
+    if participacao is None:
+        return None
+    if participacao.conclusao_id:
+        return "institucional"
+    if participacao.formacao_declarada.validacao.conclusao.fonte == ACERVO_HISTORICO:
+        return "declarada_validada_acervo"
+    return "declarada_validada_fonte_digital"

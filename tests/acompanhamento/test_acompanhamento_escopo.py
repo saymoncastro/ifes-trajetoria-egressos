@@ -60,7 +60,13 @@ def test_escopo_aplicado_no_sql(ref, cliente_csaeg_vitoria):
     relevantes = [q["sql"] for q in capturadas if any(t in q["sql"] for t in tabelas)]
     assert relevantes
     for sql in relevantes:
-        assert '"academico_conclusaoacademica"."unidade" IN' in sql, sql
+        coluna = '"academico_conclusaoacademica"."unidade"'
+        if '"academico_conclusaoacademica"' not in sql:
+            assert '"declaracao_formacaodeclarada"."unidade" IN' in sql, sql
+        elif '"participacao_participacao"' in sql:
+            assert f'COALESCE({coluna}, T5."unidade") IN' in sql, sql
+        else:
+            assert f"{coluna} IN" in sql, sql
 
 
 def test_html_da_csaeg_nao_tem_outras_unidades(ref, cliente_csaeg_vitoria):
