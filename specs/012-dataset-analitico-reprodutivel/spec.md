@@ -1290,3 +1290,10 @@ citadas como 00n/DP-nnn.
   bloqueiam uso com dados reais (FR-125).
 - **ADR 0002** (imutabilidade garantida pelas operações) e **ADR 0003** (Q14 declarada):
   respeitados.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-030 a FR-034 e FR-053 usam o universo oficial. Cada Registro congela a Participação e a origem da formação; FR-071 lê essa referência, nunca localiza novamente por par. A migração preenche snapshots antigos pelo par único e aborta em ambiguidade. Validações posteriores não mudam snapshots anteriores.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

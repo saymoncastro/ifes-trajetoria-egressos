@@ -82,3 +82,10 @@ Campanha e nunca decide quem pode responder.**
   confirmar a condição de egresso e, se a Campanha tiver abrangência restrita, a
   compatibilidade com ela. Foco de mobilização nunca se aplica.
 - Reavaliar quando o Lote de mobilização for especificado.
+
+
+## Revisão pela Feature 019 — 2026-10-04
+
+A proposta de formação declarada foi implementada com compatibilidade provisória pelos
+campos declarados e definitiva pela Conclusão confirmada. Mobilização e Lote não
+participam de nenhuma das avaliações, e a declaração não altera a população elegível.

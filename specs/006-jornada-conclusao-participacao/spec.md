@@ -1255,3 +1255,10 @@ citadas como 00n/DP-nnn.
 - **005/DP-506** — registro de respostas por intermediário.
 - **005/DP-507** — efeito de correção acadêmica sobre Participação existente.
 - **005/DP-508** — divergência entre resposta declarada e dado institucional.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-035 preserva Campanha e âncora, institucional ou declarada. A jornada, o percurso, as Respostas e a conclusão são reaproveitados sem regra nova; a validação não altera nenhum deles.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

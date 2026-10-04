@@ -6,6 +6,7 @@ requisição é 404 (`ModoDemonstracaoMiddleware`)."""
 from django.urls import include, path
 
 urlpatterns = [
+    path("", include("trajetoria.declaracao.urls")),
     path("editor/", include("trajetoria.editor.urls")),
     path("acompanhamento/", include("trajetoria.acompanhamento.urls")),
     path("", include("trajetoria.demonstracao.urls")),

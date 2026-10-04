@@ -104,3 +104,6 @@ PERIODO_ENCERRADO = (
 )
 PESQUISA_INDISPONIVEL = ("Esta pesquisa não está disponível no momento.", ())
 FORMACAO_INDISPONIVEL = ("Formação não disponível.", ())
+
+REGISTRADA_DECLARADA = ("Obrigado. Sua resposta foi registrada. "
+                       "A formação informada passará por verificação institucional.")

@@ -69,9 +69,9 @@ DOCUMENTADAS = _linhas_documentadas()
 
 
 def test_catalogo_documentado_e_dados_sao_identicos():
-    assert len(DOCUMENTADAS) == len(cenarios.REGISTROS) == 19
+    assert len(DOCUMENTADAS) == len(cenarios.REGISTROS) == 20
     assert [vars(r) for r in cenarios.REGISTROS] == DOCUMENTADAS
-    assert len(cenarios.PESSOAS) == 11
+    assert len(cenarios.PESSOAS) == 12
 
 
 @pytest.mark.parametrize("linha", DOCUMENTADAS, ids=lambda linha: linha["id_externo"])
@@ -133,7 +133,7 @@ def test_dados_verificacao_documentados_018(fonte_simulada):
         c = [x.strip() for x in linha.strip("|").split("|")]
         if len(c) == 4 and c[0].startswith("SIM-P-"):
             linhas.append(c)
-    assert len(linhas) == len(cenarios.PESSOAS) == 11
+    assert len(linhas) == len(cenarios.PESSOAS) == 12
     for pessoa, dados, linha in zip(cenarios.PESSOAS, DADOS, linhas, strict=True):
         resposta = fonte_simulada.obter_pessoa(pessoa.id_externo)
         assert pessoa.cpf == resposta.cpf == (dados.cpf11 or None)

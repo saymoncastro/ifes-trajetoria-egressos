@@ -1,0 +1,8 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Validações de formação{% endblock %}
+{% block conteudo %}
+<h1>Validações de formação</h1>
+<p>Registra o resultado obtido junto à instância competente.</p>
+{% if aviso %}<p role="status">{{ aviso }}</p>{% endif %}
+<ul>{% for f in itens %}<li><p><a href="/validacoes-formacao/{{ f.pk }}/">{{ f.nome }}</a></p><p>{{ f.curso }} · {{ f.unidade }} · {{ f.nivel }} · {{ f.ano_conclusao }}</p><p>{{ f.declarada_em }} · {{ f.participacao.campanha.nome }}</p><p>{% if f.validacao.conflito_detectado_na_validacao %}resolução administrativa pendente{% else %}Aguardando validação{% endif %}</p></li>{% empty %}<li>Nenhuma formação na fila desta atuação.</li>{% endfor %}</ul>
+{% endblock %}

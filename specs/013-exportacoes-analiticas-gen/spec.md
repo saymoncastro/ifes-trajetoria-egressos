@@ -1458,3 +1458,10 @@ citadas como 00n/DP-nnn.
   registros de Pessoa do sistema, sem reconciliar fontes; efeito de reconciliação futura
   sobre o pseudônimo fica com quem resolver a DP (FR-028).
 - **ADR 0002** e **ADR 0003** (Q14 declarada): respeitados.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-010, FR-020 e FR-026 acrescentam origem_formacao, derivada, com valores institucional, declarada_validada_fonte_digital e declarada_validada_acervo, vazia sem Participação. FR-065: contrato versão 2. FR-021 trata colunas constantes por construção; uma origem igual em todas as linhas de uma campanha não justifica remover essa coluna variável. Nenhum dado da declaração ou da decisão é exportado.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

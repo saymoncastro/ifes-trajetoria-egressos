@@ -261,3 +261,13 @@ footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375r
 }
 .acesso-painel button { width: 100%; padding: 0.5rem 0.2rem; overflow-wrap: anywhere; }
 .acesso-painel caption { text-align: left; margin-bottom: 0.75rem; }
+
+/* Formação declarada e consulta ao acervo (019). */
+.campo { margin-block: 1rem; }
+.campo label { display: block; margin-bottom: .25rem; }
+.campo input[type="number"] {
+  width: 100%; max-width: 100%; padding: .5rem; font: inherit;
+  border: 2px solid #565c65; border-radius: .25rem;
+}
+
+.validacao-formacao fieldset > label { display: block; margin-block: .5rem; }

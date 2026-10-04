@@ -24,3 +24,11 @@ def limpar_cache_acesso():
     from django.core.cache import caches
 
     caches["acesso"].clear()
+
+
+@pytest.fixture(autouse=True)
+def chaves_de_declaracao(settings):
+    from cryptography.fernet import Fernet
+
+    settings.TRAJETORIA_CHAVE_SELO_DECLARACAO = Fernet.generate_key().decode()
+    settings.TRAJETORIA_CHAVE_CONSULTA_ACERVO = Fernet.generate_key().decode()

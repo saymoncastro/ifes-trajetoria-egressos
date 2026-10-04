@@ -179,3 +179,23 @@ def test_mensagem_de_recusa_sem_valores_academicos(inst):
     c.conclusao(unidade="Unidade Muito Especifica", curso="Curso Muito Especifico")
     texto = _recusa(campanha, Motivo.COLETA_NAO_ENCERRADA)
     assert "Especific" not in texto
+
+
+def test_participacao_de_elegivel_sem_registro_faz_a_captura_falhar(cenario, monkeypatch):
+    # Regressão (code review da 019): o universo tem registros sem Participação
+    # (`participacao_id` NULL). A escrita tardia de uma oficial para um desses elegíveis não
+    # pode escapar da verificação final por causa do NULL dentro do `NOT IN`.
+    original = operacoes._participantes_por_conclusao
+
+    def com_escrita_tardia(campanha):
+        participantes = original(campanha)
+        Participacao.objects.create(
+            campanha=campanha, conclusao=cenario.serra_sem_participacao, iniciada_em=c.na_coleta()
+        )
+        return participantes
+
+    monkeypatch.setattr(operacoes, "_participantes_por_conclusao", com_escrita_tardia)
+    with pytest.raises(CapturaInconsistente):
+        capturar_snapshot(cenario.campanha)
+    _nada_gravado()
+    assert not Participacao.objects.filter(conclusao=cenario.serra_sem_participacao).exists()

@@ -285,6 +285,7 @@ class _Montagem:
             contexto.data_conclusao,
             participacao is not None,
             *_estado(participacao),
+            linha.origem_formacao,
             *self._perguntas(linha),
         )
 

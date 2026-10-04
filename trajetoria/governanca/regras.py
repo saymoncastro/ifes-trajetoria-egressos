@@ -31,6 +31,7 @@ __all__ = [
     "escopo_de_acompanhamento",
     "pode_acompanhar_coleta",
     "pode_gerir_campanha",
+    "pode_validar_formacao",
     "pode_simular_comunicacao",
     "pode_consultar_publicado",
     "pode_consultar_rascunho",
@@ -85,3 +86,8 @@ def pode_gerir_campanha(vinculos) -> bool:
     Não concede publicação, critérios, remoção ou mobilização.
     """
     return any(v.ativo and v.papel == Papel.CPAEG for v in vinculos)
+
+
+def pode_validar_formacao(vinculos) -> bool:
+    """019/E3, DP-1901: registro fictício do resultado, CPAEG ou CSAEG ativos."""
+    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)

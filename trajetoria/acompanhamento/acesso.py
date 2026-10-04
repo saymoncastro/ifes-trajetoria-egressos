@@ -29,6 +29,7 @@ from trajetoria.governanca.regras import (
     pode_acompanhar_coleta,
     pode_consultar_rascunho,
     pode_gerir_campanha,
+    pode_validar_formacao,
 )
 
 ESCOLHA_DE_OPERADOR = "/demonstracao/operador/?destino=acompanhamento"
@@ -42,6 +43,7 @@ class Atuacao:
     rotulos: tuple[str, ...]
     consultar_rascunho: bool
     gerir_campanha: bool = False
+    validar_formacao: bool = False
 
 
 def recusa(request, texto: str):
@@ -67,11 +69,13 @@ def acompanhamento(view):
             return redirect(ESCOLHA_DE_OPERADOR)
         if not pode_acompanhar_coleta(vinculos):
             return recusa(request, ap.RECUSA_SEM_ATUACAO)
+        request.vinculos = vinculos
         request.escopo = escopo_de_acompanhamento(vinculos)
         request.atuacao = Atuacao(
             rotulos=tuple(v.rotulo_de_atuacao for v in vinculos),
             consultar_rascunho=pode_consultar_rascunho(vinculos),
             gerir_campanha=pode_gerir_campanha(vinculos),
+            validar_formacao=pode_validar_formacao(vinculos),
         )
         return view(request, *args, **kwargs)
 

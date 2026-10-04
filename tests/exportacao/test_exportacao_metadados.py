@@ -54,7 +54,7 @@ def test_valores_do_snapshot_da_campanha_e_da_versao(snapshot, inst):
     m = apoio.metadados(snapshot)
     campanha, versao = snapshot.campanha, inst.versao
     versao.refresh_from_db()
-    assert m["contrato_versao"] == 1
+    assert m["contrato_versao"] == 2
     assert m["pseudonimizacao_esquema"] == "hmac-sha256-v1"
     assert m["snapshot"] == str(snapshot.pk)
     assert m["capturado_em"] == timezone.localtime(snapshot.capturado_em)

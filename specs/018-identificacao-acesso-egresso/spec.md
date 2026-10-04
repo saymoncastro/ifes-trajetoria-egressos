@@ -836,3 +836,10 @@ herdado da feature indicada.
 
 As sete escolhas técnicas da versão inicial foram decididas pelo solicitante em
 2026-10-04. Ver Clarifications e a tabela "Interpretação desta spec".
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-034 continua sem persistir falhas da verificação. NAO_CONFIRMADA oferece a declaração por selo transitório em POST, sem reavaliar o par. O selo transitório fica na própria 018 (`acesso/transito.py`, chave A), como ponto de saída de FR-035. O sujeito declarante, exclusivo com a sessão de Pessoa e guardando só UUIDs e instantes, pertence à 019 (`declaracao/sessao.py`). A 018 não importa nem referencia a 019; a dependência é só 019 → 018. FR-005 admite a fonte fictícia de acervo histórico. A 018 nunca lê os dados persistidos para consulta ao acervo.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

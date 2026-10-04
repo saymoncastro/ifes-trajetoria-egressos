@@ -17,11 +17,16 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
     complemento_da_formacao,
+    conclusao_efetiva,
     contexto_da_formacao,
+    formacao_exibida,
     resumo_da_formacao,
+    rotulo_da_formacao,
+    rotulo_da_formacao_declarada,
 )
 from trajetoria.interface.formularios import FormularioDaSecao
 from trajetoria.interface.gravacao import salvar_secao
@@ -60,33 +65,44 @@ def _respondendo(view):
     return envolvida
 
 
-def _tela(request, texto, *, conclusao=None, status=200):
-    """Tela de estado (`aviso.html`): já respondida, período encerrado, indisponível."""
+def _tela(request, texto, *, conclusao=None, declarada=False, status=200):
+    """Tela de estado (`aviso.html`): já respondida, período encerrado, indisponível.
+    `declarada` vem sempre da Participação (019), nunca deduzido do tipo do objeto."""
     titulo, paragrafos = texto
-    contexto = {"titulo": titulo, "mensagem": paragrafos}
+    contexto = {"titulo": titulo, "mensagem": paragrafos, "declarada": declarada}
     if conclusao is not None:
         contexto["contexto_formacao"] = contexto_da_formacao(conclusao)
         contexto["mostrar_contexto"] = True
+        if declarada:
+            contexto["rotulo_formacao"] = rotulo_da_formacao_declarada()
     return render(request, "interface/aviso.html", contexto, status=status)
 
 
-def _pessoa(request):
+def _da_participacao(participacao) -> dict:
+    """Formação exibida nas telas de estado da jornada: a âncora original, com o rótulo de
+    declarada tirado da própria Participação (019)."""
+    return {
+        "conclusao": formacao_exibida(participacao),
+        "declarada": participacao.formacao_declarada_id is not None,
+    }
+
+
+def _pessoa(request, *, aceita_declarante=False):
     """A Pessoa resolvida (pela confirmação de acesso) ou o redirecionamento à entrada."""
     pessoa = pessoa_em_uso(request)
-    if pessoa is None:
+    if pessoa is None and not (aceita_declarante and declaracoes_em_uso(request) is not None):
         raise _Resposta(redirect("/acesso/"))
     return pessoa
 
 
-def _participacao_da_pessoa(request, pk) -> Participacao:
-    """A Participação, só se pertencer a uma formação da Pessoa em uso. Alheia ou
-    inexistente: o mesmo 404, sem revelar nada (FR-089, FR-090)."""
-    pessoa = _pessoa(request)
-    participacao = (
-        Participacao.objects.select_related("campanha__versao", "conclusao")
-        .filter(pk=pk, conclusao__pessoa=pessoa)
-        .first()
-    )
+def _participacao_do_sujeito(request, pk) -> Participacao:
+    pessoa = _pessoa(request, aceita_declarante=True)
+    qs = Participacao.objects.select_related("campanha__versao", "conclusao", "formacao_declarada")
+    if pessoa is not None:
+        qs = qs.filter(conclusao__pessoa=pessoa)
+    else:
+        qs = qs.filter(formacao_declarada_id__in=declaracoes_em_uso(request))
+    participacao = qs.filter(pk=pk).first()
     if participacao is None:
         raise Http404
     return participacao
@@ -99,7 +115,13 @@ def _jornada(request, participacao):
         return situacao_da_jornada(participacao)
     except ParticipacaoRejeitada as erro:
         if Motivo.ESTRUTURA_NAO_SUPORTADA in erro.motivos:
-            raise _Resposta(_tela(request, mensagens.PESQUISA_INDISPONIVEL)) from None
+            raise _Resposta(
+                _tela(
+                    request,
+                    mensagens.PESQUISA_INDISPONIVEL,
+                    declarada=participacao.formacao_declarada_id is not None,
+                )
+            ) from None
         raise
 
 
@@ -109,7 +131,9 @@ def _base(participacao) -> str:
 
 @require_GET
 def inicio(request):
-    return redirect("/formacoes/" if pessoa_em_uso(request) else "/acesso/")
+    if pessoa_em_uso(request):
+        return redirect("/formacoes/")
+    return redirect("/declaracao/" if declaracoes_em_uso(request) is not None else "/acesso/")
 
 
 # --- Formações (007) ---------------------------------------------------------------------------
@@ -188,15 +212,12 @@ def formacoes(request):
             "principal": pendentes[0] if pendentes else None,
             "pendentes": pendentes,
             "outras": [
-                _formacao_apresentada(f)
-                for f in situacao.formacoes
-                if f.conclusao.pk not in chaves
+                _formacao_apresentada(f) for f in situacao.formacoes if f.conclusao.pk not in chaves
             ],
             "aviso": _aviso(request, "situacao", "salvo", "saida"),
             "entrada_operacional": mensagens.ENTRADA_OPERACIONAL,
         },
     )
-
 
 
 # --- Entrada na Participação (007 → 005) -------------------------------------------------------
@@ -232,7 +253,9 @@ def entrar_view(request):
     if participacao is None:
         return redirect("/formacoes/?aviso=situacao")
     if participacao.concluida_em is not None:
-        return _tela(request, mensagens.JA_RESPONDIDA, conclusao=participacao.conclusao)
+        # A Pessoa vê a sua Conclusão, mesmo quando a resposta veio de uma declaração validada
+        # (019 FR-092): nunca os valores declarados nem o caminho do declarante.
+        return _tela(request, mensagens.JA_RESPONDIDA, conclusao=conclusao_efetiva(participacao))
     return redirect(_base(participacao))
 
 
@@ -240,12 +263,12 @@ def entrar_view(request):
 @never_cache
 @_respondendo
 def participacao(request, participacao):
-    participacao = _participacao_da_pessoa(request, participacao)
+    participacao = _participacao_do_sujeito(request, participacao)
     jornada = _jornada(request, participacao)
     if jornada.concluida_em is not None:
         return redirect(_base(participacao) + "concluida/")
     if not jornada.admite_escrita:
-        return _tela(request, mensagens.PERIODO_ENCERRADO, conclusao=participacao.conclusao)
+        return _tela(request, mensagens.PERIODO_ENCERRADO, **_da_participacao(participacao))
     if jornada.finalizada:
         return redirect(_base(participacao) + "concluir/")
     return redirect(_base(participacao) + f"secoes/{jornada.secao_atual.posicao}/")
@@ -266,11 +289,11 @@ def _exigir_rascunho_aberto(request, participacao, jornada) -> None:
     não avalia período nem estado de Campanha: lê `admite_escrita` da 006 (FR-065)."""
     if jornada.concluida_em is not None:
         raise _Resposta(
-            _tela(request, mensagens.JA_RESPONDIDA, conclusao=participacao.conclusao)
+            _tela(request, mensagens.JA_RESPONDIDA, **_da_participacao(participacao))
         )
     if not jornada.admite_escrita:
         raise _Resposta(
-            _tela(request, mensagens.PERIODO_ENCERRADO, conclusao=participacao.conclusao)
+            _tela(request, mensagens.PERIODO_ENCERRADO, **_da_participacao(participacao))
         )
 
 
@@ -309,7 +332,9 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
             "texto_abertura": versao.texto_abertura,
             "primeira": indice == 0,
             "acao": _base(participacao) + f"secoes/{passagem.secao.posicao}/",
-            "resumo_formacao": resumo_da_formacao(participacao.conclusao),
+            "rotulo_formacao": rotulo_da_formacao(participacao),
+            "declarada": participacao.formacao_declarada_id is not None,
+            "resumo_formacao": resumo_da_formacao(formacao_exibida(participacao)),
             "passagem": passagem,
             "itens": itens,
             "resumo_erros": resumo,
@@ -333,7 +358,7 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
 @never_cache
 @_respondendo
 def secao(request, participacao, posicao):
-    participacao = _participacao_da_pessoa(request, participacao)
+    participacao = _participacao_do_sujeito(request, participacao)
     jornada = _jornada(request, participacao)
     _exigir_rascunho_aberto(request, participacao, jornada)
     passagem = _passagem(participacao, jornada, posicao)
@@ -371,9 +396,9 @@ def _salvar(request, participacao, jornada, passagem):
         return _tela_da_secao(request, participacao, jornada, passagem, formulario)
     resultado = salvar_secao(participacao, passagem.secao, formulario.limpos, jornada.respostas)
     if resultado.motivo_global is Motivo.PARTICIPACAO_CONCLUIDA:
-        return _tela(request, mensagens.JA_RESPONDIDA, conclusao=participacao.conclusao)
+        return _tela(request, mensagens.JA_RESPONDIDA, **_da_participacao(participacao))
     if resultado.motivo_global is Motivo.COLETA_NAO_ADMITIDA:
-        return _tela(request, mensagens.PERIODO_ENCERRADO, conclusao=participacao.conclusao)
+        return _tela(request, mensagens.PERIODO_ENCERRADO, **_da_participacao(participacao))
     if resultado.motivo_global is not None:
         raise Http404
     if resultado.erros_por_pergunta:
@@ -387,7 +412,8 @@ def _salvar(request, participacao, jornada, passagem):
         # "Salvar e sair" (014 FR-011, FR-012): mesma validação e gravação; só o destino
         # muda. O aviso só diz que algo está salvo se há Resposta gravada na Seção (FR-008).
         salvo = _ha_resposta_na_secao(jornada, passagem.secao)
-        return redirect("/formacoes/?aviso=" + ("salvo" if salvo else "saida"))
+        destino = "/formacoes/" if participacao.conclusao_id else "/declaracao/"
+        return redirect(destino + "?aviso=" + ("salvo" if salvo else "saida"))
     secao = _base(participacao) + f"secoes/{passagem.secao.posicao}/"
     if not passagem.satisfeita:
         return redirect(secao + "?pendencias=1")
@@ -406,7 +432,7 @@ def _salvar(request, participacao, jornada, passagem):
 @never_cache
 @_respondendo
 def concluir_view(request, participacao):
-    participacao = _participacao_da_pessoa(request, participacao)
+    participacao = _participacao_do_sujeito(request, participacao)
     jornada = _jornada(request, participacao)
     if jornada.concluida_em is not None:
         return redirect(_base(participacao) + "concluida/")
@@ -429,7 +455,9 @@ def concluir_view(request, participacao):
         "interface/conclusao.html",
         {
             "titulo_pesquisa": participacao.campanha.versao.titulo or "Pesquisa",
-            "contexto_formacao": contexto_da_formacao(participacao.conclusao),
+            "contexto_formacao": contexto_da_formacao(formacao_exibida(participacao)),
+            "rotulo_formacao": rotulo_da_formacao(participacao),
+            "declarada": participacao.formacao_declarada_id is not None,
             "secoes": secoes,
             "acao": _base(participacao) + "concluir/",
         },
@@ -444,9 +472,13 @@ def _concluir(request, participacao):
         concluir(participacao)
     except ParticipacaoRejeitada as erro:
         if Motivo.COLETA_NAO_ADMITIDA in erro.motivos:
-            return _tela(request, mensagens.PERIODO_ENCERRADO, conclusao=participacao.conclusao)
+            return _tela(request, mensagens.PERIODO_ENCERRADO, **_da_participacao(participacao))
         if set(erro.motivos) != {Motivo.OBRIGATORIA_PENDENTE}:
-            return _tela(request, mensagens.PESQUISA_INDISPONIVEL)
+            return _tela(
+                request,
+                mensagens.PESQUISA_INDISPONIVEL,
+                declarada=participacao.formacao_declarada_id is not None,
+            )
         jornada = _jornada(request, participacao)
         return redirect(_endereco_atual(participacao, jornada) + "?pendencias=1")
     return redirect(_base(participacao) + "concluida/")
@@ -458,21 +490,31 @@ def _concluir(request, participacao):
 def concluida(request, participacao):
     """Confirmação simples: sem respostas, data, comprovante ou ação de editar (FR-062,
     FR-063). A Participação concluída é lida, nunca reaberta."""
-    participacao = _participacao_da_pessoa(request, participacao)
+    participacao = _participacao_do_sujeito(request, participacao)
     if participacao.concluida_em is None:
         return redirect(_base(participacao))
-    curso = participacao.conclusao.curso
+    curso = formacao_exibida(participacao).curso
     encerramento = participacao.campanha.versao.texto_encerramento
     return render(
         request,
         "interface/concluida.html",
         {
             "registro": (
-                mensagens.REGISTRADAS_CURSO.format(curso=curso) if curso else mensagens.REGISTRADAS
+                mensagens.REGISTRADA_DECLARADA
+                if participacao.formacao_declarada_id
+                else (
+                    mensagens.REGISTRADAS_CURSO.format(curso=curso)
+                    if curso
+                    else mensagens.REGISTRADAS
+                )
             ),
             # O texto de encerramento da Versão já agradece: um agradecimento só (014 FR-040).
-            "agradecimento": None if encerramento else mensagens.AGRADECIMENTO,
-            "contexto_formacao": contexto_da_formacao(participacao.conclusao),
+            "agradecimento": None
+            if encerramento or participacao.formacao_declarada_id
+            else mensagens.AGRADECIMENTO,
+            "declarada": bool(participacao.formacao_declarada_id),
+            "contexto_formacao": contexto_da_formacao(formacao_exibida(participacao)),
+            "rotulo_formacao": rotulo_da_formacao(participacao),
             "texto_encerramento": encerramento,
         },
     )

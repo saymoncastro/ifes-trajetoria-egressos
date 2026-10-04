@@ -1,4 +1,4 @@
-"""Constantes do contrato de dados analíticos, versão 1 (contracts/pacote-de-dados.md).
+"""Constantes do contrato de dados analíticos, versão 2 (contracts/pacote-de-dados.md).
 
 Só constantes, sem função de negócio. Os textos (descrições das colunas base e notas fixas)
 são **literais do contrato**: mudá-los de forma incompatível exige nova `VERSAO_CONTRATO`
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from trajetoria.instrumento.models import TipoPergunta
 
-VERSAO_CONTRATO = 1
+VERSAO_CONTRATO = 2
 ESQUEMA_PSEUDONIMIZACAO = "hmac-sha256-v1"  # HMAC-SHA-256 de "<domínio>:<uuid>", hexadecimal
 
 # Primeiro caractere de texto que recebe o apóstrofo de escape no CSV (spec FR-075). O
@@ -25,7 +25,7 @@ class ColunaBase:
     descricao: str
 
 
-# As 14 colunas base de Dados, nesta ordem (data-model §1.1).
+# As 15 colunas base de Dados, nesta ordem (data-model §1.1).
 COLUNAS_BASE = (
     ColunaBase(
         "conclusao_analitica_id",
@@ -152,6 +152,12 @@ COLUNAS_BASE = (
             "Data da conclusão registrada da Participação, na timezone institucional. Vazio = "
             "sem Participação ou não concluída."
         ),
+    ),
+    ColunaBase(
+        "origem_formacao", "texto", "derivado",
+        "Como a Participação chegou à Conclusão Acadêmica: âncora institucional ou "
+        "declaração do egresso validada depois pela fonte digital ou pelo acervo histórico. "
+        "O contexto acadêmico desta linha é sempre o da Conclusão, dado institucional.",
     ),
 )
 

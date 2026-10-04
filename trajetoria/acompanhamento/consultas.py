@@ -39,7 +39,7 @@ from trajetoria.campanha.consultas import (
 from trajetoria.campanha.models import Campanha
 from trajetoria.governanca.regras import EscopoDeAcompanhamento
 from trajetoria.instrumento.models import EstadoVersao
-from trajetoria.participacao.models import Participacao
+from trajetoria.participacao.consultas import atributo_efetivo, participacoes_oficiais
 
 __all__ = [
     "CampanhaAcompanhada",
@@ -78,7 +78,7 @@ def _universo(escopo: EscopoDeAcompanhamento) -> Q:
 
 def _universo_participacao(escopo: EscopoDeAcompanhamento) -> Q:
     """Participações cuja Conclusão está no escopo, pela unidade institucional da Conclusão."""
-    return Q() if escopo.institucional else Q(conclusao__unidade__in=sorted(escopo.unidades))
+    return Q() if escopo.institucional else Q(unidade_efetiva__in=sorted(escopo.unidades))
 
 
 def unidades_relevantes(campanha: Campanha, escopo: EscopoDeAcompanhamento) -> frozenset | None:
@@ -102,7 +102,8 @@ def indicadores_da_campanha(campanha: Campanha, escopo: EscopoDeAcompanhamento) 
     elegibilidade atual (FR-038): Participação é fato registrado."""
     elegiveis = populacao_no_momento(campanha).filter(_universo(escopo)).count()
     participacoes = (
-        Participacao.objects.filter(campanha=campanha)
+        participacoes_oficiais().filter(campanha=campanha).annotate(
+            unidade_efetiva=atributo_efetivo("unidade"))
         .filter(_universo_participacao(escopo))
         .aggregate(iniciadas=_INICIADAS, concluidas=_CONCLUIDAS)
     )
@@ -181,9 +182,11 @@ def _linhas(campanha, escopo, recorte: Recorte) -> tuple[LinhaDeRecorte, ...]:
         .order_by()
     )
     participacoes = (
-        Participacao.objects.filter(campanha=campanha)
+        participacoes_oficiais().filter(campanha=campanha).annotate(
+            unidade_efetiva=atributo_efetivo("unidade"))
         .filter(_universo_participacao(escopo))
-        .values_list(*(f"conclusao__{c}" for c in campos))
+        .annotate(**{f"efetivo_{c}": atributo_efetivo(c) for c in campos})
+        .values_list(*(f"efetivo_{c}" for c in campos))
         .annotate(iniciadas=_INICIADAS, concluidas=_CONCLUIDAS)
         .order_by()
     )

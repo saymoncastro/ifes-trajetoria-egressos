@@ -30,7 +30,11 @@ class Participacao(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     campanha = models.ForeignKey("campanha.Campanha", on_delete=models.PROTECT, related_name="+")
     conclusao = models.ForeignKey(
-        "academico.ConclusaoAcademica", on_delete=models.PROTECT, related_name="+"
+        "academico.ConclusaoAcademica", on_delete=models.PROTECT, related_name="+", null=True
+    )
+    formacao_declarada = models.OneToOneField(
+        "declaracao.FormacaoDeclarada", null=True, on_delete=models.PROTECT,
+        related_name="participacao",
     )
     # Momento de referência da criação, não `auto_now_add`: os testes controlam o tempo.
     iniciada_em = models.DateTimeField()
@@ -42,6 +46,11 @@ class Participacao(models.Model):
         # Só determinismo; sem significado de preferência ou de "atual" (FR-049).
         ordering = ["iniciada_em", "id"]
         constraints = [
+            models.CheckConstraint(
+                condition=(Q(conclusao__isnull=False, formacao_declarada__isnull=True)
+                    | Q(conclusao__isnull=True, formacao_declarada__isnull=False)),
+                name="participacao_ancora_unica",
+            ),
             models.UniqueConstraint(
                 fields=["campanha", "conclusao"], name="participacao_par_unico"
             ),
@@ -50,7 +59,7 @@ class Participacao(models.Model):
     @property
     def pessoa(self):
         """Pela Conclusão; não há coluna própria (FR-004)."""
-        return self.conclusao.pessoa
+        return self.conclusao.pessoa if self.conclusao_id else None
 
     @property
     def versao(self):

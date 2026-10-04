@@ -15,6 +15,8 @@
     <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. A confirmação usa CPF e data de nascimento fictícios e não é autenticação forte.</p>
     {% if pessoa_demonstracao %}
     <p class="pessoa">Pessoa fictícia: {{ pessoa_demonstracao.nome|default:"sem nome informado" }}</p>
+    {% endif %}
+    {% if pessoa_demonstracao or declarante_demonstracao %}
     <form method="post" action="/acesso/sair/">{% csrf_token %}<button type="submit">Sair</button></form>
     {% endif %}
   </div>

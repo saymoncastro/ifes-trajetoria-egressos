@@ -11,7 +11,9 @@ from django.views.decorators.http import require_http_methods, require_POST
 from trajetoria.acesso import mensagens
 from trajetoria.acesso.demonstracao import painel
 from trajetoria.acesso.formularios import EntradaForm
+from trajetoria.acesso.normalizacao import normalizar_cpf, normalizar_data
 from trajetoria.acesso.sessao import encerrar, estabelecer
+from trajetoria.acesso.transito import ChaveIndisponivel, selar_transito
 from trajetoria.acesso.verificacao import (
     CausaIndisponibilidade,
     Confirmada,
@@ -37,6 +39,7 @@ def entrada(request):
     aviso = None
     status = 200
     espera = None
+    selo = None
     if request.method == "POST":
         form.is_valid()
         agora = timezone.now()
@@ -51,6 +54,11 @@ def entrada(request):
             return HttpResponse(status=303, headers={"Location": "/formacoes/"})
         if isinstance(resultado, NaoConfirmada):
             aviso = mensagens.NAO_CONFIRMADA
+            try:
+                selo = selar_transito(normalizar_cpf(form.cleaned_data["cpf"]),
+                    normalizar_data(form.cleaned_data["data_nascimento"],timezone.localdate(agora)))
+            except ChaveIndisponivel:
+                pass
         elif isinstance(resultado, FormatoInvalido):
             for campo in resultado.campos:
                 form.add_error(campo, mensagens.ERROS[campo])
@@ -70,6 +78,7 @@ def entrada(request):
         "acesso/entrada.html",
         {
             "form": form,
+            "selo_declaracao": selo,
             "painel": painel(),
             "aviso": aviso,
             "prefixo_titulo": "Erro: " if form.errors else "",

@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "Trajetória Ifes — Núcleo Institucional de Acompanhamento de Egressos (NIAE)"
 requires-python = ">=3.13,<3.14"
 dependencies = [
+  "cryptography>=46,<47",
   "Django>=5.2,<5.3",
   "psycopg[binary]>=3.2,<3.4",
   "XlsxWriter>=3.2,<4",

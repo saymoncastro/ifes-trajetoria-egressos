@@ -1193,3 +1193,10 @@ citadas como 00n/DP-nnn.
 - **004/DP-408** — população de referência para indicadores (denominador).
 - **001/DP-005** — correção de dado acadêmico.
 - **001/DP-009** — base legal e retenção de dados pessoais da fonte acadêmica.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-002 admite exatamente uma âncora imutável: Conclusão Acadêmica ou Formação Declarada. FR-004: a Pessoa declarada só é alcançada pela Conclusão efetiva depois da validação, nunca criada pela declaração. FR-006 e FR-013: a unicidade oficial e o retorno já existente consideram a Conclusão efetiva. FR-011: a admissão declarada é própria; escritas de Resposta permanecem iguais.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

@@ -829,3 +829,10 @@ DP-010 (pessoas sem conclusão elegível) foi **encerrada** em 2026-09-30 como d
 escopo da Feature 001 (FR-039). Ela não é decisão institucional pendente. Uma feature
 futura que precise tratar estudantes ainda não egressos deve abrir sua própria
 especificação.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-030 continua vedando cadastro manual. A fonte institucional de acervo histórico entrega Referências de acervo pelo mesmo contrato; Pessoa e Conclusão nascem somente pela incorporação. A validação é um disparo explícito da incorporação (DP-006), sem fundir Pessoas de fontes diferentes.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

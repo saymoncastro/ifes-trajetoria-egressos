@@ -1377,3 +1377,10 @@ citadas como 00n/DP-nnn.
 
 Campanha nunca aberta e expirada: "Período encerrado — Campanha nunca aberta", na lista
  e no detalhe para todos os operadores; o estado de domínio permanece ENCERRADA.
+
+
+## Nota de revisão pela Feature 019 (2026-10-04)
+
+FR-030 a FR-039 contam somente Participações oficiais e usam o contexto da Conclusão efetiva. Elegíveis permanecem iguais. A página da Campanha mostra apenas o agregado Validações de formação: N na fila (só os itens desta Campanha, no escopo do operador) e o link; FR-080 a FR-084 permanecem para a 011. A fila nominal pertence à área separada da 019.
+
+Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).

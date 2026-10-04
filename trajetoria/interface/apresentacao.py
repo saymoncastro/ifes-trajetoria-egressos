@@ -10,14 +10,16 @@ def contexto_da_formacao(conclusao) -> list[tuple[str, str]]:
     """Pares (rótulo, valor) só para os atributos informados, na ordem: curso, unidade,
     ano (ou data) de conclusão, nível, modalidade, forma de oferta."""
     pares = [("Curso", conclusao.curso), ("Unidade", conclusao.unidade)]
-    if conclusao.data_conclusao is not None:
-        pares.append(("Data de conclusão", conclusao.data_conclusao.strftime("%d/%m/%Y")))
+    if getattr(conclusao, "data_conclusao", None) is not None:
+        pares.append(
+            ("Data de conclusão", getattr(conclusao, "data_conclusao", None).strftime("%d/%m/%Y"))
+        )
     elif conclusao.ano_conclusao is not None:
         pares.append(("Ano de conclusão", str(conclusao.ano_conclusao)))
     pares += [
         ("Nível", conclusao.nivel),
-        ("Modalidade", conclusao.modalidade),
-        ("Forma de oferta", conclusao.forma_oferta),
+        ("Modalidade", getattr(conclusao, "modalidade", None)),
+        ("Forma de oferta", getattr(conclusao, "forma_oferta", None)),
     ]
     return [(rotulo, valor) for rotulo, valor in pares if valor is not None]
 
@@ -27,8 +29,8 @@ def resumo_da_formacao(conclusao) -> str:
     formações (e homônimos) na entrada de demonstração e como contexto compacto nas telas de
     Seção. Vazio se nada foi informado."""
     ano = conclusao.ano_conclusao
-    if ano is None and conclusao.data_conclusao is not None:
-        ano = conclusao.data_conclusao.year
+    if ano is None and getattr(conclusao, "data_conclusao", None) is not None:
+        ano = getattr(conclusao, "data_conclusao", None).year
     partes = (conclusao.curso, conclusao.unidade, None if ano is None else str(ano))
     return " · ".join(p for p in partes if p)
 
@@ -37,5 +39,30 @@ def complemento_da_formacao(conclusao) -> str:
     """Linha complementar da formação na trajetória (014 FR-034): nível · modalidade · forma
     de oferta, só os informados. Vazio se nada foi informado. Sem desempate entre formações
     nem atributo deduzido (007/DP-702)."""
-    partes = (conclusao.nivel, conclusao.modalidade, conclusao.forma_oferta)
+    partes = (
+        conclusao.nivel,
+        getattr(conclusao, "modalidade", None),
+        getattr(conclusao, "forma_oferta", None),
+    )
     return " · ".join(p for p in partes if p)
+
+
+def formacao_exibida(participacao):
+    """Contexto sempre pela âncora original; nunca pela decisão posterior."""
+    return participacao.conclusao if participacao.conclusao_id else participacao.formacao_declarada
+
+
+def conclusao_efetiva(participacao):
+    """A Conclusão observada: a âncora institucional ou a vinculada pela validação (019).
+    Só para Participação oficial; nunca para declaração pendente."""
+    if participacao.conclusao_id:
+        return participacao.conclusao
+    return participacao.formacao_declarada.validacao.conclusao
+
+
+def rotulo_da_formacao_declarada():
+    return "Formação informada por você"
+
+
+def rotulo_da_formacao(participacao):
+    return "Sobre a sua formação" if participacao.conclusao_id else rotulo_da_formacao_declarada()
