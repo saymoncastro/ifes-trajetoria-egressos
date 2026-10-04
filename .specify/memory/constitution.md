@@ -145,6 +145,14 @@ identificadores institucionais; demais características acadêmicas pertinentes.
 Campus, curso e demais características acadêmicas pertencem ao contexto da Conclusão
 Acadêmica e NÃO DEVEM ser tratados como atributos permanentes da Pessoa.
 
+### Formação Declarada
+
+Representa a formação no Ifes informada pelo próprio egresso quando a Conclusão Acadêmica
+correspondente não pôde ser identificada. É dado declarado (Princípio III), não fato
+institucional: NÃO DEVE criar nem alterar Pessoa, NÃO DEVE ser fonte de Conclusão
+Acadêmica e NÃO DEVE substituí-la. Sua correspondência com uma Conclusão Acadêmica só se
+estabelece por validação institucional registrada, que preserva a declaração original.
+
 ### Pesquisa
 
 Representa o instrumento lógico de coleta.
@@ -161,8 +169,10 @@ contexto específico. Pesquisa e Campanha NÃO são sinônimos.
 ### Participação em Pesquisa
 
 Representa uma ocorrência concreta de acompanhamento de determinada Conclusão Acadêmica
-em determinada Campanha. Uma mesma Conclusão Acadêmica pode possuir várias Participações
-em diferentes momentos.
+em determinada Campanha. Quando a Conclusão Acadêmica não pôde ser identificada, a
+Participação PODE ter como âncora uma Formação Declarada. A âncora de uma Participação
+NÃO DEVE ser alterada depois de criada. Uma mesma Conclusão Acadêmica pode possuir várias
+Participações em diferentes momentos.
 
 ### Resposta
 
@@ -184,7 +194,12 @@ O modelo conceitual fundamental DEVE preservar a cadeia:
   a resposta mais recente em "estado atual" único da Pessoa.
 - Toda Participação DEVE possuir contexto temporal.
 - Toda Participação relacionada a uma formação DEVE permitir identificar
-  inequivocamente a Conclusão Acadêmica observada.
+  inequivocamente a Conclusão Acadêmica observada ou, enquanto ela não for identificada,
+  a Formação Declarada que a ancora.
+- Participação ancorada em Formação Declarada NÃO DEVE integrar dados analíticos oficiais
+  nem ser contada como resposta institucional válida enquanto validação institucional
+  registrada não a fizer corresponder a uma Conclusão Acadêmica. A validação NÃO DEVE
+  alterar a Participação, a Formação Declarada nem as Respostas.
 - Múltiplas formações da mesma Pessoa NÃO DEVEM ser artificialmente fundidas.
 
 Exemplo válido: Pessoa A → Graduação concluída em 2024 → participações em 2025, 2027 e
@@ -802,4 +817,4 @@ A Constituição usa versionamento semântico:
   escrito no plan (*Complexity Tracking*) e aceitos em revisão; desvios de princípios
   NON-NEGOTIABLE NÃO são admitidos sem emenda.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
+**Version**: 2.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-04
