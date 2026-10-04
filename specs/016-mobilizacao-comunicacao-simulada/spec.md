@@ -23,10 +23,11 @@ não transforma elegibilidade em convite e não assume responsabilidade instituc
 comunicação real. “Preparar” significa conferir público e mensagem fixa; não criar mailing,
 rascunho editável ou configuração gravada na Campanha.
 
-*(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* O público usado na simulação faz o papel de um futuro Lote de mobilização: é quem
-seria abordado, não quem pode responder. Ele não estabelece exclusividade de participação:
-qualquer egresso cuja formação esteja na abrangência da Campanha pode responder, contatado
-ou não. Os critérios da Campanha expressam a abrangência do instrumento e não devem ser
+*(Revisado pela ADR 0004 — ver `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.)* O público usado na simulação funciona apenas como substituto temporário para
+exercitar a comunicação antes da existência de Lote. Ele não modela nem antecipa a
+semântica do futuro Lote de mobilização, que será uma seleção operacional própria, e não
+define exclusividade de participação: qualquer egresso cuja formação esteja na abrangência
+da Campanha pode responder, contatado ou não. Os critérios da Campanha expressam a abrangência do instrumento e não devem ser
 usados para recortar a divulgação.
 
 ### Base existente e evidências

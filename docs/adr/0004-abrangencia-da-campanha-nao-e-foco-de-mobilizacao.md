@@ -60,8 +60,9 @@ Campanha e nunca decide quem pode responder.**
 
 ## Consequências
 
-- Nenhuma alteração de modelo, migração ou contrato de domínio. O comportamento da 004 e da
-  005 permanece o mesmo; as specs 004 e 005 recebem notas de revisão com este significado.
+- Nenhuma alteração estrutural ou comportamental de modelo ou contrato: esta ADR corrige e
+  explicita a semântica de uso dos critérios existentes. Não há migração; as specs 004 e 005
+  recebem notas de revisão com este significado.
 - Demonstração: a "coleta ampla" não tem critério; a Campanha nunca aberta do acompanhamento
   passa a se chamar "Demonstração — rodada em preparação", também sem critério; a "coleta
   sobreposta" é o único cenário com abrangência restrita (instrumento da pós-graduação de
@@ -71,8 +72,9 @@ Campanha e nunca decide quem pode responder.**
 - Acompanhamento (011): "Elegíveis atuais" são as formações na abrangência da Campanha;
   numa Campanha sem critério, todas as Conclusões conhecidas no escopo do operador. O rótulo
   não muda agora.
-- Comunicação simulada (016): o público simulado faz o papel de um futuro Lote; ele não
-  define quem pode responder.
+- Comunicação simulada (016): o público da simulação é apenas um substituto temporário para
+  exercitar a comunicação antes de existir Lote. Ele não modela nem antecipa a semântica do
+  futuro Lote, que será uma seleção operacional própria, e não define quem pode responder.
 - Gestão de Campanha: a interface principal não deve expor os critérios. Eles só aparecem
   quando houver instrumento com abrangência realmente restrita, com texto que impeça usá-los
   como foco de divulgação.
