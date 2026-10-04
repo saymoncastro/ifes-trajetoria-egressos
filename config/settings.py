@@ -5,6 +5,7 @@ projeto rode sem nenhuma variável exportada. Nada lê `.env` automaticamente.
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,13 +35,15 @@ TRAJETORIA_DEMONSTRACAO = os.environ.get("TRAJETORIA_DEMONSTRACAO") == "1"
 # Trocá-la rompe a ligação com exportações anteriores; custódia e rotação em DP-1301.
 TRAJETORIA_CHAVE_PSEUDONIMIZACAO = os.environ.get("TRAJETORIA_CHAVE_PSEUDONIMIZACAO", "")
 
-# Apps de domínio, sem admin, auth, sessions, contenttypes, messages ou staticfiles. As
+# Apps de domínio, sem admin, auth, contenttypes, messages ou staticfiles. As
 # restrições de não exposição continuam valendo para egressos (001: FR-030, R15; 002: R17;
 # 004: R13; 005: FR-058; 006: FR-054; 007: FR-049): a interface da 008 existe só em modo de
-# demonstração, com Pessoas da fonte simulada. `demonstracao` é o adaptador temporário que
-# faz as vezes da fronteira de identidade e sai quando ela existir. `governanca` (010) guarda
+# demonstração, com Pessoas da fonte simulada. `demonstracao` controla o ambiente fictício;
+# `acesso` (018) confirma a Pessoa e mantém sua sessão. `governanca` (010) guarda
 # os vínculos CPAEG/CSAEG que autorizam o editor; não é autenticação.
 INSTALLED_APPS = [
+    "django.contrib.sessions",  # 018 R9: revogação da sessão no servidor.
+    "trajetoria.acesso",
     "trajetoria.academico",
     "trajetoria.instrumento",
     "trajetoria.campanha",
@@ -57,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "trajetoria.demonstracao.middleware.ModoDemonstracaoMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -102,7 +106,7 @@ LOGGING = {
 }
 
 TRAJETORIA_URL_ENTRADA_DEMONSTRACAO = os.environ.get(
-    "TRAJETORIA_URL_ENTRADA_DEMONSTRACAO", "http://127.0.0.1:8000/demonstracao/"
+    "TRAJETORIA_URL_ENTRADA_DEMONSTRACAO", "http://127.0.0.1:8000/acesso/"
 )
 
 # Comunicação simulada 016: só configuração SMTP local explícita habilita transporte.
@@ -120,3 +124,31 @@ EMAIL_TIMEOUT = 5
 DEFAULT_FROM_EMAIL = "trajetoria@example.invalid"
 # Sem variável pública de ambiente: locmem só é permitido por override_settings na suíte.
 TRAJETORIA_COMUNICACAO_TESTE = False
+
+# 018 R3: segredos independentes; não há valores padrão utilizáveis.
+TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO = os.environ.get("TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO", "")
+TRAJETORIA_CHAVE_ACESSO_VERIFICACAO = os.environ.get("TRAJETORIA_CHAVE_ACESSO_VERIFICACAO", "")
+# 018 R9: inatividade e duração máxima no servidor; cookie termina com o navegador.
+TRAJETORIA_SESSAO_INATIVIDADE = timedelta(
+    minutes=int(os.environ.get("TRAJETORIA_SESSAO_INATIVIDADE", "30"))
+)
+TRAJETORIA_SESSAO_DURACAO_MAXIMA = timedelta(
+    minutes=int(os.environ.get("TRAJETORIA_SESSAO_DURACAO_MAXIMA", "480"))
+)
+SESSION_COOKIE_NAME = "trajetoria_sessao_egresso"
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_SECURE = os.environ.get("TRAJETORIA_COOKIE_SEGURO") == "1"
+# 018 R8 / DP-1803: cache por processo, exclusivamente demonstração local.
+CACHES = {
+    nome: {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": nome}
+    for nome in ("default", "acesso")
+}
+TRAJETORIA_ACESSO_LIMITES = {
+    "origem": {"livres": 30, "janela": 900},
+    "cpf": {"livres": 3, "janela": 3600},
+    "espera_base": 5,
+    "fator": 3,
+    "espera_maxima": 300,
+}

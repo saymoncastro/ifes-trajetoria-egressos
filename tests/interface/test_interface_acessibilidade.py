@@ -98,9 +98,7 @@ def verificar(resposta) -> list[str]:
             remover = e.attrs.get("name", "").endswith("-remover")
             if e.attrs.get("type") in ("radio", "checkbox") and not remover:
                 grupo = [a for a in e.ancestrais if a.tag == "fieldset"]
-                legendas = [
-                    x for x in tag("legend") if grupo and grupo[-1] in x.ancestrais
-                ]
+                legendas = [x for x in tag("legend") if grupo and grupo[-1] in x.ancestrais]
                 if not grupo or not legendas or not legendas[0].texto.strip():
                     falhas.append(f"grupo sem fieldset/legend: {e.attrs.get('name')}")
         for alvo in e.attrs.get("aria-describedby", "").split():
@@ -141,7 +139,7 @@ def telas(client, cenario, relogio):
     """Todas as telas da jornada, com os estados relevantes."""
     b = cenario.base
     ce.incorporar(FonteSimulada(), "SIM-P-0002")
-    resultado = {"entrada": client.get("/demonstracao/")}
+    resultado = {"entrada": client.get("/acesso/")}
     resultado["operador"] = client.get("/demonstracao/operador/")  # 010
     resultado["formacoes-sem-pesquisa"] = _como(client, "SIM-P-0002", "/formacoes/")
     resultado["formacoes-selecao"] = _como(client, "SIM-P-0003", "/formacoes/")
@@ -159,9 +157,7 @@ def telas(client, cenario, relogio):
     resultado["s3"] = client.get(url + "secoes/3/")
     c.preencher(ana, b, [3, 6], escolhas)
     resultado["s8"] = client.get(url + "secoes/8/")
-    resultado["s8-complemento"] = client.post(
-        url + "secoes/8/", {"p7-complemento": "x", "p1": "9"}
-    )
+    resultado["s8-complemento"] = client.post(url + "secoes/8/", {"p7-complemento": "x", "p1": "9"})
     resultado["s8-sair-com-erro"] = client.post(  # 014: "Salvar e sair" com erro de forma
         url + "secoes/8/", {"p7-complemento": "x", "p1": "9", "depois": "sair"}
     )
@@ -181,7 +177,7 @@ def telas(client, cenario, relogio):
     resultado["aviso-ja-respondida"] = client.get(url + "secoes/1/")
     resultado["s1-pendencias-vazia"] = _pendencias_sem_resposta(client, cenario)  # troca de Pessoa
     resultado["404"] = client.get("/nao-existe/")
-    resultado["403"] = Client(enforce_csrf_checks=True).post("/demonstracao/encerrar/")
+    resultado["403"] = Client(enforce_csrf_checks=True).post("/acesso/")
     return resultado
 
 

@@ -9,5 +9,6 @@ urlpatterns = [
     path("editor/", include("trajetoria.editor.urls")),
     path("acompanhamento/", include("trajetoria.acompanhamento.urls")),
     path("", include("trajetoria.demonstracao.urls")),
+    path("acesso/", include("trajetoria.acesso.urls")),
     path("", include("trajetoria.interface.urls")),
 ]

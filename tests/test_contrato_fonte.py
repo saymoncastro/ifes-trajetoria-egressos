@@ -126,3 +126,17 @@ def test_nucleo_nao_conhece_fonte_concreta():
     for caminho in (RAIZ / "trajetoria/academico").rglob("*.py"):
         importados = _modulos_importados(caminho)
         assert not any(nome.startswith(proibidos) for nome in importados), caminho
+
+
+@pytest.mark.parametrize("cpf", ["123", "123456789012", "000.000.001-91", ""])
+def test_cpf_canonico_018(cpf):
+    with pytest.raises(ValueError):
+        PessoaEncontrada("SIM-P-X", None, (), cpf=cpf)
+
+
+def test_material_nao_aparece_no_repr_018():
+    from datetime import date
+
+    p = PessoaEncontrada("SIM-P-X", None, (), cpf="00000000191", data_nascimento=date(1998, 4, 12))
+    assert "00000000191" not in repr(p) and "1998" not in repr(p)
+    assert PessoaEncontrada("SIM-P-X", None, ()).cpf is None

@@ -8,7 +8,7 @@ A situação acadêmica é vocabulário interno desta fonte, não do NIAE. Só `
 reconhecida como conclusão (decisão da própria fonte; para a fonte real, DP-008).
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 
 
@@ -16,6 +16,8 @@ from datetime import date
 class PessoaSimulada:
     id_externo: str
     nome: str | None
+    cpf: str | None = field(default=None, repr=False)
+    data_nascimento: date | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True)
@@ -39,17 +41,24 @@ GRAD, TEC, POS = "Graduação", "Técnico", "Pós-graduação"
 PRES, EAD = "Presencial", "A distância"
 
 PESSOAS: tuple[PessoaSimulada, ...] = (
-    PessoaSimulada("SIM-P-0001", "Ana Exemplo"),  # A
-    PessoaSimulada("SIM-P-0002", "Bruno Exemplo"),  # B
-    PessoaSimulada("SIM-P-0003", "Maria Exemplo"),  # C — "experiência esperada"
-    PessoaSimulada("SIM-P-0004", "Diego Exemplo"),  # D — três conclusões
-    PessoaSimulada("SIM-P-0005", "Elisa Exemplo"),  # E
-    PessoaSimulada("SIM-P-0006", "João Exemplo"),  # F1 — só matrícula ativa
-    PessoaSimulada("SIM-P-0007", "Fernanda Exemplo"),  # F2 — conclusão + matrícula ativa
-    PessoaSimulada("SIM-P-0008", "Gustavo Exemplo"),  # F3 — nenhum registro concluído
-    PessoaSimulada("SIM-P-0009", None),  # sem nome
-    PessoaSimulada("SIM-P-0010", "Carla Exemplo"),  # homônimos
-    PessoaSimulada("SIM-P-0011", "Carla Exemplo"),  # homônimos
+    # CPFs e datas fictícios (018 research R13): dígito verificador válido, nada real.
+    PessoaSimulada("SIM-P-0001", "Ana Exemplo", "00000000191", date(1998, 4, 12)),  # A
+    PessoaSimulada("SIM-P-0002", "Bruno Exemplo", "11144477735", date(1990, 9, 3)),  # B
+    # C — "experiência esperada"
+    PessoaSimulada("SIM-P-0003", "Maria Exemplo", "00000000272", date(1997, 11, 25)),
+    # D — três conclusões
+    PessoaSimulada("SIM-P-0004", "Diego Exemplo", "00000000353", date(1994, 2, 8)),
+    PessoaSimulada("SIM-P-0005", "Elisa Exemplo", None, date(2001, 6, 30)),  # E — sem CPF
+    # F1 — só matrícula ativa
+    PessoaSimulada("SIM-P-0006", "João Exemplo", "00000000434", date(2003, 3, 14)),
+    # F2 — conclusão + matrícula ativa
+    PessoaSimulada("SIM-P-0007", "Fernanda Exemplo", "00000000515", date(1999, 8, 21)),
+    # F3 — nenhum registro concluído
+    PessoaSimulada("SIM-P-0008", "Gustavo Exemplo", "00000000604", date(2000, 1, 17)),
+    PessoaSimulada("SIM-P-0009", None, "00000000787", None),  # sem nome; sem data
+    # Homônimos com o mesmo CPF: colisão de cadastro
+    PessoaSimulada("SIM-P-0010", "Carla Exemplo", "00000000868", date(1992, 5, 5)),
+    PessoaSimulada("SIM-P-0011", "Carla Exemplo", "00000000868", date(1995, 10, 19)),
 )
 
 REGISTROS: tuple[RegistroSimulado, ...] = (

@@ -14,7 +14,7 @@ def ambiente(settings):
     settings.TRAJETORIA_DEMONSTRACAO = True
     settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
     settings.TRAJETORIA_COMUNICACAO_TESTE = True
-    settings.TRAJETORIA_URL_ENTRADA_DEMONSTRACAO = "http://127.0.0.1:8000/demonstracao/"
+    settings.TRAJETORIA_URL_ENTRADA_DEMONSTRACAO = "http://127.0.0.1:8000/acesso/"
 
 
 @pytest.fixture

@@ -38,7 +38,7 @@ def test_dominio_exato():
     ],
 )
 def test_mensagem_final_adulterada(campo, valor):
-    msg = renderizar_convite(None, "C", "http://127.0.0.1:8000/demonstracao/").mensagem(
+    msg = renderizar_convite(None, "C", "http://127.0.0.1:8000/acesso/").mensagem(
         "a@example.invalid"
     )
     setattr(msg, campo, valor)
@@ -47,7 +47,7 @@ def test_mensagem_final_adulterada(campo, valor):
 
 
 def test_remetente_institucional_permitido():
-    msg = renderizar_convite(None, "C", "http://127.0.0.1:8000/demonstracao/").mensagem(
+    msg = renderizar_convite(None, "C", "http://127.0.0.1:8000/acesso/").mensagem(
         "a@example.invalid"
     )
     validar_mensagem(msg)

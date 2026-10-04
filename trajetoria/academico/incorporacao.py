@@ -63,17 +63,27 @@ def incorporar_pessoa(fonte: FonteAcademica, id_externo_pessoa: str) -> Resultad
     # Consulta antes de abrir a transação: uma falha da fonte não chega a escrever nada.
     resposta = fonte.obter_pessoa(id_externo_pessoa)
 
-    if isinstance(resposta, PessoaEncontrada):
-        with transaction.atomic():
-            resultado = _incorporar(fonte.codigo, resposta)
-    elif isinstance(resposta, PessoaInexistente):
-        resultado = _pessoa_inexistente(fonte.codigo, resposta.id_externo)
-    else:
-        # Resposta fora do contrato é erro de integração, nunca "inexistente" (FR-025).
-        raise TypeError(f"resposta fora do contrato: {type(resposta).__name__}")
+    with transaction.atomic():
+        resultado = incorporar_encontrada(fonte.codigo, resposta)
+    registrar_divergencias(resultado)
+    return resultado
+
+
+def registrar_divergencias(resultado: ResultadoIncorporacao) -> None:
+    """Registra as divergências de uma incorporação, sem valores pessoais. Quem compõe a
+    incorporação numa transação própria chama depois do commit."""
     for divergencia in resultado.divergencias:
         _registrar(divergencia)
-    return resultado
+
+
+def incorporar_encontrada(codigo, resposta) -> ResultadoIncorporacao:
+    """Incorpora uma resposta já obtida, na transação do chamador; não registra logs."""
+    if isinstance(resposta, PessoaEncontrada):
+        return _incorporar(codigo, resposta)
+    if isinstance(resposta, PessoaInexistente):
+        return _pessoa_inexistente(codigo, resposta.id_externo)
+    # Resposta fora do contrato é erro de integração, nunca "inexistente" (FR-025).
+    raise TypeError(f"resposta fora do contrato: {type(resposta).__name__}")
 
 
 def _incorporar(codigo: str, resposta: PessoaEncontrada) -> ResultadoIncorporacao:

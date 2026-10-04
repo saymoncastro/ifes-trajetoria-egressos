@@ -1,0 +1,21 @@
+{% extends "interface/base.html" %}
+{% block titulo %}Confirme seus dados para acessar a pesquisa{% endblock %}
+{% block conteudo %}
+<h1>Confirme seus dados para acessar a pesquisa</h1>
+{% if base_indevida %}<p role="alert">{{ base_indevida }}</p>{% else %}
+<p>Use o CPF e a data de nascimento registrados no Ifes.</p>
+{% if pessoa_demonstracao %}<p><a href="/formacoes/">Continuar para suas formações</a></p>{% endif %}
+{% if aviso %}<div class="aviso" role="status" tabindex="-1" autofocus><p>{{ aviso }}</p>{% if conferir %}<p>{{ conferir }} <a href="#cpf">Conferir os dados</a></p>{% endif %}</div>{% endif %}
+{% if form.errors %}<div class="resumo-erros" role="alert" tabindex="-1" autofocus><h2>Confira os dados informados</h2><ul>{% for campo in form %}{% for erro in campo.errors %}<li><a href="#{{ campo.id_for_label }}">{{ erro }}</a></li>{% endfor %}{% endfor %}</ul></div>{% endif %}
+<form method="post" action="/acesso/">{% csrf_token %}
+{% for campo in form %}<div class="campo"><label for="{{ campo.id_for_label }}">{{ campo.label }}</label>{{ campo }}
+{% for erro in campo.errors %}<p id="erro-{{ campo.name }}" class="erro">{{ erro }}</p>{% endfor %}
+<p id="dica-{{ campo.name }}" class="dica">{% if campo.name == 'cpf' %}Somente números ou no formato 000.000.000-00{% else %}DD/MM/AAAA{% endif %}</p></div>{% endfor %}
+<button type="submit">Continuar</button></form>
+<section aria-labelledby="titulo-painel"><h2 id="titulo-painel">Dados fictícios para demonstração</h2>
+<p>Use apenas os dados fictícios abaixo para conhecer a demonstração.</p>
+<table class="acesso-painel"><caption>Credenciais exclusivamente fictícias</caption><thead><tr><th scope="col">Pessoa</th><th scope="col">CPF</th><th scope="col">Nascimento</th><th scope="col">Caso e ação</th></tr></thead><tbody>
+{% for linha in painel %}<tr><th scope="row">{{ linha.nome }}</th><td>{{ linha.cpf|default:'—' }}</td><td>{{ linha.nascimento|default:'—' }}</td><td><p>{{ linha.nota|default:'Dados disponíveis' }}</p>
+<form method="post" action="/acesso/">{% csrf_token %}<input type="hidden" name="cpf" value="{{ linha.cpf }}"><input type="hidden" name="data_nascimento" value="{{ linha.nascimento }}"><button type="submit" aria-label="Usar estes dados de {{ linha.nome }}">Usar estes dados</button></form></td></tr>{% endfor %}</tbody></table>
+</section>{% endif %}
+{% endblock %}

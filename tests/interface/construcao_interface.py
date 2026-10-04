@@ -60,8 +60,20 @@ def cenario_baseline(*ids) -> Cenario:
 
 
 def entrar_como(client, pessoa) -> None:
-    resposta = client.post("/demonstracao/escolher/", {"pessoa": str(pessoa.pk)})
-    assert resposta.status_code == 302, resposta.status_code
+    from django.utils import timezone
+
+    from trajetoria.acesso.models import MaterialDeVerificacao
+    from trajetoria.acesso.sessao import dados_de_sessao
+
+    material = MaterialDeVerificacao.objects.filter(pessoa=pessoa).first()
+    sessao = client.session
+    sessao.update(
+        dados_de_sessao(pessoa, material.atualizado_em if material else None, timezone.now())
+    )
+    sessao.save()
+    from django.conf import settings
+
+    client.cookies[settings.SESSION_COOKIE_NAME] = sessao.session_key
 
 
 def iniciar(client, pessoa, formacao=None):

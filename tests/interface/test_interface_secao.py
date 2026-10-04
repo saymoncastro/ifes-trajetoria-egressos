@@ -222,7 +222,7 @@ def test_sair_e_voltar_retoma_a_secao_atual_com_as_respostas(client, cenario, an
     pessoa = cenario.pessoa("SIM-P-0001")
     _preencher(ana, b, [1, 2, 3, 6, 8], {**ESCOLHAS_ATE_S11, "Q33": "Sim"})
     op.responder_escolha_unica(ana, b.q(34), b.q(34).opcoes.get(posicao=2))  # S9 parcial
-    client.post("/demonstracao/encerrar/")
+    client.post("/acesso/sair/")
     ci.entrar_como(client, pessoa)
     assert "Continuar a pesquisa" in ci.texto_visivel(client.get("/formacoes/"))
     antes = ce.linhas()
@@ -263,7 +263,9 @@ def test_consultas_da_secao_nao_crescem_com_as_respostas(client, cenario, ana):
         with CaptureQueriesContext(connection) as consultas:
             assert _get(client, ana, 8).status_code == 200
         contagens.append(len(consultas))
-    assert contagens[0] == contagens[1] <= 11  # medido: 11 (sem reler o conteúdo da Versão)
+    assert (
+        contagens[0] == contagens[1] <= 12
+    )  # 018: sessão e material/Pessoa, sem reler o conteúdo da Versão
 
 
 # --- 014 US1: Seção incompleta, pendência × erro (FR-001 a FR-008) -------------------------

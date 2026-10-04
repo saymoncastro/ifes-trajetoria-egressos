@@ -13,9 +13,7 @@ def test_preview_com_mesmo_renderer(campanha, clientes, snapshot):
     antes = snapshot()
     resposta = clientes[B].get(f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/")
     assert resposta.context["destinatario"] == "sim-p-0002@example.invalid"
-    convite = renderizar_convite(
-        "Bruno Exemplo", campanha.nome, "http://127.0.0.1:8000/demonstracao/"
-    )
+    convite = renderizar_convite("Bruno Exemplo", campanha.nome, "http://127.0.0.1:8000/acesso/")
     assert resposta.context["convite"] == convite
     assert b'sandbox=""' in resposta.content
     assert not getattr(mail, "outbox", [])

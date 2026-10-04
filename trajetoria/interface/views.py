@@ -3,7 +3,7 @@
 **Camada fina.** Nenhuma regra de domínio vive aqui: formações e entrada vêm da 007,
 jornada e conclusão da 006, gravação de Respostas da 005 (por `gravacao.py`). As views
 apenas traduzem resultados em telas e ações em chamadas às operações existentes. A
-Pessoa vem do adaptador de demonstração (`pessoa_em_uso`), substituível pela futura
+Pessoa vem da sessão da confirmação de acesso (`pessoa_em_uso`), substituível pela futura
 fronteira de identidade (FR-005).
 """
 
@@ -16,7 +16,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from trajetoria.academico.models import ConclusaoAcademica
-from trajetoria.demonstracao.entrada import pessoa_em_uso
+from trajetoria.acesso.sessao import pessoa_em_uso
 from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
     complemento_da_formacao,
@@ -71,10 +71,10 @@ def _tela(request, texto, *, conclusao=None, status=200):
 
 
 def _pessoa(request):
-    """A Pessoa resolvida (hoje, pela demonstração) ou o redirecionamento à entrada."""
+    """A Pessoa resolvida (pela confirmação de acesso) ou o redirecionamento à entrada."""
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        raise _Resposta(redirect("/demonstracao/"))
+        raise _Resposta(redirect("/acesso/"))
     return pessoa
 
 
@@ -109,7 +109,7 @@ def _base(participacao) -> str:
 
 @require_GET
 def inicio(request):
-    return redirect("/formacoes/" if pessoa_em_uso(request) else "/demonstracao/")
+    return redirect("/formacoes/" if pessoa_em_uso(request) else "/acesso/")
 
 
 # --- Formações (007) ---------------------------------------------------------------------------
