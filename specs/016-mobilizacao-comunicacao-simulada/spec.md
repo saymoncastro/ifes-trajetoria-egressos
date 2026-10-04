@@ -355,6 +355,9 @@ Nenhuma mudança do instrumento ou regra institucional é presumida.
   Pessoa, Conclusão, Participação ou Campanha. DEVE ser configuração neutra substituível,
   validada como local; NÃO DEVE ser construído confiando no host enviado pelo cliente.
   [Solicitante; 004/DP-406; Arquitetura]
+    *(Revisado pela 018)* A URL neutra local passa a apontar para `/acesso/`, sem identidade ou
+  preenchimento (018 FR-053).
+
 - **FR-022**: Abrir a mensagem ou seguir seu link NÃO DEVE autenticar, identificar,
   autorizar, selecionar Pessoa/formação/Campanha, iniciar/retomar Participação ou criar
   Resposta. Escolha fictícia e ação explícita da 007/005 continuam separadas. [004–008]

@@ -7,12 +7,12 @@ from django.urls import URLPattern
 from django.utils import timezone
 
 from tests.editor.construcao_editor import A, B, C
+from tests.interface.construcao_interface import entrar_como
 from trajetoria.academico.models import Pessoa
 from trajetoria.acompanhamento import urls
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.comunicacao.acesso import RecusaComunicacao, autorizar_operador
 from trajetoria.comunicacao.operacoes import simular_comunicacao
-from trajetoria.demonstracao.entrada import usar as usar_pessoa
 from trajetoria.governanca.models import VinculoDeGovernanca
 from trajetoria.participacao.models import Participacao
 
@@ -44,15 +44,11 @@ def test_vinculo_misto_revogacao_e_multiplas_unidades(campanha, clientes):
 
 
 def test_cta_com_pessoa_nao_abre_campanha(campanha, snapshot):
-    antes = snapshot()
     pessoa = Pessoa.objects.get(id_externo="SIM-P-0002")
     cliente = Client()
-    from django.http import HttpResponse
-
-    resposta = HttpResponse()
-    usar_pessoa(resposta, pessoa)
-    cliente.cookies.update(resposta.cookies)
-    assert cliente.get("/demonstracao/").status_code == 200
+    entrar_como(cliente, pessoa)
+    antes = snapshot()
+    assert cliente.get("/acesso/").status_code == 200
     pagina = f"/acompanhamento/campanhas/{campanha.pk}/comunicacao/"
     assert cliente.get(pagina).status_code == 302
     assert estado(campanha) == EstadoCampanha.EM_PREPARACAO

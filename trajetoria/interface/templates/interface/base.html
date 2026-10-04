@@ -12,11 +12,10 @@
 {# Faixa de demonstração: ambiente fictício e controles de demonstração, fora do produto (015 FR-021; research R4). #}
 <div class="faixa-demonstracao" role="note">
   <div class="coluna">
-    <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. Não há autenticação: a escolha de uma pessoa não comprova identidade.</p>
+    <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. A confirmação usa CPF e data de nascimento fictícios e não é autenticação forte.</p>
     {% if pessoa_demonstracao %}
     <p class="pessoa">Pessoa fictícia: {{ pessoa_demonstracao.nome|default:"sem nome informado" }}</p>
-    <a href="/demonstracao/">Trocar de pessoa</a>
-    <form method="post" action="/demonstracao/encerrar/">{% csrf_token %}<button type="submit">Encerrar demonstração</button></form>
+    <form method="post" action="/acesso/sair/">{% csrf_token %}<button type="submit">Sair</button></form>
     {% endif %}
   </div>
 </div>

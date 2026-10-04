@@ -153,7 +153,7 @@ def test_seletores_compartilhados_com_a_administracao_nao_usam_tokens():
 def telas_da_jornada(client, cenario):
     """HTML de cada tela da jornada e da demonstração que estende o template base."""
     telas = {
-        "entrada da demonstração": _html(client.get("/demonstracao/")),
+        "entrada da demonstração": _html(client.get("/acesso/")),
         "operador da demonstração": _html(client.get("/demonstracao/operador/")),
     }
     resposta = ci.iniciar(client, cenario.pessoa("SIM-P-0001"))
@@ -541,13 +541,10 @@ def test_controles_de_demonstracao_na_faixa(client, cenario):
     html = _html(client.get("/formacoes/"))
     faixa = _faixa(html)
     assert "Pessoa fictícia: Ana Exemplo" in faixa
-    assert '<a href="/demonstracao/">Trocar de pessoa</a>' in faixa
-    assert re.search(
-        r'<form method="post" action="/demonstracao/encerrar/"><input type="hidden" '
-        r'name="csrfmiddlewaretoken" value="[^"]+">'
-        r'<button type="submit">Encerrar demonstração</button></form>',
-        faixa,
-    )
+    assert "Trocar de pessoa" not in faixa
+    assert "Encerrar demonstração" not in faixa
+    assert 'action="/acesso/sair/"' in faixa
+    assert ">Sair</button>" in faixa
     assert "Ambiente de demonstração." in faixa
 
 

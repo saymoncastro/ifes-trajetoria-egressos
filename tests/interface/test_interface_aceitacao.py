@@ -44,10 +44,12 @@ def _enviar(client, participacao, posicao, escolhas, **trocas):
 
 def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     escolhas = {"Q1": "Sim", "Q14": "Graduação", "Q33": "Sim", "Q46": "Sim"}
-    ana = ce.pessoa_da_fonte("SIM-P-0001")
-    # 2–3. Entrada de demonstração e escolha da Pessoa fictícia.
-    assert "Ambiente de demonstração." in ci.texto_visivel(client.get("/demonstracao/"))
-    ci.entrar_como(client, ana)
+    # 2–3. Confirmação de acesso com dados fictícios.
+    assert "Ambiente de demonstração." in ci.texto_visivel(client.get("/acesso/"))
+    resposta_acesso = client.post(
+        "/acesso/", {"cpf": "000.000.001-91", "data_nascimento": "12/04/1998"}
+    )
+    assert resposta_acesso.status_code == 303
     # 4. A formação com pesquisa é encontrada, sem escolha artificial.
     formacoes = ci.texto_visivel(client.get("/formacoes/"))
     assert "Você concluiu " in formacoes  # 014 FR-031
@@ -81,9 +83,12 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     assert respostas_atuais(participacao)[q26.id].complemento == "Zine"
     # 9. No meio de S9: parte das respostas, depois abandona a demonstração.
     _enviar(client, participacao, 9, escolhas, p1=None)
-    client.post("/demonstracao/encerrar/")
+    client.post("/acesso/sair/")
     # 10–11. Retorna e retoma exatamente o rascunho.
-    ci.entrar_como(client, ana)
+    resposta_acesso = client.post(
+        "/acesso/", {"cpf": "000.000.001-91", "data_nascimento": "12/04/1998"}
+    )
+    assert resposta_acesso.status_code == 303
     assert "Continuar a pesquisa" in ci.texto_visivel(client.get("/formacoes/"))
     assert client.post("/formacoes/entrar/")["Location"] == _url(participacao)
     assert client.get(_url(participacao))["Location"] == _url(participacao, "secoes/9/")

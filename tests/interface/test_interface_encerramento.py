@@ -41,6 +41,8 @@ def test_envio_depois_do_encerramento(client, cenario, ana, relogio, forma):
     else:
         encerrar(cenario.campanha, agora=c.momento(2027, 5, 2))
         relogio.agora = c.momento(2027, 5, 3)
+    # 018: o salto de dias exige uma nova sessão para testar somente o período.
+    ci.entrar_como(client, ana.conclusao.pessoa)
     antes = c.retrato(ana)
     dados = ci.dados_validos(ci.secao_do_conteudo(cenario.base.versao, 2))
     resposta = client.post(_url(ana, "secoes/2/"), dados)
@@ -63,6 +65,7 @@ def test_envio_depois_do_encerramento(client, cenario, ana, relogio, forma):
 def test_conclusao_finalizada_depois_do_fim(client, cenario, ana, relogio):
     client.post(_url(ana, "secoes/1/"), _dados_s1(cenario, "Não"))
     relogio.agora = c.DEPOIS_DO_FIM
+    ci.entrar_como(client, ana.conclusao.pessoa)
     assert ENCERRADO in ci.texto_visivel(client.post(_url(ana, "concluir/")))
     ana.refresh_from_db()
     assert ana.concluida_em is None
@@ -70,6 +73,7 @@ def test_conclusao_finalizada_depois_do_fim(client, cenario, ana, relogio):
 
 def test_ultimo_dia_ainda_aceita(client, cenario, ana, relogio):
     relogio.agora = c.ULTIMO_DIA
+    ci.entrar_como(client, ana.conclusao.pessoa)
     resposta = client.post(_url(ana, "secoes/1/"), _dados_s1(cenario, "Não"))
     assert resposta["Location"] == _url(ana, "concluir/")
     assert client.post(_url(ana, "concluir/"))["Location"] == _url(ana, "concluida/")

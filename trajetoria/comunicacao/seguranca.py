@@ -2,16 +2,12 @@
 
 from dataclasses import dataclass
 
-from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.comunicacao.acesso import RecusaComunicacao
-from trajetoria.fonte_academica.simulada import FonteSimulada
+from trajetoria.demonstracao.base import base_somente_simulada
 
 
 def validar_origem():
-    if (
-        Pessoa.objects.exclude(fonte=FonteSimulada.codigo).exists()
-        or ConclusaoAcademica.objects.exclude(fonte=FonteSimulada.codigo).exists()
-    ):
+    if not base_somente_simulada():
         raise RecusaComunicacao("origem_indevida", 422)
 
 
@@ -47,7 +43,7 @@ def validar_url(url):
             and u.scheme == "http"
             and u.hostname in ("127.0.0.1", "::1")
             and u.port == 8000
-            and u.path == "/demonstracao/"
+            and u.path == "/acesso/"
             and u.username is None
             and u.password is None
             and not u.query

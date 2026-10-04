@@ -837,6 +837,9 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   como login, cadastro, conta ou autenticação. NÃO DEVEM existir senha, CPF, e-mail,
   matrícula, OTP, link mágico, Gov.br, SSO, recuperação de acesso nem qualquer campo para
   identificar-se. [Solicitante; Const. — XV; 007 FR-002]
+    *(Revisado pela 018)* A entrada passa a confirmar CPF e nascimento fictícios, com
+  advertência explícita sobre sua garantia (018 FR-060, FR-061).
+
 - **FR-005**: A entrada de demonstração DEVE ser um **adaptador substituível**: o restante
   da interface DEVE depender apenas de "qual é a Pessoa resolvida", de modo que uma futura
   fronteira de identidade a substitua sem alterar Participação, Jornada, Respostas,
@@ -855,10 +858,16 @@ delimitação desta feature; **[Solicitante]** requisito explícito do pedido de
   Conclusões. NÃO DEVEM ser mostrados UUID, fonte, identificador externo, código
   `SIM-…`, Campanha ou qualquer identificador técnico. [Solicitante; Const. — XVI;
   001 FR-005]
+    *(Revisado pela 018)* O seletor é substituído pelo formulário de confirmação e pelo painel
+  de credenciais da fonte simulada (018 FR-060).
+
 - **FR-008**: Somente Pessoas incorporadas da **fonte simulada** DEVEM ser listadas e
   aceitas como Pessoa de demonstração. Pessoa de qualquer outra fonte NÃO DEVE ser
   listada nem aceita, ainda que referenciada diretamente. [Const. — XVI; 001 FR-028;
   Arquitetura]
+    *(Revisado pela 018)* A entrada recusa qualquer base com Pessoa de fonte diferente da
+  simulada, preservando a barreira da demonstração (018 FR-005).
+
 - **FR-009**: A escolha da Pessoa de demonstração NÃO DEVE criar nem alterar registro de
   domínio. O único estado mantido entre requisições pela entrada de demonstração DEVE ser
   a referência à Pessoa de demonstração em uso. Esse estado NÃO DEVE ser modelo de

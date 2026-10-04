@@ -6,7 +6,7 @@ nunca mostram faixa de demonstração nem nome de Pessoa (FR-001).
 
 from django.conf import settings
 
-from trajetoria.demonstracao.entrada import pessoa_em_uso
+from trajetoria.acesso.sessao import pessoa_em_uso
 
 
 def demonstracao(request) -> dict:

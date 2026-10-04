@@ -8,7 +8,8 @@ Atributo ausente é `None` e significa "não informado pela fonte". Cadeia vazia
 proibida, para que não exista uma segunda forma de ausência.
 """
 
-from dataclasses import dataclass, fields
+import re
+from dataclasses import dataclass, field, fields
 from datetime import date
 from typing import Protocol
 
@@ -55,15 +56,21 @@ CAMPOS_DE_CONTEXTO = tuple(f.name for f in fields(ConclusaoNaFonte) if f.name !=
 
 @dataclass(frozen=True)
 class PessoaEncontrada:
-    """Pessoa conhecida pela fonte, com suas conclusões reconhecidas (possivelmente nenhuma)."""
+    """Pessoa conhecida pela fonte, com suas conclusões reconhecidas.
+
+    A fonte agrupa os registros associáveis ao mesmo indivíduo (018 FR-021)."""
 
     id_externo: str
     nome: str | None
     conclusoes: tuple[ConclusaoNaFonte, ...]
+    cpf: str | None = field(default=None, repr=False)
+    data_nascimento: date | None = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         _exigir_texto(self.id_externo, "id_externo")
         _rejeitar_cadeias_vazias(self)
+        if self.cpf is not None and not re.fullmatch(r"[0-9]{11}", self.cpf):
+            raise ValueError("cpf deve ter 11 dígitos canônicos")
         if not isinstance(self.conclusoes, tuple):
             raise TypeError("conclusoes deve ser tuple")
         ids = [c.id_externo for c in self.conclusoes]

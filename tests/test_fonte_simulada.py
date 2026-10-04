@@ -25,8 +25,12 @@ CATALOGO = (
     / "specs/001-nucleo-academico-fonte-simulada/contracts/cenarios-simulados.md"
 )
 ABREVIACOES = {
-    "Téc.": "Técnico", "Grad.": "Graduação", "Pós": "Pós-graduação",
-    "Pres.": "Presencial", "EaD": "A distância", "—": None,
+    "Téc.": "Técnico",
+    "Grad.": "Graduação",
+    "Pós": "Pós-graduação",
+    "Pres.": "Presencial",
+    "EaD": "A distância",
+    "—": None,
 }
 
 
@@ -44,18 +48,20 @@ def _linhas_documentadas() -> list[dict]:
             else:
                 data = date.fromisoformat(conclusao)
                 ano = data.year
-        linhas.append({
-            "id_externo": registro,
-            "id_pessoa": pessoa,
-            "situacao": None if situacao == "(ausente)" else situacao,
-            "curso": curso,
-            "unidade": unidade,
-            "nivel": ABREVIACOES.get(nivel, nivel),
-            "modalidade": ABREVIACOES.get(modal, modal),
-            "forma_oferta": ABREVIACOES.get(oferta, oferta),
-            "ano_conclusao": ano,
-            "data_conclusao": data,
-        })
+        linhas.append(
+            {
+                "id_externo": registro,
+                "id_pessoa": pessoa,
+                "situacao": None if situacao == "(ausente)" else situacao,
+                "curso": curso,
+                "unidade": unidade,
+                "nivel": ABREVIACOES.get(nivel, nivel),
+                "modalidade": ABREVIACOES.get(modal, modal),
+                "forma_oferta": ABREVIACOES.get(oferta, oferta),
+                "ano_conclusao": ano,
+                "data_conclusao": data,
+            }
+        )
     return linhas
 
 
@@ -116,3 +122,22 @@ def test_dados_sao_ficticios():
                 assert "@" not in valor
         if registro.data_conclusao is not None:
             assert registro.data_conclusao <= date(2026, 9, 30)
+
+
+def test_dados_verificacao_documentados_018(fonte_simulada):
+    from tests.acesso.construcao import DADOS
+
+    tabela = CATALOGO.read_text().split("## Dados de verificação — fictícios")[1]
+    linhas = []
+    for linha in tabela.splitlines():
+        c = [x.strip() for x in linha.strip("|").split("|")]
+        if len(c) == 4 and c[0].startswith("SIM-P-"):
+            linhas.append(c)
+    assert len(linhas) == len(cenarios.PESSOAS) == 11
+    for pessoa, dados, linha in zip(cenarios.PESSOAS, DADOS, linhas, strict=True):
+        resposta = fonte_simulada.obter_pessoa(pessoa.id_externo)
+        assert pessoa.cpf == resposta.cpf == (dados.cpf11 or None)
+        assert pessoa.data_nascimento == resposta.data_nascimento == dados.data
+        assert linha[0].startswith(pessoa.id_externo)
+        assert linha[1] == (dados.cpf or "—")
+        assert linha[2] == (dados.data.isoformat() if dados.data else "—")

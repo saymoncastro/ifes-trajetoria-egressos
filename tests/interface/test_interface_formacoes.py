@@ -191,13 +191,13 @@ def test_avisos_e_metodos(client, inst):
 
 def test_sem_pessoa_vai_para_a_entrada(client, inst):
     resposta = client.get("/formacoes/")
-    assert resposta.status_code == 302 and resposta["Location"] == "/demonstracao/"
+    assert resposta.status_code == 302 and resposta["Location"] == "/acesso/"
 
 
 def test_consultas_limitadas(client, inst, django_assert_max_num_queries):
     c.campanha_aberta(inst.versao)
     ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0004"))
-    with django_assert_max_num_queries(8):  # medido: 2 + 1 por formação; 3 formações
+    with django_assert_max_num_queries(9):  # 018: inclui leitura da sessão; 3 formações
         client.get("/formacoes/")
 
 
@@ -237,9 +237,7 @@ def test_ambiguidade_e_local_e_neutra(client, inst):
     assert "Você concluiu " in texto  # a outra, sem escolha (014 FR-031)
     assert _formacoes_nos_botoes(resposta) == []
     assert [b for b in _botoes(resposta) if "pesquisa" in b] == ["Iniciar a pesquisa"]
-    assert (
-        "A pesquisa referente a esta formação não está disponível neste momento." in texto
-    )
+    assert "A pesquisa referente a esta formação não está disponível neste momento." in texto
     assert "Campanha" not in texto  # nem nome, nem quantidade, nem período de Campanha
     assert "30/06/2027" not in texto and "01/04/2027" not in texto
 
@@ -289,8 +287,7 @@ def _aviso(client, consulta):
 def test_aviso_de_saida_com_respostas_salvas(client, inst):
     c.campanha_aberta(inst.versao)
     assert _aviso(client, "?aviso=salvo") == (
-        "O que você respondeu nesta seção está salvo. Você pode continuar a pesquisa quando "
-        "quiser."
+        "O que você respondeu nesta seção está salvo. Você pode continuar a pesquisa quando quiser."
     )
 
 

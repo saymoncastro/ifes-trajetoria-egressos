@@ -46,7 +46,7 @@ PERMITIDOS_NA_INTERFACE = {
     "trajetoria.instrumento.conteudo": None,
     "trajetoria.instrumento.models": {"Pergunta", "Opcao", "TipoPergunta"},
     "trajetoria.academico.models": {"ConclusaoAcademica", "Pessoa"},
-    "trajetoria.demonstracao.entrada": {"pessoa_em_uso"},  # FR-005: só a Pessoa resolvida
+    "trajetoria.acesso.sessao": {"pessoa_em_uso"},  # FR-005: só a Pessoa resolvida
 }
 SO_NO_CENARIO = (
     "trajetoria.campanha",
@@ -93,7 +93,7 @@ def test_demonstracao_isolada():
                 assert relativo == "views.py", relativo
                 assert modulo == "trajetoria.interface.apresentacao", modulo
             if modulo.startswith(SO_NO_CENARIO):
-                assert relativo == "cenario.py", (relativo, modulo)
+                assert relativo in ("cenario.py", "base.py"), (relativo, modulo)
 
 
 def test_nenhuma_regra_por_pergunta_nos_fontes():
@@ -143,8 +143,7 @@ def test_csrf_em_toda_escrita(cenario, ana):
     sem_token = Client(enforce_csrf_checks=True)
     base = f"/participacoes/{ana.pk}/"
     for rota in (
-        "/demonstracao/escolher/",
-        "/demonstracao/encerrar/",
+        "/acesso/",
         "/formacoes/entrar/",
         base + "secoes/1/",
         base + "concluir/",
@@ -164,9 +163,9 @@ def test_falha_de_csrf_nao_manda_recarregar(cenario, ana):
 @pytest.mark.django_db
 def test_metodos(client, cenario, ana):
     base = f"/participacoes/{ana.pk}/"
-    for rota in ("/demonstracao/escolher/", "/demonstracao/encerrar/", "/formacoes/entrar/"):
+    for rota in ("/formacoes/entrar/",):
         assert client.get(rota).status_code == 405, rota
-    for rota in ("/", "/demonstracao/", "/formacoes/", base, base + "concluida/"):
+    for rota in ("/", "/formacoes/", base, base + "concluida/"):
         assert client.post(rota).status_code == 405, rota
     for rota in (base + "secoes/1/", base + "concluir/"):
         assert client.put(rota).status_code == 405 and client.delete(rota).status_code == 405
@@ -178,7 +177,7 @@ def test_rastros_e_telas_sem_dados_declarados_nem_tecnicos(client, cenario, capl
     pessoa = cenario.pessoa("SIM-P-0001")
     curso = pessoa.conclusoes.get().curso
     declarado = f"Texto declarado {uuid4().hex[:8]}"
-    respostas = [client.get("/demonstracao/")]
+    respostas = [client.get("/acesso/")]
     ci.entrar_como(client, pessoa)
     respostas.append(client.get("/formacoes/"))
     entrada = client.post("/formacoes/entrar/")

@@ -392,11 +392,17 @@ perguntas do instrumento.
   O sistema NÃO DEVE incorporar CPF, e-mail, data de nascimento, telefone, documentos ou
   outros dados pessoais nesta feature. Eles só entram quando uma feature com consumidor
   concreto precisar deles. [Escopo; Const. — XVI, XXII]
+    *(Revisado pela 018)* CPF e nascimento têm consumidor concreto na capacidade separada de
+  acesso, sem alterar a identidade interna (018 FR-010, FR-016, FR-020).
+
 - **FR-006**: O sistema NÃO DEVE presumir que algum identificador da fonte (CPF,
   matrícula ou outro) é a chave da Pessoa, nem que a Pessoa tem uma única matrícula. Os
   identificadores de fonte DEVEM ser tratados como referências opacas. O modelo NÃO DEVE
   impedir que uma Pessoa tenha mais de uma referência de origem no futuro. [Const. —
   Terminologia, Pessoa]
+
+    *(Revisado pela 018)* CPF permanece fora da identidade da Pessoa; o agrupamento por
+  indivíduo cabe à fonte (018 FR-021).
 
 **Conclusão Acadêmica**
 
@@ -512,6 +518,9 @@ perguntas do instrumento.
 - **FR-028**: Os dados da fonte simulada DEVEM ser fictícios. Eles NÃO DEVEM conter CPF,
   e-mail, matrícula, telefone ou outro dado de pessoas reais. Os identificadores DEVEM
   ser visivelmente fictícios. [Const. — XVI]
+    *(Revisado pela 018)* Os cenários incluem CPF com dígitos verificadores válidos e
+  nascimento exclusivamente fictícios (018 FR-026).
+
 - **FR-029**: Os dados da fonte simulada DEVERIAM ser realistas. Unidades, cursos, níveis
   e modalidades DEVERIAM ser plausíveis no Ifes, por exemplo usando as unidades e os
   cursos que aparecem no instrumento atual, e as datas de conclusão DEVEM ser passadas.
@@ -547,6 +556,9 @@ perguntas do instrumento.
 
   O tratamento definitivo fica em DP-005 e DP-006. [Const. — III, XXII, XXIX; Hipótese
   provisória]
+    *(Revisado pela 018)* A atualização de material de verificação segue regra própria,
+  preservando os dados acadêmicos incorporados (018 FR-024).
+
 - **FR-034**: O sistema NÃO DEVE resolver nem presumir identidade entre registros de
   fontes diferentes. [Const. — Terminologia, Pessoa; XXIX]
 

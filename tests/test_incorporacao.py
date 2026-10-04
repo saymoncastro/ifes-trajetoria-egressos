@@ -76,7 +76,9 @@ def test_conclusoes_em_unidades_diferentes(fonte_simulada):
 def test_conclusoes_em_niveis_diferentes(fonte_simulada):
     resultado = incorporar_pessoa(fonte_simulada, "SIM-P-0004")
     assert {c.nivel for c in resultado.pessoa.conclusoes.all()} == {
-        "Técnico", "Graduação", "Pós-graduação",
+        "Técnico",
+        "Graduação",
+        "Pós-graduação",
     }
 
 
@@ -101,8 +103,15 @@ def test_conclusoes_parecidas_com_origens_distintas_nao_se_fundem():
     # Mesmo curso e unidade, id_externo diferente: duas conclusões (FR-014).
     registros = [
         RegistroSimulado(
-            f"SIM-C-T{n}", "SIM-P-T1", "concluida", "Técnico em Informática", "Serra",
-            "Técnico", "Presencial", "Subsequente", ano,
+            f"SIM-C-T{n}",
+            "SIM-P-T1",
+            "concluida",
+            "Técnico em Informática",
+            "Serra",
+            "Técnico",
+            "Presencial",
+            "Subsequente",
+            ano,
         )
         for n, ano in ((1, 2015), (2, 2019))
     ]
@@ -180,13 +189,22 @@ def test_nova_conclusao_e_associada_a_pessoa_existente(fonte_simulada):
 @pytest.mark.parametrize(
     ("variante", "id_pessoa", "esperada"),
     [
-        ("i", "SIM-P-0001", (TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", "SIM-C-0001",
-                             ("curso",))),
+        (
+            "i",
+            "SIM-P-0001",
+            (TipoDivergencia.ATRIBUTOS_DIFERENTES, "conclusao", "SIM-C-0001", ("curso",)),
+        ),
         ("ii", "SIM-P-0002", (TipoDivergencia.AUSENTE_NA_FONTE, "conclusao", "SIM-C-0003", ())),
-        ("iii", "SIM-P-0001", (TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao",
-                               "SIM-C-0002", ())),
-        ("iv", "SIM-P-0009", (TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", "SIM-P-0009",
-                              ("nome",))),
+        (
+            "iii",
+            "SIM-P-0001",
+            (TipoDivergencia.CONCLUSAO_DE_OUTRA_PESSOA, "conclusao", "SIM-C-0002", ()),
+        ),
+        (
+            "iv",
+            "SIM-P-0009",
+            (TipoDivergencia.ATRIBUTOS_DIFERENTES, "pessoa", "SIM-P-0009", ("nome",)),
+        ),
     ],
 )
 def test_divergencia_e_sinalizada_sem_alterar_nada(
@@ -199,9 +217,7 @@ def test_divergencia_e_sinalizada_sem_alterar_nada(
         resultado = incorporar_pessoa(variante_canonica(variante), id_pessoa)
 
     tipo, registro, id_externo, campos = esperada
-    assert resultado.divergencias == (
-        Divergencia(tipo, registro, "simulada", id_externo, campos),
-    )
+    assert resultado.divergencias == (Divergencia(tipo, registro, "simulada", id_externo, campos),)
     assert _retrato() == retrato  # nada sobrescrito, removido ou duplicado
 
     assert len(caplog.records) == 1
@@ -351,3 +367,24 @@ def test_resposta_fora_do_contrato_e_erro_e_nao_inexistencia():
     with pytest.raises(TypeError):
         incorporar_pessoa(FonteDefeituosa(), "X")
     assert Pessoa.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_extraida_equivale_e_ignora_credenciais_018(fonte_simulada):
+    from django.db import transaction
+
+    from trajetoria.academico.incorporacao import incorporar_encontrada, incorporar_pessoa
+    from trajetoria.fonte_academica.cenarios import PESSOAS
+
+    for p in PESSOAS:
+        resposta = fonte_simulada.obter_pessoa(p.id_externo)
+        with transaction.atomic():
+            extraida = incorporar_encontrada(fonte_simulada.codigo, resposta)
+            transaction.set_rollback(True)
+        original = incorporar_pessoa(fonte_simulada, p.id_externo)
+        assert extraida.situacao == original.situacao
+        assert extraida.pessoa_criada == original.pessoa_criada
+        assert len(extraida.conclusoes_criadas) == len(original.conclusoes_criadas)
+        assert extraida.divergencias == original.divergencias
+        if original.pessoa:
+            assert not hasattr(original.pessoa, "cpf")

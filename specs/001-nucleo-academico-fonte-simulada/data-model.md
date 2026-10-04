@@ -67,7 +67,7 @@ depois por `id`. A ordem é só de apresentação, sem significado de domínio (
 | Só conclusões reconhecidas são persistidas | O contrato só transporta conclusões reconhecidas (R4) |
 | Pessoa sem conclusão elegível não é persistida | Regra da incorporação (FR-039) |
 | Ausência ≠ valor | `NULL` com semântica fixa; cadeia vazia proibida (R8) |
-| Dados incorporados não são sobrescritos nem removidos por nova leitura | A incorporação nunca executa atualização ou remoção (R11) |
+| Dados acadêmicos incorporados não são sobrescritos nem removidos por nova leitura | A incorporação acadêmica nunca executa atualização ou remoção (R11); *(Revisado pela 018)* o material separado de verificação segue a atualização da 018 FR-024. |
 | Todo dado acadêmico é institucional | Não existe campo declarado nem derivado nesta feature (FR-036) |
 
 ## Ciclo de vida

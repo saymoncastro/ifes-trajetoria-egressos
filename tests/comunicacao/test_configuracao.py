@@ -48,14 +48,15 @@ def test_smtp_inseguro(settings, setting, valor):
 @pytest.mark.parametrize(
     "url",
     [
-        "https://example.com/demonstracao/",
-        "http://localhost:8000/demonstracao/",
-        "http://127.0.0.1:8000/demonstracao/?pessoa=1",
-        "http://127.0.0.1:8000/demonstracao/#x",
-        "http://user@127.0.0.1:8000/demonstracao/",
-        "http://127.0.0.1:25/demonstracao/",
+        "http://127.0.0.1:8000/demonstracao/",
+        "https://example.com/acesso/",
+        "http://localhost:8000/acesso/",
+        "http://127.0.0.1:8000/acesso/?pessoa=1",
+        "http://127.0.0.1:8000/acesso/#x",
+        "http://user@127.0.0.1:8000/acesso/",
+        "http://127.0.0.1:25/acesso/",
         "http://127.0.0.1:8000/other/",
-        "http://127.0.0.1:bad/demonstracao/",
+        "http://127.0.0.1:bad/acesso/",
     ],
 )
 def test_url_insegura(url):

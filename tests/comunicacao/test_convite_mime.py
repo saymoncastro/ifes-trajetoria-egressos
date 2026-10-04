@@ -7,7 +7,7 @@ from trajetoria.comunicacao.convite import renderizar_convite
 
 
 def test_mime_fixo():
-    c = renderizar_convite(None, "Campanha", "http://127.0.0.1:8000/demonstracao/")
+    c = renderizar_convite(None, "Campanha", "http://127.0.0.1:8000/acesso/")
     msg = c.mensagem("sim-p-0001@example.invalid")
     assert parseaddr(msg.from_email) == (
         "Trajetória Ifes — demonstração institucional",
@@ -23,9 +23,9 @@ def test_mime_fixo():
 
 def test_cta_neutro_nao_muda_dominio(campanha, snapshot):
     antes = snapshot()
-    c = renderizar_convite(None, campanha.nome, "http://127.0.0.1:8000/demonstracao/")
-    assert Client().get("/demonstracao/").status_code == 200
-    assert c.url.endswith("/demonstracao/")
+    c = renderizar_convite(None, campanha.nome, "http://127.0.0.1:8000/acesso/")
+    assert Client().get("/acesso/").status_code == 200
+    assert c.url.endswith("/acesso/")
     assert snapshot() == antes
 
 
@@ -41,6 +41,6 @@ def test_cta_neutro_nao_muda_dominio(campanha, snapshot):
 def test_destinatario_simples_e_reservado(destino):
     from trajetoria.comunicacao.acesso import RecusaComunicacao
 
-    c = renderizar_convite(None, "Campanha", "http://127.0.0.1:8000/demonstracao/")
+    c = renderizar_convite(None, "Campanha", "http://127.0.0.1:8000/acesso/")
     with pytest.raises(RecusaComunicacao):
         c.mensagem(destino)

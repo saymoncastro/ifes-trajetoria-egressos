@@ -43,7 +43,9 @@ class FonteSimulada:
             for r in sorted(self._registros.values(), key=lambda r: r.id_externo)
             if r.id_pessoa == id_externo and _reconhecida(r)
         )
-        return PessoaEncontrada(id_externo, pessoa.nome, conclusoes)
+        return PessoaEncontrada(
+            id_externo, pessoa.nome, conclusoes, pessoa.cpf, pessoa.data_nascimento
+        )
 
     def obter_conclusao(
         self, id_externo: str

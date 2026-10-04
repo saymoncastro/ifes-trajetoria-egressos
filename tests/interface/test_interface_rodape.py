@@ -153,6 +153,7 @@ def test_coleta_encerrada(client, cenario, relogio, sair):
     ana = _ana_na_secao(client, cenario, 2)
     antes = c.retrato(ana)
     relogio.agora = c.DEPOIS_DO_FIM
+    ci.entrar_como(client, ana.conclusao.pessoa)
     resposta = _secao(client, ana.pk, 2, _completa(cenario, 2), sair=sair)
     assert resposta.status_code == 200 and c.retrato(ana) == antes
     assert "O período de resposta desta pesquisa foi encerrado." in ci.texto_visivel(resposta)

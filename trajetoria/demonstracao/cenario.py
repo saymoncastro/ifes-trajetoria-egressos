@@ -29,12 +29,14 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
-from trajetoria.academico.incorporacao import incorporar_pessoa
-from trajetoria.academico.models import ConclusaoAcademica, Pessoa
+from trajetoria.academico.models import Pessoa
+from trajetoria.acesso.chaves import ChavesInvalidas, chaves_de_acesso
+from trajetoria.acesso.material import incorporar_com_material
 from trajetoria.campanha import operacoes as op_campanha
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.campanha.models import Campanha
 from trajetoria.campanha.regras import CampanhaRejeitada
+from trajetoria.demonstracao.base import base_somente_simulada
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.simulada import FonteSimulada
@@ -91,11 +93,16 @@ def preparar() -> Resumo:
             "O modo de demonstração está desligado. Defina TRAJETORIA_DEMONSTRACAO=1 num "
             "ambiente local."
         )
+    try:
+        chaves_de_acesso()
+    except ChavesInvalidas:
+        raise PreparoRecusado(
+            "As chaves de acesso não estão configuradas. Defina "
+            "TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO e TRAJETORIA_CHAVE_ACESSO_VERIFICACAO "
+            "(valores distintos, com pelo menos 32 caracteres)."
+        ) from None
     fonte = FonteSimulada()
-    if (
-        Pessoa.objects.exclude(fonte=fonte.codigo).exists()
-        or ConclusaoAcademica.objects.exclude(fonte=fonte.codigo).exists()
-    ):
+    if not base_somente_simulada():
         raise PreparoRecusado(
             "O banco contém dados que não são da fonte simulada. O cenário de demonstração só "
             "é preparado num banco local com dados fictícios."
@@ -110,7 +117,7 @@ def preparar() -> Resumo:
     try:
         with transaction.atomic():
             for pessoa in cenarios.PESSOAS:
-                incorporar_pessoa(fonte, pessoa.id_externo)
+                incorporar_com_material(fonte, pessoa.id_externo)
             baseline = materializar().versao
             versao = _versao_de_demonstracao(baseline)
             for nome, criterios in CAMPANHAS.items():

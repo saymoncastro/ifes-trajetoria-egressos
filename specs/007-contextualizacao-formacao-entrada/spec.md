@@ -676,6 +676,9 @@ delimitação desta feature.
   matrícula, nome ou qualquer outro identificador. NÃO DEVE criar usuário, conta,
   credencial, login, senha, OTP, link mágico, sessão autenticada, vínculo Pessoa ↔ e-mail
   ou CPF normalizado. [Const. — XV, XVI, XXII; Escopo]
+    *(Revisado pela 018)* A entrada por CPF e nascimento pertence à capacidade separada da 018,
+  que entrega a Pessoa resolvida à jornada (018 FR-044, FR-050).
+
 - **FR-003**: Pessoa não registrada no NIAE, ou argumento de natureza errada, DEVE ser
   recusada como **erro de uso**, antes de qualquer gravação, e NÃO DEVE ser confundida
   com situação de domínio ("sem formação", "sem pesquisa"). Conclusão informada que não

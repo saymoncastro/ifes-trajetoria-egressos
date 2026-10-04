@@ -98,6 +98,7 @@ def test_campanha_encerrada_entre_a_tela_e_a_acao(client, campanha, relogio):
     ci.entrar_como(client, _pessoa("SIM-P-0001"))
     client.get("/formacoes/")
     relogio.agora = c.DEPOIS_DO_FIM
+    ci.entrar_como(client, _pessoa("SIM-P-0001"))
     resposta = client.post("/formacoes/entrar/")
     assert resposta["Location"] == "/formacoes/?aviso=situacao"
     assert not Participacao.objects.exists()
@@ -123,7 +124,7 @@ def test_metodos_e_csrf(campanha):
 
 
 def test_sem_pessoa_vai_para_a_entrada(client, campanha):
-    assert client.post("/formacoes/entrar/")["Location"] == "/demonstracao/"
+    assert client.post("/formacoes/entrar/")["Location"] == "/acesso/"
 
 
 # --- /participacoes/<id>/ ------------------------------------------------------------------
@@ -162,6 +163,7 @@ def test_participacao_concluida_vai_para_a_confirmacao(client, campanha, inst):
 def test_participacao_com_campanha_encerrada(client, campanha, relogio):
     pk = _iniciada(client)
     relogio.agora = c.DEPOIS_DO_FIM
+    ci.entrar_como(client, _pessoa("SIM-P-0001"))
     resposta = client.get(f"/participacoes/{pk}/")
     assert resposta.status_code == 200
     assert "O período de resposta desta pesquisa foi encerrado." in ci.texto_visivel(resposta)

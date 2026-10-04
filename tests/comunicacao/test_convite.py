@@ -2,7 +2,7 @@ import pytest
 
 from trajetoria.comunicacao.convite import renderizar_convite
 
-URL = "http://127.0.0.1:8000/demonstracao/"
+URL = "http://127.0.0.1:8000/acesso/"
 
 
 @pytest.mark.parametrize(

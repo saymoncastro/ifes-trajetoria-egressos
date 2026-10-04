@@ -76,3 +76,21 @@ EaD = A distância; "—" = `None` (não informado pela fonte).
 > Observação: "—" em forma de oferta de graduação e pós significa "não informado pela
 > fonte", e não "não se aplica". Se a fonte real precisar distinguir os dois casos, isso
 > será resolvido no vocabulário canônico (DP-007).
+
+## Dados de verificação — fictícios
+
+Dados artificiais da 018; CPFs gerados com dígitos verificadores válidos, sem dados reais.
+
+| Pessoa | CPF | Nascimento | Caso |
+| --- | --- | --- | --- |
+| SIM-P-0001 Ana | 000.000.001-91 | 1998-04-12 | Uma formação |
+| SIM-P-0002 Bruno | 111.444.777-35 | 1990-09-03 | Duas formações |
+| SIM-P-0003 Maria | 000.000.002-72 | 1997-11-25 | Unidades diferentes |
+| SIM-P-0004 Diego | 000.000.003-53 | 1994-02-08 | Três formações |
+| SIM-P-0005 Elisa | — | 2001-06-30 | Sem CPF |
+| SIM-P-0006 João | 000.000.004-34 | 2003-03-14 | Sem conclusão |
+| SIM-P-0007 Fernanda | 000.000.005-15 | 1999-08-21 | Conclusão e matrícula ativa |
+| SIM-P-0008 Gustavo | 000.000.006-04 | 2000-01-17 | Nenhum concluído |
+| SIM-P-0009 sem nome | 000.000.007-87 | — | Sem data |
+| SIM-P-0010 Carla | 000.000.008-68 | 1992-05-05 | CPF compartilhado |
+| SIM-P-0011 Carla | 000.000.008-68 | 1995-10-19 | CPF compartilhado |

@@ -138,7 +138,7 @@ def test_trocar_e_encerrar(client):
 def test_operador_e_pessoa_ficticia_sao_independentes(client, cenario):
     ci.entrar_como(client, cenario.pessoa("SIM-P-0001"))
     client.post("/demonstracao/operador/escolher/", {"operador": B})
-    client.post("/demonstracao/encerrar/")  # encerra a Pessoa, não o operador
+    client.post("/acesso/sair/")  # encerra a Pessoa, não o operador
     assert operador_em_uso(_requisicao(client.cookies[COOKIE].value)) == B
 
 

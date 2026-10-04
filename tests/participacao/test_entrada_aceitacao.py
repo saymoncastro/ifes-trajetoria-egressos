@@ -162,10 +162,12 @@ def _rotas(padroes):
 
 
 def test_10_nenhum_mecanismo_de_autenticacao():
-    # Nenhuma app, middleware ou backend de autenticação ou sessão no projeto.
-    assert not {"django.contrib.auth", "django.contrib.sessions"} & set(settings.INSTALLED_APPS)
+    # A 018 usa sessões fora do domínio; continua sem autenticação por conta/senha.
+    assert "django.contrib.auth" not in settings.INSTALLED_APPS
+    assert "django.contrib.sessions" in settings.INSTALLED_APPS
     middleware = " ".join(getattr(settings, "MIDDLEWARE", [])).lower()
-    assert "session" not in middleware and "auth" not in middleware
+    assert "auth" not in middleware
+    assert "sessionmiddleware" in middleware
     assert not hasattr(settings, "AUTHENTICATION_BACKENDS") or not settings.is_overridden(
         "AUTHENTICATION_BACKENDS"
     )
