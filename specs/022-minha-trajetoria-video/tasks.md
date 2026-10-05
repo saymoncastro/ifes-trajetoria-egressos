@@ -722,7 +722,7 @@ Respostas.
   (research R14) e acrescentar esse teste a `tests/video/test_quadros.py`. Registrar os
   valores medidos no `validacao.md`.
 
-- [ ] T040 **Porta humana (SC-008):** apresentar ao solicitante os quadros-chave e os MP4 de
+- [X] T040 **Porta humana (SC-008):** apresentar ao solicitante os quadros-chave e os MP4 de
   referência para aprovação **antes do merge**. Registrar a aprovação, ou os ajustes
   pedidos, no `validacao.md`.
 
