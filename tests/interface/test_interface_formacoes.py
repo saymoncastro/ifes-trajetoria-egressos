@@ -306,7 +306,7 @@ def test_avisos_fora_da_lista_sao_ignorados(client, inst):
     assert _aviso(client, "?aviso=percurso") is None
 
 
-# --- 014 US6: "Sua trajetória no Ifes" (FR-030 a FR-037) -------------------------------------
+# --- 014 US6: "Suas formações no Ifes" (FR-030 a FR-037; título revisado pela 021 FR-006) -----
 
 
 def _h1(resposta):
@@ -316,12 +316,12 @@ def _h1(resposta):
 def test_titulo_trajetoria_em_todas_as_situacoes(client, inst):
     campanha = c.campanha_aberta(inst.versao)
     for id_externo in ("SIM-P-0001", "SIM-P-0003", "SIM-P-0002"):  # resolvida, seleção, sem pesq.
-        assert _h1(_tela(client, id_externo)[0]) == ["Sua trajetória no Ifes"], id_externo
+        assert _h1(_tela(client, id_externo)[0]) == ["Suas formações no Ifes"], id_externo
     ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
-    assert _h1(_tela(client, "SIM-P-0001")[0]) == ["Sua trajetória no Ifes"]  # sem pendente
+    assert _h1(_tela(client, "SIM-P-0001")[0]) == ["Suas formações no Ifes"]  # sem pendente
     pessoa = Pessoa.objects.create(fonte="simulada", id_externo="SIM-P-T", nome="Teste Exemplo")
     ci.entrar_como(client, pessoa)
-    assert _h1(client.get("/formacoes/")) == ["Sua trajetória no Ifes"]  # sem formação
+    assert _h1(client.get("/formacoes/")) == ["Suas formações no Ifes"]  # sem formação
 
 
 def test_entrada_resolvida_parte_do_fato_e_da_continuacao(client, inst):
@@ -372,3 +372,31 @@ def test_ordem_das_outras_formacoes_e_a_da_007(client, inst):
     outras = [linha for linha in linhas if f"Você concluiu {linha}." not in texto]
     posicoes = [texto.index(linha) for linha in outras]
     assert posicoes == sorted(posicoes) and len(outras) == 2
+
+
+# --- 021: ligação para a Minha trajetória e antecipação (FR-005, FR-070; R15, R16) ----------
+
+
+def test_ligacao_para_a_narrativa_so_depois_de_concluir(client, inst):
+    campanha = c.campanha_aberta(inst.versao)
+    resposta, texto = _tela(client, "SIM-P-0001")
+    assert "Ver minha trajetória no Ifes" not in texto
+    ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
+    resposta, texto = _tela(client, "SIM-P-0001")
+    assert 'href="/minha-trajetoria/">Ver minha trajetória no Ifes' in resposta.content.decode()
+
+
+def test_antecipacao_so_com_pesquisa_a_responder(client, inst):
+    campanha = c.campanha_aberta(inst.versao)
+    _, texto = _tela(client, "SIM-P-0001")
+    assert "Ao final, você poderá ver sua trajetória no Ifes." in texto
+    ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
+    _, texto = _tela(client, "SIM-P-0001")
+    assert "Ao final, você poderá ver sua trajetória no Ifes." not in texto
+
+
+def test_aviso_liga_as_formacoes():
+    """021 FR-006 (R16): as telas de estado ligam a "Suas formações no Ifes"."""
+    html = open("trajetoria/interface/templates/interface/aviso.html").read()
+    assert '<a href="/formacoes/">Ver suas formações no Ifes</a>' in html
+    assert "Ver sua trajetória no Ifes" not in html

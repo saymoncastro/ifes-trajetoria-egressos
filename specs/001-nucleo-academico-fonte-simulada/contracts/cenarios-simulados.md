@@ -100,3 +100,25 @@ Dados artificiais da 018; CPFs gerados com dígitos verificadores válidos, sem 
 | SIM-P-0012 Helena | 000.000.010-82 | 1980-06-30 | Fonte digital, excluída do preparo (019) |
 
 O par 000.000.009-49 / 2001-06-30 é fictício e inexistente na fonte, para testar declaração.
+
+
+## Nota de revisão pela Feature 021 (2026-10-04)
+
+### Contexto da trajetória (021)
+
+Os valores são fictícios. Ficam em `cenarios.py` (`COMPLEMENTOS`, `AGREGADOS`) e são
+servidos por `ContextoSimulado`, que é separado da `FonteSimulada`. Não afirmam que a fonte
+real fornece ingresso ou agregados (021 FR-064).
+
+| Dado | Valor fictício |
+|---|---|
+| Complemento `SIM-C-0001` (Ana, TADS) | ingresso 2019 |
+| Demais conclusões | sem complemento |
+| Conclusões de TADS na unidade Serra em 2022 | 27, apurado em 2026-01-31 |
+| Conclusões da unidade Serra em 2022 | 812, apurado em 2026-01-31 |
+| Demais recortes (Vila Velha, Cefor, …) | sem agregado |
+
+Os dois agregados são coerentes com as conclusões simuladas do recorte: valor maior ou
+igual ao número delas (021 FR-060).
+
+Referência: [021 — Minha Trajetória: narrativa visual personalizada](../../021-minha-trajetoria-narrativa/spec.md).

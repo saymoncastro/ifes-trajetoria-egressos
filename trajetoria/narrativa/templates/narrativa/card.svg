@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ largura }}" height="{{ altura }}" viewBox="0 0 {{ largura }} {{ altura }}" role="img" aria-labelledby="card-titulo card-descricao">
+<title id="card-titulo">{{ titulo }}</title>
+<desc id="card-descricao">{{ descricao }}</desc>
+{% for e in elementos %}<{{ e.tag }}{% for chave, valor in e.atributos %} {{ chave }}="{{ valor }}"{% endfor %}{% if e.interior is not None %}>{{ e.interior|safe }}</{{ e.tag }}>{% elif e.texto is not None %}>{{ e.texto }}</{{ e.tag }}>{% else %}/>{% endif %}
+{% endfor %}</svg>

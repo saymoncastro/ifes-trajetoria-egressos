@@ -11,6 +11,7 @@ dependencies = [
   "cryptography>=46,<47",
   "Django>=5.2,<5.3",
   "psycopg[binary]>=3.2,<3.4",
+  "resvg-py>=0.5,<0.6",
   "XlsxWriter>=3.2,<4",
 ]
 

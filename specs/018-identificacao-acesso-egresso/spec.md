@@ -843,3 +843,19 @@ As sete escolhas técnicas da versão inicial foram decididas pelo solicitante e
 FR-034 continua sem persistir falhas da verificação. NAO_CONFIRMADA oferece a declaração por selo transitório em POST, sem reavaliar o par. O selo transitório fica na própria 018 (`acesso/transito.py`, chave A), como ponto de saída de FR-035. O sujeito declarante, exclusivo com a sessão de Pessoa e guardando só UUIDs e instantes, pertence à 019 (`declaracao/sessao.py`). A 018 não importa nem referencia a 019; a dependência é só 019 → 018. FR-005 admite a fonte fictícia de acervo histórico. A 018 nunca lê os dados persistidos para consulta ao acervo.
 
 Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).
+
+
+## Nota de revisão pela Feature 021 (2026-10-04)
+
+"Minha Trajetória", listada como fora do escopo, passou a ser especificada pela 021.
+
+- **Sessão:** a página `/minha-trajetoria/` usa a sessão de Pessoa desta feature
+  (`pessoa_em_uso`), sem mudança. Sem Pessoa na sessão, inclusive na sessão do declarante
+  (019), vai para `/acesso/`.
+- **Separação:** a 018 não importa nem conhece a 021. A capacidade de contexto da
+  trajetória, que traz ingresso e agregados, é separada da `FonteAcademica`. O caminho de
+  identidade nunca depende dela (021 FR-071).
+- **Fora do escopo:** a consulta das próprias respostas continua fora (008/DP-802). A 021
+  não lê Respostas.
+
+Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-minha-trajetoria-narrativa/spec.md).

@@ -1,0 +1,92 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block estilo %}{% include "narrativa/narrativa.css" %}{% endblock %}
+{% block conteudo %}
+<div class="narrativa-abertura">
+  <figure class="narrativa-figura">
+    {{ abertura.imagem }}
+    <figcaption>{{ abertura.legenda }}</figcaption>
+  </figure>
+  <h1>{{ titulo }}</h1>
+  {% for frase in abertura.frases %}
+  <p class="{% if forloop.first and abertura.frases|length > 1 %}narrativa-nome{% else %}narrativa-registro{% endif %}">{{ frase.texto }}</p>
+  {% endfor %}
+</div>
+{% for capitulo in capitulos %}
+{% if capitulo.chave == "seu_card" %}
+<section class="narrativa-capitulo narrativa-card" id="card" aria-labelledby="capitulo-seu_card">
+  {% if capitulo.indicador %}<p class="narrativa-indicador">{{ capitulo.indicador }}</p>{% endif %}
+  <h2 id="capitulo-seu_card">{{ capitulo.titulo }}</h2>
+  <p>Uma imagem vertical para compartilhar no story ou no status das redes sociais.</p>
+  {% if card.png %}
+  <img class="narrativa-previa" src="{{ card.arquivo }}" alt="{{ card.alt }}" width="270" height="480">
+  <p class="narrativa-nota">No celular, você também pode tocar e segurar a imagem para salvá-la.</p>
+  {% else %}
+  <div class="narrativa-previa">{{ card.svg }}</div>
+  {% endif %}
+  {% if card.nome_disponivel %}
+  <form method="get" action="/minha-trajetoria/#card" class="narrativa-nome-card">
+    <p><input type="checkbox" id="incluir-nome" name="nome" value="1"{% if card.com_nome %} checked{% endif %}>
+    <label for="incluir-nome">Incluir meu nome no card</label></p>
+    <button type="submit" class="secundario">Atualizar prévia</button>
+  </form>
+  {% endif %}
+  <p class="narrativa-acoes">
+    <a class="botao" href="{{ card.arquivo }}" download="{{ card.nome_do_arquivo }}">Baixar imagem ({{ card.formato }})</a>
+    {% if card.png %}<button type="button" class="secundario" id="compartilhar" data-arquivo="{{ card.arquivo }}" hidden>Compartilhar imagem</button>{% endif %}
+  </p>
+  {% if card.png %}
+  <script>
+  /* 021 FR-073: melhoria progressiva. Só aparece se o navegador compartilha arquivos; abre o
+     menu do próprio celular, cujos destinos dependem do aparelho. Nada é enviado pelo
+     sistema; sem o script, salvar e baixar continuam funcionando. */
+  (function () {
+    var botao = document.getElementById("compartilhar");
+    if (!botao || !window.File || !navigator.canShare || !navigator.share) return;
+    try {
+      if (!navigator.canShare({ files: [new File([""], "x.png", { type: "image/png" })] })) return;
+    } catch (e) { return; }
+    var arquivo = null;
+    fetch(botao.dataset.arquivo, { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.blob() : Promise.reject(); })
+      .then(function (blob) {
+        arquivo = new File([blob], "minha-trajetoria-ifes.png", { type: "image/png" });
+        botao.hidden = false;
+      })
+      .catch(function () {});
+    botao.addEventListener("click", function () {
+      if (arquivo) navigator.share({ files: [arquivo] }).catch(function () {});
+    });
+  })();
+  </script>
+  {% endif %}
+</section>
+{% else %}
+<section class="narrativa-capitulo" aria-labelledby="capitulo-{{ capitulo.chave }}">
+  {% if capitulo.indicador %}<p class="narrativa-indicador">{{ capitulo.indicador }}</p>{% endif %}
+  <h2 id="capitulo-{{ capitulo.chave }}">{{ capitulo.titulo }}</h2>
+  {% for frase in capitulo.abertura %}<p class="narrativa-inicio">{{ frase.texto }}</p>{% endfor %}
+  {% if capitulo.itens %}
+  <ol class="narrativa-linha">
+    {% for item in capitulo.itens %}
+    <li>
+      {% if item.ano %}<span class="narrativa-ano" aria-hidden="true">{{ item.ano }}</span>{% endif %}
+      {% if item.relacao %}<p class="narrativa-relacao">{{ item.relacao.texto }}</p>{% endif %}
+      {% for frase in item.frases %}<p class="{% if frase.tipo == 'atributos' %}narrativa-atributos{% elif forloop.first %}narrativa-fato{% else %}narrativa-derivado{% endif %}">{{ frase.texto }}</p>{% endfor %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+  {% if capitulo.destaques %}
+  <ul class="narrativa-destaques">
+    {% for destaque in capitulo.destaques %}
+    <li><span class="narrativa-numero" aria-hidden="true">{{ destaque.numero }}</span><p>{{ destaque.frase.texto }}</p></li>
+    {% endfor %}
+  </ul>
+  {% for frase in capitulo.apuracoes %}<p class="narrativa-nota">{{ frase.texto }}</p>{% endfor %}
+  {% endif %}
+</section>
+{% endif %}
+{% endfor %}
+<p class="narrativa-voltar"><a href="/formacoes/">Voltar às suas formações</a></p>
+{% endblock %}

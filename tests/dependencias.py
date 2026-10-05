@@ -8,5 +8,6 @@ DEPENDENCIAS_APROVADAS = [
     "cryptography>=46,<47",  # Feature 019: Fernet para selos e consulta ao acervo (R5)
     "Django>=5.2,<5.3",
     "psycopg[binary]>=3.2,<3.4",
+    "resvg-py>=0.5,<0.6",  # Feature 021: PNG do card a partir do SVG (research R11)
     "XlsxWriter>=3.2,<4",  # Feature 013: escrita de XLSX (research R11)
 ]

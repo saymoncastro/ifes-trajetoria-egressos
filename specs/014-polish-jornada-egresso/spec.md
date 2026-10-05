@@ -995,3 +995,25 @@ indicado):
 **Validação posterior registrada (não é decisão institucional)**: MF-03 e os demais
 itens [T] de FR-050; o resultado do item 4 orienta uma eventual decisão futura sobre
 MF-03.
+
+
+## Nota de revisão pela Feature 021 (2026-10-04)
+
+- **FR-030:** o título da tela de formações passa de "Sua trajetória no Ifes" a "Suas
+  formações no Ifes" (021 FR-006). O nome "Minha trajetória no Ifes" fica reservado à
+  devolutiva. A ligação das telas de estado (`aviso.html`) passa a "Ver suas formações no
+  Ifes".
+- **FR-041:** na confirmação de Participação ancorada em Conclusão Acadêmica, a ação única
+  passa a ser "Ver minha trajetória no Ifes", que leva a `/minha-trajetoria/` (021
+  FR-003). A confirmação declarada (019) não muda (021 FR-007). A confirmação continua sem
+  download, prévia ou trecho da narrativa (008 FR-063; 021 FR-004).
+- **Tela de formações:**
+  - ganha a ligação "Ver minha trajetória no Ifes" quando há Participação concluída
+    institucional (021 FR-005);
+  - ganha o texto fixo "Ao final, você poderá ver sua trajetória no Ifes." quando há
+    pesquisa a iniciar ou retomar (021 FR-070), sem conteúdo personalizado e fora da
+    Versão.
+
+  A FR-035 continua valendo para esta tela.
+
+Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-minha-trajetoria-narrativa/spec.md).

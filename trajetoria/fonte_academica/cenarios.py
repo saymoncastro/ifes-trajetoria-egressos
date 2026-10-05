@@ -157,3 +157,16 @@ REGISTROS: tuple[RegistroSimulado, ...] = (
 # 019: credencial fictícia que não identifica nenhuma Pessoa da fonte.
 PAR_DECLARANTE = ("00000000949", date(2001, 6, 30))
 PESSOAS_NAO_PREPARADAS = frozenset({"SIM-P-0012"})
+
+# 021 (P2): contexto da trajetória, fictício; não afirma que a fonte real fornece ingresso
+# ou agregados (021 FR-064). Ingresso por conclusão: (ano, data ou None).
+COMPLEMENTOS: dict[str, tuple[int, date | None]] = {
+    "SIM-C-0001": (2019, None),  # Ana, TADS
+}
+# (métrica, curso, unidade, ano, valor, apurado_em). Coerentes com as conclusões simuladas do
+# recorte (FR-060); Vila Velha e Cefor ficam sem agregado, para exercitar a ausência.
+APURACAO_SIMULADA = date(2026, 1, 31)
+AGREGADOS: tuple[tuple[str, str | None, str, int, int, date], ...] = (
+    ("conclusoes_curso_unidade_ano", TADS, "Serra", 2022, 27, APURACAO_SIMULADA),
+    ("conclusoes_unidade_ano", None, "Serra", 2022, 812, APURACAO_SIMULADA),
+)

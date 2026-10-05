@@ -20,8 +20,13 @@ A publicação da cópia é técnica e local, como nos testes das 005–007; a b
 RASCUNHO e nada disso é publicação institucional (002/DP-001). Idempotente: repetir não
 duplica nada. Recomeçar do zero é recriar o banco local — não existe operação para remover
 Participações (005 FR-017) nem para reabrir Campanha (004/DP-405).
+
+Depois da incorporação, carrega o contexto da trajetória da 021 (P2) pela fonte simulada de
+contexto, separada da fonte acadêmica: cada Pessoa num *savepoint* próprio, e uma falha não
+interrompe o preparo nem desfaz a incorporação (021 FR-071).
 """
 
+import logging
 from dataclasses import dataclass
 from datetime import timedelta
 
@@ -36,9 +41,11 @@ from trajetoria.campanha import operacoes as op_campanha
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.campanha.models import Campanha
 from trajetoria.campanha.regras import CampanhaRejeitada
+from trajetoria.contexto_trajetoria.carga import carregar_contexto
 from trajetoria.demonstracao.base import base_somente_simulada
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
 from trajetoria.fonte_academica import cenarios
+from trajetoria.fonte_academica.contexto_simulado import ContextoSimulado
 from trajetoria.fonte_academica.simulada import FonteSimulada
 from trajetoria.formulario_2024 import materializar
 from trajetoria.formulario_2024.materializacao import MaterializacaoRecusada
@@ -49,6 +56,8 @@ from trajetoria.instrumento import operacoes as op_instrumento
 from trajetoria.instrumento.models import Versao
 from trajetoria.instrumento.regras import OperacaoRejeitada
 from trajetoria.participacao.entrada import ResolucaoDaEntrada, situacao_de_entrada
+
+logger = logging.getLogger("trajetoria.demonstracao")
 
 DESIGNACAO_DEMONSTRACAO = "Demonstração — cópia da referência 2024"
 VINCULOS = (
@@ -87,7 +96,7 @@ class Resumo:
     linhas: tuple[str, ...]  # "Nome — situação", sem identificadores
 
 
-def preparar() -> Resumo:
+def preparar(fonte_de_contexto=None) -> Resumo:
     if not settings.TRAJETORIA_DEMONSTRACAO:
         raise PreparoRecusado(
             "O modo de demonstração está desligado. Defina TRAJETORIA_DEMONSTRACAO=1 num "
@@ -120,6 +129,7 @@ def preparar() -> Resumo:
                 if pessoa.id_externo in cenarios.PESSOAS_NAO_PREPARADAS:
                     continue
                 incorporar_com_material(fonte, pessoa.id_externo)
+            _carregar_contextos(fonte_de_contexto or ContextoSimulado())
             baseline = materializar().versao
             versao = _versao_de_demonstracao(baseline)
             for nome, criterios in CAMPANHAS.items():
@@ -139,6 +149,17 @@ def preparar() -> Resumo:
             "preparo de novo."
         ) from None
     return _resumo()
+
+
+def _carregar_contextos(fonte_de_contexto) -> None:
+    """021 P2: o contexto da trajetória vem depois da incorporação e à parte dela."""
+    for pessoa in Pessoa.objects.filter(fonte=FonteSimulada.codigo).order_by("pk"):
+        try:
+            with transaction.atomic():
+                carregar_contexto(fonte_de_contexto, pessoa)
+        except Exception:
+            # Sem dado pessoal; a incorporação já feita não é desfeita (FR-071).
+            logger.warning("Falha ao carregar o contexto da trajetória no preparo")
 
 
 def _exigir_campanhas_em_coleta() -> None:

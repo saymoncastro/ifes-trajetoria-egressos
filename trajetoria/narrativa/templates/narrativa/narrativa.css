@@ -1,0 +1,79 @@
+/* Minha trajetória no Ifes (021). Tokens da 015 (estilo.css) para texto e ações; o tema do
+   card (narrativa/card.py, TEMA_CARD) para os elementos editoriais (FR-029, FR-083). Nenhum
+   recurso externo. Mobile-first: uma coluna, rolagem vertical, legível a partir de 320 px. */
+:root {
+  --card-profundo: #0e3b23;
+  --card-marca: #2f9e41;        /* só grafismo: nós, traço, filete */
+  --card-marca-escura: #257a33; /* o ano: 4,8:1 no creme */
+  --card-creme: #f6f2e8;
+}
+
+/* Abertura: imagem do catálogo com legenda honesta, título e registro (FR-076). */
+.narrativa-abertura { margin: 0 0 var(--espaco-6); }
+.narrativa-figura { position: relative; margin: 0 0 var(--espaco-5); border-radius: var(--raio);
+  overflow: hidden; background: var(--card-creme); }
+.narrativa-imagem { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; }
+.narrativa-figura figcaption {
+  position: absolute; right: var(--espaco-3); bottom: var(--espaco-3);
+  background: var(--card-profundo); color: #ffffff; border-radius: 999px;
+  padding: var(--espaco-1) var(--espaco-3); font-size: var(--fonte-5);
+}
+.narrativa-abertura h1 { color: var(--card-profundo); margin-bottom: var(--espaco-3); }
+.narrativa-nome { color: var(--cor-texto-suave); font-size: var(--fonte-3); margin: 0 0 var(--espaco-2); }
+.narrativa-registro { font-size: var(--fonte-3); margin: 0; }
+
+/* Capítulos: blocos de largura total com fundo alternado, sem telas separadas (R21). */
+.narrativa-capitulo { margin: 0 0 var(--espaco-5); padding: var(--espaco-5) var(--espaco-4);
+  border-radius: var(--raio); background: var(--card-creme); }
+.narrativa-capitulo:nth-of-type(even) { background: var(--cor-fundo);
+  border: var(--borda-fina) solid var(--cor-borda-suave); }
+.narrativa-capitulo h2 { color: var(--card-profundo); margin-top: 0; }
+.narrativa-indicador { margin: 0 0 var(--espaco-1); color: var(--cor-texto-suave);
+  font-size: var(--fonte-5); text-transform: uppercase; letter-spacing: .04em; }
+.narrativa-inicio { font-size: var(--fonte-3); }
+
+/* Linha do tempo: nó e traço em CSS, sem JavaScript (FR-083). */
+.narrativa-linha { list-style: none; margin: 0; padding: 0; }
+.narrativa-linha li { position: relative; margin: 0 0 var(--espaco-5); padding-left: 2.5rem; }
+.narrativa-linha li:last-child { margin-bottom: 0; }
+.narrativa-linha li::before {
+  content: ""; position: absolute; left: 0; top: .1rem; width: 1.5rem; height: 1.5rem;
+  box-sizing: border-box; border-radius: 50%; border: .4rem solid var(--card-marca);
+  background: var(--card-creme);
+}
+.narrativa-linha li:not(:last-child)::after {
+  content: ""; position: absolute; left: calc(.75rem - 2px); top: 1.6rem; width: 4px;
+  bottom: calc(-1 * var(--espaco-5)); background: var(--card-marca);
+}
+.narrativa-ano { display: block; color: var(--card-marca-escura); font-weight: 700;
+  font-size: var(--fonte-2); line-height: 1.2; }
+.narrativa-linha li p { margin: 0 0 var(--espaco-1); }
+.narrativa-fato { font-weight: var(--peso-medio); }
+.narrativa-relacao { font-style: italic; }
+.narrativa-atributos, .narrativa-derivado { color: var(--cor-texto-suave); }
+
+/* Destaques: número grande seguido da frase completa e da apuração (FR-078, FR-083). */
+.narrativa-destaques { list-style: none; margin: 0 0 var(--espaco-3); padding: 0;
+  display: grid; gap: var(--espaco-3); }
+.narrativa-destaques li { background: #ffffff; border-radius: var(--raio);
+  border-left: .5rem solid var(--card-marca); padding: var(--espaco-3) var(--espaco-4); }
+.narrativa-numero { display: block; color: var(--card-profundo); font-weight: 700;
+  font-size: 2.5rem; line-height: 1.1; }
+.narrativa-destaques p { margin: var(--espaco-1) 0 0; }
+.narrativa-voltar { margin-top: var(--espaco-6); }
+
+/* Seu card (021 FR-073): a prévia é a própria imagem 9:16 do story. */
+.narrativa-previa { display: block; max-width: 100%; height: auto; aspect-ratio: 9 / 16;
+  border: var(--borda-fina) solid var(--cor-borda-suave); margin: 0 0 var(--espaco-3); }
+div.narrativa-previa { width: 270px; }
+div.narrativa-previa svg { width: 100%; height: auto; display: block; }
+.narrativa-nota { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
+.narrativa-nome-card { margin: var(--espaco-4) 0; }
+.narrativa-acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-3); align-items: center; }
+a.botao {
+  display: inline-flex; align-items: center; text-decoration: none;
+  background: var(--cor-acao); border-color: var(--cor-acao); color: var(--cor-fundo);
+  border-radius: var(--raio);
+}
+a.botao:hover, a.botao:focus { background: var(--cor-acao-forte); border-color: var(--cor-acao-forte);
+  color: var(--cor-fundo); }

@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ prefixo_titulo }}{% block titulo %}{% endblock %} — Trajetória Ifes (demonstração)</title>
 <style>{% include "interface/estilo.css" %}
-{% include "interface/jornada.css" %}</style>
+{% include "interface/jornada.css" %}
+{% block estilo %}{% endblock %}</style>
 </head>
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
