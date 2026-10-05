@@ -55,42 +55,22 @@ def test_formato_vertical_9_16():
     assert raiz.get("viewBox") == "0 0 1080 1920"
 
 
-@pytest.mark.parametrize("caso", CASOS)
-def test_todo_texto_na_area_segura(caso):
-    fabrica, nome = CASOS[caso]
-    for texto in _textos(card.card_svg(fabrica(), nome=nome)):
-        x, y, tamanho = int(texto.get("x")), int(texto.get("y")), int(texto.get("font-size"))
-        assert y - tamanho >= Y0, texto.text
-        assert y + card.DESCENDENTE * tamanho <= Y1, texto.text
-        negrito = texto.get("font-weight") == "700"
-        assert X0 <= x and x + card.largura(texto.text, tamanho, negrito) <= X1, texto.text
-
-
-@pytest.mark.parametrize("caso", CASOS)
-def test_corpo_minimo(caso):
-    fabrica, nome = CASOS[caso]
-    textos = _textos(card.card_svg(fabrica(), nome=nome))
-    assert all(int(t.get("font-size")) >= card.CORPO_MINIMO for t in textos)
-    titulo = next(t for t in textos if t.text == catalogo.TITULO)
-    assert int(titulo.get("font-size")) >= card.CORPO_TITULO
-
-
 def test_pior_caso_cabe_com_composicao_adaptativa():
-    linhas, exibidas, agregados = card.compor(cn.pior_caso(), cn.NOME_LONGO, True)
-    conteudo = [linha.texto for linha in linhas]
-    assert 1 <= exibidas <= 4
+    """A área segura e o corpo mínimo de cada zona estão em test_card_editorial."""
+    composicao = card.compor(cn.pior_caso(), cn.NOME_LONGO, True)
+    conteudo = _conteudo(card.card_svg(cn.pior_caso(), nome=cn.NOME_LONGO))
+    assert 1 <= composicao.exibidas <= 4
     # Nenhuma formação some sem aviso: as não exibidas entram em "e mais N".
-    omitidas = 4 - exibidas + 3
-    assert catalogo.plural(catalogo.CARD_MAIS, omitidas).format(n=omitidas) in " ".join(conteudo)
-    assert "7 formações registradas no Ifes" in conteudo
+    omitidas = 4 - composicao.exibidas + 3
+    assert catalogo.plural(catalogo.CARD_MAIS, omitidas).format(n=omitidas) in conteudo
     # O nome nunca é truncado: todas as palavras aparecem.
-    assert " ".join(c for c in conteudo[1:3]) == cn.NOME_LONGO
+    assert " ".join(t for t in conteudo if t in cn.NOME_LONGO) == cn.NOME_LONGO
 
 
 def test_caso_maria_mostra_tudo():
-    linhas, exibidas, agregados = card.compor(cn.caso_maria(), "Maria Exemplo", True)
-    assert exibidas == 2 and agregados
-    assert not any(linha.texto.startswith("e mais") for linha in linhas)
+    composicao = card.compor(cn.caso_maria(), "Maria Exemplo", True)
+    assert composicao.exibidas == 2 and composicao.destaques
+    assert not any(t.startswith("e mais") for t in _conteudo(card.card_svg(cn.caso_maria())))
 
 
 def test_nome_so_quando_fornecido():
@@ -99,7 +79,8 @@ def test_nome_so_quando_fornecido():
 
 
 def test_marca_de_demonstracao():
-    assert catalogo.CARD_DEMO in _conteudo(card.card_svg(cn.caso_maria(), demonstracao=True))
+    com = " ".join(_conteudo(card.card_svg(cn.caso_maria(), demonstracao=True)))
+    assert catalogo.CARD_DEMO in com
     assert catalogo.CARD_DEMO not in card.card_svg(cn.caso_maria(), demonstracao=False)
 
 
@@ -115,6 +96,7 @@ def test_conteudo_vedado(caso):
         t for t in _conteudo(svg) if not t.startswith("Dados institucionais")
     ))
     assert "<image" not in svg and "qr" not in texto
+    assert "formações registradas no Ifes" not in texto
 
 
 def test_titulo_descricao_e_fonte():
@@ -122,14 +104,18 @@ def test_titulo_descricao_e_fonte():
     assert raiz.find("s:title", NS).text == catalogo.TITULO
     descricao = raiz.find("s:desc", NS).text
     assert "Maria Exemplo" in descricao and cn.cenarios.TADS in descricao
+    assert "27 conclusões deste curso na unidade Serra em 2022." in descricao
+    assert catalogo.FECHO in descricao
     for texto in raiz.findall("s:text", NS):
         assert texto.get("font-family").startswith("Open Sans")
 
 
 def test_contraste_aa_dos_tokens():
-    tema = card.TEMA_PADRAO
-    assert _contraste(tema["texto"], tema["fundo"]) >= 4.5
-    assert _contraste(tema["suave"], tema["fundo"]) >= 4.5
+    tema = card.TEMA_CARD
+    for cor in ("texto", "suave", "profundo", "marca_escura"):
+        assert _contraste(tema[cor], tema["creme"]) >= 4.5, cor
+    assert _contraste(tema["suave"], tema["branco"]) >= 4.5
+    assert _contraste(tema["branco"], tema["profundo"]) >= 4.5
 
 
 def test_quebra_nunca_corta_palavra():
@@ -142,7 +128,8 @@ def test_quebra_nunca_corta_palavra():
 
 def test_atributo_nao_e_partido():
     linhas = card.quebrar_atributos(
-        [cn.UNIDADE_LONGA, "Pós-graduação", "A distância", "2012"], card.TAMANHO_TEXTO
+        [cn.UNIDADE_LONGA, "Pós-graduação", "A distância", "2012"], card.TAMANHO_DETALHE,
+        limite=card.LIMITE_ITEM,
     )
     assert all(not linha.endswith(" A") and not linha.startswith("distância")
                for linha in linhas)

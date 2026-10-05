@@ -9,7 +9,7 @@ from tests.narrativa import construcao as cn
 from trajetoria.narrativa import catalogo as cat
 from trajetoria.narrativa.montagem import montar
 
-PERMITIDOS = {"curso", "unidade", "ano", "n", "nome", "apuracao"}
+PERMITIDOS = {"curso", "unidade", "ano", "n", "nome", "apuracao", "tipo", "k", "total"}
 
 
 def _placeholders(texto):
@@ -24,7 +24,7 @@ def test_placeholders_do_conjunto_fechado():
 def test_unidade_sem_campus_e_sempre_na_unidade():
     for formulacao in cat.FORMULACOES:
         assert "Campus" not in formulacao, formulacao
-        if "{unidade}" in formulacao:
+        if "{unidade}" in formulacao and formulacao != cat.LEGENDA:
             assert "na unidade {unidade}" in formulacao, formulacao
 
 
@@ -38,8 +38,8 @@ def test_vedadas_cobrem_o_contrato():
 
 
 def test_singular_e_plural():
-    for par in (cat.REGISTRADAS, cat.HA_ANOS, cat.CARD_MAIS, cat.CARD_REGISTRADAS,
-                cat.AGREGADO_CURSO, cat.AGREGADO_UNIDADE):
+    for par in (cat.REGISTRADAS, cat.HA_ANOS, cat.CARD_MAIS, cat.AGREGADO_CURSO,
+                cat.AGREGADO_UNIDADE, cat.DESTAQUE_CURSO, cat.DESTAQUE_UNIDADE):
         assert len(par) == 2
         assert cat.plural(par, 1) == par[0] and cat.plural(par, 2) == par[1]
 
@@ -48,6 +48,20 @@ def test_nenhuma_formulacao_contem_termo_vedado():
     for formulacao in cat.FORMULACOES:
         for termo in cat.VEDADAS:
             assert termo.lower() not in formulacao.lower(), (termo, formulacao)
+
+
+def test_card_editorial_no_catalogo():
+    """FR-076, FR-078, FR-079: rótulos de duas linhas com "conclusões" como sujeito; legenda
+    sem ano; fecho e hashtag fixos."""
+    for par in (cat.DESTAQUE_CURSO, cat.DESTAQUE_UNIDADE):
+        for rotulo in par:
+            assert len(rotulo) == 2 and rotulo[0].startswith("conclus")
+    assert "{ano}" not in cat.LEGENDA + cat.LEGENDA_SEM_UNIDADE
+    assert cat.FECHO == "Essa história também é minha." and cat.HASHTAG == "#SouEgressoIfes"
+    assert cat.CARD_APURACAO == cat.APURACAO
+    assert list(cat.TITULOS_DOS_CAPITULOS.values()) == [
+        "Sua formação", "Sua continuidade no Ifes", "Naquele ano no Ifes", "Seu card",
+    ]
 
 
 def test_formulacoes_sem_texto_tecnico():

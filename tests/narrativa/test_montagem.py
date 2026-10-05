@@ -213,8 +213,12 @@ def test_compartilhavel_ate_quatro_e_omitidas():
 
 def test_compartilhavel_linhas_da_quebra_do_card():
     c = montar(_maria()).compartilhavel
-    assert c.formacoes[0].linhas_curso == card.quebrar_linhas(TADS, card.TAMANHO_CURSO, True)
-    assert c.formacoes[0].linhas_detalhe == ("Serra · Graduação · Presencial · 2022",)
+    assert c.formacoes[0].linhas_curso == card.quebrar_linhas(
+        TADS, card.TAMANHO_CURSO, True, card.LIMITE_ITEM
+    )
+    # O ano vai no nó da linha do tempo, não no detalhe (FR-077).
+    assert c.formacoes[0].linhas_detalhe == ("Serra · Graduação · Presencial",)
+    assert c.unidade_da_imagem == "Serra" and c.apuracao is None
 
 
 def test_compartilhavel_sem_forma_de_oferta():

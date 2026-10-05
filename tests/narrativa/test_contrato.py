@@ -130,3 +130,26 @@ def test_serializacao_deterministica():
 def test_compartilhavel_sem_nome():
     dados = ct.serializar(_narrativa())["compartilhavel"]
     assert "nome" not in dados and dados["nome_disponivel"] is True
+
+
+def test_compartilhavel_com_destaque_apuracao_e_unidade_da_imagem():
+    narrativa = _narrativa()
+    destaque = ct.ContextoCompartilhavel(
+        ct.METRICA_CURSO_UNIDADE_ANO, 27, ("conclusões deste curso", "na unidade Serra em 2022")
+    )
+    compartilhavel = ct.Compartilhavel(
+        **{**narrativa.compartilhavel.__dict__, "contextos_agregados": (destaque,),
+           "apuracao": "Dados institucionais apurados em 31/01/2026.",
+           "unidade_da_imagem": "Serra"}
+    )
+    dados = ct.serializar(
+        ct.TrajetoriaNarrativa(**{**narrativa.__dict__, "compartilhavel": compartilhavel})
+    )["compartilhavel"]
+    assert dados["contextos_agregados"] == [{
+        "metrica": "conclusoes_curso_unidade_ano", "numero": 27,
+        "rotulo": ["conclusões deste curso", "na unidade Serra em 2022"],
+    }]
+    assert dados["apuracao"] == "Dados institucionais apurados em 31/01/2026."
+    assert dados["unidade_da_imagem"] == "Serra"
+    # Ausentes são omitidos, nunca null.
+    assert "apuracao" not in ct.serializar(narrativa)["compartilhavel"]

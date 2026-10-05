@@ -95,4 +95,4 @@ def test_diego_em_ordem_e_ana_sem_outras(client, cenario):
     ana = cenario.pessoa("SIM-P-0001")
     cenario.concluir(ana.conclusoes.get())
     cn.entrar(client, ana)
-    assert "Outras formações no Ifes" not in ci.texto_visivel(client.get(URL))
+    assert "Sua continuidade no Ifes" not in ci.texto_visivel(client.get(URL))

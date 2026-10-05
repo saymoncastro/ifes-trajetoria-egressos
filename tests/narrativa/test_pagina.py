@@ -25,20 +25,31 @@ def _principal(resposta):
     return resposta.content.decode().split('<main id="conteudo"')[1].split("</main>")[0]
 
 
-def test_um_h1_e_secoes_com_h2(pagina):
+def test_um_h1_e_capitulos_com_h2(pagina):
     html = _principal(pagina)
     assert re.findall(r"<h1[^>]*>\s*(.*?)\s*</h1>", html) == ["Minha trajetória no Ifes"]
     h2 = re.findall(r"<h2[^>]*>\s*(.*?)\s*</h2>", html)
-    assert h2[:3] == [
-        "O que o Ifes registra sobre você", "Sua trajetória acadêmica", "Outras formações no Ifes",
-    ]
-    assert "Naquele ano no Ifes" not in h2  # P1: sem agregado, a seção não existe
+    # P1: sem agregado, "Naquele ano no Ifes" não existe (FR-026, FR-027).
+    assert h2 == ["Sua formação", "Sua continuidade no Ifes", "Seu card"]
+    indicadores = re.findall(r'<p class="narrativa-indicador">(.*?)</p>', html)
+    assert indicadores == ["Capítulo 1 de 3", "Capítulo 2 de 3", "Capítulo 3 de 3"]
 
 
-def test_formacoes_em_lista_ordenada(pagina):
+def test_abertura_com_imagem_e_legenda_sem_ano(pagina):
     html = _principal(pagina)
-    lista = re.search(r"<ol[^>]*>(.*?)</ol>", html, re.S).group(1)
-    assert lista.count("<li") == 2
+    abertura = html.split('<div class="narrativa-abertura">')[1].split("</div>")[0]
+    assert '<svg aria-hidden="true"' in abertura and "<text" not in abertura
+    legenda = re.search(r"<figcaption>(.*?)</figcaption>", abertura).group(1)
+    assert legenda == "Unidade Serra · ilustração"
+    assert not re.search(r"\b\d{4}\b", legenda)
+
+
+def test_linha_do_tempo_por_capitulo(pagina):
+    html = _principal(pagina)
+    listas = re.findall(r'<ol class="narrativa-linha">(.*?)</ol>', html, re.S)
+    assert [lista.count("<li") for lista in listas] == [1, 1]
+    assert "2022" in listas[0] and "Tecnologia em Análise" in listas[0]
+    assert "Depois dessa formação" in listas[1] and "2025" in listas[1]
 
 
 def test_nome_uma_vez_e_discreto(pagina):
@@ -73,3 +84,29 @@ def test_css_sem_largura_fixa_nem_nowrap():
     assert all(px <= 320 for px in larguras)
     assert "nowrap" not in css
     assert "http" not in css
+
+
+def test_indicador_so_com_dois_ou_mais_capitulos():
+    from trajetoria.narrativa.montagem import montar
+    from trajetoria.narrativa.views import _capitulos
+
+    # Formação sem nenhum atributo: só o capítulo do card, sem indicador.
+    so_card = _capitulos(montar(cn.entrada([cn.fato()])))
+    assert [c["chave"] for c in so_card] == ["seu_card"] and so_card[0]["indicador"] is None
+    uma = _capitulos(montar(cn.entrada([cn.fato(curso="A", ano_conclusao=2020)])))
+    assert [c["chave"] for c in uma] == ["sua_formacao", "seu_card"]
+    assert [c["indicador"] for c in uma] == ["Capítulo 1 de 2", "Capítulo 2 de 2"]
+
+
+def test_continuidade_so_com_duas_ou_mais_formacoes():
+    from trajetoria.narrativa.montagem import montar
+    from trajetoria.narrativa.views import _capitulos
+
+    duas = cn.entrada(
+        [cn.fato(curso="A", ano_conclusao=2018), cn.fato(curso="B", ano_conclusao=2021)]
+    )
+    capitulos = {c["chave"]: c for c in _capitulos(montar(duas))}
+    assert [i["ano"] for i in capitulos["continuidade"]["itens"]] == [2021]
+    assert capitulos["continuidade"]["itens"][0]["relacao"].texto.startswith("Depois")
+    uma = _capitulos(montar(cn.entrada([cn.fato(curso="A")])))
+    assert "continuidade" not in {c["chave"] for c in uma}

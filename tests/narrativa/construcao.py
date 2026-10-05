@@ -98,19 +98,31 @@ def formacao_card(curso, unidade, nivel, modalidade, ano):
     from trajetoria.narrativa import card
     from trajetoria.narrativa.contrato import FormacaoCompartilhavel
 
-    atributos = [a for a in (unidade, nivel, modalidade, None if ano is None else str(ano)) if a]
+    atributos = [a for a in (unidade, nivel, modalidade) if a]
     return FormacaoCompartilhavel(
         curso, unidade, nivel, modalidade, ano,
-        card.quebrar_linhas(curso, card.TAMANHO_CURSO, True) if curso else (),
-        card.quebrar_atributos(atributos, card.TAMANHO_TEXTO),
+        card.quebrar_linhas(curso, card.TAMANHO_CURSO, True, card.LIMITE_ITEM) if curso else (),
+        card.quebrar_atributos(atributos, card.TAMANHO_DETALHE, limite=card.LIMITE_ITEM),
     )
 
 
-def agregado_card(texto):
-    from trajetoria.narrativa import card
-    from trajetoria.narrativa.contrato import ContextoCompartilhavel
+def destaque_card(numero, unidade, ano, por_curso=True):
+    from trajetoria.narrativa import catalogo
+    from trajetoria.narrativa.contrato import (
+        METRICA_CURSO_UNIDADE_ANO,
+        METRICA_UNIDADE_ANO,
+        ContextoCompartilhavel,
+    )
 
-    return ContextoCompartilhavel(texto, card.quebrar_linhas(texto, card.TAMANHO_TEXTO))
+    par = catalogo.DESTAQUE_CURSO if por_curso else catalogo.DESTAQUE_UNIDADE
+    return ContextoCompartilhavel(
+        METRICA_CURSO_UNIDADE_ANO if por_curso else METRICA_UNIDADE_ANO,
+        numero,
+        tuple(linha.format(unidade=unidade, ano=ano) for linha in catalogo.plural(par, numero)),
+    )
+
+
+APURACAO = "Dados institucionais apurados em 31/01/2026."
 
 
 def compartilhavel(formacoes, omitidas=0, agregados=(), nome_disponivel=True):
@@ -122,41 +134,69 @@ def compartilhavel(formacoes, omitidas=0, agregados=(), nome_disponivel=True):
         formacoes_registradas=len(formacoes) + omitidas,
         contextos_agregados=tuple(agregados),
         nome_disponivel=nome_disponivel,
+        apuracao=APURACAO if agregados else None,
+        unidade_da_imagem=formacoes[0].unidade if formacoes else None,
     )
 
 
+def par_de_destaques(unidade, ano):
+    return [destaque_card(27, unidade, ano), destaque_card(812, unidade, ano, por_curso=False)]
+
+
 def pior_caso():
-    """Nome longo, 4 cursos longos numa unidade longa, "e mais 3" e um par de agregados."""
+    """Nome longo, 4 cursos longos numa unidade longa, "e mais 3" e um par de destaques."""
     formacoes = [
         formacao_card(curso, UNIDADE_LONGA, "Pós-graduação", "A distância", 2012 + 3 * i)
         for i, curso in enumerate(CURSOS_LONGOS)
     ]
-    agregados = [
-        agregado_card(
-            f"Em 2012, 27 conclusões de {CURSOS_LONGOS[0]} foram registradas na unidade "
-            f"{UNIDADE_LONGA}, incluindo a sua."
-        ),
-        agregado_card(f"Em 2012, 812 conclusões foram registradas na unidade {UNIDADE_LONGA}."),
-        agregado_card("Dados institucionais apurados em 31/01/2026."),
-    ]
-    return compartilhavel(formacoes, omitidas=3, agregados=agregados)
+    return compartilhavel(formacoes, omitidas=3, agregados=par_de_destaques(UNIDADE_LONGA, 2012))
+
+
+TADS_SERRA = (cenarios.TADS, "Serra", "Graduação", "Presencial", 2022)
+ESPECIALIZACAO_CEFOR = (
+    "Especialização em Informática na Educação", "Cefor", "Pós-graduação", "A distância", 2025,
+)
 
 
 def caso_maria():
     return compartilhavel(
-        [
-            formacao_card(cenarios.TADS, "Serra", "Graduação", "Presencial", 2022),
-            formacao_card(
-                "Especialização em Informática na Educação", "Cefor", "Pós-graduação",
-                "A distância", 2025,
-            ),
-        ],
-        agregados=[
-            agregado_card(
-                f"Em 2022, 27 conclusões de {cenarios.TADS} foram registradas na unidade "
-                "Serra, incluindo a sua."
-            ),
-            agregado_card("Em 2022, 812 conclusões foram registradas na unidade Serra."),
-            agregado_card("Dados institucionais apurados em 31/01/2026."),
-        ],
+        [formacao_card(*TADS_SERRA), formacao_card(*ESPECIALIZACAO_CEFOR)],
+        agregados=par_de_destaques("Serra", 2022),
     )
+
+
+def caso_ana():
+    return compartilhavel([formacao_card(*TADS_SERRA)], agregados=par_de_destaques("Serra", 2022))
+
+
+def caso_diego():
+    return compartilhavel([
+        formacao_card("Técnico em Química", "Vila Velha", "Técnico", "Presencial", 2012),
+        formacao_card("Licenciatura em Química", "Vila Velha", "Graduação", "Presencial", 2017),
+        formacao_card("Mestrado Profissional em Química", "Vila Velha", "Pós-graduação",
+                      "Presencial", 2020),
+    ])
+
+
+def caso_quatro():
+    return compartilhavel([
+        formacao_card("Técnico em Informática", "Serra", "Técnico", "Presencial", 2014),
+        formacao_card(*TADS_SERRA),
+        formacao_card(*ESPECIALIZACAO_CEFOR),
+        formacao_card("Mestrado Profissional em Educação Profissional e Tecnológica", "Vitória",
+                      "Pós-graduação", "Presencial", 2026),
+    ])
+
+
+def caso_sem_imagem_propria():
+    """Unidade sem entrada no catálogo de imagens: cai na genérica, com a legenda da
+    unidade da formação."""
+    return compartilhavel(
+        [formacao_card("Engenharia de Controle e Automação", "Linhares", "Graduação",
+                       "Presencial", 2019)],
+        agregados=[destaque_card(41, "Linhares", 2019)],
+    )
+
+
+def caso_sem_unidade():
+    return compartilhavel([formacao_card("Técnico em Mecânica", None, "Técnico", None, None)])

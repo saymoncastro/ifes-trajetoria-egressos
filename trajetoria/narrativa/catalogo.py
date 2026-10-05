@@ -17,6 +17,15 @@ TITULOS_DAS_SECOES = {
 }
 TITULO_DO_CARD = "Seu card"
 
+# Página em capítulos (FR-026, R21): os títulos substituem, na página, os das seções.
+TITULOS_DOS_CAPITULOS = {
+    "sua_formacao": "Sua formação",
+    "continuidade": "Sua continuidade no Ifes",
+    "naquele_ano": "Naquele ano no Ifes",
+    "seu_card": TITULO_DO_CARD,
+}
+CAPITULO = "Capítulo {k} de {total}"
+
 # P1 — pares (singular, plural) escolhidos por `plural`.
 REGISTRADAS = (
     "O Ifes registra {n} formação concluída por você.",
@@ -31,7 +40,6 @@ DEPOIS = "Depois dessa formação, você também concluiu {curso}."
 HA_ANOS = ("Há {n} ano desde essa conclusão.", "Há {n} anos desde essa conclusão.")
 CONCLUIDA_EM = "Concluída em {ano}."
 CARD_MAIS = ("e mais {n} formação registrada", "e mais {n} formações registradas")
-CARD_REGISTRADAS = ("{n} formação registrada no Ifes", "{n} formações registradas no Ifes")
 CARD_RODAPE = "Instituto Federal do Espírito Santo"
 CARD_DEMO = "Demonstração — dados fictícios"
 
@@ -48,10 +56,32 @@ AGREGADO_UNIDADE = (
 )
 APURACAO = "Dados institucionais apurados em {apuracao}."
 
+# Card editorial (revisão de 2026-10-05; FR-076, FR-078, FR-079). No card, cada contagem é
+# um número com rótulo de duas linhas, com a mesma semântica de AGREGADO_*: o sujeito é
+# "conclusões", nunca pessoas. Pares (singular, plural) de rótulos.
+DESTAQUE_CURSO = (
+    ("conclusão deste curso", "na unidade {unidade} em {ano}"),
+    ("conclusões deste curso", "na unidade {unidade} em {ano}"),
+)
+DESTAQUE_UNIDADE = (
+    ("conclusão registrada", "na unidade {unidade} em {ano}"),
+    ("conclusões registradas", "na unidade {unidade} em {ano}"),
+)
+CARD_APURACAO = APURACAO
+# A legenda da imagem nunca tem ano: não afirma retratar o período do egresso (FR-076).
+LEGENDA = "Unidade {unidade} · {tipo}"
+LEGENDA_SEM_UNIDADE = "Ifes · {tipo}"
+# Hipóteses de produto; o uso em produção depende da ACS (DP-2110).
+FECHO = "Essa história também é minha."
+HASHTAG = "#SouEgressoIfes"
+
 FORMULACOES = (
     *REGISTRADAS, NOME_REGISTROS, CONCLUIU_COMPLETO, CONCLUIU_SEM_UNIDADE, CONCLUIU_SEM_ANO,
-    CONCLUIU_SO_CURSO, DEPOIS, *HA_ANOS, CONCLUIDA_EM, *CARD_MAIS, *CARD_REGISTRADAS,
-    CARD_RODAPE, CARD_DEMO, INICIO, *AGREGADO_CURSO, *AGREGADO_UNIDADE, APURACAO,
+    CONCLUIU_SO_CURSO, DEPOIS, *HA_ANOS, CONCLUIDA_EM, *CARD_MAIS, CARD_RODAPE, CARD_DEMO,
+    INICIO, *AGREGADO_CURSO, *AGREGADO_UNIDADE, APURACAO,
+    *(linha for par in (DESTAQUE_CURSO, DESTAQUE_UNIDADE) for rotulo in par for linha in rotulo),
+    LEGENDA, LEGENDA_SEM_UNIDADE, FECHO, HASHTAG, CAPITULO, TITULO,
+    *TITULOS_DOS_CAPITULOS.values(),
 )
 
 # Rede de segurança contra o erro grosseiro (contracts/catalogo.md). A garantia principal é

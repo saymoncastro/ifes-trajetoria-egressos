@@ -133,19 +133,27 @@ class FormacaoCompartilhavel:
 
 @dataclass(frozen=True)
 class ContextoCompartilhavel:
-    texto: str
-    linhas: tuple[str, ...]
+    """Um destaque do card (FR-078): o número e o rótulo de duas linhas do catálogo, com a
+    mesma semântica da frase completa da página (FR-061)."""
+
+    metrica: str
+    numero: int
+    rotulo: tuple[str, ...]
 
 
 @dataclass(frozen=True)
 class Compartilhavel:
-    """Subconjunto do card (FR-033). Sem nome: a rota o acrescenta por escolha (FR-034)."""
+    """Subconjunto do card (FR-033). Sem nome: a rota o acrescenta por escolha (FR-034).
+    `apuracao` é o texto do rodapé quando há destaque; `unidade_da_imagem` escolhe a imagem
+    e a legenda da abertura (FR-076)."""
 
     formacoes: tuple[FormacaoCompartilhavel, ...]
     formacoes_omitidas: int
     formacoes_registradas: int
     contextos_agregados: tuple[ContextoCompartilhavel, ...]
     nome_disponivel: bool
+    apuracao: str | None = None
+    unidade_da_imagem: str | None = None
 
 
 @dataclass(frozen=True)
@@ -242,9 +250,13 @@ def serializar(n: TrajetoriaNarrativa) -> dict:
             "formacoes_omitidas": n.compartilhavel.formacoes_omitidas,
             "formacoes_registradas": n.compartilhavel.formacoes_registradas,
             "contextos_agregados": [
-                {"texto": c.texto, "linhas": list(c.linhas)}
+                {"metrica": c.metrica, "numero": c.numero, "rotulo": list(c.rotulo)}
                 for c in n.compartilhavel.contextos_agregados
             ],
             "nome_disponivel": n.compartilhavel.nome_disponivel,
+            **_sem_ausentes(
+                [("apuracao", n.compartilhavel.apuracao),
+                 ("unidade_da_imagem", n.compartilhavel.unidade_da_imagem)]
+            ),
         },
     }

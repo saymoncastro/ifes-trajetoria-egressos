@@ -1,49 +1,110 @@
-"""Card vertical 9:16 para rede social (Feature 021; contracts/card.md; research R10).
+"""Card editorial vertical 9:16 para rede social (Feature 021; contracts/card.md; R10, R19).
 
-O SVG é a representação-base; o PNG sai dele (`rasterizacao.png_de`). Todo texto fica na
-área segura: as faixas de topo e de base, cobertas pela interface do story, recebem só
-grafismo (FR-072). A quebra de linha mede o texto com as larguras reais das fontes
-embutidas (`metricas.py`), sem cortar palavras nem truncar o nome.
+O SVG é a representação-base; o PNG sai dele (`rasterizacao.png_de`). O card é composto em
+zonas, de cima para baixo (FR-074): abertura (imagem do catálogo, marca e legenda), título,
+linha do tempo, destaques, fecho, rodapé e faixa inferior. Cada zona é uma função que
+devolve os elementos posicionados e a altura que ocupa: a mesma função mede e desenha, e
+nada se sobrepõe.
 
-A composição é adaptativa: mostra até 4 formações, tantas quantas couberem com o corpo
-mínimo; as demais entram em "e mais N" (nenhuma some sem aviso). O par de agregados entra
-só se couber depois das formações exibidas.
+Todo texto fica na área segura; as faixas de topo e de base recebem só imagem e grafismo
+(FR-072). A quebra de linha mede o texto com as larguras reais das fontes embutidas
+(`metricas.py`), sem cortar palavras nem truncar o nome.
+
+Ocupação e corte (FR-080, FR-082): a abertura absorve o espaço livre, entre um mínimo e um
+máximo. Quando falta espaço, a abertura vai ao mínimo, depois saem os destaques e, por fim,
+formações viram "e mais N". Título, nome, curso e fecho nunca são cortados.
 """
 
 from dataclasses import dataclass
+from functools import cache
+from pathlib import Path
 
 from django.template.loader import render_to_string
 
-from trajetoria.narrativa import catalogo, metricas
+from trajetoria.narrativa import catalogo, imagens, metricas
 from trajetoria.narrativa.contrato import Compartilhavel
 
 LARGURA, ALTURA = 1080, 1920
-AREA_SEGURA = (90, 270, 990, 1570)  # x0, y0, x1, y1
-LARGURA_UTIL = AREA_SEGURA[2] - AREA_SEGURA[0]
-CORPO_MINIMO, CORPO_TITULO = 40, 64
+AREA_SEGURA = (90, 270, 990, 1650)  # x0, y0, x1, y1 (orientação da Meta para stories)
+X0, TOPO, X1, BASE = AREA_SEGURA
+LARGURA_UTIL = X1 - X0
 
-TAMANHO_TITULO = CORPO_TITULO
-TAMANHO_NOME = 44
-TAMANHO_CURSO = 44
-TAMANHO_TEXTO = CORPO_MINIMO
-ENTRELINHA = 1.25
-DESCENDENTE = 0.3  # fração do corpo abaixo da linha de base (Open Sans: 0,293)
-
-RECUO_TOPO = 40  # respiro entre o fio da faixa de topo e o título
-ESPACO_TITULO = 28
-ESPACO_NOME = 36
-ESPACO_FORMACAO = 28
-ESPACO_BLOCO = 32
-
-# Tokens da 015 (interface/templates/interface/estilo.css). A cor de marca só em grafismo.
-TEMA_PADRAO = {
-    "fundo": "#eef7f0",   # --cor-institucional
-    "texto": "#1b1b1b",   # --cor-texto (≈ 15,8:1 sobre o fundo)
-    "suave": "#565c65",   # --cor-texto-suave
-    "faixa": "#1b1b1b",   # --cor-texto, só nas faixas (sem as cores de ação: 015 FR-012)
-    "marca": "#2f9e41",   # --cor-marca, só nos fios
+# Tema próprio do card, derivado da marca (FR-040). Sem as cores de ação da 015.
+TEMA_CARD = {
+    "profundo": "#0e3b23",
+    # Grafismo e o título, grande também no celular (o AA de texto grande pede 3:1).
+    "marca": "#2f9e41",
+    # O ano: no celular, 44 px viram ~15 px, texto comum, que pede 4,5:1 (4,8:1 no creme).
+    "marca_escura": "#257a33",
+    "creme": "#f6f2e8",
+    "branco": "#ffffff",
+    "texto": "#1b1b1b",
+    "suave": "#4a5058",
 }
 FAMILIA = "Open Sans, system-ui, sans-serif"
+DESCENDENTE = 0.3  # fração do corpo abaixo da linha de base (Open Sans: 0,293)
+
+
+@dataclass(frozen=True)
+class Corpo:
+    tamanho: int
+    entrelinha: int
+    negrito: bool = False
+
+
+# Tabela única de medidas: mede e desenha (R19). Hierarquia do FR-081.
+MEDIDAS = {
+    "titulo": Corpo(84, 92, True),
+    "nome": Corpo(44, 56),
+    "ano": Corpo(44, 52, True),
+    "curso": Corpo(44, 52, True),
+    "detalhe": Corpo(36, 46),
+    "mais": Corpo(40, 52, True),
+    "numero": Corpo(88, 96, True),
+    "rotulo": Corpo(30, 36),
+    "fecho": Corpo(46, 58, True),
+    "hashtag": Corpo(36, 60, True),
+    "legenda": Corpo(30, 36),
+    "rodape": Corpo(28, 36),
+    "apuracao": Corpo(26, 34),
+}
+TAMANHO_CURSO = MEDIDAS["curso"].tamanho
+TAMANHO_DETALHE = MEDIDAS["detalhe"].tamanho
+
+RECUO_ITEM = 74  # do nó ao texto da linha do tempo
+X_ITEM = X0 + RECUO_ITEM
+LIMITE_ITEM = X1 - X_ITEM
+RAIO_NO, RAIO_CENTRO, TRACO = 22, 9, 6
+
+ESPACO_ABERTURA = 8  # da borda em onda ao título
+ESPACO_NOME = 8
+ESPACO_BLOCO = 36
+ESPACO_ITEM = 28
+ESPACO_FECHO = 40  # mínimo entre o conteúdo e o fecho
+ESPACO_HASHTAG = 16
+ESPACO_RODAPE = 24
+
+# Abertura: borda inferior entre o mínimo e o máximo (FR-080). Com o mínimo, a imagem ocupa
+# 21,9% do quadro (SC-015: ≥ 20%). A legenda divide a faixa da marca quando não colide com
+# ela na horizontal; senão, a abertura cresce para a legenda caber abaixo da marca.
+ABERTURA_MINIMA, ABERTURA_MAXIMA = 420, 890
+ALTURA_DA_ARTE = 900  # viewBox das imagens do catálogo: 1080 × 900
+MARCA = (X0 - 20, TOPO + 6, 390, 116)  # pílula branca: x, y, largura, altura
+RECUO_LEGENDA = 76  # da borda da abertura à base da pílula da legenda
+PILULA_LEGENDA = 22  # folga horizontal do texto na pílula
+
+DESTAQUE_ALTO, DESTAQUE_BAIXO, DESTAQUE_VAO = 200, 140, 24
+DESTAQUE_TEXTO, DESTAQUE_MARGEM = 36, 24  # recuo do texto e folga à direita no cartão
+
+TITULO_LINHAS = ("Minha trajetória", "no Ifes")
+assert " ".join(TITULO_LINHAS) == catalogo.TITULO
+
+ASSINATURA = Path(__file__).resolve().parent.parent / (
+    "interface/templates/interface/assinatura.svg"
+)
+
+
+# --- Medida de texto ----------------------------------------------------------------------
 
 
 def largura(texto: str, tamanho: float, negrito: bool = False) -> float:
@@ -93,144 +154,397 @@ def quebrar_atributos(
     )
 
 
+# --- Elementos ----------------------------------------------------------------------------
+
+
 @dataclass(frozen=True)
-class Linha:
-    texto: str
-    x: int
-    y: int  # linha de base
-    tamanho: int
-    negrito: bool
-    cor: str
+class Elemento:
+    """Um elemento SVG. `interior` é marcação de um ativo versionado (imagem do catálogo,
+    assinatura), embutida sem escape; o texto vem sempre escapado pelo template."""
+
+    tag: str
+    atributos: tuple[tuple[str, object], ...]
+    texto: str | None = None
+    interior: str | None = None
 
 
-def _altura(qtd_linhas: int, tamanho: int) -> float:
-    return qtd_linhas * tamanho * ENTRELINHA
-
-
-def _bloco(linhas, y, tamanho, negrito, cor) -> tuple[list[Linha], float]:
-    saida = []
-    for texto in linhas:
-        base = y + tamanho  # topo da linha + corpo ≈ linha de base com folga da entrelinha
-        saida.append(Linha(texto, AREA_SEGURA[0], round(base), tamanho, negrito, cor))
-        y += tamanho * ENTRELINHA
-    return saida, y
-
-
-def compor(c: Compartilhavel, nome: str | None, demonstracao: bool, tema=TEMA_PADRAO):
-    """Linhas posicionadas e o número de formações exibidas. Determinística."""
-    x0, y0, _, y1 = AREA_SEGURA
-    texto, suave = tema["texto"], tema["suave"]
-    titulo = quebrar_linhas(catalogo.TITULO, TAMANHO_TITULO, True)
-    linhas_nome = quebrar_linhas(nome, TAMANHO_NOME) if nome else ()
-    registradas = catalogo.plural(catalogo.CARD_REGISTRADAS, c.formacoes_registradas).format(
-        n=c.formacoes_registradas
+def _el(tag, texto=None, interior=None, **atributos) -> Elemento:
+    pares = tuple(
+        (chave.rstrip("_").replace("_", "-"), valor) for chave, valor in atributos.items()
     )
-    rodape = [catalogo.CARD_RODAPE] + ([catalogo.CARD_DEMO] if demonstracao else [])
-    linhas_rodape = [linha for t in rodape for linha in quebrar_linhas(t, TAMANHO_TEXTO)]
+    return Elemento(tag, pares, texto, interior)
 
-    def mais(n):
-        return quebrar_linhas(
-            catalogo.plural(catalogo.CARD_MAIS, n).format(n=n), TAMANHO_TEXTO
-        )
 
-    fixo = (
-        _altura(len(titulo), TAMANHO_TITULO) + ESPACO_TITULO
-        + (_altura(len(linhas_nome), TAMANHO_NOME) + ESPACO_NOME if linhas_nome else 0)
-        + _altura(len(quebrar_linhas(registradas, TAMANHO_TEXTO)), TAMANHO_TEXTO)
-        + ESPACO_BLOCO
-        + _altura(len(linhas_rodape), TAMANHO_TEXTO)
+def _base(topo: float, corpo: Corpo) -> int:
+    """Linha de base que centra a altura das maiúsculas e dos descendentes na linha."""
+    return round(topo + corpo.entrelinha / 2 + 0.24 * corpo.tamanho)
+
+
+def _texto(x, topo, texto, medida, cor, ancora=None) -> Elemento:
+    corpo = MEDIDAS[medida]
+    extras = {"font_weight": "700"} if corpo.negrito else {}
+    if ancora:
+        extras["text_anchor"] = ancora
+    return _el(
+        "text", texto, class_=medida, x=round(x), y=_base(topo, corpo), font_family=FAMILIA,
+        font_size=corpo.tamanho, **extras, fill=cor,
     )
-    disponivel = (y1 - y0) - RECUO_TOPO - fixo
 
-    def altura_formacao(f):
-        return (
-            _altura(len(f.linhas_curso), TAMANHO_CURSO)
-            + _altura(len(f.linhas_detalhe), TAMANHO_TEXTO)
-            + ESPACO_FORMACAO
+
+def _linhas(x, topo, linhas, medida, cor):
+    corpo = MEDIDAS[medida]
+    elementos = [
+        _texto(x, topo + i * corpo.entrelinha, t, medida, cor) for i, t in enumerate(linhas)
+    ]
+    return elementos, len(linhas) * corpo.entrelinha
+
+
+def _quebra(texto, medida, limite=LARGURA_UTIL):
+    corpo = MEDIDAS[medida]
+    return quebrar_linhas(texto, corpo.tamanho, corpo.negrito, limite)
+
+
+def _cabe(texto, medida, limite) -> bool:
+    corpo = MEDIDAS[medida]
+    return largura(texto, corpo.tamanho, corpo.negrito) <= limite
+
+
+@cache
+def _svg_interior(caminho: Path) -> tuple[str, str]:
+    """viewBox e marcação interna de um SVG versionado."""
+    texto = caminho.read_text(encoding="utf-8")
+    raiz = texto[texto.index("<svg"):]
+    abertura = raiz[: raiz.index(">") + 1]
+    viewbox = abertura.split('viewBox="', 1)[1].split('"', 1)[0]
+    return viewbox, raiz[len(abertura): raiz.rindex("</svg>")].strip()
+
+
+# --- Zonas --------------------------------------------------------------------------------
+
+
+def _legenda(c: Compartilhavel):
+    imagem = imagens.imagem_para(c.unidade_da_imagem)
+    texto = imagens.legenda(imagem, c.unidade_da_imagem)
+    return imagem, _quebra(texto, "legenda", LARGURA_UTIL - 2 * PILULA_LEGENDA)
+
+
+def _altura_da_legenda(linhas) -> int:
+    return MEDIDAS["legenda"].entrelinha * len(linhas) + 16
+
+
+def abertura(c: Compartilhavel, fim: int, tema) -> list[Elemento]:
+    """Imagem em sangria até `fim`, borda em onda, marca e legenda (FR-075, FR-076)."""
+    imagem, linhas = _legenda(c)
+    viewbox, interior = _svg_interior(imagens.PASTA / imagem.arquivo)
+    elementos = [
+        _el("svg", interior=interior, class_="abertura", x=0, y=0, width=LARGURA, height=fim,
+            viewBox=viewbox, preserveAspectRatio="xMidYMax slice"),
+        _el("path", class_="onda", fill=tema["creme"],
+            d=f"M0 {fim - 60} C 270 {fim - 130} 640 {fim + 10} {LARGURA} {fim - 90} "
+              f"L {LARGURA} {fim} L 0 {fim} Z"),
+    ]
+    elementos += marca(tema)
+    alta = _altura_da_legenda(linhas)
+    topo = fim - RECUO_LEGENDA - alta
+    larga = _largura_da_legenda(linhas)
+    elementos.append(
+        _el("rect", class_="legenda-fundo", x=round(X1 + PILULA_LEGENDA - larga), y=topo,
+            width=round(larga), height=alta, rx=26, fill=tema["profundo"])
+    )
+    for i, texto in enumerate(linhas):
+        elementos.append(
+            _texto(X1, topo + 8 + i * MEDIDAS["legenda"].entrelinha, texto, "legenda",
+                   tema["branco"], ancora="end")
         )
+    return elementos
 
-    exibidas, usado = 0, 0.0
+
+def marca(tema) -> list[Elemento]:
+    """A assinatura visual do Ifes, a mesma do cabeçalho, sobre pílula branca (FR-075)."""
+    x, y, larga, alta = MARCA
+    viewbox, interior = _svg_interior(ASSINATURA)
+    return [
+        _el("rect", class_="marca-fundo", x=x, y=y, width=larga, height=alta, rx=18,
+            fill=tema["branco"]),
+        _el("svg", interior=interior, class_="marca", x=x + 15, y=y + 8, width=360, height=100,
+            viewBox=viewbox),
+    ]
+
+
+def _largura_da_legenda(linhas) -> float:
+    return max(largura(t, MEDIDAS["legenda"].tamanho) for t in linhas) + 2 * PILULA_LEGENDA
+
+
+def abertura_minima(c: Compartilhavel) -> int:
+    _, linhas = _legenda(c)
+    esquerda = X1 + PILULA_LEGENDA - _largura_da_legenda(linhas)
+    lado_a_lado = esquerda >= MARCA[0] + MARCA[2] + 20
+    topo = MARCA[1] if lado_a_lado else MARCA[1] + MARCA[3] + 20
+    return max(ABERTURA_MINIMA, topo + _altura_da_legenda(linhas) + RECUO_LEGENDA)
+
+
+def titulo(topo: float, nome: str | None, tema):
+    corpo = MEDIDAS["titulo"]
+    elementos = [
+        _texto(X0, topo, TITULO_LINHAS[0], "titulo", tema["profundo"]),
+        _texto(X0, topo + corpo.entrelinha, TITULO_LINHAS[1], "titulo", tema["marca"]),
+    ]
+    altura = 2 * corpo.entrelinha
+    if nome:
+        bloco, alta = _linhas(X0, topo + altura + ESPACO_NOME, _quebra(nome, "nome"), "nome",
+                              tema["suave"])
+        elementos += bloco
+        altura += ESPACO_NOME + alta
+    return elementos, altura
+
+
+def _mais(n: int) -> str:
+    return catalogo.plural(catalogo.CARD_MAIS, n).format(n=n)
+
+
+def linha_do_tempo(topo: float, formacoes, omitidas: int, tema):
+    """Um nó por formação, ano em destaque, curso em negrito e atributos; traço entre os
+    nós (FR-077). As não exibidas entram em "e mais N" (FR-082)."""
+    textos, centros, y = [], [], topo
+    for i, f in enumerate(formacoes):
+        if i:
+            y += ESPACO_ITEM
+        inicio = y
+        if f.ano_conclusao is not None:
+            textos.append(_texto(X_ITEM, y, str(f.ano_conclusao), "ano", tema["marca_escura"]))
+            y += MEDIDAS["ano"].entrelinha
+        bloco, alta = _linhas(X_ITEM, y, f.linhas_curso, "curso", tema["texto"])
+        textos += bloco
+        y += alta
+        bloco, alta = _linhas(X_ITEM, y, f.linhas_detalhe, "detalhe", tema["suave"])
+        textos += bloco
+        y += alta
+        primeira = "ano" if f.ano_conclusao is not None else "curso"
+        centros.append(round(inicio + MEDIDAS[primeira].entrelinha / 2))
+        y = max(y, inicio + 2 * RAIO_NO)
+    if omitidas:
+        y += ESPACO_ITEM
+        bloco, alta = _linhas(X_ITEM, y, _quebra(_mais(omitidas), "mais", LIMITE_ITEM), "mais",
+                              tema["suave"])
+        textos += bloco
+        y += alta
+    grafismo = []
+    cx = X0 + RAIO_NO
+    if len(centros) > 1:
+        grafismo.append(_el("line", class_="traco", x1=cx, y1=centros[0], x2=cx, y2=centros[-1],
+                            stroke=tema["marca"], stroke_width=TRACO))
+    for cy in centros:
+        grafismo.append(_el("circle", class_="no", cx=cx, cy=cy, r=RAIO_NO, fill=tema["marca"]))
+        grafismo.append(_el("circle", class_="no-centro", cx=cx, cy=cy, r=RAIO_CENTRO,
+                            fill=tema["creme"]))
+    return grafismo + textos, y - topo
+
+
+def numero_formatado(n: int) -> str:
+    return f"{n:,}".replace(",", ".")
+
+
+def _arranjo(contextos) -> str | None:
+    """"lado" (dois cartões lado a lado), "faixa" (um cartão por linha, número à esquerda)
+    ou None, quando algum rótulo não cabe em duas linhas (FR-078)."""
+    if not contextos:
+        return None
+    meia = (LARGURA_UTIL - DESTAQUE_VAO) / 2 - DESTAQUE_TEXTO - DESTAQUE_MARGEM
+    if len(contextos) == 2 and all(
+        _cabe(numero_formatado(d.numero), "numero", meia)
+        and all(_cabe(r, "rotulo", meia) for r in d.rotulo)
+        for d in contextos
+    ):
+        return "lado"
+    resto = LARGURA_UTIL - 2 * DESTAQUE_TEXTO - DESTAQUE_MARGEM - _coluna_do_numero(contextos)
+    if not all(_cabe(r, "rotulo", resto) for d in contextos for r in d.rotulo):
+        return None
+    return "faixa"
+
+
+def _coluna_do_numero(contextos) -> float:
+    """Largura do maior número: na faixa, os rótulos se alinham depois dele."""
+    corpo = MEDIDAS["numero"]
+    return max(largura(numero_formatado(d.numero), corpo.tamanho, True) for d in contextos)
+
+
+def destaques(topo: float, contextos, tema):
+    """Cartões brancos com filete verde: número ≥ 80 px e rótulo de até 2 linhas (FR-078)."""
+    arranjo = _arranjo(contextos)
+    if arranjo is None:
+        return [], 0
+    elementos = []
+    rotulo = MEDIDAS["rotulo"]
+    if arranjo == "lado":
+        larga = (LARGURA_UTIL - DESTAQUE_VAO) / 2
+        caixas = [(X0 + i * (larga + DESTAQUE_VAO), topo, larga, DESTAQUE_ALTO)
+                  for i in range(len(contextos))]
+        altura = DESTAQUE_ALTO
+    else:
+        caixas = [(X0, topo + i * (DESTAQUE_BAIXO + DESTAQUE_VAO), LARGURA_UTIL, DESTAQUE_BAIXO)
+                  for i in range(len(contextos))]
+        altura = len(contextos) * (DESTAQUE_BAIXO + DESTAQUE_VAO) - DESTAQUE_VAO
+    for d, (x, y, larga, alta) in zip(contextos, caixas, strict=True):
+        elementos.append(_el("rect", class_="destaque", x=round(x), y=round(y),
+                             width=round(larga), height=alta, rx=24, fill=tema["branco"]))
+        elementos.append(_el("rect", class_="filete", x=round(x), y=round(y + 24), width=8,
+                             height=alta - 48, rx=4, fill=tema["marca"]))
+        numero = numero_formatado(d.numero)
+        if arranjo == "lado":
+            elementos.append(_texto(x + DESTAQUE_TEXTO, y + 12, numero, "numero",
+                                    tema["profundo"]))
+            topo_rotulo = y + 12 + MEDIDAS["numero"].entrelinha
+            x_rotulo = x + DESTAQUE_TEXTO
+        else:
+            meio = y + (alta - MEDIDAS["numero"].entrelinha) / 2
+            elementos.append(_texto(x + DESTAQUE_TEXTO, meio, numero, "numero",
+                                    tema["profundo"]))
+            x_rotulo = x + 2 * DESTAQUE_TEXTO + _coluna_do_numero(contextos)
+            topo_rotulo = y + (alta - len(d.rotulo) * rotulo.entrelinha) / 2
+        bloco, _ = _linhas(x_rotulo, topo_rotulo, d.rotulo, "rotulo", tema["suave"])
+        elementos += bloco
+    return elementos, altura
+
+
+def _linhas_do_rodape(c: Compartilhavel, demonstracao: bool, mostrar_apuracao: bool):
+    corpo = MEDIDAS["rodape"]
+    instituicao = [catalogo.CARD_RODAPE] + ([catalogo.CARD_DEMO] if demonstracao else [])
+    linhas = [(t, "rodape") for t in quebrar_atributos(instituicao, corpo.tamanho)]
+    if mostrar_apuracao and c.apuracao:
+        linhas += [(t, "apuracao") for t in _quebra(c.apuracao, "apuracao")]
+    return linhas
+
+
+def _altura_do_fecho(linhas_rodape) -> int:
+    return (
+        len(_quebra(catalogo.FECHO, "fecho")) * MEDIDAS["fecho"].entrelinha
+        + ESPACO_HASHTAG + MEDIDAS["hashtag"].entrelinha + ESPACO_RODAPE
+        + sum(MEDIDAS[m].entrelinha for _, m in linhas_rodape)
+    )
+
+
+def fecho_e_rodape(linhas_rodape, tema):
+    """Fecho, pílula da hashtag (FR-079) e rodapé ancorados na base da área segura. A
+    proveniência só aparece aqui (FR-081)."""
+    y = BASE - _altura_do_fecho(linhas_rodape)
+    elementos, alta = _linhas(X0, y, _quebra(catalogo.FECHO, "fecho"), "fecho", tema["profundo"])
+    y += alta + ESPACO_HASHTAG
+    hashtag = MEDIDAS["hashtag"]
+    larga = largura(catalogo.HASHTAG, hashtag.tamanho, True) + 2 * 28
+    elementos.append(_el("rect", class_="hashtag-fundo", x=X0, y=y, width=round(larga),
+                         height=hashtag.entrelinha, rx=hashtag.entrelinha // 2,
+                         fill=tema["profundo"]))
+    elementos.append(_texto(X0 + 28, y, catalogo.HASHTAG, "hashtag", tema["branco"]))
+    y += hashtag.entrelinha + ESPACO_RODAPE
+    for texto, medida in linhas_rodape:
+        elementos.append(_texto(X0, y, texto, medida, tema["suave"]))
+        y += MEDIDAS[medida].entrelinha
+    return elementos
+
+
+def faixa_inferior(tema) -> list[Elemento]:
+    """Grafismo sem texto na faixa coberta pela interface do story."""
+    y = BASE + 30
+    elementos = [_el("rect", class_="faixa", x=0, y=y, width=LARGURA, height=ALTURA - y,
+                     fill=tema["profundo"])]
+    elementos += [
+        _el("rect", class_="faixa-quadro", x=x + 18, y=y + 40, width=24, height=24, rx=4,
+            fill=tema["marca"], opacity="0.35")
+        for x in range(0, LARGURA, 60)
+    ]
+    return elementos
+
+
+# --- Composição ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Composicao:
+    elementos: tuple[Elemento, ...]
+    exibidas: int
+    destaques: bool
+    abertura: int
+
+
+def _conteudo(c, nome, exibidas, com_destaques, tema, topo=0.0):
+    """Título, linha do tempo e destaques a partir de `topo`. Devolve elementos e altura."""
+    elementos, altura = titulo(topo, nome, tema)
+    altura += ESPACO_BLOCO
+    omitidas = len(c.formacoes) - exibidas + c.formacoes_omitidas
+    bloco, alta = linha_do_tempo(topo + altura, c.formacoes[:exibidas], omitidas, tema)
+    elementos += bloco
+    altura += alta
+    if com_destaques:
+        bloco, alta = destaques(topo + altura + ESPACO_BLOCO, c.contextos_agregados, tema)
+        if bloco:
+            elementos += bloco
+            altura += ESPACO_BLOCO + alta
+    return elementos, altura
+
+
+def compor(
+    c: Compartilhavel, nome: str | None, demonstracao: bool, tema=TEMA_CARD
+) -> Composicao:
+    """Zonas posicionadas. Determinística. Ordem de corte do FR-082."""
+    minimo = abertura_minima(c)
     total = len(c.formacoes)
-    for f in c.formacoes:
-        restantes = total - exibidas - 1 + c.formacoes_omitidas
-        reserva = _altura(len(mais(restantes)), TAMANHO_TEXTO) if restantes else 0
-        if exibidas and usado + altura_formacao(f) + reserva > disponivel:
+    candidatos = []
+    if _arranjo(c.contextos_agregados):
+        candidatos.append((total, True))
+    candidatos += [(n, False) for n in range(total, 0, -1)] or [(0, False)]
+    for exibidas, com_destaques in candidatos:
+        rodape = _linhas_do_rodape(c, demonstracao, com_destaques)
+        _, altura = _conteudo(c, nome, exibidas, com_destaques, tema)
+        fim = BASE - _altura_do_fecho(rodape) - ESPACO_FECHO - altura - ESPACO_ABERTURA
+        if fim >= minimo:
             break
-        exibidas += 1
-        usado += altura_formacao(f)
-    omitidas = total - exibidas + c.formacoes_omitidas
-    if omitidas:
-        usado += _altura(len(mais(omitidas)), TAMANHO_TEXTO)
-
-    agregados = [linha for a in c.contextos_agregados for linha in a.linhas]
-    altura_agregados = (
-        ESPACO_BLOCO + _altura(len(agregados), TAMANHO_TEXTO) if agregados else 0
+    ideal = round(fim)
+    fim = max(minimo, min(ABERTURA_MAXIMA, ideal))
+    # Acima do máximo, a sobra se divide entre os dois lados do conteúdo (FR-080).
+    folga = max(0, ideal - fim) // 2
+    elementos = [_el("rect", class_="fundo", width=LARGURA, height=ALTURA, fill=tema["creme"])]
+    elementos += abertura(c, fim, tema)
+    bloco, _ = _conteudo(
+        c, nome, exibidas, com_destaques, tema, topo=fim + ESPACO_ABERTURA + folga
     )
-    mostrar_agregados = bool(agregados) and usado + altura_agregados <= disponivel
-
-    saida: list[Linha] = []
-    y = float(y0 + RECUO_TOPO)
-    bloco, y = _bloco(titulo, y, TAMANHO_TITULO, True, texto)
-    saida += bloco
-    y += ESPACO_TITULO
-    if linhas_nome:
-        bloco, y = _bloco(linhas_nome, y, TAMANHO_NOME, False, texto)
-        saida += bloco
-        y += ESPACO_NOME
-    for f in c.formacoes[:exibidas]:
-        bloco, y = _bloco(f.linhas_curso, y, TAMANHO_CURSO, True, texto)
-        saida += bloco
-        bloco, y = _bloco(f.linhas_detalhe, y, TAMANHO_TEXTO, False, suave)
-        saida += bloco
-        y += ESPACO_FORMACAO
-    if omitidas:
-        bloco, y = _bloco(mais(omitidas), y, TAMANHO_TEXTO, False, suave)
-        saida += bloco
-    bloco, y = _bloco(quebrar_linhas(registradas, TAMANHO_TEXTO), y, TAMANHO_TEXTO, True, texto)
-    saida += bloco
-    if mostrar_agregados:
-        y += ESPACO_BLOCO
-        bloco, y = _bloco(agregados, y, TAMANHO_TEXTO, False, texto)
-        saida += bloco
-    # Rodapé ancorado na base da área segura.
-    # A última linha de base fica a um descendente da borda (nada invade a faixa de base).
-    y_rodape = y1 - _altura(len(linhas_rodape), TAMANHO_TEXTO) - TAMANHO_TEXTO * (
-        DESCENDENTE - (ENTRELINHA - 1)
-    )
-    bloco, _ = _bloco(linhas_rodape, y_rodape, TAMANHO_TEXTO, False, suave)
-    saida += bloco
-    return saida, exibidas, mostrar_agregados
+    elementos += bloco
+    elementos += fecho_e_rodape(rodape, tema)
+    elementos += faixa_inferior(tema)
+    return Composicao(tuple(elementos), exibidas, com_destaques, fim)
 
 
-def descricao(c: Compartilhavel, nome: str | None) -> str:
-    """Resumo textual do card (SVG `<desc>` e `alt` da prévia; FR-067)."""
+def descricao(c: Compartilhavel, nome: str | None, demonstracao: bool = True) -> str:
+    """Resumo textual do que o card mostra (SVG `<desc>` e `alt` da prévia; FR-067)."""
+    composicao = compor(c, nome, demonstracao)
     partes = [catalogo.TITULO + "."]
     if nome:
         partes.append(nome + ".")
-    for f in c.formacoes:
-        partes.append(" · ".join(f.linhas_curso + f.linhas_detalhe).replace("  ", " ") + ".")
-    if c.formacoes_omitidas:
-        n = c.formacoes_omitidas
-        partes.append(catalogo.plural(catalogo.CARD_MAIS, n).format(n=n).capitalize() + ".")
-    for a in c.contextos_agregados:
-        partes.append(a.texto)
+    for f in c.formacoes[: composicao.exibidas]:
+        atributos = (f.curso, f.unidade, f.nivel, f.modalidade, f.ano_conclusao)
+        partes.append(SEPARADOR.join(str(a) for a in atributos if a is not None) + ".")
+    omitidas = len(c.formacoes) - composicao.exibidas + c.formacoes_omitidas
+    if omitidas:
+        partes.append(_mais(omitidas).capitalize() + ".")
+    if composicao.destaques:
+        for d in c.contextos_agregados:
+            partes.append(f"{numero_formatado(d.numero)} {' '.join(d.rotulo)}.")
+    partes += [catalogo.FECHO, catalogo.HASHTAG + "."]
+    if composicao.destaques and c.apuracao:
+        partes.append(c.apuracao)
     return " ".join(partes)
 
 
 def card_svg(
-    c: Compartilhavel, tema=TEMA_PADRAO, nome: str | None = None, demonstracao: bool = True
+    c: Compartilhavel, tema=TEMA_CARD, nome: str | None = None, demonstracao: bool = True
 ) -> str:
-    linhas, _, _ = compor(c, nome, demonstracao, tema)
+    composicao = compor(c, nome, demonstracao, tema)
     return render_to_string(
         "narrativa/card.svg",
         {
             "largura": LARGURA,
             "altura": ALTURA,
-            "area": AREA_SEGURA,
-            "tema": tema,
-            "familia": FAMILIA,
-            "linhas": linhas,
+            "elementos": composicao.elementos,
             "titulo": catalogo.TITULO,
-            "descricao": descricao(c, nome),
+            "descricao": descricao(c, nome, demonstracao),
         },
     )

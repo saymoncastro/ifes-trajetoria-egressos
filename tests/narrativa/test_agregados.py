@@ -1,5 +1,6 @@
 """Contexto institucional daquele ano (021 US6; FR-052 a FR-061; SC-009, SC-011)."""
 
+import re
 import xml.etree.ElementTree as ET
 from datetime import date
 
@@ -48,6 +49,20 @@ def _naquele_ano(texto):
 def test_ana_duas_frases_com_apuracao(client, cenario):
     trecho = _naquele_ano(_abrir(client, cenario, "SIM-P-0001"))
     assert FRASE_CURSO in trecho and FRASE_UNIDADE in trecho and FRASE_APURACAO in trecho
+
+
+@pytest.mark.django_db
+def test_ana_destaques_na_pagina_com_numero_e_frase(client, cenario):
+    pessoa = cenario.pessoa("SIM-P-0001")
+    carregar_contexto(ContextoSimulado(), pessoa)
+    cenario.concluir(pessoa.conclusoes.first())
+    cn.entrar(client, pessoa)
+    html = client.get(URL).content.decode()
+    assert re.findall(r'<span class="narrativa-numero" aria-hidden="true">(.*?)</span>', html) == [
+        "27", "812",
+    ]
+    h2 = re.findall(r"<h2[^>]*>(.*?)</h2>", html)
+    assert h2 == ["Sua formação", "Naquele ano no Ifes", "Seu card"]
 
 
 @pytest.mark.django_db
@@ -138,18 +153,38 @@ def test_card_com_no_maximo_um_par_da_primeira_formacao():
         ],
     )
     narrativa = montar(entrada)
-    textos = [c.texto for c in narrativa.compartilhavel.contextos_agregados]
-    assert textos[0].startswith("Em 2022, 10 conclusões de A")
-    assert not any("de B" in t for t in textos)
-    assert textos[-1] == FRASE_APURACAO
+    destaques = narrativa.compartilhavel.contextos_agregados
+    assert [(d.metrica, d.numero) for d in destaques] == [
+        (METRICA_CURSO_UNIDADE_ANO, 10), (METRICA_UNIDADE_ANO, 500),
+    ]
+    assert destaques[0].rotulo == ("conclusões deste curso", "na unidade Serra em 2022")
+    assert destaques[1].rotulo == ("conclusões registradas", "na unidade Serra em 2022")
+    assert narrativa.compartilhavel.apuracao == FRASE_APURACAO
     assert len(narrativa.secao("naquele_ano").frases) == 4  # a página mostra todos
+
+
+def test_destaque_no_singular():
+    entrada = cn.entrada([cn.fato(curso="A", unidade="Serra", ano_conclusao=2022)],
+                         agregados=[_selecionado(1)])
+    destaque = montar(entrada).compartilhavel.contextos_agregados[0]
+    assert destaque.rotulo == ("conclusão deste curso", "na unidade Serra em 2022")
+
+
+def test_par_com_apuracoes_distintas_fica_so_com_o_primeiro():
+    """O rodapé do card tem uma só apuração; nenhuma é escolhida por data (FR-059)."""
+    outra = ContextoSelecionado(METRICA_UNIDADE_ANO, "Serra", 2022, 812, date(2026, 2, 28), 0)
+    entrada = cn.entrada([cn.fato(curso="A", unidade="Serra", ano_conclusao=2022)],
+                         agregados=[_selecionado(27), outra])
+    c = montar(entrada).compartilhavel
+    assert [d.numero for d in c.contextos_agregados] == [27]
+    assert c.apuracao == FRASE_APURACAO
 
 
 @pytest.mark.django_db
 def test_card_da_ana_com_agregados_na_area_segura(client, cenario):
     _abrir(client, cenario, "SIM-P-0001")
     svg = client.get("/minha-trajetoria/card.svg").content.decode()
-    assert "27 conclusões" in svg
+    assert ">27<" in svg and "conclusões deste curso" in svg
     for texto in ET.fromstring(svg).findall("{http://www.w3.org/2000/svg}text"):
         y, tamanho = int(texto.get("y")), int(texto.get("font-size"))
         assert y - tamanho >= card.AREA_SEGURA[1]

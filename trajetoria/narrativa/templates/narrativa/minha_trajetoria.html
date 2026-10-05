@@ -2,24 +2,21 @@
 {% block titulo %}{{ titulo }}{% endblock %}
 {% block estilo %}{% include "narrativa/narrativa.css" %}{% endblock %}
 {% block conteudo %}
-<h1>{{ titulo }}</h1>
-{% for secao in secoes %}
-<section class="narrativa-secao" aria-labelledby="secao-{{ secao.chave }}">
-  <h2 id="secao-{{ secao.chave }}">{{ secao.titulo }}</h2>
-  {% for frase in secao.abertura %}
-  <p{% if forloop.first and secao.chave == "o_que_o_ifes_registra" and secao.abertura|length > 1 %} class="narrativa-nome"{% endif %}>{{ frase.texto }}</p>
+<div class="narrativa-abertura">
+  <figure class="narrativa-figura">
+    {{ abertura.imagem }}
+    <figcaption>{{ abertura.legenda }}</figcaption>
+  </figure>
+  <h1>{{ titulo }}</h1>
+  {% for frase in abertura.frases %}
+  <p class="{% if forloop.first and abertura.frases|length > 1 %}narrativa-nome{% else %}narrativa-registro{% endif %}">{{ frase.texto }}</p>
   {% endfor %}
-  {% if secao.itens %}
-  <ol class="narrativa-linha">
-    {% for item in secao.itens %}
-    <li>{% for frase in item %}<p class="{% if frase.tipo == 'atributos' %}narrativa-atributos{% elif forloop.first %}narrativa-fato{% else %}narrativa-derivado{% endif %}">{{ frase.texto }}</p>{% endfor %}</li>
-    {% endfor %}
-  </ol>
-  {% endif %}
-</section>
-{% endfor %}
-<section class="narrativa-secao narrativa-card" id="card" aria-labelledby="secao-card">
-  <h2 id="secao-card">{{ titulo_do_card }}</h2>
+</div>
+{% for capitulo in capitulos %}
+{% if capitulo.chave == "seu_card" %}
+<section class="narrativa-capitulo narrativa-card" id="card" aria-labelledby="capitulo-seu_card">
+  {% if capitulo.indicador %}<p class="narrativa-indicador">{{ capitulo.indicador }}</p>{% endif %}
+  <h2 id="capitulo-seu_card">{{ capitulo.titulo }}</h2>
   <p>Uma imagem vertical para compartilhar no story ou no status das redes sociais.</p>
   {% if card.png %}
   <img class="narrativa-previa" src="{{ card.arquivo }}" alt="{{ card.alt }}" width="270" height="480">
@@ -64,5 +61,32 @@
   </script>
   {% endif %}
 </section>
+{% else %}
+<section class="narrativa-capitulo" aria-labelledby="capitulo-{{ capitulo.chave }}">
+  {% if capitulo.indicador %}<p class="narrativa-indicador">{{ capitulo.indicador }}</p>{% endif %}
+  <h2 id="capitulo-{{ capitulo.chave }}">{{ capitulo.titulo }}</h2>
+  {% for frase in capitulo.abertura %}<p class="narrativa-inicio">{{ frase.texto }}</p>{% endfor %}
+  {% if capitulo.itens %}
+  <ol class="narrativa-linha">
+    {% for item in capitulo.itens %}
+    <li>
+      {% if item.ano %}<span class="narrativa-ano" aria-hidden="true">{{ item.ano }}</span>{% endif %}
+      {% if item.relacao %}<p class="narrativa-relacao">{{ item.relacao.texto }}</p>{% endif %}
+      {% for frase in item.frases %}<p class="{% if frase.tipo == 'atributos' %}narrativa-atributos{% elif forloop.first %}narrativa-fato{% else %}narrativa-derivado{% endif %}">{{ frase.texto }}</p>{% endfor %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+  {% if capitulo.destaques %}
+  <ul class="narrativa-destaques">
+    {% for destaque in capitulo.destaques %}
+    <li><span class="narrativa-numero" aria-hidden="true">{{ destaque.numero }}</span><p>{{ destaque.frase.texto }}</p></li>
+    {% endfor %}
+  </ul>
+  {% for frase in capitulo.apuracoes %}<p class="narrativa-nota">{{ frase.texto }}</p>{% endfor %}
+  {% endif %}
+</section>
+{% endif %}
+{% endfor %}
 <p class="narrativa-voltar"><a href="/formacoes/">Voltar às suas formações</a></p>
 {% endblock %}

@@ -121,39 +121,58 @@ def _secao(chave, frases) -> Secao | None:
     return Secao(chave, catalogo.TITULOS_DAS_SECOES[chave], tuple(frases)) if frases else None
 
 
+def _destaque(a: ContextoSelecionado) -> ContextoCompartilhavel:
+    par = (
+        catalogo.DESTAQUE_CURSO
+        if a.metrica == METRICA_CURSO_UNIDADE_ANO
+        else catalogo.DESTAQUE_UNIDADE
+    )
+    rotulo = tuple(
+        linha.format(unidade=a.unidade, ano=a.ano) for linha in catalogo.plural(par, a.valor)
+    )
+    return ContextoCompartilhavel(a.metrica, a.valor, rotulo)
+
+
 def _compartilhavel(e: EntradaDaNarrativa) -> Compartilhavel:
     formacoes = []
     for f in e.formacoes[:MAXIMO_NO_CARD]:
-        ano = f.ano_conclusao
-        atributos = [a for a in (f.unidade, f.nivel, f.modalidade) if a]
-        if ano is not None:
-            atributos.append(str(ano))
         formacoes.append(
             FormacaoCompartilhavel(
                 curso=f.curso,
                 unidade=f.unidade,
                 nivel=f.nivel,
                 modalidade=f.modalidade,
-                ano_conclusao=ano,
+                ano_conclusao=f.ano_conclusao,
                 linhas_curso=(
-                    card.quebrar_linhas(f.curso, card.TAMANHO_CURSO, True) if f.curso else ()
+                    card.quebrar_linhas(f.curso, card.TAMANHO_CURSO, True, card.LIMITE_ITEM)
+                    if f.curso
+                    else ()
                 ),
-                linhas_detalhe=card.quebrar_atributos(atributos, card.TAMANHO_TEXTO),
+                # O ano vai no nó da linha do tempo (FR-077).
+                linhas_detalhe=card.quebrar_atributos(
+                    [a for a in (f.unidade, f.nivel, f.modalidade) if a],
+                    card.TAMANHO_DETALHE,
+                    limite=card.LIMITE_ITEM,
+                ),
             )
         )
     # No máximo um par: o da primeira formação, na ordem de exibição, com agregado (FR-033).
+    # O rodapé tem uma só apuração: com datas distintas no par, fica só o primeiro destaque,
+    # sem escolher por data (FR-059).
     primeira = min((a.formacao for a in e.agregados), default=None)
     par = [a for a in e.agregados if a.formacao == primeira]
-    textos = [_frase_de_agregado(a) for a in par] + _apuracoes(par)
+    if len({a.apurado_em for a in par}) > 1:
+        par = par[:1]
     return Compartilhavel(
         formacoes=tuple(formacoes),
         formacoes_omitidas=max(0, len(e.formacoes) - MAXIMO_NO_CARD),
         formacoes_registradas=len(e.formacoes),
-        contextos_agregados=tuple(
-            ContextoCompartilhavel(t, card.quebrar_linhas(t, card.TAMANHO_TEXTO))
-            for t in textos
-        ),
+        contextos_agregados=tuple(_destaque(a) for a in par),
         nome_disponivel=e.nome is not None,
+        apuracao=(
+            catalogo.CARD_APURACAO.format(apuracao=_data(par[0].apurado_em)) if par else None
+        ),
+        unidade_da_imagem=e.formacoes[0].unidade if e.formacoes else None,
     )
 
 
