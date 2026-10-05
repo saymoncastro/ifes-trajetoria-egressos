@@ -115,7 +115,7 @@
     <li><span><span class="st st-impl">Implementado</span></span><span>Existe no código da branch analisada e tem testes automatizados.</span></li>
     <li><span><span class="st st-demo">Somente demonstração</span></span><span>Qualificador: a capacidade existe, mas só pode ser usada no modo de demonstração, com dados fictícios. Não há caminho produtivo.</span></li>
     <li><span><span class="st st-parc">Implementado parcialmente</span></span><span>Existe, mas não cobre todo o comportamento previsto ou esperado.</span></li>
-    <li><span><span class="st st-spec">Especificado</span></span><span>Definido em Feature aprovada, mas não implementado. <em>Na branch analisada não há nenhum caso: as 20 Features especificadas estão implementadas. A 021 tem 63 de 65 tasks concluídas; as duas abertas são validações manuais em celular real (T031, T053).</em></span></li>
+    <li><span><span class="st st-spec">Especificado</span></span><span>Definido em Feature aprovada, mas não implementado. <em>Caso atual: a Feature 020, especificada em 2026-10-05 e ainda não implementada. As demais Features especificadas estão implementadas. A 021 tem 63 de 65 tasks concluídas; as duas abertas são validações manuais em celular real (T031, T053).</em></span></li>
     <li><span><span class="st st-plan">Planejado</span></span><span>Consta de nota de roadmap, research ou decisão arquitetural, sem spec aprovada.</span></li>
     <li><span><span class="st st-norm">Referência normativa</span></span><span>Obrigação ou orientação de norma, sem implementação necessariamente correspondente.</span></li>
     <li><span><span class="st st-org">Organizacional</span></span><span>Dispositivo normativo de natureza administrativa, que não exige funcionalidade de software.</span></li>
@@ -164,7 +164,7 @@
       <tr><td>Editor do instrumento</td><td>Compor e alterar Versões em rascunho sem código; não publica.</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><td>Governança</td><td>Vínculos CPAEG (institucional) e CSAEG (por unidade) definem o que cada operador pode fazer.</td><td><span class="st st-impl">Implementado</span>; identificação produtiva <span class="st st-dp">DP-1001</span></td></tr>
       <tr><td>Acompanhamento da coleta</td><td>Indicadores agregados por Campanha: elegíveis, iniciadas, concluídas, taxas e recortes.</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
-      <tr><td>Comunicação</td><td>Convite por e-mail simulado, só para contatos fictícios e servidor local.</td><td><span class="st st-parc">Parcial</span> (simulada); real <span class="st st-plan">Planejado</span> (020)</td></tr>
+      <tr><td>Comunicação</td><td>Convite por e-mail simulado, só para contatos fictícios e servidor local.</td><td><span class="st st-parc">Parcial</span> (simulada); real <span class="st st-spec">Especificado</span> (020: especificada, não implementada, uso real não habilitado)</td></tr>
       <tr><td>Dataset analítico</td><td>Fotografia imutável e reprodutível de uma Campanha encerrada.</td><td><span class="st st-impl">Implementado</span>, sem tela</td></tr>
       <tr><td>Exportação</td><td>CSV/XLSX pseudonimizado, com dicionário, metadados e proveniência por coluna.</td><td><span class="st st-impl">Implementado</span>, sem tela</td></tr>
       <tr><td>Minha trajetória no Ifes</td><td>Devolutiva ao egresso depois da pesquisa: narrativa das formações e card vertical (PNG) para compartilhar, só com fatos institucionais.</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span>; ingresso e agregados só simulados</td></tr>
@@ -175,9 +175,9 @@
 
   <h3>Números da base analisada</h3>
   <ul>
-    <li>20 Features especificadas e implementadas (001 a 019 e 021). A numeração 020 está reservada à nota de roadmap de mobilização real, ainda sem spec.</li>
+    <li>20 Features especificadas e implementadas (001 a 019 e 021). A Feature 020 (mobilização real, Lotes e contatos) está <strong>especificada</strong> desde 2026-10-05, ainda <strong>não implementada</strong> e <strong>não habilitada para uso real</strong> (Gates A e B).</li>
     <li>Constituição v2.0.0, com 29 princípios, 10 deles inegociáveis (NON-NEGOTIABLE).</li>
-    <li>6 ADRs, 8 auditorias e 1 nota de roadmap (Feature 020, ainda não especificada).</li>
+    <li>6 ADRs, 8 auditorias e 1 nota de roadmap na base analisada; depois dela, a auditoria e a spec da Feature 020 (2026-10-05).</li>
     <li>199 arquivos de teste e 1.807 funções de teste, que somam 2.568 casos coletados com a parametrização. O resultado da execução nesta análise está em <a href="#arquitetura">Arquitetura técnica</a>.</li>
   </ul>
 </section>
@@ -678,7 +678,7 @@
 
   <div class="nota">
     <span class="titulo-nota">Abrangência não é foco de mobilização (ADR 0004)</span>
-    <p>Critérios de Campanha (ano, unidade, nível, modalidade, forma de oferta) significam apenas "esta Versão se aplica a estas formações". O padrão é não ter critério. Divulgar para um grupo, como "egressos de 2023" ou "Campus Serra", <em>não</em> impede que outros respondam. O futuro "Lote de mobilização" registrará quem foi abordado, sem decidir quem pode responder (<span class="st st-plan">Planejado</span>, nota de roadmap 020).</p>
+    <p>Critérios de Campanha (ano, unidade, nível, modalidade, forma de oferta) significam apenas "esta Versão se aplica a estas formações". O padrão é não ter critério. Divulgar para um grupo, como "egressos de 2023" ou "Campus Serra", <em>não</em> impede que outros respondam. O futuro "Lote de mobilização" registrará quem foi abordado, sem decidir quem pode responder (<span class="st st-spec">Especificado</span>, Feature 020; ainda não implementado).</p>
   </div>
 
   <h3>Quando a formação não é encontrada</h3>
@@ -815,8 +815,8 @@
       <dt>Objetivo</dt><dd>Convidar egressos a participar.</dd>
       <dt>Funcionamento</dt><dd>No detalhe da Campanha, "Comunicação simulada" mostra o público (Pessoas distintas, com e sem contato) e a prévia do convite fixo. "Simular envio local" envia a um servidor de e-mail local (Mailpit), apenas para endereços fictícios <code>@example.invalid</code>. O link do convite é neutro (<code>/acesso/</code>) e não identifica ninguém.</dd>
       <dt>Conceitos</dt><dd>Convite, público da simulação. Lote de mobilização ainda não existe.</dd>
-      <dt>Situação</dt><dd>Simulação implementada. Envio real, contatos, opt-out e lembretes: <span class="st st-dp">DP-1601 a DP-1608</span>. Feature 020 (contatos institucionais, atualização voluntária de e-mail e WhatsApp, Lotes) <span class="st st-plan">Planejado</span>, ainda sem spec.</dd>
-      <dt>Evidências</dt><dd><code>trajetoria/comunicacao/</code>, <code>tests/comunicacao/</code>; Feature 016; <code>docs/roadmap/020-mobilizacao-real-lotes.md</code>.</dd>
+      <dt>Situação</dt><dd>Simulação implementada. Envio real, contatos, opt-out e lembretes: <span class="st st-dp">DP-1601 a DP-1608</span>. Feature 020 (contato de e-mail com proveniência, atualização voluntária pelo egresso, Lotes de mobilização e envio por Lote) <span class="st st-spec">Especificado</span> em 2026-10-05: não implementada e não habilitada para uso real (Gates A e B). WhatsApp e telefone ficaram fora (<span class="st st-dp">DP-2009</span>).</dd>
+      <dt>Evidências</dt><dd><code>trajetoria/comunicacao/</code>, <code>tests/comunicacao/</code>; Feature 016; <code>docs/roadmap/020-mobilizacao-real-lotes.md</code>; <code>specs/020-mobilizacao-real-lotes-contatos/spec.md</code>.</dd>
       <dt>Relação normativa</dt><dd>PAEG Art. 8º, IV (canal de comunicação); Art. 22, IV (CSAEG aplica o questionário).</dd>
     </dl>
   </article>
@@ -1009,7 +1009,7 @@
       <tr><th scope="row">Art. 8º, I</th><td>Banco de dados que auxilie no aprimoramento dos PPCs.</td><td>Dados por Conclusão com curso e unidade; recorte por curso no acompanhamento; snapshot e exportação com contexto institucional congelado.</td><td>Features 011, 012, 013</td><td><span class="st st-impl">Implementado</span> (sem interface para 012/013)</td></tr>
       <tr><th scope="row">Art. 8º, V</th><td>Tornar o egresso referência para a divulgação e valorização do Ifes no mundo do trabalho.</td><td>Relação interpretativa desta documentação, não citada pela spec: o card compartilhável da 021 permite ao egresso divulgar a própria trajetória no Ifes, só na demonstração. Ações de divulgação institucional continuam fora do NIAE.</td><td>Feature 021; DP-2101, DP-2110</td><td><span class="st st-parc">Parcial</span> (interpretação) <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Art. 8º, II, III, VII</th><td>Eventos, parcerias externas, docentes em contato.</td><td>Fora do domínio do NIAE (Princípio VI). Podem pertencer a outros sistemas ou ao Portal.</td><td>Constituição, "Fronteira do Domínio"</td><td><span class="st st-fora">Fora do escopo</span></td></tr>
-      <tr><th scope="row">Art. 8º, IV</th><td>Implementar e manter canal de comunicação com egressos.</td><td>Convite por e-mail apenas simulado. Contatos reais, atualização voluntária e canais estão planejados para a 020. A relação com o Portal está pendente.</td><td>Feature 016; DP-1601 a 1608; roadmap 020</td><td><span class="st st-parc">Parcial</span> (simulado) · <span class="st st-plan">Planejado</span></td></tr>
+      <tr><th scope="row">Art. 8º, IV</th><td>Implementar e manter canal de comunicação com egressos.</td><td>Convite por e-mail apenas simulado. Contatos de e-mail, atualização voluntária e envio por Lote estão especificados na 020, com envio real desativado até os Gates A e B. A relação com o Portal está pendente.</td><td>Feature 016; DP-1601 a 1608; Feature 020</td><td><span class="st st-parc">Parcial</span> (simulado) · <span class="st st-spec">Especificado</span> (020)</td></tr>
       <tr><th scope="row">Art. 8º, VI</th><td>Criar indicadores de avaliação contínua da vida profissional e do uso dos conhecimentos.</td><td>O sistema não calcula indicadores de resultado: entrega dados (012, 013) para consumidor externo. Indicadores operacionais (011) não são estes.</td><td>Princípio XIX; 011 FR-003</td><td><span class="st st-fora">Fora do escopo</span> (cálculo)</td></tr>
       <tr><th scope="row">Art. 9º, I e II</th><td>No último período do curso, apresentar a PAEG aos formandos e ressaltar sua relevância.</td><td>Atividade presencial da unidade.</td><td>—</td><td><span class="st st-org">Organizacional</span></td></tr>
       <tr><th scope="row">Art. 9º, III</th><td>Solicitar o cadastro do aluno no Portal do Egresso para registro de dados e avaliação do curso.</td><td>Registros de estudantes não egressos são permitidos no futuro, sem serem tratados como egressos (Princípio II), mas não existem. O cadastro no Portal está fora do escopo.</td><td>Princípio II; 001 Out of Scope</td><td><span class="st st-fora">Fora do escopo</span> · <span class="st st-dp">Decisão pendente</span> (Portal)</td></tr>
@@ -1292,7 +1292,7 @@
       <dt>Cenário anterior</dt><dd>Divulgação do link (canal e alcance não documentados).</dd>
       <dt>Problema</dt><dd>Sem saber quem foi convidado, não há acompanhamento de alcance.</dd>
       <dt>Resposta arquitetural</dt><dd>Convite com link neutro; futuro Lote de mobilização que registra quem foi abordado sem restringir quem responde.</dd>
-      <dt>Situação</dt><dd>Apenas simulação local (016). Contatos reais e Lotes estão <span class="st st-plan">Planejado</span> (020).</dd>
+      <dt>Situação</dt><dd>Apenas simulação local (016). Contatos e Lotes estão <span class="st st-spec">Especificado</span> (020), não implementados; uso real depende dos Gates A e B.</dd>
       <dt>Origem</dt><dd>Feature 016; ADR 0004; roadmap 020.</dd>
     </dl>
   </article>
@@ -1345,7 +1345,7 @@
   <table>
     <thead><tr><th scope="col">Lacuna</th><th scope="col">Evidência</th><th scope="col">Impacto</th><th scope="col">Relação normativa</th><th scope="col">Feature prevista?</th><th scope="col">Recomendação</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Mobilização real e contatos</th><td>DP-1601 a 1608; roadmap 020</td><td>Sem convite real, a coleta depende de divulgação externa.</td><td>Art. 8º, IV</td><td><span class="st st-plan">Sim, 020</span></td><td>Seguir a nota da 020: contato institucional × declarado, sem sobrescrita; não público por padrão.</td></tr>
+      <tr><th scope="row">Mobilização real e contatos</th><td>DP-1601 a 1608; roadmap 020</td><td>Sem convite real, a coleta depende de divulgação externa.</td><td>Art. 8º, IV</td><td><span class="st st-spec">Especificado</span> (020)</td><td>Seguir a nota da 020: contato institucional × declarado, sem sobrescrita; não público por padrão.</td></tr>
       <tr><th scope="row">Snapshot e exportação sem superfície</th><td>012 FR-100; 013 FR-100</td><td>A CPAEG não consegue gerar o dataset sem apoio técnico.</td><td>Art. 10, III; Art. 21, V</td><td>Não</td><td>Superfície mínima para a CPAEG depois de DP-1001 e DP-1301.</td></tr>
       <tr><th scope="row">Risco de reidentificação</th><td>011/DP-1101; 013/DP-1303</td><td>Recortes pequenos e respostas sensíveis (Q2, Q4–Q6) exportadas.</td><td>—</td><td>Não</td><td>Definir limiar de supressão e tratamento de sensíveis antes de qualquer compartilhamento.</td></tr>
       <tr><th scope="row">Relatórios da CPAEG e das CSAEG</th><td>Matriz: Art. 14, Art. 21, IV, Art. 22, V</td><td>Relatórios previstos na PAEG sem suporte; a CSAEG não recebe dados da unidade.</td><td>Art. 14; Art. 21, IV; Art. 22, V</td><td>Não</td><td>Primeiro decidir se o relatório é produzido fora (GeN) e o que a CSAEG pode receber (DP-1004).</td></tr>
@@ -1384,7 +1384,7 @@
       <tr><td>publica Versão por tela, nem tem fluxo de aprovação</td><td>009 FR-076; 010 FR-047 a 052; 002/DP-001</td><td><span class="st st-dp">Pendente</span></td></tr>
       <tr><td>é um "Google Forms genérico" (scripts, fórmulas, condições compostas, tipos novos)</td><td>Princípio XXIII; 009 Out of Scope</td><td><span class="st st-fora">Por princípio</span></td></tr>
       <tr><td>tem autenticação institucional, senha, Gov.br, OTP ou SSO</td><td>Princípio XV; 018 Out of Scope; DP-1808</td><td><span class="st st-fora">Fora do escopo</span></td></tr>
-      <tr><td>envia comunicação real, nem tem WhatsApp, SMS, lembretes ou opt-out</td><td>016 Out of Scope; DP-1601 a 1608</td><td><span class="st st-plan">Parte planejada (020)</span></td></tr>
+      <tr><td>envia comunicação real, nem tem WhatsApp, SMS, lembretes ou opt-out</td><td>016 Out of Scope; DP-1601 a 1608</td><td><span class="st st-spec">Especificado</span> em parte (020: e-mail real desativado até os Gates A e B; WhatsApp, SMS, lembretes e opt-out continuam fora)</td></tr>
       <tr><td>anonimiza ou suprime pequenos grupos</td><td>013 FR-112; DP-1101, DP-1303: não inventar sem decisão</td><td><span class="st st-dp">Pendente</span></td></tr>
       <tr><td>importa respostas históricas do Google Forms</td><td>001 e 003 Out of Scope; inventário, ponto 6</td><td><span class="st st-fora">Fora do escopo inicial</span></td></tr>
       <tr><td>mostra ao egresso as respostas que deu, nem o notifica da validação</td><td>008/DP-802; 019/DP-1908</td><td><span class="st st-dp">Pendente</span></td></tr>
@@ -1514,7 +1514,7 @@
       <tr><td>018</td><td><a href="../../specs/018-identificacao-acesso-egresso/spec.md">Identificação e acesso do egresso por dados acadêmicos</a></td><td>CPF + nascimento com HMAC; sessão; limitação</td><td>50/50</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada (PR #28)</td></tr>
       <tr><td>019</td><td><a href="../../specs/019-formacao-declarada-validacao/spec.md">Formação não localizada e validação posterior</a></td><td>Formação declarada, quarentena, validação, acervo; Constituição 2.0.0</td><td>69/69</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada e validada</td></tr>
       <tr><td>021</td><td><a href="../../specs/021-minha-trajetoria-narrativa/spec.md">Minha Trajetória — narrativa visual personalizada</a></td><td>Devolutiva ao egresso: narrativa das formações, card 9:16 em PNG, ingresso e agregados simulados</td><td>63/65</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span>; validação em celular real pendente</td><td>P1 e P2 implementadas (PR #30)</td></tr>
-      <tr><td>020</td><td><a href="../../docs/roadmap/020-mobilizacao-real-lotes.md">Mobilização real + Lotes</a> <em>(nota de roadmap)</em></td><td>Contatos institucionais e declarados, Lotes de mobilização</td><td>—</td><td><span class="st st-plan">Planejado</span></td><td>"Não é spec"</td></tr>
+      <tr><td>020</td><td><a href="../../specs/020-mobilizacao-real-lotes-contatos/spec.md">Mobilização real, Lotes e contatos do egresso</a></td><td>Contato de e-mail com proveniência, atualização voluntária, Lotes congelados, envio por Lote retomável</td><td>—</td><td><span class="st st-spec">Especificado</span></td><td>Especificada (2026-10-05); não implementada; uso real não habilitado (Gates A e B)</td></tr>
     </tbody>
   </table>
   </div>
@@ -1531,7 +1531,7 @@
     <li><div class="passo"><strong>Operação da rodada</strong><span>016–018: comunicação simulada, gestão de Campanha e acesso do egresso.</span></div></li>
     <li><div class="passo"><strong>Inclusão de quem não é localizado</strong><span>019: formação declarada e validação (emenda constitucional 2.0.0).</span></div></li>
     <li><div class="passo"><strong>Devolutiva ao egresso</strong><span>021: "Minha trajetória no Ifes", narrativa e card compartilhável.</span></div></li>
-    <li><div class="passo passo-evo"><strong>Mobilização real e vídeo</strong><span>020 (nota de roadmap) e 022 (vídeo, citado como fora do escopo da 021): planejadas.</span></div></li>
+    <li><div class="passo passo-evo"><strong>Mobilização real e vídeo</strong><span>020 (especificada em 2026-10-05; implementação e habilitação real pendentes) e 022 (vídeo, citado como fora do escopo da 021): ainda não disponíveis nesta base.</span></div></li>
   </ol>
 </section>
 
@@ -1563,7 +1563,7 @@
     <div><dt>Formação Declarada</dt><dd><p>Formação informada pelo próprio egresso quando a Conclusão não pôde ser identificada. É dado declarado e nunca cria nem substitui Conclusão.</p><p class="tecnico">Técnico: <code>declaracao.FormacaoDeclarada</code>, imutável.</p><p class="origem">Origem: Constituição 2.0.0, Terminologia.</p></dd></div>
     <div><dt>GeN</dt><dd><p>Consumidor institucional a jusante (análise e painéis) para o qual a exportação define um contrato de dados. A sigla <strong>não é expandida</strong> no repositório, e o mecanismo de consumo é 013/DP-1302.</p></dd></div>
     <div><dt>Incorporação</dt><dd><p>"Ato pelo qual o NIAE reconhece em seu domínio uma Pessoa ou uma Conclusão Acadêmica obtida de uma fonte e lhe atribui identidade interna própria" (001). Idempotente; nunca atualiza nem remove.</p></dd></div>
-    <div><dt>Lote de mobilização</dt><dd><p><span class="st st-plan">Planejado</span> Seleção operacional que registrará quem foi abordado, sem participar da decisão de quem pode responder (ADR 0004; roadmap 020).</p></dd></div>
+    <div><dt>Lote de mobilização</dt><dd><p><span class="st st-spec">Especificado</span> Seleção operacional, congelada na confirmação, que registra quem foi abordado e por qual contato, sem participar da decisão de quem pode responder (ADR 0004; Feature 020).</p></dd></div>
     <div><dt>Material de verificação</dt><dd><p>HMACs do CPF e do par CPF + data de nascimento, importados da fonte e usados para conferir o acesso. Os valores em claro são descartados.</p><p class="tecnico">Técnico: <code>acesso.MaterialDeVerificacao</code> (018).</p></dd></div>
     <div><dt>Matriz de Migração</dt><dd><p>Artefato de documentação da Feature 003 que liga cada pergunta e elemento do formulário original à baseline, com categoria (MANTER, MANTER_COM_OBSERVAÇÃO, CORREÇÃO_EDITORIAL_EXPLÍCITA, CANDIDATA_A_CONTEXTO_INSTITUCIONAL…) e justificativa.</p></dd></div>
     <div><dt>Modo de demonstração</dt><dd><p>Configuração local (<code>TRAJETORIA_DEMONSTRACAO=1</code>) que habilita as telas com dados fictícios. Desligado, toda requisição é 404.</p></dd></div>
@@ -1684,7 +1684,8 @@
       <a href="../../docs/auditorias/2026-10-03-identidade-acesso-egresso.md">Identidade e acesso do egresso</a> ·
       <a href="../../docs/auditorias/2026-10-04-formacao-declarada-validacao.md">Formação declarada e validação</a> ·
       <a href="../../docs/auditorias/2026-10-04-minha-trajetoria-narrativa.md">Minha trajetória: narrativa</a> ·
-      <a href="../../docs/auditorias/2026-10-04-021-convergencia-visual.md">Convergência visual da 021</a>.</li>
+      <a href="../../docs/auditorias/2026-10-04-021-convergencia-visual.md">Convergência visual da 021</a> ·
+      <a href="../../docs/auditorias/2026-10-04-mobilizacao-real-lotes-contatos.md">Mobilização real, Lotes e contatos (020)</a>.</li>
     <li><a href="../../docs/roadmap/020-mobilizacao-real-lotes.md">Nota de roadmap 020</a>.</li>
     <li>Specs 001–019 e 021 em <code>specs/</code> (links em <a href="#features">Evolução por Features</a>).</li>
   </ul>
