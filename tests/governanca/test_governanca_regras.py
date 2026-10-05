@@ -73,9 +73,11 @@ def test_tres_regras_do_editor_e_a_regra_de_acompanhamento():
     acompanhamento = {
         pode_acompanhar_coleta.__name__,
         escopo_de_acompanhamento.__name__,
-        "pode_simular_comunicacao",
         "pode_gerir_campanha",
         "pode_validar_formacao",
+        "pode_consultar_lotes",
+        "pode_preparar_lote",
+        "pode_enviar_lote",
     }
     assert publicas == {r.__name__ for r in REGRAS} | acompanhamento
     assert set(regras.__all__) == publicas | {"EscopoDeAcompanhamento"}
@@ -148,9 +150,11 @@ def test_acompanhamento_depende_so_dos_vinculos(settings):
         ("tecnico", True, False),
     ],
 )
-def test_capacidade_simulacao_explicitamente_nomeada(papel, ativo, esperado):
-    assert regras.pode_simular_comunicacao([_v(papel, "Vitória", ativo)]) is esperado
-    assert not regras.pode_simular_comunicacao([])
+def test_capacidades_de_lote_explicitamente_nomeadas(papel, ativo, esperado):
+    """020 FR-036: consultar, preparar e enviar Lotes; só demonstração (DP-2001)."""
+    for regra in (regras.pode_consultar_lotes, regras.pode_preparar_lote, regras.pode_enviar_lote):
+        assert regra([_v(papel, "Vitória", ativo)]) is esperado
+        assert not regra([])
 
 
 @pytest.mark.parametrize(

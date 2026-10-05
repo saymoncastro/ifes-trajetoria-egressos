@@ -22,7 +22,7 @@ def test_matriz_painel(inst, cliente_cpaeg, estado, esperadas):
     r = k.detalhe(cliente_cpaeg, c)
     assert acoes(r) == esperadas
     texto = texto_visivel(r)
-    assert "Comunicação simulada" in texto
+    assert "Lotes de mobilização" in texto
     if estado == "em_coleta":
         assert "Encerramento previsto" in texto
     if estado == "expirada_sem_abertura":
@@ -53,7 +53,7 @@ def test_csaeg_sem_painel(inst, cliente_csaeg_vitoria):
     texto = texto_visivel(r)
     for t in ("Gestão da Campanha", "abrangência restrita", "Nova Campanha"):
         assert t not in texto
-    for t in ("Resumo", "Recortes", "Comunicação simulada", "Elegíveis"):
+    for t in ("Resumo", "Recortes", "Lotes de mobilização", "Elegíveis"):
         assert t in texto
 
 
@@ -92,7 +92,7 @@ def test_misto_cpaeg_inativo_preserva_acompanhamento(inst, cliente_cpaeg_e_csaeg
         ):
             assert acao not in texto
     texto = texto_visivel(k.detalhe(cliente_cpaeg_e_csaeg, c))
-    for elemento in ("Resumo", "Recortes", "Comunicação simulada", "Elegíveis"):
+    for elemento in ("Resumo", "Recortes", "Lotes de mobilização", "Elegíveis"):
         assert elemento in texto
 
 

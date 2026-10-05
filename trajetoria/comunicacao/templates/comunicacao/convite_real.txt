@@ -1,0 +1,12 @@
+{% autoescape off %}[Texto provisório — pendente de aprovação institucional]
+
+{{ saudacao }}
+
+O Ifes convida você a responder à pesquisa de acompanhamento de egressos {{ campanha }}.
+Sua participação ajuda a instituição a conhecer a trajetória de quem se formou aqui.
+Esta mensagem não identifica você: ao abrir o link, informe seus dados para acessar.
+
+Responder à pesquisa: {{ url }}
+
+{{ assinatura }}
+{% endautoescape %}

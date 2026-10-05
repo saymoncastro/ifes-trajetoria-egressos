@@ -14,7 +14,7 @@ qualquer outra combinação recusa com `transporte_inseguro`.
 | --- | --- |
 | teste | `TRAJETORIA_COMUNICACAO_TESTE is True` e `EMAIL_BACKEND` locmem |
 | demonstracao | `TRAJETORIA_DEMONSTRACAO`; `TRAJETORIA_ENVIO_REAL != "1"`; backend SMTP; host em loopback; porta 1025; sem usuário e senha; sem TLS e SSL; timeout 5; remetente `trajetoria@example.invalid`; URL `TRAJETORIA_URL_ENTRADA_DEMONSTRACAO` validada pela 016 |
-| real | `TRAJETORIA_ENVIO_REAL == "1"`; demonstração desligada; backend SMTP; TLS ou SSL; usuário e senha não vazios; `TRAJETORIA_REMETENTE_INSTITUCIONAL` válido; `TRAJETORIA_URL_ENTRADA` em `https`, sem credenciais, query ou fragmento; base **sem** dados simulados |
+| real | `TRAJETORIA_ENVIO_REAL == "1"`; demonstração desligada; backend SMTP; porta inteira de 1 a 65535; TLS ou SSL; usuário e senha não vazios; `TRAJETORIA_REMETENTE_INSTITUCIONAL` válido; `TRAJETORIA_URL_ENTRADA` em `https`, sem credenciais, query ou fragmento; base **sem** dados simulados |
 
 - Com a demonstração desligada, o middleware torna toda rota 404. O modo real **só existe
   como validação** desta fronteira, testada com `override_settings`. A ativação depende do
@@ -52,7 +52,7 @@ Convite.mensagem(destinatario, connection) -> EmailMultiAlternatives
 ```text
 enviar_lote(lote_id, operador, *, agora=None) -> ResultadoDoEnvio
 ResultadoDoEnvio(processados, submetidos, falhas, restantes_nao_tentados,
-                 interrompido: bool)
+                 interrompido: bool, nao_enviaveis: int, saiu_da_coleta: bool)
 ```
 
 Algoritmo (research R7):
@@ -60,11 +60,18 @@ Algoritmo (research R7):
 1. Revalidar: capacidade, Lote visível, `estado(campanha) == EM_COLETA`,
    `transporte_de_envio()`, origem da base compatível com o modo.
 2. Escolher até `TRAJETORIA_LOTE_ENVIO_POR_ACAO` membros `NAO_TENTADO`, por `pk`.
-3. Para cada membro:
+3. Para cada membro (*code review de 2026-10-05*):
+   - **(0)** reconferir que a Campanha continua `EM_COLETA`. Se não estiver, encerrar a
+     ação com `saiu_da_coleta`; os restantes continuam `NAO_TENTADO`;
+   - **(0')** renderizar e validar a mensagem no modo, **antes** de reservar. Recusa
+     determinística (contato fora do domínio do modo, conteúdo ou cabeçalho inválidos)
+     conta como `nao_enviavel`: nada é transmitido e o membro continua `NAO_TENTADO`,
+     nunca "resultado incerto";
    - **(a)** transação curta: `select_for_update(skip_locked=True)`; ainda `NAO_TENTADO`;
      gravar `EM_TENTATIVA` e `tentativa_iniciada_em`; commit. A unicidade por Pessoa e
      Campanha é garantida pela restrição `membro_uma_abordagem_por_campanha` (FR-025);
-   - **(b)** renderizar com o contato congelado e `send(fail_silently=False)`;
+   - **(b)** enviar a mensagem já validada, com o contato congelado, por
+     `send(fail_silently=False)`;
    - **(c)** retorno 1 grava `SUBMETIDO_AO_TRANSPORTE`. `SMTPException` ou `OSError`
      gravam `FALHA_DE_TRANSPORTE`. Os dois gravam `resultado_em`;
    - **(d)** outra exceção: interrompe a ação; o membro fica em `EM_TENTATIVA`

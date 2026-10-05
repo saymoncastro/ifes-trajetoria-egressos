@@ -11,8 +11,9 @@
 `main` (021 e 022): contato importado por capacidade separada (FR-005 a FR-007) e convite
 secundário na conclusão (FR-009, E7). Escolhas E1 a E7 decididas pelo solicitante (ver
 Clarifications). Plan, tasks e `/speckit-analyze` concluídos em 2026-10-05, com os achados
-críticos corrigidos. Especificada; não implementada; envio real **não habilitado** (Gates A
-e B).
+críticos corrigidos. **Implementada e validada em 2026-10-05, somente na demonstração** (66
+tarefas; evidências em [validacao.md](validacao.md)). Envio real **não habilitado** (Gates A e
+B; DP-2010).
 
 **Input**: "Feature 020 — Mobilização real, Lotes e contatos do egresso", com base na
 [auditoria da 020](../../docs/auditorias/2026-10-04-mobilizacao-real-lotes-contatos.md)

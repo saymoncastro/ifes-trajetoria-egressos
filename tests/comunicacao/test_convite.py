@@ -1,3 +1,5 @@
+"""Renderer do convite de demonstração (016 FR-015 a FR-018; regressão na 020)."""
+
 import pytest
 
 from trajetoria.comunicacao.convite import renderizar_convite

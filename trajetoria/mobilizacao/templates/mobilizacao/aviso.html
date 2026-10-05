@@ -1,0 +1,8 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Lotes de mobilização{% endblock %}
+{% block conteudo %}
+<h1>Lotes de mobilização</h1>
+<p role="alert">{{ texto }}</p>
+{% if campanha %}<p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/">Voltar aos Lotes</a></p>{% endif %}
+<p><a href="/acompanhamento/">Voltar ao acompanhamento</a></p>
+{% endblock %}

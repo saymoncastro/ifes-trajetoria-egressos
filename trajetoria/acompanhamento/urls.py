@@ -6,7 +6,7 @@ from django.urls import path
 
 from trajetoria.acompanhamento import views
 from trajetoria.acompanhamento.gestao import views as gestao
-from trajetoria.comunicacao import views as comunicacao
+from trajetoria.mobilizacao import views as mobilizacao
 
 urlpatterns = [
     path("", views.campanhas),
@@ -14,7 +14,9 @@ urlpatterns = [
     path("campanhas/<uuid:campanha>/encerrar/", gestao.encerrar),
     path("campanhas/<uuid:campanha>/abrir/", gestao.abrir),
     path("campanhas/<uuid:campanha>/editar/", gestao.editar),
-    path("campanhas/<uuid:campanha>/comunicacao/", comunicacao.preparar),
-    path("campanhas/<uuid:campanha>/comunicacao/simular/", comunicacao.simular),
+    path("campanhas/<uuid:campanha>/lotes/", mobilizacao.lista),
+    path("campanhas/<uuid:campanha>/lotes/confirmar/", mobilizacao.confirmar),
+    path("campanhas/<uuid:campanha>/lotes/<uuid:lote>/", mobilizacao.detalhe),
+    path("campanhas/<uuid:campanha>/lotes/<uuid:lote>/enviar/", mobilizacao.enviar),
     path("campanhas/<uuid:campanha>/", views.campanha),
 ]

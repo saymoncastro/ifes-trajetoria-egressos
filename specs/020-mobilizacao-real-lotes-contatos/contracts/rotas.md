@@ -11,7 +11,7 @@ com 405.
 | GET | `/acompanhamento/campanhas/<campanha>/lotes/` | `pode_consultar_lotes` (e `pode_preparar_lote` para ver a prévia e o formulário) | Lista os Lotes visíveis. Com filtros na query (`unidade`, várias; `nivel`; `ano_minimo`; `ano_maximo`; `curso`), mostra a prévia. Não grava nada. |
 | POST | `/acompanhamento/campanhas/<campanha>/lotes/confirmar/` | `pode_preparar_lote` | Corpo: `nome`, filtros e `confirmo_abrangencia` (exigido sem filtros no escopo institucional). Recalcula e grava. Redireciona com 303 ao detalhe. |
 | GET | `/acompanhamento/campanhas/<campanha>/lotes/<lote>/` | `pode_consultar_lotes` e Lote visível | Filtros, momento, operador (rótulo), contagens por situação e situação derivada. |
-| POST | `/acompanhamento/campanhas/<campanha>/lotes/<lote>/enviar/` | `pode_enviar_lote` e Lote visível | Processa até N membros `NAO_TENTADO`. Responde com 303 ao detalhe e o aviso do resultado (totais, sem endereço). |
+| POST | `/acompanhamento/campanhas/<campanha>/lotes/<lote>/enviar/` | `pode_enviar_lote` e Lote visível | Processa até N membros `NAO_TENTADO`. Responde com o próprio detalhe e o aviso do resultado (totais, sem endereço): 200, ou 500 se interrompido. Repetir o POST é seguro, porque só processa não tentados. *(Implementação: sem 303, para não guardar o resultado em sessão.)* |
 
 **Recusas**, sempre por categoria fixa e sem dado pessoal:
 

@@ -32,7 +32,9 @@ __all__ = [
     "pode_acompanhar_coleta",
     "pode_gerir_campanha",
     "pode_validar_formacao",
-    "pode_simular_comunicacao",
+    "pode_consultar_lotes",
+    "pode_preparar_lote",
+    "pode_enviar_lote",
     "pode_consultar_publicado",
     "pode_consultar_rascunho",
     "pode_elaborar_instrumento",
@@ -75,11 +77,6 @@ def escopo_de_acompanhamento(vinculos) -> EscopoDeAcompanhamento | None:
     return None
 
 
-def pode_simular_comunicacao(vinculos) -> bool:
-    """Capacidade exclusiva da demonstração 016; não concede comunicação real."""
-    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)
-
-
 def pode_gerir_campanha(vinculos) -> bool:
     """017 C1: só CPAEG ativa, restrita à demonstração; DP-402 aberta.
 
@@ -90,4 +87,26 @@ def pode_gerir_campanha(vinculos) -> bool:
 
 def pode_validar_formacao(vinculos) -> bool:
     """019/E3, DP-1901: registro fictício do resultado, CPAEG ou CSAEG ativos."""
+    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)
+
+
+# Lotes de mobilização (020). Três regras nomeadas: consultar, preparar/confirmar e enviar
+# são ações distintas, para que a instância competente possa separá-las (DP-2001, DP-1602).
+# Hoje, CPAEG ou CSAEG ativos: interpretação local reversível, **só demonstração**; o envio
+# real continua bloqueado pelos Gates A e B, qualquer que seja a capacidade. Acompanhar a
+# coleta (011) e gerir Campanha (017) não concedem nenhuma delas.
+
+
+def pode_consultar_lotes(vinculos) -> bool:
+    """020 FR-036: ver Lotes e contagens agregadas no escopo; nunca membros individuais."""
+    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)
+
+
+def pode_preparar_lote(vinculos) -> bool:
+    """020 FR-036: prévia e confirmação; CSAEG só nas suas unidades (FR-037)."""
+    return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)
+
+
+def pode_enviar_lote(vinculos) -> bool:
+    """020 FR-036: envio na demonstração; não concede envio real (Gate B; DP-2001)."""
     return any(v.ativo and v.papel in (Papel.CPAEG, Papel.CSAEG) for v in vinculos)

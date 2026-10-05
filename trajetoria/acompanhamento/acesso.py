@@ -27,6 +27,7 @@ from trajetoria.demonstracao.operador import vinculos_do_operador_em_uso
 from trajetoria.governanca.regras import (
     escopo_de_acompanhamento,
     pode_acompanhar_coleta,
+    pode_consultar_lotes,
     pode_consultar_rascunho,
     pode_gerir_campanha,
     pode_validar_formacao,
@@ -44,6 +45,7 @@ class Atuacao:
     consultar_rascunho: bool
     gerir_campanha: bool = False
     validar_formacao: bool = False
+    consultar_lotes: bool = False  # 020: link para os Lotes de mobilização
 
 
 def recusa(request, texto: str):
@@ -76,6 +78,7 @@ def acompanhamento(view):
             consultar_rascunho=pode_consultar_rascunho(vinculos),
             gerir_campanha=pode_gerir_campanha(vinculos),
             validar_formacao=pode_validar_formacao(vinculos),
+            consultar_lotes=pode_consultar_lotes(vinculos),
         )
         return view(request, *args, **kwargs)
 

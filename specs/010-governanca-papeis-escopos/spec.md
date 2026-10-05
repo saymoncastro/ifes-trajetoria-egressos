@@ -1485,3 +1485,10 @@ citadas como 00n/DP-nnn.
 A capacidade nomeada pode_validar_formacao admite CPAEG e CSAEG ativos na demonstração. CSAEG atua pela unidade declarada e só vincula Conclusão ou acervo das unidades do vínculo. DP-1901 e DP-1902 preservam a competência de atestar e o acesso real como decisões institucionais pendentes.
 
 Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+FR-028: a regra `pode_simular_comunicacao` (016) foi retirada. Entram três regras nomeadas da 020: `pode_consultar_lotes`, `pode_preparar_lote` e `pode_enviar_lote`, com CPAEG ou CSAEG ativos, a CSAEG só nas suas unidades. É interpretação local reversível, só na demonstração (DP-2001). Acompanhar a coleta e gerir Campanha não concedem nenhuma delas. Envio real depende do Gate B.
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

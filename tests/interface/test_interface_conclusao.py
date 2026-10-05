@@ -255,7 +255,10 @@ def test_sem_texto_de_encerramento_agradece_uma_vez(client, db):
     texto = ci.texto_visivel(resposta)
     assert texto.count("Obrigado pela sua participação.") == 1
     principal = resposta.content.decode().split('<main id="conteudo"')[1].split("</main>")[0]
-    assert re.findall(r"<a [^>]*>([^<]+)</a>", principal) == ["Ver minha trajetória no Ifes"]
+    # 020 E7: a ação principal continua a primeira; o convite de e-mail vem depois.
+    assert re.findall(r"<a [^>]*>([^<]+)</a>", principal) == [
+        "Ver minha trajetória no Ifes", "Quer manter seu e-mail atualizado com o Ifes?",
+    ]
 
 
 def test_ligacoes_da_conclusao_em_lista_com_alvo_de_toque(client, cenario, ana):

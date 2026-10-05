@@ -1,0 +1,44 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}{{ lote.nome }} — Lote de mobilização{% endblock %}
+{% block conteudo %}
+<h1>{{ lote.nome }}</h1>
+<p>{{ campanha.nome }} — {{ situacao_campanha }}</p>
+{% if erro %}<p role="alert">{{ erro }}</p>{% endif %}
+{% if resultado %}
+<div role="status">
+{% if resultado.interrompido %}<p>O envio foi interrompido por uma falha inesperada. Membros com resultado incerto não serão tentados de novo; a caixa pode conter mensagens deles.</p>
+{% else %}<p>Envio processado nesta ação: {{ resultado.processados }} tentativa{{ resultado.processados|pluralize }} — {{ resultado.submetidos }} submetida{{ resultado.submetidos|pluralize }} ao transporte, {{ resultado.falhas }} falha{{ resultado.falhas|pluralize }} de transporte.{% if resultado.restantes_nao_tentados %} Resta{{ resultado.restantes_nao_tentados|pluralize:"m" }} {{ resultado.restantes_nao_tentados }} não tentado{{ resultado.restantes_nao_tentados|pluralize }}.{% endif %}</p>{% endif %}
+{% if resultado.saiu_da_coleta %}<p>A Campanha deixou de estar em coleta durante o envio. Nenhuma outra mensagem foi tentada; os membros restantes continuam não tentados.</p>{% endif %}
+{% if resultado.nao_enviaveis %}<p>{{ resultado.nao_enviaveis }} membro{{ resultado.nao_enviaveis|pluralize }} com contato não aceito neste ambiente: nenhuma mensagem saiu para ele{{ resultado.nao_enviaveis|pluralize }}, que continua{{ resultado.nao_enviaveis|pluralize:"m" }} não tentado{{ resultado.nao_enviaveis|pluralize }}.</p>{% endif %}
+</div>
+{% endif %}
+<h2>Seleção congelada</h2>
+<dl class="dados">
+<dt>Confirmado em</dt><dd>{{ lote.confirmado_em|date:"d/m/Y H:i" }}</dd>
+<dt>Por</dt><dd>{{ rotulo }}</dd>
+<dt>Unidades</dt><dd>{% if lote.unidades %}{{ lote.unidades|join:", " }}{% else %}Todas da abrangência{% endif %}</dd>
+<dt>Nível</dt><dd>{{ lote.nivel|default:"Todos" }}</dd>
+<dt>Ano de conclusão</dt><dd>{% if lote.ano_minimo or lote.ano_maximo %}{{ lote.ano_minimo|default:"…" }} a {{ lote.ano_maximo|default:"…" }}{% else %}Todos{% endif %}</dd>
+<dt>Curso</dt><dd>{{ lote.curso|default:"Todos" }}</dd>
+<dt>Já mobilizadas nesta Campanha (excluídas)</dt><dd>{{ lote.excluidas_por_mobilizacao }}</dd>
+</dl>
+<h2>Situação dos membros — {{ situacao }}</h2>
+<dl class="dados">
+<dt>Membros</dt><dd>{{ contagens.membros }}</dd>
+<dt>Sem contato (nenhuma mensagem)</dt><dd>{{ contagens.sem_contato }}</dd>
+<dt>Não tentados</dt><dd>{{ contagens.nao_tentados }}</dd>
+<dt>Submetidos ao transporte</dt><dd>{{ contagens.submetidos }}</dd>
+<dt>Falhas de transporte (sem nova tentativa)</dt><dd>{{ contagens.falhas }}</dd>
+<dt>Resultado incerto (nunca tentado de novo)</dt><dd>{{ contagens.incertos }}</dd>
+</dl>
+<p class="nota">Contagens operacionais. {{ aviso_aceite }}</p>
+<p class="nota">{{ aviso_causa }}</p>
+{% if pode_enviar %}
+<form method="post" action="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/{{ lote.pk }}/enviar/">{% csrf_token %}
+<button type="submit">{% if ja_tentado %}Continuar envio{% else %}Enviar{% endif %}</button>
+</form>
+<p>Cada membro recebe no máximo uma tentativa. Acionar de novo só processa os não tentados.</p>
+{% elif contagens.nao_tentados and not em_coleta %}<p>O envio só ocorre com a Campanha em coleta.</p>
+{% elif not contagens.nao_tentados %}<p>Não há membros a tentar neste Lote.</p>{% endif %}
+<p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/">Voltar aos Lotes</a></p>
+{% endblock %}
