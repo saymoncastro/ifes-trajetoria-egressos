@@ -429,6 +429,11 @@ perguntas do instrumento.
   reserva de vagas ou outros atributos acadêmicos além do contexto mínimo. Eles poderão
   ser acrescentados quando a spec de migração do instrumento demonstrar necessidade
   concreta. [Const. — XXII]
+  *(Revisado pela 021 — registrado em 2026-10-05.)* O complemento da Conclusão (ingresso),
+  fora do contexto mínimo, é admitido pela 021 (FR-046 a FR-051), em modelo e fronteira
+  próprios (`contexto_trajetoria.ComplementoDaConclusao`;
+  `fonte_academica/contexto_da_trajetoria.py`). `ConclusaoAcademica` e `CAMPOS_DE_CONTEXTO`
+  não mudam. Forma de ingresso e reserva de vagas continuam vedadas.
 - **FR-013**: Cada Conclusão Acadêmica DEVE conservar seu próprio contexto. A
   incorporação, consulta ou divergência de uma conclusão NÃO DEVE alterar o contexto de
   outra conclusão da mesma Pessoa. [Const. — I, XI]

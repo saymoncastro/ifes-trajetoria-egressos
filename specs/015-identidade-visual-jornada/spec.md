@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-03
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-03 (PR #24). A validação institucional da identidade visual continua pendente (DP-801, D-02, D-03).
 
 **Input**: User description: "015 — Foundations e validação da identidade visual do
 Trajetória Ifes (jornada do egresso), conforme a auditoria
@@ -345,6 +345,16 @@ auditoria (**Aud. §n**), **[014 FR-nnn]**, **[008 …]**, **[Const.]**, **[Soli
   num só lugar, com o contraste de cada cor documentado ao lado do valor. Nenhum valor
   visual da jornada DEVE ficar solto fora desse conjunto, salvo os isolados listados na
   auditoria como não-token (Aud. §25). [IV-12; Aud. §25]
+  *(Esclarecimento registrado em 2026-10-05.)* A implementação aplica FR-001 com a
+  exceção do research R1: seletores de `interface/estilo.css` compartilhados com o editor,
+  o acompanhamento e as páginas 403/404/500 mantêm valores literais **iguais** aos tokens,
+  para não alterar as telas administrativas antes da propagação transversal, que é
+  decisão posterior (D6, D8). Por isso oito tokens estão definidos e ainda não são referenciados por
+  `var()`: `--cor-demonstracao`, `--fonte`, `--fonte-1`, `--fonte-4`, `--entrelinha-corpo`,
+  `--borda-controle`, `--coluna` e `--alvo`. Eles permanecem como fonte única dos valores e
+  serão usados na propagação. A diferença entre as cores do SVG da assinatura e as do
+  Manual da Marca continua registrada em R3 e depende de D-03 (ACS); não é corrigida por
+  esta spec.
 - **FR-002**: As cores DEVEM ter papéis semânticos fixos, com estes valores de partida
   [Aud. §25]:
 

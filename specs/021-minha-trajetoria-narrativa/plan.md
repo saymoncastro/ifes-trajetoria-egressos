@@ -110,7 +110,7 @@ de 2026-10-04.*
 | 18 | Testes proporcionais ao risco | XXV, XXVI | ✅ Conforme | ✅ Conforme | Matriz da spec em research R17, com fronteiras 001/018/021, isolamento sob indisponibilidade e área segura |
 | 19 | Risco de over engineering | XXII, XXIII, XXIV | ⚠ Atenção | ✅ Conforme, com justificativa | Dependência nativa, fontes, dois apps e o primeiro script. Ver Complexity Tracking. Duas métricas fechadas, um tema, um formato, nada persistido, sem vídeo, sem abstração genérica de "enriquecimento" |
 | 20 | Exportabilidade | XVIII | N/A | N/A | A 021 não exporta. 013 intacta |
-| 21 | Decisões pendentes explicitadas | XXIX | ✅ Conforme | ✅ Conforme | DP-2101 a DP-2109 e as herdadas. Acesso, nome e botão "Compartilhar" são hipóteses reversíveis |
+| 21 | Decisões pendentes explicitadas | XXIX | ✅ Conforme | ✅ Conforme | DP-2101 a DP-2110 e as herdadas. Acesso, nome e botão "Compartilhar" são hipóteses reversíveis |
 
 **Resultado do gate**: APROVADO. A linha 19 só avança com a Complexity Tracking aceita em
 revisão.
@@ -128,14 +128,15 @@ revisão.
 | ID | DECISÃO PENDENTE | Instância competente | Solução provisória (hipótese) | Como reverter |
 |----|------------------|----------------------|-------------------------------|---------------|
 | DP-2101 | Compartilhamento pelo egresso de representação com o nome do Ifes | CPAEG/Proex, ACS, encarregado de dados | Salvar, baixar ou compartilhar pelo celular, só na demonstração; nenhuma publicação pelo sistema | Remover a seção do card e suas rotas. A narrativa continua |
-| DP-2102 | Marca no card | ACS | Sem marca gráfica; nome da instituição em texto | Acrescentar o ativo ao template |
+| DP-2102 | Marca no card | ACS | Na demonstração, a assinatura oficial já usada no cabeçalho do sistema (decisão do solicitante, 2026-10-05; revisado pela convergência visual); produção bloqueada até a ACS | Retirar o ativo do template do card |
 | DP-2103 | Nome civil × nome social | Registro acadêmico, encarregado de dados | Nome da fonte; no card, só por escolha | Trocar a origem do nome em `consultas.py` |
 | DP-2104 | Ingresso na fonte real | Registro acadêmico/DTI (Portão A) | Só `ContextoSimulado` informa | O adaptador real implementa a capacidade ou não |
 | DP-2105 | Definição e exibição dos agregados reais | CPAEG/Proex, registro acadêmico, encarregado de dados | Só simulados, só na demonstração, sem limiar | Desligar a seção, ou aplicar o limiar em `consultas.py` |
-| DP-2106 | Acervo de imagens | ACS, unidades | Nenhuma imagem | Ativo decorativo futuro, sem afirmação |
+| DP-2106 | Acervo de imagens | ACS, unidades | Na demonstração, só a ilustração vetorial própria e genérica, com legenda "· ilustração" (decisão do solicitante, 2026-10-05); nenhuma imagem afirma o período do egresso | Trocar a entrada do catálogo de imagens |
 | DP-2107 | Correspondência entre Versões (= 002/DP-006) | CPAEG | Nenhum dado declarado | Spec futura |
 | DP-2108 | Relação com o Portal do Egresso | Proex/CPAEG | Página no NIAE; contrato serializável | Outro sistema renderiza o mesmo JSON |
 | DP-2109 | Vigência entre apurações | Registro acadêmico/DTI, CPAEG/Proex | Exibe só com exatamente uma apuração | Trocar a seleção em `consultas.py`, com teste |
+| DP-2110 | Frase de fecho e hashtag (`#SouEgressoIfes`) | ACS, CPAEG/Proex | Ambas na demonstração, como texto fixo do catálogo (decisão do solicitante, 2026-10-05) | Trocar ou retirar o texto do catálogo |
 | 008/DP-801 | Identidade visual definitiva | Proex/CPAEG, ACS | Tokens da 015 | Trocar os tokens |
 | 001/DP-006 | Gatilho de incorporação e de carga de contexto | — | O preparo da demonstração carrega o contexto depois da incorporação | Mesmo gatilho real, chamando `carregar_contexto` à parte |
 
@@ -147,7 +148,7 @@ revisão.
 specs/021-minha-trajetoria-narrativa/
 ├── spec.md
 ├── plan.md              # este arquivo
-├── research.md          # Fase 0 (R1–R18), revisado em 2026-10-04
+├── research.md          # Fase 0 (R1–R21), revisado em 2026-10-05
 ├── data-model.md        # Fase 1
 ├── quickstart.md        # Fase 1
 ├── contracts/

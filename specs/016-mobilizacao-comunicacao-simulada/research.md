@@ -84,6 +84,7 @@ SMTP somente host literal `127.0.0.1` ou `::1`, porta 1025, usuário/senha vazio
 falsos, timeout 5 s. Não usar DNS nem confiar nos defaults de Django para ativar a operação.
 Remetente fixo `trajetoria@example.invalid`. URL configurada independente do Host do cliente,
 HTTP loopback literal, porta local 8000, caminho `/demonstracao/`, sem credenciais/query/fragmento.
+*(Revisado pela 018: o caminho validado passou a ser `/acesso/`, 018 FR-053 e R12.)*
 Mode demo off bloqueia a operação; backend não permitido ou adapter diferente também.
 
 **Razão:** mesmo SMTP incorreto não libera contato real: a operação checa a fronteira de

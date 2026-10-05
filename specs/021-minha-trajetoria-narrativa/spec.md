@@ -351,7 +351,9 @@ lista de formulações vedadas.
 
 Ao fim da página, a Maria vê a prévia do card, que é a própria imagem vertical (9:16) que
 ela vai postar no story do Instagram. A prévia mostra curso, unidade e ano de cada formação
-e a contagem de formações. Ela pode:
+e, quando nem todas cabem, "e mais N formações registradas". *(Revisado pela convergência
+visual, 2026-10-05: a linha com a contagem total de formações saiu do card; a contagem
+continua no subconjunto compartilhável e na página.)* Ela pode:
 
 - marcar "incluir meu nome" e atualizar a prévia;
 - salvar a imagem no celular, tocando e segurando, ou pelo botão de baixar;
@@ -360,8 +362,9 @@ e a contagem de formações. Ela pode:
   sistema não garante que o Instagram apareça; nesse caso, ela salva a imagem e a anexa no
   aplicativo.
 
-A imagem não tem brasão, selo, assinatura, QR nem identificador. Na demonstração, leva a
-indicação de dados fictícios.
+A imagem não tem brasão, selo, assinatura de autoridade, QR nem identificador. A assinatura
+visual do Ifes (marca) entra pelo FR-075 e não é elemento de autenticação (FR-036; DP-2102).
+Na demonstração, leva a indicação de dados fictícios.
 
 **Why this priority**: É a primeira representação compartilhável e fecha o ciclo de
 devolutiva. O valor de compartilhamento depende de a imagem caber, sem ajuste, no formato
@@ -388,7 +391,8 @@ Num celular, salvar a imagem e anexá-la a um story sem recorte.
    incluir o nome não aparece.
 4. **Given** qualquer card, **When** inspecionado, **Then** não contém forma de oferta,
    data completa, tempo decorrido, CPF, data de nascimento, resposta da pesquisa, contato,
-   brasão, selo, assinatura, QR, identificador nem data de emissão.
+   brasão, selo, assinatura de autoridade, QR, identificador nem data de emissão (a
+   assinatura visual do Ifes do FR-075 é marca, não autenticação).
 5. **Given** a mesma narrativa e a mesma escolha de nome, **When** o SVG é gerado duas
    vezes, **Then** os arquivos são idênticos.
 6. **Given** o download, **When** concluído, **Then** o nome do arquivo não contém nome,

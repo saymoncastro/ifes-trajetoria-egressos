@@ -499,6 +499,12 @@ vínculo. O preparo da demonstração (`trajetoria/demonstracao/cenario.py`) acr
 | Critérios | `unidades = ["Serra", "Vitória"]`; nenhum outro |
 | Ciclo | **nunca aberta** → EM PREPARAÇÃO, permanentemente |
 
+> *(Revisado pela ADR 0004; registrado em 2026-10-05.)* A Campanha descrita aqui foi
+> renomeada para "Demonstração — rodada em preparação" e **não tem critério**
+> (`CAMPANHA_ACOMPANHAMENTO` em `trajetoria/demonstracao/cenario.py`). Os operadores A, B e
+> C e o restante desta decisão não mudaram. Ver
+> `docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md`.
+
 A Campanha é criada só pelas operações da 004: `criar_campanha` e `definir_criterios`.
 
 Com os dados simulados já existentes, sem nenhum dado acadêmico novo:

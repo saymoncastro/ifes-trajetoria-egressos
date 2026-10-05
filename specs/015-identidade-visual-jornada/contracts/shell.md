@@ -13,6 +13,13 @@ próprias).
    - quando houver Pessoa de demonstração: "Pessoa fictícia: {nome}", "Trocar de pessoa"
      e o formulário "Encerrar demonstração" — **movidos do cabeçalho**, com textos,
      destinos e CSRF inalterados.
+   - *(Revisado pela 018 e pela 019; registrado em 2026-10-05.)* Hoje o texto da faixa é
+     "Ambiente de demonstração. Todos os dados são fictícios. A confirmação usa CPF e data
+     de nascimento fictícios e não é autenticação forte." Com Pessoa confirmada, a faixa
+     mostra "Pessoa fictícia: {nome}". Com Pessoa ou declarante da 019, mostra um único
+     botão "Sair" (POST com CSRF para `/acesso/sair/`). "Trocar de pessoa" e "Encerrar
+     demonstração" não existem mais. Fonte de verdade:
+     `trajetoria/interface/templates/interface/base.html`.
 3. **Cabeçalho do produto** (`<header>`):
    - borda superior 4 px `--cor-marca` (fio de marca);
    - assinatura oficial (SVG inline, `role="img"`, nome acessível "Instituto Federal do

@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #9).
 
 **Input**: User description: "Feature 007 — Contextualização da formação e entrada na
 pesquisa. A partir de uma Pessoa já resolvida por uma fronteira confiável, obter suas
@@ -905,6 +905,7 @@ delimitação desta feature.
   egressos ou usuários — interface, URL, API, página — antes da existência da fronteira
   de identidade, porque a entrada cria Participação em nome da Pessoa (005/DP-505;
   004/DP-406). [Const. — X, XV, XVI]
+  *(Revisado pela 008 — registrado em 2026-10-05.)* A Feature 008 passou a expor estas capacidades por uma interface **somente no modo de demonstração**, com dados fictícios (008 FR-001, FR-002). Fora desse modo continuam sem exposição: toda requisição responde 404. A exposição produtiva continua dependente de 005/DP-505 e 004/DP-406 (a identificação de demonstração da 018 não é fronteira produtiva de identidade).
 - **FR-050**: Os resultados DEVEM ser de domínio ou de aplicação. NÃO DEVEM ser produzidos
   HTML, modelo de tela, ViewModel, textos de interface ou mensagens ao egresso.
   [Escopo; Const. — XXII]

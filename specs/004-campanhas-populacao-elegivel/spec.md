@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #5).
 
 **Input**: User description: "Feature 004 — Campanhas e população elegível. Campanha como
 rodada institucional de aplicação de uma Versão publicada, com período de coleta,
@@ -811,9 +811,9 @@ a ser representável, não como regra.
   domínio. Elas NÃO DEVEM ser expostas a usuários com base apenas em acesso técnico, nem
   atribuídas a qualquer perfil, enquanto DP-402 estiver aberta. NÃO DEVE ser criado
   workflow de aprovação. [Const. — X; Governança de Permissões]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **FR-057**: Toda rejeição DEVE ser explícita, identificar o motivo e não produzir
   alteração parcial. [Const. — XXVI]
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -1081,6 +1081,7 @@ citadas como 00n/DP-nnn.
   (Art. 21, VI) e sua aplicação às CSAEGs (Art. 22, IV), sem tratar de rodadas. Instância
   competente: Proex/CPAEG (PAEG Art. 26). Impacto: FR-056; perfis de feature futura.
   Tratamento provisório: capacidades do domínio sem exposição a usuários.
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **DP-403** — DECISÃO PENDENTE: se haverá Campanhas próprias de unidade (CSAEG) além das
   institucionais, e como elas se relacionam com a Campanha institucional (complementar,
   substituta ou simultânea). Instância competente: CPAEG, com Proex. Impacto: uso do
@@ -1117,7 +1118,6 @@ citadas como 00n/DP-nnn.
   competente: CPAEG, com responsáveis pelo registro acadêmico. Depende de 001/DP-004 e
   001/DP-005. Impacto: alcance real de Campanhas com recorte. Tratamento provisório:
   exclusão conservadora com motivo NÃO INFORMADO (FR-028), sem processo de correção.
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Herdadas e ainda abertas** (não resolvidas por esta feature)
 

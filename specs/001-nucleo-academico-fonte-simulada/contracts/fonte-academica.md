@@ -32,7 +32,9 @@ ConclusaoNaFonte(
 )
 
 PessoaEncontrada(id_externo: str, nome: str | None,
-                 conclusoes: tuple[ConclusaoNaFonte, ...])
+                 conclusoes: tuple[ConclusaoNaFonte, ...],
+                 cpf: str | None = None,              # acrescentado pela 018
+                 data_nascimento: date | None = None) # acrescentado pela 018
 PessoaInexistente(id_externo: str)
 
 ConclusaoEncontrada(conclusao: ConclusaoNaFonte, id_externo_pessoa: str)
@@ -61,6 +63,11 @@ class FonteAcademicaIndisponivel(Exception): ...
    tabelas e vocabulário próprios da fonte ficam dentro da implementação.
 8. A mesma consulta à mesma fonte, sem mudança na fonte, devolve resultado igual. A
    ordem de `conclusoes` é determinística.
+9. *(Acrescentada pela 018.)* `cpf`, quando informado, tem exatamente 11 dígitos
+   canônicos. `cpf` e `data_nascimento` não aparecem na representação textual do objeto
+   (`repr=False`). Eles servem só para derivar o material de verificação de acesso
+   (`trajetoria/acesso/material.py`) e são descartados depois. Nunca são copiados para
+   `Pessoa` nem para outro modelo (001 FR-005, revisado pela 018).
 
 ## Verificação
 

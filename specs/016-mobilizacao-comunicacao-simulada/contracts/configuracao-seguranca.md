@@ -14,7 +14,7 @@ permite descobrir templates, sem modelos/migrations. Dependências Python perman
 | `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | falsos |
 | `EMAIL_TIMEOUT` | 5 segundos, fixo para esta demo |
 | `DEFAULT_FROM_EMAIL` | `trajetoria@example.invalid`; mensagem usa remetente institucional fixo |
-| `TRAJETORIA_URL_ENTRADA_DEMONSTRACAO` | default neutro `http://127.0.0.1:8000/demonstracao/` |
+| `TRAJETORIA_URL_ENTRADA_DEMONSTRACAO` | default neutro `http://127.0.0.1:8000/acesso/` *(revisado pela 018; era `/demonstracao/`)* |
 
 Ausência de configuração explícita de backend mantém operação desabilitada: default local
 recusável (por exemplo valor vazio tratado no preflight), sem fallback ao SMTP padrão Django.
@@ -24,7 +24,7 @@ entre guard e backend. A permissão locmem exige setting interno
 pública de ambiente; testes também ativam modo demo. Não inferir teste pelo nome do processo.
 
 URL permite HTTP loopback literal `127.0.0.1`/`[::1]`, porta 8000, caminho exato
-`/demonstracao/`; sem userinfo, query, fragmento, redirect ou identidade. Não usar request Host.
+`/acesso/` *(revisado pela 018, FR-053; era `/demonstracao/`; ver `trajetoria/comunicacao/seguranca.py`)*; sem userinfo, query, fragmento, redirect ou identidade. Não usar request Host.
 Destinatários exigem endereço simples válido, domínio exatamente `example.invalid`,
 sem CR/LF, listas ou display name. Remetente é composto pelo nome institucional fixo
 “Trajetória Ifes — demonstração institucional” e mailbox fixo `trajetoria@example.invalid`.

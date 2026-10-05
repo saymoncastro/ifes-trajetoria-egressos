@@ -713,12 +713,12 @@ da coleta.
 - **FR-001**: O acompanhamento DEVE ser somente leitura. Nenhuma página, consulta ou
   cálculo DEVE criar, alterar ou remover Campanha, Conclusão, Pessoa, Participação,
   Resposta, Versão ou vínculo. [Const. — XIX; Escopo]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **FR-002**: O acompanhamento DEVE ser agregado: somente contagens e taxas, nunca
   registros individuais (FR-080 a FR-084). [Const. — XVI]
 - **FR-003**: O acompanhamento NÃO DEVE ser apresentado como relatório estatístico
   oficial, dataset analítico, indicador da PAEG (Art. 10, III) ou Relatório Anual
   (Art. 14). Ele informa o andamento da coleta. [Const. — XIX; Escopo]
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Capacidade e escopo de acompanhamento**
 
@@ -977,10 +977,10 @@ consulta:
   critérios, abrir, encerrar, reabrir, prorrogar ou remover Campanha. A competência
   continua pendente (004/DP-402, DP-405) e nenhuma decisão anterior a resolveu.
   [004 FR-056; Const. — X]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **FR-101**: Esta feature NÃO DEVE criar envio de e-mail, WhatsApp, SMS, lembrete,
   convite, lista de destinatários ou de não respondentes, nem entidade Convite.
   [004 FR-048, FR-049; 004/DP-407; Const. — VI]
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Sem avaliação de desempenho**
 

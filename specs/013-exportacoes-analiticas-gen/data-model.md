@@ -56,6 +56,7 @@ Uma linha por registro do snapshot, na ordem da fronteira da 012 (spec FR-010, F
 | 12 | `participacao_concluida` | booleano | coleta | `participacao.concluida`; `None` sem Participação |
 | 13 | `participacao_iniciada_em` | data | coleta | `localtime(participacao.iniciada_em).date()`; `None` sem Participação |
 | 14 | `participacao_concluida_em` | data | coleta | `localtime(participacao.concluida_em).date()`; `None` se ausente |
+| 15 | `origem_formacao` | texto | derivado | *(Acrescentada pela 019, contrato v2.)* `institucional`, `declarada_validada_fonte_digital` ou `declarada_validada_acervo`, conforme o registro do snapshot; `None` sem Participação |
 
 ### 1.2 Colunas de Pergunta
 
@@ -142,7 +143,7 @@ Cabeçalho fixo (24 colunas), nesta ordem:
 
 | Proveniência | Colunas |
 |--------------|---------|
-| `derivado` | 1 a 3 e aplicabilidade |
+| `derivado` | 1 a 3, 15 (desde a 019) e aplicabilidade |
 | `institucional` | 4 a 10 |
 | `coleta` | 11 a 14 (fatos registrados pelo sistema durante a coleta; não é dado institucional, derivado nem declarado) |
 | `declarado` | valor, Opção e complemento |
@@ -168,7 +169,7 @@ Cabeçalho: `chave`, `valor`, `tipo`. O `tipo` é um de `texto`, `inteiro`, `dat
 
 | # | `chave` | `tipo` | Origem | Fixo para o snapshot porque |
 |---|---------|--------|--------|------------------------------|
-| 1 | `contrato_versao` | inteiro | constante `VERSAO_CONTRATO = 1` | constante |
+| 1 | `contrato_versao` | inteiro | constante `VERSAO_CONTRATO` (1 na 013; 2 desde a 019) | constante |
 | 2 | `pseudonimizacao_esquema` | texto | constante `hmac-sha256-v1` | constante |
 | 3 | `finalidade` | texto | nota fixa | constante |
 | 4 | `snapshot` | texto | `snapshot.id` | imutável (012) |

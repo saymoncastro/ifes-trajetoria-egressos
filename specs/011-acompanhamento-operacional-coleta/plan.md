@@ -365,7 +365,7 @@ operações das features anteriores, nunca por escrita direta que contorne regra
 
 | Teste | Resultado |
 |-------|-----------|
-| Preparo | Vínculos `(A, CPAEG, "")` e `(B, CSAEG, "Vitória")` **inalterados**; a Campanha "Demonstração — acompanhamento Serra e Vitória" existe, nunca aberta, com a baseline em RASCUNHO e critério {Serra, Vitória}; repetir o preparo não duplica nada |
+| Preparo | Vínculos `(A, CPAEG, "")` e `(B, CSAEG, "Vitória")` **inalterados**; a Campanha "Demonstração — acompanhamento Serra e Vitória" existe, nunca aberta, com a baseline em RASCUNHO e critério {Serra, Vitória} *(revisado pela ADR 0004: hoje "Demonstração — rodada em preparação", sem critério)*; repetir o preparo não duplica nada |
 | Após o preparo, B (Vitória) | Lista contém só a Campanha de acompanhamento ("coleta ampla" e "coleta sobreposta" ausentes); detalhe: 3 elegíveis, "Instrumento ainda não publicado", "A coleta ainda não começou"; sem opção de recorte por unidade |
 | Após o preparo, A | Três Campanhas; "coleta ampla" com 9 elegíveis; a de acompanhamento com 6 (Serra 3, Vitória 3) e instrumento identificado |
 | Cenários da 007/008 | `situacao_de_entrada` de todas as Pessoas fictícias idêntica à anterior; suítes existentes verdes |

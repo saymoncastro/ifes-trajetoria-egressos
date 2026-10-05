@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #7).
 
 **Input**: User description: "Feature 005 — Participação em Campanha e respostas em
 rascunho. Registrar que uma Conclusão Acadêmica participa de uma Campanha (no máximo uma
@@ -842,6 +842,7 @@ atual não tem conceito de Participação nem de rascunho.
 - **FR-058**: Iniciar, escrever e consultar são capacidades do domínio. Elas NÃO DEVEM ser
   expostas a usuários ou perfis nem receber interface, URL ou API nesta feature (DP-505).
   [Const. — X, XVI]
+  *(Revisado pela 008 — registrado em 2026-10-05.)* A Feature 008 passou a expor estas capacidades por uma interface **somente no modo de demonstração**, com dados fictícios (008 FR-001, FR-002). Fora desse modo continuam sem exposição: toda requisição responde 404. A exposição produtiva continua dependente de DP-505.
 - **FR-059**: Valores declarados NÃO DEVEM aparecer em logs, mensagens de rejeição ou
   outros rastros técnicos. [Const. — XVI; Observabilidade]
 - **FR-060**: Esta feature NÃO DEVE alterar modelos, operações, contratos ou dados das

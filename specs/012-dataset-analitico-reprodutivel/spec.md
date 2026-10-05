@@ -987,6 +987,12 @@ analítico próprio.
   acadêmicos de uma Conclusão nem conteúdo de Resposta. [Const. — XVI; Observabilidade]
 - **FR-125**: Enquanto 001/DP-009 e 005/DP-504 estiverem abertas, snapshots DEVEM ser
   produzidos somente com dados fictícios. [001/DP-009; 005/DP-504]
+  *(Esclarecimento registrado em 2026-10-05.)* Hoje esta restrição é garantida
+  **operacionalmente**, não por recusa técnica: `capturar_snapshot` não tem tela, rota, comando nem
+  outro chamador além dos testes (FR-100), e os testes usam só dados fictícios. A
+  operação não verifica o modo de demonstração nem a origem da base (`base_somente_simulada`,
+  em `trajetoria/demonstracao/base.py`). Antes de qualquer superfície que a exponha, a
+  restrição DEVE ser reavaliada: barreira técnica ou decisão de 001/DP-009 e 005/DP-504.
 
 **Demonstração e testes**
 

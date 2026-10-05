@@ -59,7 +59,7 @@ Inspeção da `main`, revisão `0c911b5` (PR #24, Feature 015 mergeada), em 2026
 | Pessoas e operadores são escolhidos por adaptadores fictícios separados | `trajetoria/demonstracao/{entrada,operador,views}.py` | Cookie de Pessoa não concede acesso institucional; não é autenticação |
 | Modo desligado bloqueia todas as páginas; não há auth/admin/sessions nem configuração explícita de e-mail | `config/{settings,urls}.py`, `demonstracao/middleware.py`, `.env.example` | Não depender dos padrões de e-mail do framework; exigir transporte seguro explícito |
 | Preparo explícito usa operações existentes e recusa bases com outra fonte ou vínculos não fictícios | `trajetoria/demonstracao/cenario.py`, comando `preparar_demonstracao` | Reutilizar o preparo; contatos fictícios ficam fora dos modelos acadêmicos |
-| Operador B é CSAEG Vitória; a Campanha visível Serra/Vitória está em preparação, e as duas abertas não incluem Vitória | `trajetoria/demonstracao/cenario.py`, `CAMPANHAS`, `VINCULOS` | Usar essa Campanha EM PREPARAÇÃO para verificação pré-operacional, preservando a jornada |
+| Operador B é CSAEG Vitória; a Campanha visível Serra/Vitória está em preparação, e as duas abertas não incluem Vitória | `trajetoria/demonstracao/cenario.py`, `CAMPANHAS`, `VINCULOS` | Usar essa Campanha EM PREPARAÇÃO para verificação pré-operacional, preservando a jornada. *(Revisado pela ADR 0004: a Campanha em preparação chama-se "Demonstração — rodada em preparação" e não tem critério; a "coleta ampla" também não.)* |
 
 **015 é a baseline atual.** Foundations e contratos de shell aprovados são preservados.
 O acompanhamento mantém sua base administrativa e estilos compartilhados; o shell da
