@@ -3,6 +3,8 @@
 Software do Núcleo Institucional de Acompanhamento de Egressos (NIAE) do Ifes.
 
 - Princípios do projeto: [Constituição](.specify/memory/constitution.md)
+- Ambiente local de desenvolvimento, do clone aos testes: [docs/desenvolvimento/ambiente-local.md](docs/desenvolvimento/ambiente-local.md)
+- Implantação em VM Ubuntu no datacenter: [docs/implantacao/datacenter-ubuntu.md](docs/implantacao/datacenter-ubuntu.md); operação: [docs/implantacao/operacao-producao.md](docs/implantacao/operacao-producao.md)
 - Como rodar e validar: [quickstart da Feature 001](specs/001-nucleo-academico-fonte-simulada/quickstart.md)
 - Instrumento de pesquisa (Pesquisa, Versão e estrutura): [quickstart da Feature 002](specs/002-pesquisa-versao-instrumento/quickstart.md)
 - Migração semântica do Formulário Egresso Ifes 2024 (baseline em rascunho, 54 perguntas, Matriz de Migração Q1–Q54): [quickstart da Feature 003](specs/003-migracao-semantica-instrumento/quickstart.md)
