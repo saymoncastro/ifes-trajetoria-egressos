@@ -1,0 +1,68 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block estilo %}{% include "narrativa/narrativa.css" %}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% for secao in secoes %}
+<section class="narrativa-secao" aria-labelledby="secao-{{ secao.chave }}">
+  <h2 id="secao-{{ secao.chave }}">{{ secao.titulo }}</h2>
+  {% for frase in secao.abertura %}
+  <p{% if forloop.first and secao.chave == "o_que_o_ifes_registra" and secao.abertura|length > 1 %} class="narrativa-nome"{% endif %}>{{ frase.texto }}</p>
+  {% endfor %}
+  {% if secao.itens %}
+  <ol class="narrativa-linha">
+    {% for item in secao.itens %}
+    <li>{% for frase in item %}<p class="{% if frase.tipo == 'atributos' %}narrativa-atributos{% elif forloop.first %}narrativa-fato{% else %}narrativa-derivado{% endif %}">{{ frase.texto }}</p>{% endfor %}</li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+</section>
+{% endfor %}
+<section class="narrativa-secao narrativa-card" id="card" aria-labelledby="secao-card">
+  <h2 id="secao-card">{{ titulo_do_card }}</h2>
+  <p>Uma imagem vertical para compartilhar no story ou no status das redes sociais.</p>
+  {% if card.png %}
+  <img class="narrativa-previa" src="{{ card.arquivo }}" alt="{{ card.alt }}" width="270" height="480">
+  <p class="narrativa-nota">No celular, você também pode tocar e segurar a imagem para salvá-la.</p>
+  {% else %}
+  <div class="narrativa-previa">{{ card.svg }}</div>
+  {% endif %}
+  {% if card.nome_disponivel %}
+  <form method="get" action="/minha-trajetoria/#card" class="narrativa-nome-card">
+    <p><input type="checkbox" id="incluir-nome" name="nome" value="1"{% if card.com_nome %} checked{% endif %}>
+    <label for="incluir-nome">Incluir meu nome no card</label></p>
+    <button type="submit" class="secundario">Atualizar prévia</button>
+  </form>
+  {% endif %}
+  <p class="narrativa-acoes">
+    <a class="botao" href="{{ card.arquivo }}" download="{{ card.nome_do_arquivo }}">Baixar imagem ({{ card.formato }})</a>
+    {% if card.png %}<button type="button" class="secundario" id="compartilhar" data-arquivo="{{ card.arquivo }}" hidden>Compartilhar imagem</button>{% endif %}
+  </p>
+  {% if card.png %}
+  <script>
+  /* 021 FR-073: melhoria progressiva. Só aparece se o navegador compartilha arquivos; abre o
+     menu do próprio celular, cujos destinos dependem do aparelho. Nada é enviado pelo
+     sistema; sem o script, salvar e baixar continuam funcionando. */
+  (function () {
+    var botao = document.getElementById("compartilhar");
+    if (!botao || !window.File || !navigator.canShare || !navigator.share) return;
+    try {
+      if (!navigator.canShare({ files: [new File([""], "x.png", { type: "image/png" })] })) return;
+    } catch (e) { return; }
+    var arquivo = null;
+    fetch(botao.dataset.arquivo, { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.blob() : Promise.reject(); })
+      .then(function (blob) {
+        arquivo = new File([blob], "minha-trajetoria-ifes.png", { type: "image/png" });
+        botao.hidden = false;
+      })
+      .catch(function () {});
+    botao.addEventListener("click", function () {
+      if (arquivo) navigator.share({ files: [arquivo] }).catch(function () {});
+    });
+  })();
+  </script>
+  {% endif %}
+</section>
+<p class="narrativa-voltar"><a href="/formacoes/">Voltar às suas formações</a></p>
+{% endblock %}

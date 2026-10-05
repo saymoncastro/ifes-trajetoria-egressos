@@ -30,6 +30,7 @@ from trajetoria.interface.apresentacao import (
 )
 from trajetoria.interface.formularios import FormularioDaSecao
 from trajetoria.interface.gravacao import salvar_secao
+from trajetoria.narrativa.consultas import elegivel as narrativa_elegivel
 from trajetoria.participacao.consultas import situacao_da_jornada
 from trajetoria.participacao.entrada import (
     FormacaoDeOutraPessoa,
@@ -216,6 +217,9 @@ def formacoes(request):
             ],
             "aviso": _aviso(request, "situacao", "salvo", "saida"),
             "entrada_operacional": mensagens.ENTRADA_OPERACIONAL,
+            # 021 FR-005 e FR-070: ligação para a devolutiva e antecipação do benefício.
+            "narrativa_disponivel": narrativa_elegivel(pessoa),
+            "antecipacao": mensagens.ANTECIPACAO if pendentes else None,
         },
     )
 
@@ -489,7 +493,8 @@ def _concluir(request, participacao):
 @_respondendo
 def concluida(request, participacao):
     """Confirmação simples: sem respostas, data, comprovante ou ação de editar (FR-062,
-    FR-063). A Participação concluída é lida, nunca reaberta."""
+    FR-063). A Participação concluída é lida, nunca reaberta. A ação única leva à Minha
+    trajetória (021 FR-003); a declarada continua como na 019 (021 FR-007)."""
     participacao = _participacao_do_sujeito(request, participacao)
     if participacao.concluida_em is None:
         return redirect(_base(participacao))

@@ -48,6 +48,7 @@ PERMITIDOS_NA_INTERFACE = {
     "trajetoria.academico.models": {"ConclusaoAcademica", "Pessoa"},
     "trajetoria.acesso.sessao": {"pessoa_em_uso"},  # 018: apenas a Pessoa resolvida
     "trajetoria.declaracao.sessao": {"declaracoes_em_uso"},  # 019: apenas o declarante
+    "trajetoria.narrativa.consultas": {"elegivel"},  # 021 FR-005: só a ligação à devolutiva
 }
 SO_NO_CENARIO = (
     "trajetoria.campanha",

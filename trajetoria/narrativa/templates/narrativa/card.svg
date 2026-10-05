@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ largura }}" height="{{ altura }}" viewBox="0 0 {{ largura }} {{ altura }}" role="img" aria-labelledby="card-titulo card-descricao">
+<title id="card-titulo">{{ titulo }}</title>
+<desc id="card-descricao">{{ descricao }}</desc>
+<rect width="{{ largura }}" height="{{ altura }}" fill="{{ tema.fundo }}"/>
+<rect width="{{ largura }}" height="{{ area.1 }}" fill="{{ tema.faixa }}"/>
+<rect y="{{ area.1 }}" width="{{ largura }}" height="12" fill="{{ tema.marca }}"/>
+<rect y="{{ area.3 }}" width="{{ largura }}" height="{{ altura }}" fill="{{ tema.faixa }}"/>
+<rect y="{{ area.3 }}" width="{{ largura }}" height="12" fill="{{ tema.marca }}"/>
+{% for l in linhas %}<text x="{{ l.x }}" y="{{ l.y }}" font-family="{{ familia }}" font-size="{{ l.tamanho }}"{% if l.negrito %} font-weight="700"{% endif %} fill="{{ l.cor }}">{{ l.texto }}</text>
+{% endfor %}</svg>

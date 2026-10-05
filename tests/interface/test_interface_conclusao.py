@@ -140,7 +140,9 @@ def test_confirmacao_simples_sem_respostas(client, cenario, ana):
     assert ana.concluida_em.strftime("%d/%m/%Y") not in texto
     assert not [p for p in PROIBIDAS_NA_CONFIRMACAO if p in texto.lower()]
     html = resposta.content.decode()
-    assert 'href="/formacoes/">Ver sua trajetória no Ifes' in html  # 014 FR-030
+    # 021 FR-003 (revisa 014 FR-041): a ação única leva à Minha trajetória.
+    assert 'href="/minha-trajetoria/">Ver minha trajetória no Ifes' in html
+    assert "<img" not in html and "download" not in html  # 021 FR-004
     assert "<form" not in html.split('<main id="conteudo"')[1]
 
 
@@ -253,7 +255,7 @@ def test_sem_texto_de_encerramento_agradece_uma_vez(client, db):
     texto = ci.texto_visivel(resposta)
     assert texto.count("Obrigado pela sua participação.") == 1
     principal = resposta.content.decode().split('<main id="conteudo"')[1].split("</main>")[0]
-    assert re.findall(r"<a [^>]*>([^<]+)</a>", principal) == ["Ver sua trajetória no Ifes"]
+    assert re.findall(r"<a [^>]*>([^<]+)</a>", principal) == ["Ver minha trajetória no Ifes"]
 
 
 def test_ligacoes_da_conclusao_em_lista_com_alvo_de_toque(client, cenario, ana):

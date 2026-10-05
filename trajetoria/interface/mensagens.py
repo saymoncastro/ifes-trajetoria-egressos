@@ -19,12 +19,16 @@ SITUACAO_DA_FORMACAO = {
     ),
 }
 
-# Tela "Sua trajetória no Ifes" (014 FR-030 a FR-033). A frase de entrada usa só a linha da
-# formação (curso · unidade · ano informados): nenhuma qualificação fixa da unidade.
-TITULO_TRAJETORIA = "Sua trajetória no Ifes"
+# Tela "Suas formações no Ifes" (014 FR-030 a FR-033; título revisado pela 021 FR-006, para não
+# se confundir com a devolutiva "Minha trajetória no Ifes"). A frase de entrada usa só a linha
+# da formação (curso · unidade · ano informados): nenhuma qualificação fixa da unidade.
+TITULO_TRAJETORIA = "Suas formações no Ifes"
 ENTRADA_FATO = "Você concluiu {linha}."
 ENTRADA_SEM_ATRIBUTOS = "Encontramos uma formação sua no Ifes."
 ENTRADA_CONTINUACAO = "O Ifes quer saber como sua trajetória seguiu depois disso."
+# 021 FR-070: antecipa o benefício, sem conteúdo personalizado; texto da interface, nunca da
+# Versão. Só com pesquisa a iniciar ou retomar.
+ANTECIPACAO = "Ao final, você poderá ver sua trajetória no Ifes."
 SELECAO = (
     "Cada formação tem sua própria pesquisa. Escolha por qual começar ou continuar; as outras "
     "continuam disponíveis aqui."

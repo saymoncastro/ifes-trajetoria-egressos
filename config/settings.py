@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     "trajetoria.participacao",
     "trajetoria.governanca",
     "trajetoria.interface",
+    "trajetoria.narrativa",  # Feature 021: Minha trajetória (sem models).
+    "trajetoria.contexto_trajetoria",  # Feature 021, P2: complemento e agregados.
     "trajetoria.demonstracao",
     "trajetoria.editor",
     "trajetoria.acompanhamento",

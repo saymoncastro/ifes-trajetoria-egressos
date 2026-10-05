@@ -1,0 +1,31 @@
+/* Minha trajetória no Ifes (021). Só tokens da 015 (estilo.css); nenhum recurso externo.
+   Mobile-first: uma coluna, rolagem vertical, legível a partir de 320 px. */
+.narrativa-secao { margin: 0 0 var(--espaco-6); }
+.narrativa-nome { color: var(--cor-texto-suave); font-size: var(--fonte-4); }
+.narrativa-linha { list-style: none; margin: 0; padding: 0; }
+.narrativa-linha li {
+  position: relative;
+  margin: 0 0 var(--espaco-5);
+  padding-left: var(--espaco-5);
+  border-left: var(--borda-acento) solid var(--cor-marca);
+}
+.narrativa-linha li p { margin: 0 0 var(--espaco-1); }
+.narrativa-fato { font-weight: var(--peso-medio); }
+.narrativa-atributos, .narrativa-derivado { color: var(--cor-texto-suave); }
+.narrativa-voltar { margin-top: var(--espaco-6); }
+
+/* Seu card (021 FR-073): a prévia é a própria imagem 9:16 do story. */
+.narrativa-previa { display: block; max-width: 100%; height: auto; aspect-ratio: 9 / 16;
+  border: var(--borda-fina) solid var(--cor-borda-suave); margin: 0 0 var(--espaco-3); }
+div.narrativa-previa { width: 270px; }
+div.narrativa-previa svg { width: 100%; height: auto; display: block; }
+.narrativa-nota { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
+.narrativa-nome-card { margin: var(--espaco-4) 0; }
+.narrativa-acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-3); align-items: center; }
+a.botao {
+  display: inline-flex; align-items: center; text-decoration: none;
+  background: var(--cor-acao); border-color: var(--cor-acao); color: var(--cor-fundo);
+  border-radius: var(--raio);
+}
+a.botao:hover, a.botao:focus { background: var(--cor-acao-forte); border-color: var(--cor-acao-forte);
+  color: var(--cor-fundo); }

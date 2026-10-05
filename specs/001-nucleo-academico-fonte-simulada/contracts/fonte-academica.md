@@ -68,3 +68,20 @@ Uma suíte de contrato única (`tests/test_contrato_fonte.py`) é executada cont
 implementação: hoje, a fonte simulada e uma implementação alternativa que existe só nos
 testes. Uma implementação real futura DEVE passar na mesma suíte, alimentada pelos casos
 que ela mesma declara.
+
+
+## Nota de revisão pela Feature 021 (2026-10-04)
+
+- **O contrato deste arquivo não muda:** `ConclusaoNaFonte`, `CAMPOS_DE_CONTEXTO`,
+  `PessoaEncontrada` e o protocolo `FonteAcademica`.
+- **Fronteira separada:** a 021 acrescenta, ao lado dele, a capacidade de contexto da
+  trajetória (`trajetoria/fonte_academica/contexto_da_trajetoria.py`). Ela informa o
+  ingresso como complemento opcional e o contexto institucional agregado (duas métricas).
+- **Adaptador:** um adaptador real pode ler uma única view larga e alimentar os dois
+  contratos; quem separa é o adaptador.
+- **Isolamento:** a incorporação desta feature não chama a capacidade nova (021 FR-071).
+
+Contrato da capacidade:
+[021 contracts/contexto-da-trajetoria.md](../../021-minha-trajetoria-narrativa/contracts/contexto-da-trajetoria.md).
+
+Referência: [021 — Minha Trajetória: narrativa visual personalizada](../../021-minha-trajetoria-narrativa/spec.md).
