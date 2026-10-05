@@ -89,3 +89,15 @@ Campanha e nunca decide quem pode responder.**
 A proposta de formação declarada foi implementada com compatibilidade provisória pelos
 campos declarados e definitiva pela Conclusão confirmada. Mobilização e Lote não
 participam de nenhuma das avaliações, e a declaração não altera a população elegível.
+
+
+## Revisão pela Feature 020 — 2026-10-05
+
+O Lote de mobilização foi especificado e implementado, só na demonstração. É uma seleção operacional congelada, pertencente à Campanha, que registra quem foi abordado e por qual contato:
+
+- é sempre subconjunto da abrangência e do escopo do operador;
+- não participa da admissão nem da entrada;
+- não exclui ninguém.
+
+Filtros de foco (unidade, nível, ano, curso) existem só no Lote, nunca na Campanha. Pertencer a um Lote não é atribuído como causa de resposta, porque o link é neutro.
+

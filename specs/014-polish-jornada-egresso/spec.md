@@ -1017,3 +1017,10 @@ MF-03.
   A FR-035 continua valendo para esta tela.
 
 Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-minha-trajetoria-narrativa/spec.md).
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+FR-041: na confirmação ancorada em Conclusão Acadêmica, "Ver minha trajetória no Ifes" passa de ação única a **ação principal** e continua a primeira. Logo abaixo, com menor destaque, entra o convite opcional "Quer manter seu e-mail atualizado com o Ifes?" para `/meu-email/` (020 FR-009, E7). A confirmação declarada (019) não muda. A tela de conclusão é definida em conjunto por 014, 021 e 020: mudar uma exige conferir as três.
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

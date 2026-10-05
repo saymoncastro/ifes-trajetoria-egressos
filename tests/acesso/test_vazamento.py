@@ -33,12 +33,14 @@ def test_varredura_completa(client, settings, caplog, django_capture_on_commit_c
         respostas.append(client.post("/acesso/", {"cpf": ANA.cpf, "data_nascimento": "13/04/1998"}))
     respostas.append(client.post("/acesso/sair/"))
     from trajetoria.campanha.models import Campanha
-    from trajetoria.comunicacao.operacoes import simular_comunicacao
+    from trajetoria.mobilizacao.operacoes import confirmar_lote, enviar_lote
 
     settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
     settings.TRAJETORIA_COMUNICACAO_TESTE = True
-    campanha = Campanha.objects.get(nome="Demonstração — rodada em preparação")
-    simular_comunicacao(campanha.pk, "demonstracao:operador-a")
+    campanha = Campanha.objects.get(nome="Demonstração — coleta ampla")
+    lote = confirmar_lote(campanha.pk, "demonstracao:operador-a", "Todos", {}, True)
+    enviar_lote(lote.pk, "demonstracao:operador-a")
+    assert mail.outbox  # 020: o envio por Lote também não expõe CPF nem data
     for r in respostas:
         requisicoes.extend([r.wsgi_request.get_full_path(), r.get("Location", ""), str(r.cookies)])
     banco = []

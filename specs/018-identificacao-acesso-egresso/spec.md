@@ -859,3 +859,10 @@ Referência: [019 — Formação não localizada e validação posterior](../019
   não lê Respostas.
 
 Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-minha-trajetoria-narrativa/spec.md).
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+A sessão de Pessoa desta feature (`pessoa_em_uso`) também autoriza a página `/meu-email/` da 020, sem mudança. Sem Pessoa, inclusive na sessão do declarante, a página vai para `/acesso/`. O e-mail não vira credencial nem fator de verificação. FR-053 (link neutro) é preservado pelo envio por Lote.
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

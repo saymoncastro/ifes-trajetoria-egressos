@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     "trajetoria.interface",
     "trajetoria.narrativa",  # Feature 021: Minha trajetória (sem models).
     "trajetoria.contexto_trajetoria",  # Feature 021, P2: complemento e agregados.
+    "trajetoria.contato",  # Feature 020: contato de e-mail da Pessoa, com proveniência.
+    "trajetoria.mobilizacao",  # Feature 020: Lotes de mobilização e envio por Lote.
     "trajetoria.video",  # Feature 022: vídeo (estado técnico, sem FK).
     "trajetoria.demonstracao",
     "trajetoria.editor",
@@ -129,6 +131,14 @@ EMAIL_TIMEOUT = 5
 DEFAULT_FROM_EMAIL = "trajetoria@example.invalid"
 # Sem variável pública de ambiente: locmem só é permitido por override_settings na suíte.
 TRAJETORIA_COMUNICACAO_TESTE = False
+
+# 020 (research R15): envio real desativado até os Gates A e B (DP-2010). Só "1" liga, e
+# ligado ele ainda exige TLS, credenciais, remetente institucional, URL https e base real.
+TRAJETORIA_ENVIO_REAL = os.environ.get("TRAJETORIA_ENVIO_REAL", "")
+TRAJETORIA_REMETENTE_INSTITUCIONAL = os.environ.get("TRAJETORIA_REMETENTE_INSTITUCIONAL", "")
+TRAJETORIA_URL_ENTRADA = os.environ.get("TRAJETORIA_URL_ENTRADA", "")
+_por_acao = os.environ.get("TRAJETORIA_LOTE_ENVIO_POR_ACAO", "100")
+TRAJETORIA_LOTE_ENVIO_POR_ACAO = int(_por_acao) if _por_acao.isdigit() and int(_por_acao) else 100
 
 # 018 R3: segredos independentes; não há valores padrão utilizáveis.
 TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO = os.environ.get("TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO", "")

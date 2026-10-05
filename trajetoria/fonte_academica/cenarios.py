@@ -170,3 +170,20 @@ AGREGADOS: tuple[tuple[str, str | None, str, int, int, date], ...] = (
     ("conclusoes_curso_unidade_ano", TADS, "Serra", 2022, 27, APURACAO_SIMULADA),
     ("conclusoes_unidade_ano", None, "Serra", 2022, 812, APURACAO_SIMULADA),
 )
+
+# 020: contatos fictícios, só `example.invalid` (vindos da 016, `comunicacao/contatos.py`).
+# Não afirmam que a fonte real oferece e-mail (Gate A). SIM-P-0010 sem e-mail; SIM-P-0004 com
+# dois, para exercitar a ordem declarada pelo adaptador.
+EMAILS: dict[str, tuple[str, ...]] = {
+    "SIM-P-0001": ("sim-p-0001@example.invalid",),
+    "SIM-P-0002": ("sim-p-0002@example.invalid",),
+    "SIM-P-0003": ("sim-p-0003@example.invalid",),
+    "SIM-P-0004": ("sim-p-0004@example.invalid", "sim-p-0004.alternativo@example.invalid"),
+    "SIM-P-0005": ("sim-p-0005@example.invalid",),
+    "SIM-P-0006": ("sim-p-0006@example.invalid",),
+    "SIM-P-0007": ("sim-p-0007@example.invalid",),
+    "SIM-P-0008": ("sim-p-0008@example.invalid",),
+    "SIM-P-0009": ("sim-p-0009@example.invalid",),
+    "SIM-P-0010": (),
+    "SIM-P-0011": ("sim-p-0011@example.invalid",),
+}

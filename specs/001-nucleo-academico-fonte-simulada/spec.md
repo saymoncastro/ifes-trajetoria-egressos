@@ -841,3 +841,10 @@ especificação.
 FR-030 continua vedando cadastro manual. A fonte institucional de acervo histórico entrega Referências de acervo pelo mesmo contrato; Pessoa e Conclusão nascem somente pela incorporação. A validação é um disparo explícito da incorporação (DP-006), sem fundir Pessoas de fontes diferentes.
 
 Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+O e-mail, antes adiado até haver consumidor concreto, é admitido pela 020: os Lotes de mobilização o consomem. Ele chega por uma capacidade de contatos **separada** da `FonteAcademica` (`fonte_academica/contatos_da_fonte.py`), carregada à parte da incorporação (precedente 021 FR-071). `PessoaEncontrada`, `ConclusaoNaFonte`, `CAMPOS_DE_CONTEXTO`, `Pessoa` e a incorporação não mudam. Telefone continua vedado (020 E1; DP-2009). O adaptador real depende do Gate A (DP-1601).
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

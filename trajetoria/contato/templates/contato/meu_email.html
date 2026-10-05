@@ -1,0 +1,38 @@
+{% extends "interface/base.html" %}
+{% block titulo %}Seu e-mail para contato do Ifes{% endblock %}
+{% block estilo %}
+/* 020: mesmo tratamento dos campos de texto da jornada (alvo de toque de 44 px), sem
+   alterar a folha compartilhada. */
+#email { display: block; width: 100%; max-width: 100%; font: inherit; padding: 0.5rem;
+  min-height: 2.75rem; border: 2px solid #565c65; border-radius: 0; background: #ffffff;
+  color: #1b1b1b; }
+.com-erro #email { border-color: #b50909; }
+{% endblock %}
+{% block conteudo %}
+<h1>Seu e-mail para contato do Ifes</h1>
+{% if situacao == "salvo" %}
+<p role="status">Pronto. O e-mail que você informou passa a ser usado nos próximos contatos do Ifes sobre pesquisas de acompanhamento de egressos.</p>
+{% elif situacao == "recusado" %}
+<p role="status">Tudo bem. Nada foi alterado.</p>
+{% else %}
+<p>Se quiser, informe um e-mail para o Ifes convidar você para pesquisas de acompanhamento de egressos.</p>
+<p>Seu e-mail não será público e não será usado para outra finalidade. Informar é opcional e não muda nada na sua participação.</p>
+<p class="nota">Texto provisório, pendente de aprovação institucional.</p>
+<form method="post" novalidate>
+{% csrf_token %}
+<div class="campo{% if erro %} com-erro{% endif %}">
+<label for="email">E-mail</label>
+{% if erro %}<p class="erro" id="email-erro">{{ erro }}</p>{% endif %}
+<input type="email" name="email" id="email" autocomplete="email" inputmode="email" maxlength="254"{% if erro %} aria-invalid="true" aria-describedby="email-erro"{% endif %}>
+</div>
+<div class="acoes">
+<button type="submit" name="acao" value="salvar" class="secundario">Salvar</button>
+<button type="submit" name="acao" value="agora_nao" class="secundario">Agora não</button>
+</div>
+</form>
+{% endif %}
+<ul class="lista-simples">
+{% if narrativa_disponivel %}<li><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></li>{% endif %}
+<li><a href="/formacoes/">Ver suas formações no Ifes</a></li>
+</ul>
+{% endblock %}

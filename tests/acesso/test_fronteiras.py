@@ -25,6 +25,8 @@ def test_dependencia_unidirecional_e_material_fora_de_operador():
         "acompanhamento",
         "comunicacao",
         "editor",
+        "contato",
+        "mobilizacao",
     )
     for pasta in pastas:
         for p in (RAIZ / "trajetoria" / pasta).rglob("*.py"):
@@ -34,12 +36,14 @@ def test_dependencia_unidirecional_e_material_fora_de_operador():
                     and no.module
                     and no.module.startswith("trajetoria.acesso")
                 ):
-                    assert pasta == "interface" and p.name == "views.py"
+                    # 020: a página "Meu e-mail" usa a mesma sessão de Pessoa (FR-011).
+                    assert pasta in ("interface", "contato") and p.name == "views.py"
                     assert no.module == "trajetoria.acesso.sessao"
                     assert {a.name for a in no.names} <= {"pessoa_em_uso"}
                 if isinstance(no, ast.Import):
                     assert not any(a.name.startswith("trajetoria.acesso") for a in no.names)
-        if pasta in ("exportacao", "analitico", "acompanhamento", "comunicacao", "editor"):
+        if pasta in ("exportacao", "analitico", "acompanhamento", "comunicacao", "editor",
+                     "mobilizacao"):
             assert all(
                 "MaterialDeVerificacao" not in p.read_text()
                 for p in (RAIZ / "trajetoria" / pasta).rglob("*.html")

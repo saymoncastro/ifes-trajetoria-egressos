@@ -1141,3 +1141,10 @@ citadas como 00n/DP-nnn.
 FR-016, FR-017 e FR-053 continuam definindo população e elegibilidade sobre Conclusões. A entrada declarada tem compatibilidade provisória própria, sobre unidade, nível e ano, sem excluir por atributos não coletados; a confirmação usa a elegibilidade definitiva da Conclusão. Declarações não integram a população.
 
 Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+O Lote de mobilização previsto pela ADR 0004 foi especificado e implementado pela 020, só na demonstração. O Lote é sempre um subconjunto da população no momento (FR-031) restrito ao escopo do operador. Ele não altera critérios, não participa de `admite_participacao` nem da entrada (007) e não exclui ninguém (020 FR-040, SC-007).
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

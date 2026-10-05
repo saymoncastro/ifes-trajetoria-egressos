@@ -1347,3 +1347,10 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   - Impacto: FR-079.
   - Tratamento provisório: ambas na demonstração, como texto fixo do catálogo (decisão do
     solicitante, 2026-10-05). Revisáveis sem mudar comportamento.
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+FR-003: a ação da confirmação ancorada em Conclusão passa de "única" a **ação principal**. "Ver minha trajetória no Ifes" continua a primeira; abaixo, com menor destaque, vem o convite opcional de e-mail da 020 (FR-009, E7). A independência funcional se mantém: a narrativa, o card e o vídeo não dependem de contato e não mostram o convite, e `narrativa`, `video` e `contexto_trajetoria` não importam `contato` nem `mobilizacao` (FR-009, FR-070 inalterados). O impacto na tela de conclusão é compartilhado e foi revisto em conjunto.
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).

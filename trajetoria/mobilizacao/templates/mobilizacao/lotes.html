@@ -1,0 +1,70 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}Lotes de mobilização — {{ campanha.nome }}{% endblock %}
+{% block conteudo %}
+<h1>Lotes de mobilização</h1>
+<p>{{ campanha.nome }} — {{ situacao_campanha }}</p>
+<p>Um Lote registra quem foi abordado e por qual contato. Ele não define quem pode responder: a abrangência continua a da Campanha.</p>
+{% if erro %}<p role="alert">{{ erro }}</p>{% endif %}
+
+<h2>Lotes confirmados</h2>
+{% if linhas %}
+<div class="rolagem" role="region" aria-label="Lotes confirmados" tabindex="0">
+<table>
+<caption>Lotes confirmados nesta Campanha</caption>
+<thead><tr><th scope="col">Lote</th><th scope="col">Confirmado em</th><th scope="col">Por</th><th scope="col" class="numero">Membros</th><th scope="col">Situação</th></tr></thead>
+<tbody>
+{% for linha in linhas %}<tr><th scope="row"><a href="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/{{ linha.lote.pk }}/">{{ linha.lote.nome }}</a></th><td>{{ linha.lote.confirmado_em|date:"d/m/Y H:i" }}</td><td>{{ linha.rotulo }}</td><td class="numero">{{ linha.membros }}</td><td>{{ linha.situacao }}</td></tr>
+{% endfor %}</tbody>
+</table>
+</div>
+{% else %}<p>Nenhum Lote visível para a sua atuação.</p>{% endif %}
+
+{% if pode_preparar %}
+<h2>Preparar um Lote</h2>
+<form method="get" action="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/">
+<input type="hidden" name="previa" value="1">
+<fieldset><legend>Unidades{% if not institucional %} (obrigatório, entre as da sua atuação){% endif %}</legend>
+{% for unidade in unidades %}<div><input type="checkbox" name="unidade" value="{{ unidade }}" id="unidade-{{ forloop.counter }}"{% if unidade in pedido.unidades %} checked{% endif %}> <label for="unidade-{{ forloop.counter }}">{{ unidade }}</label></div>
+{% empty %}<p>Nenhuma unidade com formações na abrangência.</p>{% endfor %}
+</fieldset>
+<fieldset><legend>Outros filtros (opcionais)</legend>
+<div><label for="nivel">Nível</label>
+<select name="nivel" id="nivel"><option value="">Todos</option>{% for nivel in niveis %}<option value="{{ nivel }}"{% if pedido.nivel == nivel %} selected{% endif %}>{{ nivel }}</option>{% endfor %}</select></div>
+<div><label for="ano_minimo">Ano de conclusão, a partir de</label> <input type="number" name="ano_minimo" id="ano_minimo" inputmode="numeric" min="1900" max="2999" value="{{ pedido.ano_minimo|default_if_none:'' }}"></div>
+<div><label for="ano_maximo">Ano de conclusão, até</label> <input type="number" name="ano_maximo" id="ano_maximo" inputmode="numeric" min="1900" max="2999" value="{{ pedido.ano_maximo|default_if_none:'' }}"></div>
+<div><label for="curso">Curso (nome exato)</label> <input type="text" name="curso" id="curso" value="{{ pedido.curso|default_if_none:'' }}"></div>
+</fieldset>
+<button type="submit">Ver prévia</button>
+</form>
+
+{% if previa %}
+<section aria-labelledby="titulo-previa">
+<h3 id="titulo-previa">Prévia — nada foi gravado</h3>
+<dl class="dados" role="status">
+<dt>Formações no recorte</dt><dd>{{ previa.conclusoes }}</dd>
+<dt>Pessoas a incluir</dt><dd>{{ previa.pessoas }}</dd>
+<dt>Com contato</dt><dd>{{ previa.com_contato }}</dd>
+<dt>Sem contato (entram como membros, sem mensagem)</dt><dd>{{ previa.sem_contato }}</dd>
+<dt>Já mobilizadas nesta Campanha (excluídas)</dt><dd>{{ previa.excluidas }}</dd>
+</dl>
+<p>Uma Pessoa com várias formações no recorte conta uma vez. A seleção é recalculada no momento da confirmação.</p>
+{% if previa.pessoas %}
+<form method="post" action="/acompanhamento/campanhas/{{ campanha.pk }}/lotes/confirmar/">
+{% csrf_token %}
+{% for unidade in previa.filtros.unidades %}<input type="hidden" name="unidade" value="{{ unidade }}">{% endfor %}
+{% if previa.filtros.nivel %}<input type="hidden" name="nivel" value="{{ previa.filtros.nivel }}">{% endif %}
+{% if previa.filtros.ano_minimo %}<input type="hidden" name="ano_minimo" value="{{ previa.filtros.ano_minimo }}">{% endif %}
+{% if previa.filtros.ano_maximo %}<input type="hidden" name="ano_maximo" value="{{ previa.filtros.ano_maximo }}">{% endif %}
+{% if previa.filtros.curso %}<input type="hidden" name="curso" value="{{ previa.filtros.curso }}">{% endif %}
+<div><label for="nome">Nome do Lote</label> <input type="text" name="nome" id="nome" maxlength="120" required></div>
+{% if previa.exige_confirmacao_de_abrangencia %}<div><input type="checkbox" name="confirmo_abrangencia" value="1" id="confirmo"> <label for="confirmo">Confirmo que este Lote abrange {{ previa.pessoas }} Pessoas, sem filtros</label></div>{% endif %}
+<button type="submit">Confirmar Lote</button>
+</form>
+{% else %}<p>Nenhuma Pessoa a mobilizar com esses filtros.</p>{% endif %}
+</section>
+{% endif %}
+{% endif %}
+
+<p class="nota">{{ aviso_causa }}</p>
+<p><a href="/acompanhamento/campanhas/{{ campanha.pk }}/">Voltar à Campanha</a></p>
+{% endblock %}

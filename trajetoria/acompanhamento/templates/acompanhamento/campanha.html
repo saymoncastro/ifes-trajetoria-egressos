@@ -26,7 +26,7 @@
 </dl>
 {% if not resumo.elegiveis %}<p>{{ sem_elegiveis }}</p>{% endif %}
 
-<p><a href="/acompanhamento/campanhas/{{ item.campanha.pk }}/comunicacao/">Comunicação simulada</a></p>
+{% if atuacao.consultar_lotes %}<p><a href="/acompanhamento/campanhas/{{ item.campanha.pk }}/lotes/">Lotes de mobilização</a></p>{% endif %}
 
 {% include "acompanhamento/_tabela_recorte.html" %}
 <p class="nota">Números calculados em {{ momento|date:"d/m/Y H:i" }}.</p>

@@ -66,13 +66,13 @@ def test_toda_rota_exige_o_gate_de_acompanhamento():
         assert isinstance(rota, URLPattern)
         marcas = [
             m
-            for m in ("acompanhamento", "comunicacao", "gestao")
+            for m in ("acompanhamento", "gestao", "lotes")
             if getattr(rota.callback, m, False)
         ]
         caminho = str(rota.pattern)
         esperada = "acompanhamento"
-        if "/comunicacao/" in caminho:
-            esperada = "comunicacao"
+        if "/lotes/" in caminho:
+            esperada = "lotes"
         elif any(f"/{acao}/" in caminho for acao in ("nova", "editar", "abrir", "encerrar")):
             esperada = "gestao"
         assert marcas == [esperada], caminho

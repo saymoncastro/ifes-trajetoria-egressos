@@ -23,7 +23,8 @@ Participações (005 FR-017) nem para reabrir Campanha (004/DP-405).
 
 Depois da incorporação, carrega o contexto da trajetória da 021 (P2) pela fonte simulada de
 contexto, separada da fonte acadêmica: cada Pessoa num *savepoint* próprio, e uma falha não
-interrompe o preparo nem desfaz a incorporação (021 FR-071).
+interrompe o preparo nem desfaz a incorporação (021 FR-071). Depois, do mesmo modo, os
+contatos fictícios da 020 pela fonte de contatos, também separada da fonte acadêmica.
 """
 
 import logging
@@ -41,10 +42,12 @@ from trajetoria.campanha import operacoes as op_campanha
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.campanha.models import Campanha
 from trajetoria.campanha.regras import CampanhaRejeitada
+from trajetoria.contato.carga import carregar_contatos
 from trajetoria.contexto_trajetoria.carga import carregar_contexto
 from trajetoria.demonstracao.base import base_somente_simulada
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
 from trajetoria.fonte_academica import cenarios
+from trajetoria.fonte_academica.contatos_simulados import ContatosSimulados
 from trajetoria.fonte_academica.contexto_simulado import ContextoSimulado
 from trajetoria.fonte_academica.simulada import FonteSimulada
 from trajetoria.formulario_2024 import materializar
@@ -96,7 +99,7 @@ class Resumo:
     linhas: tuple[str, ...]  # "Nome — situação", sem identificadores
 
 
-def preparar(fonte_de_contexto=None) -> Resumo:
+def preparar(fonte_de_contexto=None, fonte_de_contatos=None) -> Resumo:
     if not settings.TRAJETORIA_DEMONSTRACAO:
         raise PreparoRecusado(
             "O modo de demonstração está desligado. Defina TRAJETORIA_DEMONSTRACAO=1 num "
@@ -130,6 +133,7 @@ def preparar(fonte_de_contexto=None) -> Resumo:
                     continue
                 incorporar_com_material(fonte, pessoa.id_externo)
             _carregar_contextos(fonte_de_contexto or ContextoSimulado())
+            _carregar_contatos(fonte_de_contatos or ContatosSimulados())
             baseline = materializar().versao
             versao = _versao_de_demonstracao(baseline)
             for nome, criterios in CAMPANHAS.items():
@@ -160,6 +164,17 @@ def _carregar_contextos(fonte_de_contexto) -> None:
         except Exception:
             # Sem dado pessoal; a incorporação já feita não é desfeita (FR-071).
             logger.warning("Falha ao carregar o contexto da trajetória no preparo")
+
+
+def _carregar_contatos(fonte_de_contatos) -> None:
+    """020: contatos fictícios depois da incorporação e à parte dela (contrato separado da
+    fonte acadêmica). Uma falha não interrompe o preparo nem desfaz a incorporação."""
+    for pessoa in Pessoa.objects.filter(fonte=FonteSimulada.codigo).order_by("pk"):
+        try:
+            with transaction.atomic():
+                carregar_contatos(fonte_de_contatos, pessoa)
+        except Exception:
+            logger.warning("Falha ao carregar contatos no preparo")
 
 
 def _exigir_campanhas_em_coleta() -> None:

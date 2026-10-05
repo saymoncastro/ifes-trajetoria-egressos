@@ -493,8 +493,9 @@ def _concluir(request, participacao):
 @_respondendo
 def concluida(request, participacao):
     """Confirmação simples: sem respostas, data, comprovante ou ação de editar (FR-062,
-    FR-063). A Participação concluída é lida, nunca reaberta. A ação única leva à Minha
-    trajetória (021 FR-003); a declarada continua como na 019 (021 FR-007)."""
+    FR-063). A Participação concluída é lida, nunca reaberta. A ação principal leva à Minha
+    trajetória (021 FR-003, revista pela 020); abaixo, o convite secundário e opcional de
+    e-mail (020 FR-009, E7). A declarada continua como na 019 (021 FR-007)."""
     participacao = _participacao_do_sujeito(request, participacao)
     if participacao.concluida_em is None:
         return redirect(_base(participacao))

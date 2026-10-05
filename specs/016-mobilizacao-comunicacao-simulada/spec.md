@@ -737,3 +737,10 @@ sem ampliar o escopo ou implementar produção. Plan aprovado em conceito e task
 - FR-022/038: Serra/Vitória permanece EM PREPARAÇÃO. CTA pode chegar à entrada neutra
   sem tornar essa Campanha respondível. Não abrir Campanha, criar Participação ou contornar
   004/007 para demonstrar e-mail; outras Campanhas já respondíveis seguem suas próprias regras.
+
+
+## Nota de revisão pela Feature 020 (2026-10-05)
+
+A simulação (tela "Comunicação simulada", ação de simular, `pode_simular_comunicacao`, público recalculado e o mapa fixo de contatos) foi substituída pelos Lotes de mobilização da 020. O renderer, a validação de conteúdo e as barreiras de transporte desta feature continuam como o **modo demonstração** do envio por Lote (Mailpit loopback, `example.invalid`). FR-033 ("nada persistido") foi revista: a 020 persiste contatos, Lotes, membros e situação de envio. DP-1607 fica resolvida no limite do Lote; granularidade adicional e retenção seguem em 020/DP-2006. DP-1601 a DP-1606 e DP-1608 continuam abertas.
+
+Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).
