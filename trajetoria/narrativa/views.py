@@ -6,6 +6,7 @@ Camada fina: a narrativa vem de `montagem.montar`, os fatos de `consultas`, o ca
 sem mencionar a narrativa (FR-002). O nome só entra no card com `nome=1` (FR-034).
 """
 
+import logging
 from functools import wraps
 
 from django.conf import settings
@@ -18,12 +19,15 @@ from django.views.decorators.http import require_GET
 
 from trajetoria.acesso.sessao import pessoa_em_uso
 from trajetoria.narrativa import card, catalogo, consultas, imagens, rasterizacao
+from trajetoria.narrativa.composicao import ComposicaoImpossivel, composicao_visual
 from trajetoria.narrativa.montagem import montar
+from trajetoria.video import operacoes as video
+from trajetoria.video import renderizador as renderizador_de_video
 
 ARQUIVO = "minha-trajetoria-ifes"
 
 
-class _Redirecionar(Exception):
+class Redirecionar(Exception):
     def __init__(self, destino):
         self.destino = destino
 
@@ -31,9 +35,9 @@ class _Redirecionar(Exception):
 def _pessoa_e_narrativa(request):
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        raise _Redirecionar("/acesso/")
+        raise Redirecionar("/acesso/")
     if not consultas.elegivel(pessoa):
-        raise _Redirecionar("/formacoes/")
+        raise Redirecionar("/formacoes/")
     entrada = consultas.entrada_da_pessoa(
         pessoa, timezone.localdate(), settings.TRAJETORIA_DEMONSTRACAO
     )
@@ -42,6 +46,37 @@ def _pessoa_e_narrativa(request):
 
 def _nome_escolhido(request, pessoa) -> str | None:
     return pessoa.nome if request.GET.get("nome") == "1" and pessoa.nome else None
+
+
+def composicao_da_sessao(request, quer_nome: bool) -> tuple[dict, str]:
+    """Para o vídeo (022): a composição visual do card da Pessoa da sessão, com a mesma regra
+    de acesso e de nome da 021, e o sufixo `?nome=1` da escolha. Recalculada a cada
+    requisição: o cliente nunca informa qual vídeo quer (022 FR-025). Levanta `Redirecionar`
+    ou `ComposicaoImpossivel`."""
+    pessoa, narrativa = _pessoa_e_narrativa(request)
+    nome = pessoa.nome if quer_nome and pessoa.nome else None
+    composicao = composicao_visual(
+        narrativa.compartilhavel, nome, settings.TRAJETORIA_DEMONSTRACAO
+    )
+    return composicao, "?nome=1" if nome else ""
+
+
+def _bloco_do_video(narrativa, nome, sufixo) -> dict:
+    """O bloco #video (022) nunca derruba a página: qualquer falha o esconde (FR-033). Sem
+    o renderizador, nem a composição é montada."""
+    try:
+        if not renderizador_de_video.disponivel():
+            return {"disponivel": False}
+        composicao = composicao_visual(
+            narrativa.compartilhavel, nome, settings.TRAJETORIA_DEMONSTRACAO
+        )
+        return video.bloco(composicao, sufixo)
+    except ComposicaoImpossivel:
+        return {"disponivel": False}
+    except Exception:
+        # Só o fato técnico (022 FR-027).
+        logging.getLogger("trajetoria.video").exception("video: falha ao montar o bloco")
+        return {"disponivel": False}
 
 
 def _svg(request, pessoa, narrativa) -> str:
@@ -57,7 +92,7 @@ def _respondendo(view):
     def envolvida(request):
         try:
             return view(request, *_pessoa_e_narrativa(request))
-        except _Redirecionar as r:
+        except Redirecionar as r:
             return redirect(r.destino)
 
     return envolvida
@@ -144,6 +179,7 @@ def minha_trajetoria(request, pessoa, narrativa):
             "titulo": catalogo.TITULO,
             "abertura": _abertura(narrativa),
             "capitulos": _capitulos(narrativa),
+            "video": _bloco_do_video(narrativa, nome, sufixo),
             "card": {
                 "png": png,
                 "arquivo": f"/minha-trajetoria/card.{'png' if png else 'svg'}{sufixo}",

@@ -92,6 +92,21 @@ def test_so_a_rasterizacao_importa_resvg():
             assert arquivo == RAIZ / "narrativa" / "rasterizacao.py", arquivo
 
 
+@pytest.mark.parametrize("pasta", ["acesso", "declaracao", "academico", "analitico",
+                                   "exportacao", "acompanhamento"])
+def test_001_018_019_e_analiticos_nao_conhecem_a_022(pasta):
+    """O vídeo (022) é derivado opcional: nem identidade nem snapshot/exportação o veem."""
+    for arquivo in _modulos(pasta):
+        for modulo in _importacoes(arquivo):
+            assert not modulo.startswith("trajetoria.video"), (arquivo, modulo)
+
+
+def test_so_o_renderizador_chama_processos_externos():
+    for arquivo in RAIZ.rglob("*.py"):
+        if any(m.split(".")[0] == "subprocess" for m in _importacoes(arquivo)):
+            assert arquivo == RAIZ / "video" / "renderizador.py", arquivo
+
+
 @pytest.mark.django_db
 def test_logs_sem_dados_pessoais(client, cenario, caplog):
     caplog.set_level(logging.DEBUG)

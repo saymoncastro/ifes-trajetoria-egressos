@@ -90,6 +90,10 @@ vídeo da Feature 022 (FR-014). `serializar(narrativa)` produz este formato.
 
 ## Evolução
 
+- *(Feature 022)* O vídeo não consome este JSON bruto: consome a **composição visual do
+  card**, derivada dele (`narrativa/composicao.py`), que já traz textos prontos, nome por
+  escolha e decisões de layout. Este contrato não mudou.
+
 - A revisão de 2026-10-05 (card editorial) mudou a forma de `compartilhavel` mantendo a
   versão 1: o contrato ainda não foi publicado fora do PR #30.
 

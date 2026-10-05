@@ -13,10 +13,14 @@ Todo texto fica na área segura; as faixas de topo e de base recebem só imagem 
 Ocupação e corte (FR-080, FR-082): a abertura absorve o espaço livre, entre um mínimo e um
 máximo. Quando falta espaço, a abertura vai ao mínimo, depois saem os destaques e, por fim,
 formações viram "e mais N". Título, nome, curso e fecho nunca são cortados.
+
+Zonas (Feature 022; research R3): a composição também é exposta agrupada por zona e parte
+(um nó da linha do tempo, um cartão de destaque), para que o vídeo anime exatamente o que o
+card desenha. A lista plana `elementos` e, portanto, o SVG não mudam.
 """
 
-from dataclasses import dataclass
-from functools import cache
+from dataclasses import dataclass, field
+from functools import cache, cached_property
 from pathlib import Path
 
 from django.template.loader import render_to_string
@@ -306,19 +310,23 @@ def linha_do_tempo(topo: float, formacoes, omitidas: int, tema):
     """Um nó por formação, ano em destaque, curso em negrito e atributos; traço entre os
     nós (FR-077). As não exibidas entram em "e mais N" (FR-082)."""
     textos, centros, y = [], [], topo
+    textos_dos_nos = []
     for i, f in enumerate(formacoes):
         if i:
             y += ESPACO_ITEM
         inicio = y
+        do_no = []
         if f.ano_conclusao is not None:
-            textos.append(_texto(X_ITEM, y, str(f.ano_conclusao), "ano", tema["marca_escura"]))
+            do_no.append(_texto(X_ITEM, y, str(f.ano_conclusao), "ano", tema["marca_escura"]))
             y += MEDIDAS["ano"].entrelinha
         bloco, alta = _linhas(X_ITEM, y, f.linhas_curso, "curso", tema["texto"])
-        textos += bloco
+        do_no += bloco
         y += alta
         bloco, alta = _linhas(X_ITEM, y, f.linhas_detalhe, "detalhe", tema["suave"])
-        textos += bloco
+        do_no += bloco
         y += alta
+        textos += do_no
+        textos_dos_nos.append(do_no)
         primeira = "ano" if f.ano_conclusao is not None else "curso"
         centros.append(round(inicio + MEDIDAS[primeira].entrelinha / 2))
         y = max(y, inicio + 2 * RAIO_NO)
@@ -333,11 +341,15 @@ def linha_do_tempo(topo: float, formacoes, omitidas: int, tema):
     if len(centros) > 1:
         grafismo.append(_el("line", class_="traco", x1=cx, y1=centros[0], x2=cx, y2=centros[-1],
                             stroke=tema["marca"], stroke_width=TRACO))
-    for cy in centros:
-        grafismo.append(_el("circle", class_="no", cx=cx, cy=cy, r=RAIO_NO, fill=tema["marca"]))
-        grafismo.append(_el("circle", class_="no-centro", cx=cx, cy=cy, r=RAIO_CENTRO,
-                            fill=tema["creme"]))
-    return grafismo + textos, y - topo
+    nos = []
+    for cy, do_no in zip(centros, textos_dos_nos, strict=True):
+        circulos = [
+            _el("circle", class_="no", cx=cx, cy=cy, r=RAIO_NO, fill=tema["marca"]),
+            _el("circle", class_="no-centro", cx=cx, cy=cy, r=RAIO_CENTRO, fill=tema["creme"]),
+        ]
+        grafismo += circulos
+        nos.append(tuple(circulos + do_no))
+    return grafismo + textos, y - topo, tuple(nos)
 
 
 def numero_formatado(n: int) -> str:
@@ -372,8 +384,8 @@ def destaques(topo: float, contextos, tema):
     """Cartões brancos com filete verde: número ≥ 80 px e rótulo de até 2 linhas (FR-078)."""
     arranjo = _arranjo(contextos)
     if arranjo is None:
-        return [], 0
-    elementos = []
+        return [], 0, ()
+    elementos, cartoes = [], []
     rotulo = MEDIDAS["rotulo"]
     if arranjo == "lado":
         larga = (LARGURA_UTIL - DESTAQUE_VAO) / 2
@@ -385,6 +397,7 @@ def destaques(topo: float, contextos, tema):
                   for i in range(len(contextos))]
         altura = len(contextos) * (DESTAQUE_BAIXO + DESTAQUE_VAO) - DESTAQUE_VAO
     for d, (x, y, larga, alta) in zip(contextos, caixas, strict=True):
+        inicio = len(elementos)
         elementos.append(_el("rect", class_="destaque", x=round(x), y=round(y),
                              width=round(larga), height=alta, rx=24, fill=tema["branco"]))
         elementos.append(_el("rect", class_="filete", x=round(x), y=round(y + 24), width=8,
@@ -403,7 +416,8 @@ def destaques(topo: float, contextos, tema):
             topo_rotulo = y + (alta - len(d.rotulo) * rotulo.entrelinha) / 2
         bloco, _ = _linhas(x_rotulo, topo_rotulo, d.rotulo, "rotulo", tema["suave"])
         elementos += bloco
-    return elementos, altura
+        cartoes.append(tuple(elementos[inicio:]))
+    return elementos, altura, tuple(cartoes)
 
 
 def _linhas_do_rodape(c: Compartilhavel, demonstracao: bool, mostrar_apuracao: bool):
@@ -459,27 +473,88 @@ def faixa_inferior(tema) -> list[Elemento]:
 
 
 @dataclass(frozen=True)
+class Zona:
+    """Uma zona do card (Feature 022) e suas partes: um nó, um cartão ou a zona inteira."""
+
+    chave: str
+    partes: tuple[tuple[Elemento, ...], ...]
+
+
+# Ordem de pintura das zonas (022 data-model §1.4). Cada classe de elemento pertence a uma
+# zona; nós e cartões têm uma parte cada.
+ZONAS = (
+    "fundo", "abertura", "marca", "legenda", "titulo", "nome", "traco", "nos", "mais",
+    "destaques", "apuracao", "fechamento", "rodape",
+)
+_ZONA_DA_CLASSE = {
+    "fundo": "fundo", "faixa": "fundo", "faixa-quadro": "fundo",
+    "abertura": "abertura", "onda": "abertura",
+    "marca-fundo": "marca", "marca": "marca",
+    "legenda-fundo": "legenda", "legenda": "legenda",
+    "titulo": "titulo", "nome": "nome", "traco": "traco", "mais": "mais",
+    "apuracao": "apuracao",
+    "fecho": "fechamento", "hashtag-fundo": "fechamento", "hashtag": "fechamento",
+    "rodape": "rodape",
+}
+
+
+@dataclass(frozen=True)
 class Composicao:
     elementos: tuple[Elemento, ...]
     exibidas: int
     destaques: bool
     abertura: int
+    # Falso quando nem o mínimo (título, um curso e fecho) coube na área segura. O card mantém
+    # o comportamento da 021; o vídeo recusa a composição (022 FR-039).
+    cabe: bool = True
+    # Nós e cartões já agrupados por quem os desenhou; só o vídeo os usa (`zonas`).
+    grupos: dict = field(default_factory=dict, compare=False, repr=False)
+
+    @cached_property
+    def zonas(self) -> tuple[Zona, ...]:
+        """A composição agrupada por zona (Feature 022). Calculada só quando pedida: o card
+        (SVG e PNG) nunca passa por aqui, então uma classe nova no card não o quebra."""
+        return _zonas(self.elementos, self.grupos)
 
 
 def _conteudo(c, nome, exibidas, com_destaques, tema, topo=0.0):
-    """Título, linha do tempo e destaques a partir de `topo`. Devolve elementos e altura."""
+    """Título, linha do tempo e destaques a partir de `topo`. Devolve elementos, altura e as
+    partes agrupadas (nós e cartões)."""
     elementos, altura = titulo(topo, nome, tema)
     altura += ESPACO_BLOCO
     omitidas = len(c.formacoes) - exibidas + c.formacoes_omitidas
-    bloco, alta = linha_do_tempo(topo + altura, c.formacoes[:exibidas], omitidas, tema)
+    bloco, alta, nos = linha_do_tempo(topo + altura, c.formacoes[:exibidas], omitidas, tema)
     elementos += bloco
     altura += alta
+    cartoes = ()
     if com_destaques:
-        bloco, alta = destaques(topo + altura + ESPACO_BLOCO, c.contextos_agregados, tema)
+        bloco, alta, cartoes = destaques(
+            topo + altura + ESPACO_BLOCO, c.contextos_agregados, tema
+        )
         if bloco:
             elementos += bloco
             altura += ESPACO_BLOCO + alta
-    return elementos, altura
+    return elementos, altura, {"nos": nos, "destaques": cartoes}
+
+
+class ZonaDesconhecida(Exception):
+    """Elemento do card com classe sem zona do vídeo: falta mapeá-la em `_ZONA_DA_CLASSE`."""
+
+
+def _zonas(elementos, grupos) -> tuple[Zona, ...]:
+    """Agrupa os elementos já posicionados por zona, sem reordenar a lista plana."""
+    agrupados = {id(e) for partes in grupos.values() for parte in partes for e in parte}
+    por_zona = {}
+    for e in elementos:
+        if id(e) in agrupados:
+            continue
+        classe = dict(e.atributos).get("class")
+        if classe not in _ZONA_DA_CLASSE:
+            raise ZonaDesconhecida(classe)
+        por_zona.setdefault(_ZONA_DA_CLASSE[classe], []).append(e)
+    partes = {chave: (tuple(lista),) for chave, lista in por_zona.items()}
+    partes.update({chave: tuple(p) for chave, p in grupos.items() if p})
+    return tuple(Zona(chave, partes[chave]) for chave in ZONAS if chave in partes)
 
 
 def compor(
@@ -494,23 +569,24 @@ def compor(
     candidatos += [(n, False) for n in range(total, 0, -1)] or [(0, False)]
     for exibidas, com_destaques in candidatos:
         rodape = _linhas_do_rodape(c, demonstracao, com_destaques)
-        _, altura = _conteudo(c, nome, exibidas, com_destaques, tema)
+        _, altura, _ = _conteudo(c, nome, exibidas, com_destaques, tema)
         fim = BASE - _altura_do_fecho(rodape) - ESPACO_FECHO - altura - ESPACO_ABERTURA
         if fim >= minimo:
             break
     ideal = round(fim)
+    cabe = ideal >= minimo
     fim = max(minimo, min(ABERTURA_MAXIMA, ideal))
     # Acima do máximo, a sobra se divide entre os dois lados do conteúdo (FR-080).
     folga = max(0, ideal - fim) // 2
     elementos = [_el("rect", class_="fundo", width=LARGURA, height=ALTURA, fill=tema["creme"])]
     elementos += abertura(c, fim, tema)
-    bloco, _ = _conteudo(
+    bloco, _, grupos = _conteudo(
         c, nome, exibidas, com_destaques, tema, topo=fim + ESPACO_ABERTURA + folga
     )
     elementos += bloco
     elementos += fecho_e_rodape(rodape, tema)
     elementos += faixa_inferior(tema)
-    return Composicao(tuple(elementos), exibidas, com_destaques, fim)
+    return Composicao(tuple(elementos), exibidas, com_destaques, fim, cabe, grupos)
 
 
 def descricao(c: Compartilhavel, nome: str | None, demonstracao: bool = True) -> str:

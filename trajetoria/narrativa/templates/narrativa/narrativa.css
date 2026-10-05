@@ -70,6 +70,12 @@ div.narrativa-previa svg { width: 100%; height: auto; display: block; }
 .narrativa-nota { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
 .narrativa-nome-card { margin: var(--espaco-4) 0; }
 .narrativa-acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-3); align-items: center; }
+
+/* Vídeo da trajetória (022): prévia 9:16 com controles nativos, sem reprodução automática. */
+.narrativa-video { margin-top: var(--espaco-6); }
+video.narrativa-previa { width: 270px; background: var(--card-profundo); }
+.visualmente-oculto { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); border: 0; }
 a.botao {
   display: inline-flex; align-items: center; text-decoration: none;
   background: var(--cor-acao); border-color: var(--cor-acao); color: var(--cor-fundo);

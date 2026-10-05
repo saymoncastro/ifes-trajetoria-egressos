@@ -22,3 +22,10 @@ __pycache__/
 venv/
 dist/
 *.egg-info/
+
+# Projeto de vídeo (Feature 022): dependências e navegador provisionado
+video/node_modules/
+video/.bundle/
+# Vídeos de referência da 022: regenerados por evidencias/gerar_referencias.py (só os PNGs
+# entram no repositório).
+specs/022-minha-trajetoria-video/evidencias/*.mp4

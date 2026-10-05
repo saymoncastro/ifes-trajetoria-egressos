@@ -122,6 +122,18 @@ A **marca do Ifes** (assinatura visual) é identidade, não autenticação (FR-0
 - **Referência aprovada:** `specs/021-minha-trajetoria-narrativa/evidencias/referencia-*.png`,
   gerados pelo renderer e aprovados pelo solicitante antes do merge (SC-015, item 9).
 
+## Composição por zonas (Feature 022)
+
+`card.compor()` também expõe a composição agrupada por zona (`Composicao.zonas`: abertura,
+título, linha do tempo com um nó por parte, destaques com um cartão por parte, fecho,
+rodapé). O vídeo da 022 anima exatamente essas partes
+([composição visual](../../022-minha-trajetoria-video/contracts/composicao-visual.md)).
+
+- A lista plana `elementos` e o SVG do card **não mudam**: teste de regressão byte a byte
+  em `tests/narrativa/test_card_zonas.py`.
+- `Composicao.cabe` é falso quando nem o mínimo coube. O card mantém o comportamento acima;
+  o vídeo recusa a composição (022 FR-039).
+
 ## Temas (P3, FR-065)
 
 - Um tema é só um conjunto de tokens e grafismos sobre as mesmas zonas.

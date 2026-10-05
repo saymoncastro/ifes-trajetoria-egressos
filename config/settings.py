@@ -5,6 +5,7 @@ projeto rode sem nenhuma variável exportada. Nada lê `.env` automaticamente.
 """
 
 import os
+import shutil
 from datetime import timedelta
 from pathlib import Path
 
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     "trajetoria.interface",
     "trajetoria.narrativa",  # Feature 021: Minha trajetória (sem models).
     "trajetoria.contexto_trajetoria",  # Feature 021, P2: complemento e agregados.
+    "trajetoria.video",  # Feature 022: vídeo (estado técnico, sem FK).
     "trajetoria.demonstracao",
     "trajetoria.editor",
     "trajetoria.acompanhamento",
@@ -162,3 +164,20 @@ TRAJETORIA_CHAVE_CONSULTA_ACERVO = os.environ.get("TRAJETORIA_CHAVE_CONSULTA_ACE
 TRAJETORIA_SELO_DECLARACAO_VALIDADE = timedelta(
     minutes=int(os.environ.get("TRAJETORIA_SELO_DECLARACAO_VALIDADE", "30"))
 )
+
+# 022: vídeo da Minha trajetória (research R4, R6; data-model §4). O projeto Node fica em
+# `video/`; sem ele, a página da 021 funciona sem a opção de vídeo (FR-037). Nenhum segredo.
+TRAJETORIA_VIDEO_PROJETO = Path(
+    os.environ.get("TRAJETORIA_VIDEO_PROJETO", BASE_DIR / "video")
+)
+TRAJETORIA_VIDEO_NODE = os.environ.get("TRAJETORIA_VIDEO_NODE") or shutil.which("node") or ""
+# Executável de um Chrome do sistema, opcional; vazio usa o provisionado em `video/`.
+TRAJETORIA_VIDEO_NAVEGADOR = os.environ.get("TRAJETORIA_VIDEO_NAVEGADOR", "")
+TRAJETORIA_VIDEO_TEMPO_MAXIMO = int(os.environ.get("TRAJETORIA_VIDEO_TEMPO_MAXIMO", "120"))
+TRAJETORIA_VIDEO_CONCORRENCIA = int(os.environ.get("TRAJETORIA_VIDEO_CONCORRENCIA", "2"))
+# DP-2202: retenção provisória do vídeo (pode conter o nome); nunca acima de 24 h.
+TRAJETORIA_VIDEO_RETENCAO = timedelta(
+    minutes=int(os.environ.get("TRAJETORIA_VIDEO_RETENCAO_MINUTOS", "120"))
+)
+if not timedelta(0) < TRAJETORIA_VIDEO_RETENCAO <= timedelta(hours=24):
+    raise ValueError("TRAJETORIA_VIDEO_RETENCAO_MINUTOS deve ficar entre 1 e 1440 (DP-2202).")
