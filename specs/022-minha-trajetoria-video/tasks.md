@@ -359,7 +359,7 @@ O fallback é o R17.
 
   As T015 e T016 passam.
 
-- [ ] T019 [US2] Rodar a porta de decisão:
+- [X] T019 [US2] Rodar a porta de decisão:
   - `uv run pytest tests/video/test_midia.py tests/video/test_quadros.py` localmente e
     num push para o PR (CI Linux);
   - registrar em `specs/022-minha-trajetoria-video/validacao.md` (criar): tempos,
@@ -368,7 +368,7 @@ O fallback é o R17.
   - se algum critério falhar no Linux, **parar** e apresentar ao solicitante: o valor
     medido, a causa e o ajuste proposto (tolerância, `apt-get` ou fallback R17).
 
-- [ ] T020 [US2] Atualizar `docs/adr/0007-renderizacao-do-video.md` com o resultado do CI
+- [X] T020 [US2] Atualizar `docs/adr/0007-renderizacao-do-video.md` com o resultado do CI
   (seção "Resultado do spike", linha "CI ubuntu") e mudar o estado para **aceito**, se a
   porta passou.
 
@@ -722,7 +722,7 @@ Respostas.
   (research R14) e acrescentar esse teste a `tests/video/test_quadros.py`. Registrar os
   valores medidos no `validacao.md`.
 
-- [ ] T040 **Porta humana (SC-008):** apresentar ao solicitante os quadros-chave e os MP4 de
+- [X] T040 **Porta humana (SC-008):** apresentar ao solicitante os quadros-chave e os MP4 de
   referência para aprovação **antes do merge**. Registrar a aprovação, ou os ajustes
   pedidos, no `validacao.md`.
 

@@ -1,8 +1,10 @@
 """Gera os vídeos e quadros de referência da 022 (T038; SC-008).
 
 Script avulso, fora da suíte. Usa o pipeline real: card montado → `composicao_visual` →
-renderizador (Remotion). Dados fictícios. Na raiz do repositório, com o renderizador
-instalado (`npm ci --prefix video`; `npm --prefix video run garantir-navegador`):
+renderizador (Remotion). Dados fictícios. As referências versionadas são geradas no Linux do
+CI pelo workflow `.github/workflows/referencias-video.yml` (artefato `referencias-video-022`).
+Localmente, na raiz do repositório, com o renderizador instalado (`npm ci --prefix video`;
+`npm --prefix video run garantir-navegador`):
 
     uv run python specs/022-minha-trajetoria-video/evidencias/gerar_referencias.py
 
@@ -54,8 +56,9 @@ def main():
     if not renderizador.disponivel():
         sys.exit("Renderizador indisponível: npm ci --prefix video; garantir-navegador.")
     print(f"Plataforma: {plataforma()}")
-    # Os quadros de referência só são comparáveis na mesma plataforma: Chromium no Linux e no
-    # macOS rasterizam as fontes de forma diferente (tests/video/test_quadros.py).
+    # Registro de onde as referências foram geradas. As versionadas vêm do Linux do CI
+    # (workflow `referencias-video.yml`); macOS × Linux diferem só no antisserrilhado
+    # (SSIM ≥ 0,991), e o teste as compara com tolerância nas duas plataformas.
     PLATAFORMA.write_text(plataforma() + "\n")
     for nome_do_arquivo, caso, nome in CASOS:
         c = composicao(caso, nome)

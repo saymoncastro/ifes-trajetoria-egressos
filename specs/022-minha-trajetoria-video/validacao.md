@@ -4,11 +4,11 @@ Registro das verificações da implementação. Dados sempre fictícios.
 
 **Estado em 2026-10-05:**
 
-- implementação concluída e validada localmente (macOS arm64);
-- **pendentes:**
-  - a porta de decisão no CI Linux (T019, T020), que exige push;
-  - a aprovação humana das referências (T040);
-  - o teste em celular real (T041).
+- implementação concluída, validada localmente (macOS arm64) e **no CI Linux** (PR #33,
+  mergeado);
+- **referências regeneradas no Linux** (T039), pelo workflow `referencias-video.yml`;
+- **referências aprovadas pelo solicitante** em 2026-10-05 (T040);
+- **pendente:** o teste em celular real (T041).
 
 ## Porta de decisão (T019) — macOS arm64, Apple M5 Pro, Node 26.5
 
@@ -26,17 +26,31 @@ Registro das verificações da implementação. Dados sempre fictícios.
 | Quadros de ~1 s e ~4 s × referências | SSIM 1,0000 no mesmo ambiente (8 comparações) |
 | Disco | `video/node_modules` 225 MB + Chrome Headless Shell 193 MB |
 
-### CI Linux (pendente)
+### CI Linux — porta aprovada (T019)
 
-O job `testes` já instala Node 22, `npm ci --prefix video` e o navegador, e roda os testes
-de mídia com `CI=true`: sem o renderizador, eles **falham** em vez de serem pulados. Ao
-primeiro push, registrar aqui:
+**Job `testes` do PR #33** (run `37315845369`, ubuntu-latest, Python 3.13, Node 22.23.3):
 
-- tempos de render;
-- SSIM do último quadro;
-- SSIM dos quadros de ~1 s e ~4 s contra as referências geradas no macOS. Se ficar abaixo
-  de 0,97, regenerar as referências no Linux, como prevê a T039, e registrar;
-- bibliotecas de sistema que faltaram, se alguma.
+| Passo | Resultado |
+|---|---|
+| `npm ci --prefix video` | 7 s (252 pacotes, cache do npm) |
+| `garantir-navegador` | 4 s; Chrome Headless Shell `linux64` de 91,9 MB baixado na primeira execução. **Nenhuma biblioteca de sistema faltou** no runner |
+| `pytest` (suíte completa) | **2.789 aprovados**, 11 pulados e 2 desmarcados, em 20 min 07 s. Os 11 pulados são os 3 de antes da 022 mais as 8 comparações com as referências do macOS (pulo removido nesta revisão; ver abaixo). Os testes de mídia **rodaram**: com `CI=true`, a ausência do renderizador seria falha |
+| Job inteiro | ~21 min. Antes da 022, o job era dominado pelo `pytest` da suíte sem vídeo |
+
+**Workflow `referencias-video.yml`** (run `37319654190`, mesmo runner):
+
+| Verificação | Linux | macOS (local) |
+|---|---|---|
+| Render por vídeo (concorrência 2, com o navegador a frio) | 10,7–11,5 s | 5,1–10,7 s |
+| Último quadro × PNG do card | SSIM **0,9978–0,9980**; 0,19–0,27% dos pixels com diferença > 32 | SSIM 0,9894–0,9910; 1,07–1,48% |
+| Testes de mídia e de quadros | 29 aprovados em 1 min 40 s | — |
+
+**Referências e plataforma (T039).** As 7 referências foram regeneradas no Linux e
+versionadas (`referencias-plataforma.txt` = `Linux-x86_64`). Entre macOS e Linux, os
+quadros de ~1 s, ~4 s e final dão SSIM de **0,991 a 0,997** (só antisserrilhado dos
+glifos). Isso tem folga para o limite de 0,97, e o pulo por plataforma, uma cautela do code
+review, foi removido. A comparação com as referências agora roda no CI e localmente: no
+macOS, contra as do Linux, deu SSIM de 0,994 a 0,997.
 
 ## Achados da implementação
 
@@ -70,10 +84,10 @@ primeiro push, registrar aqui:
   concorrente.
 - **Node pelo PATH.** `TRAJETORIA_VIDEO_NODE` aceita o nome do comando (`node`), resolvido
   pelo PATH.
-- **Referências e plataforma.** As referências de quadros ficam ligadas à plataforma em que
-  foram geradas (`evidencias/referencias-plataforma.txt`). Em outra plataforma, o teste é
-  pulado com o motivo e a instrução de regenerá-las. A comparação com o card e a máscara de
-  área segura continuam valendo em qualquer plataforma.
+- **Referências e plataforma.** As referências de quadros passaram a registrar a plataforma
+  em que foram geradas (`evidencias/referencias-plataforma.txt`), e o teste era pulado em
+  outra plataforma. *Revisto depois do CI:* a diferença medida entre macOS e Linux é pequena
+  (SSIM ≥ 0,991), e o pulo foi removido (seção "CI Linux").
 - **Zonas fora do card.** As zonas do card são calculadas só quando o vídeo pede: uma
   classe nova no card da 021 não o quebra, e só o vídeo recusa (`ComposicaoImpossivel`).
 - **Menos trabalho por requisição.**
@@ -126,11 +140,13 @@ CPF (`servidor.log`, `processador.log`).
   - Testes novos da 022: 164 em `tests/video/`, 58 em `tests/narrativa/test_card_zonas.py` e
     7 em `tests/narrativa/test_fronteiras.py`.
 
-## Aprovação humana (T040) — pendente
+## Aprovação humana (T040) — aprovada
 
-Referências para revisão em `evidencias/`. Para cada caso: `referencia-<caso>.mp4`, os
-quadros `-q30`, `-q120` e `-qfim` e uma folha de contato com 9 instantes (`-folha.png`).
-Casos:
+**Referências do vídeo aprovadas pelo solicitante em 2026-10-05, sem ajustes.** São as
+geradas no Linux do CI (`referencias-plataforma.txt` = `Linux-x86_64`), versionadas em
+`evidencias/`. Para cada caso há os quadros `-q30`, `-q120` e `-qfim` e uma folha de
+contato com 9 instantes (`-folha.png`). Os MP4s são regenerados pelo workflow
+`referencias-video.yml` ou por `gerar_referencias.py`. Casos:
 
 - Maria sem nome;
 - Maria com nome;
