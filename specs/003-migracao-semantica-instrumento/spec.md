@@ -4,7 +4,14 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #4).
+
+> **Nota de numeração (registrada em 2026-10-05).** Quando esta spec foi escrita, a jornada
+> de resposta estava prevista como "Feature 004". O roteiro foi reorganizado depois: a 004
+> passou a ser *Campanhas e população elegível*, e a jornada foi especificada nas Features
+> **005** (Participação e respostas em rascunho) e **006** (jornada e conclusão; inclui a
+> semântica de execução das regras, DP-302). Leia "Feature 004 (jornada de resposta)" ao
+> longo desta spec como 005/006. O texto original foi mantido.
 
 **Input**: User description: "Feature 003 — Migração semântica do instrumento institucional
 vigente. Transformar o Formulário Egresso do Ifes 2024, documentado no inventário, em uma

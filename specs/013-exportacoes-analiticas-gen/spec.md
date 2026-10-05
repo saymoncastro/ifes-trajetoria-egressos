@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-02
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-02 (PR #18).
 
 **Input**: User description: "Feature 013 — Exportações analíticas e contrato de dados para
 o GeN. Disponibilizar os dados de um SnapshotAnalitico explicitamente informado em formato
@@ -191,7 +191,8 @@ B#]** nos requisitos:
    (`conclusao_analitica_id`, `pessoa_analitica_id`, por HMAC-SHA-256 com chave dedicada),
    elegibilidade, sete atributos de contexto congelado, dois indicadores e duas datas da
    Participação (FR-020, FR-027). Nenhum identificador interno, PII ou hash de dado
-   pessoal; nenhuma coluna constante por linha.
+   pessoal; nenhuma coluna constante por linha. *(Revisado pela 019: o contrato v2 acrescenta a 15ª coluna base,
+   `origem_formacao` — ver `contracts/pacote-de-dados.md`.)*
 4. **Chave técnica da Pergunta = identificador técnico da Pergunta na Versão**, em
    hexadecimal minúsculo sem hífens: `pergunta_<id>`; Opção: `pergunta_<id>__opcao_<id>`;
    complemento: `pergunta_<id>__complemento`; aplicabilidade:
@@ -1129,6 +1130,12 @@ Cada requisito indica a origem entre colchetes: **[PAEG]**, **[Const.]**,
   XVI; Observabilidade]
 - **FR-115**: Enquanto 001/DP-009 e 005/DP-504 estiverem abertas, exportações DEVEM ser
   produzidas somente com dados fictícios. [001/DP-009; 005/DP-504; 012 FR-125]
+  *(Esclarecimento registrado em 2026-10-05.)* Hoje esta restrição é garantida
+  **operacionalmente**, não por recusa técnica: a exportação (`exportar_csv`, `exportar_xlsx`) não tem tela, rota, comando nem
+  outro chamador além dos testes (FR-100), e os testes usam só dados fictícios. A
+  operação não verifica o modo de demonstração nem a origem da base (`base_somente_simulada`,
+  em `trajetoria/demonstracao/base.py`). Antes de qualquer superfície que a exponha, a
+  restrição DEVE ser reavaliada: barreira técnica ou decisão de 001/DP-009 e 005/DP-504.
 
 **Interoperabilidade e GeN**
 

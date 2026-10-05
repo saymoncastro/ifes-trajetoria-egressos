@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-03
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-03 (PR #21).
 
 **Input**: User description: "014-polish-jornada-egresso — polish consolidado da jornada do
 egresso (usabilidade, identidade, mobile-first), conforme a fronteira aprovada na

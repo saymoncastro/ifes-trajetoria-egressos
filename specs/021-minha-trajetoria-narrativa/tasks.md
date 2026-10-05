@@ -6,9 +6,9 @@ description: "Tasks da Feature 021 — Minha Trajetória: narrativa visual perso
 
 **Input**: `specs/021-minha-trajetoria-narrativa/`, com:
 
-- spec (73 FRs, 14 SCs; revisada em 2026-10-04);
+- spec (83 FRs, 15 SCs; revisada em 2026-10-05; esta lista registrava 73 FRs e 14 SCs antes da revisão editorial);
 - plan;
-- research R1–R18;
+- research R1–R21;
 - data-model;
 - contracts (`narrativa`, `catalogo`, `rotas`, `card`, `contexto-da-trajetoria`);
 - quickstart.

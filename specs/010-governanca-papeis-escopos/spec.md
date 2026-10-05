@@ -891,6 +891,13 @@ capacidade nova do instrumento ou etapa de fluxo.
     Versão, e criar, alterar, ordenar, mover e remover Seções, Perguntas e Opções, escala,
     complemento, desvios e encaminhamentos, além das páginas de formulário e de
     confirmação dessas ações.
+  *(Revisado pelas 011, 016, 017 e 019 — registrado em 2026-10-05.)* As três capacidades
+  continuam sendo as únicas **do editor**. Features posteriores acrescentaram, cada uma
+  por regra nomeada própria em `trajetoria/governanca/regras.py`: acompanhar a coleta
+  (`pode_acompanhar_coleta` e `escopo_de_acompanhamento`, 011 FR-010 e FR-141); simular
+  comunicação (`pode_simular_comunicacao`, 016); gerir Campanha (`pode_gerir_campanha`,
+  017, só na demonstração); validar formação (`pode_validar_formacao`, 019). A
+  associação entre atuação e capacidade continua fixa na especificação (FR-035).
 
   [009; Escopo]
 - **FR-029**: **Acessar o editor** DEVE significar ter ao menos uma capacidade. Não é
@@ -906,6 +913,7 @@ capacidade nova do instrumento ou etapa de fluxo.
 - **FR-033**: NÃO DEVE existir capacidade de publicar, aprovar, homologar, despublicar,
   gerir vínculos pela interface, gerir Campanha, consultar Participação ou Resposta, nem
   qualquer outra sem ação existente que a consuma. [Const. — X, XXII; FR-047]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **FR-034**: As capacidades DEVEM ser regras explícitas e nomeadas por ação concreta
   (equivalentes a "pode consultar instrumento publicado", "pode consultar rascunhos",
   "pode elaborar"). NÃO DEVE ser criado motor de políticas, registro de permissões,
@@ -917,7 +925,6 @@ capacidade nova do instrumento ou etapa de fluxo.
   em contagens. A página DEVE informar que somente Versões publicadas são exibidas para
   a sua atuação. Uma Pesquisa sem Versão publicada DEVE aparecer com essa indicação.
   [Hipótese; Const. — XVI]
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Aplicação no editor e recusas**
 
@@ -1074,13 +1081,13 @@ capacidade nova do instrumento ou etapa de fluxo.
 - **FR-073**: Esta feature NÃO DEVE criar tela, ação, rota ou regra de Campanha,
   população elegível, monitoramento, painel, exportação ou consulta de Participação e
   Resposta. [004/DP-402; Escopo; orientação 19 e 20]
+  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 - **FR-074**: Esta feature NÃO DEVE criar registro de auditoria, histórico de ações,
   trilha de eventos nem autoria de alterações. O registro técnico de eventos segue a
   seção "Observabilidade" da Constituição e NÃO DEVE conter dado pessoal além do
   identificador de operador. [Const. — Observabilidade, XVI, XXII; 009/DP-903]
 - **FR-075**: Esta feature NÃO DEVE criar multi-tenancy: base por unidade, banco por
   campus, endereço por unidade nem configuração por unidade. [Const. — XII]
-  *(Revisado pela 017 — interpretação C1 restrita à demonstração; DP-402 aberta)* A 017 permite gestão mínima pela CPAEG ativa somente na demonstração, sem publicação, critérios ou remoção; a competência produtiva continua pendente.
 
 **Interface, linguagem e acessibilidade**
 

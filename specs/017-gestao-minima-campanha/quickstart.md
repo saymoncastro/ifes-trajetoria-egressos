@@ -111,7 +111,8 @@ Esperado: tudo verde; nenhuma migração pendente (FR-025).
 - Reenvio de encerramento confirmado por cliente HTTP Django no mesmo banco, com aviso
   `ja-encerrada` e retrato da linha idêntico. Revalidação entre GET/POST, CSRF e todas as
   recusas são também cobertos pelos testes automatizados.
-- Evidência visual da Campanha encerrada: `/tmp/ifes-017-validacao.png` (artefato local).
+- Evidência visual da Campanha encerrada: [`evidencias/017-campanha-encerrada.png`](evidencias/017-campanha-encerrada.png)
+  (gerada em 2026-10-03 como `/tmp/ifes-017-validacao.png` e versionada em 2026-10-05).
 - `manage.py check`: nenhuma ocorrência; `makemigrations --check --dry-run`: nenhuma mudança.
 - A normalização de formato do repositório inteiro feita na implementação foi revertida no
   code review: o CI só exige `ruff check`, e os 41 arquivos alheios à 017 (todos com AST

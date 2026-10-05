@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #14).
 
 **Input**: User description: "Feature 009 — Editor institucional de Pesquisa e Versão.
 Primeira interface institucional para compor e editar uma Versão em rascunho sem editar
@@ -1957,7 +1957,9 @@ citadas como 00n/DP-nnn.
   editar** Versões em rascunho do instrumento, e em que escopo. Essa competência é
   distinta da de publicar (002/DP-001).
   - A PAEG atribui à CPAEG elaborar o questionário com as áreas de ensino, pesquisa e
-    extensão (Art. 21, VI) e às CSAEGs reportar atualizações necessárias (Art. 22, III).
+    extensão (Art. 21, VI) e às CSAEGs reportar atualizações necessárias (Art. 22, IV).
+    *(Citação corrigida em 2026-10-05: o original dizia "Art. 22, III"; o reporte à CPAEG
+    está no Art. 22, IV, como já registrado pela 010.)*
   - Instância competente: Proex/CPAEG; tratamento técnico na Feature 010.
   - Impacto: quem poderá usar o editor fora do ambiente não produtivo; se haverá escopo
     por Pesquisa ou unidade.

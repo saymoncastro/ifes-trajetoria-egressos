@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #3).
 
 **Input**: User description: "Feature 002 — Pesquisa, versão e estrutura do instrumento.
 Estabelecer o modelo canônico do instrumento de pesquisa do NIAE: Pesquisa → Versão da

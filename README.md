@@ -5,6 +5,7 @@ Software do Núcleo Institucional de Acompanhamento de Egressos (NIAE) do Ifes.
 - Princípios do projeto: [Constituição](.specify/memory/constitution.md)
 - Como rodar e validar: [quickstart da Feature 001](specs/001-nucleo-academico-fonte-simulada/quickstart.md)
 - Instrumento de pesquisa (Pesquisa, Versão e estrutura): [quickstart da Feature 002](specs/002-pesquisa-versao-instrumento/quickstart.md)
+- Migração semântica do Formulário Egresso Ifes 2024 (baseline em rascunho, 54 perguntas, Matriz de Migração Q1–Q54): [quickstart da Feature 003](specs/003-migracao-semantica-instrumento/quickstart.md)
 - Campanhas e população elegível: [quickstart da Feature 004](specs/004-campanhas-populacao-elegivel/quickstart.md)
 - Participação e respostas em rascunho: [quickstart da Feature 005](specs/005-participacao-respostas-rascunho/quickstart.md)
 - Jornada de resposta e conclusão: [quickstart da Feature 006](specs/006-jornada-conclusao-participacao/quickstart.md)
@@ -13,6 +14,13 @@ Software do Núcleo Institucional de Acompanhamento de Egressos (NIAE) do Ifes.
 - Editor institucional de Pesquisa e Versão (só no modo local não produtivo, `TRAJETORIA_DEMONSTRACAO=1`; não publica): [quickstart da Feature 009](specs/009-editor-pesquisa-versao/quickstart.md)
 - Governança, papéis e escopos institucionais (vínculos CPAEG/CSAEG autorizam o editor; operador fictício só no modo de demonstração; o editor continua indisponível para uso produtivo enquanto não houver identificação de operadores — DP-1001): [quickstart da Feature 010](specs/010-governanca-papeis-escopos/quickstart.md)
 - Acompanhamento operacional da coleta (`/acompanhamento/`; indicadores agregados e derivados por Campanha — elegíveis atuais, Participações iniciadas e concluídas, recortes acadêmicos —, CPAEG institucional e CSAEG por unidade; sem modelos novos, sem dados individuais; só no modo de demonstração): [quickstart da Feature 011](specs/011-acompanhamento-operacional-coleta/quickstart.md)
-
-- Formação declarada e validação posterior (fonte digital ou acervo, quarentena analítica e dados de consulta cifrados; somente demonstração): [quickstart da Feature 019](specs/019-formacao-declarada-validacao/quickstart.md).
-- Minha trajetória no Ifes (`/minha-trajetoria/`; devolutiva depois da pesquisa, montada só com fatos institucionais e com card vertical 9:16 em PNG; ingresso e agregados vêm de uma fonte de contexto simulada, separada da fonte acadêmica, carregada pelo `preparar_demonstracao`; somente demonstração): [quickstart da Feature 021](specs/021-minha-trajetoria-narrativa/quickstart.md).
+- Dataset analítico reprodutível (snapshot imutável de Campanha encerrada; operação de domínio, sem tela): [quickstart da Feature 012](specs/012-dataset-analitico-reprodutivel/quickstart.md)
+- Exportações analíticas e contrato de dados para o GeN (CSV/XLSX pseudonimizado, contrato v2; operação de domínio, sem tela): [quickstart da Feature 013](specs/013-exportacoes-analiticas-gen/quickstart.md)
+- Polish consolidado da jornada do egresso (salvar e sair, pendência × erro, alvos de toque): [quickstart da Feature 014](specs/014-polish-jornada-egresso/quickstart.md)
+- Identidade visual da jornada (tokens, shell institucional, assinatura; validação institucional pendente): [quickstart da Feature 015](specs/015-identidade-visual-jornada/quickstart.md)
+- Mobilização e comunicação simulada (convite por e-mail só para contatos fictícios e Mailpit local; somente demonstração): [quickstart da Feature 016](specs/016-mobilizacao-comunicacao-simulada/quickstart.md)
+- Gestão mínima de Campanha (criar, editar, abrir e encerrar pela CPAEG; somente demonstração): [quickstart da Feature 017](specs/017-gestao-minima-campanha/quickstart.md)
+- Identificação e acesso do egresso (`/acesso/`; CPF e data de nascimento conferidos por HMAC; somente demonstração): [quickstart da Feature 018](specs/018-identificacao-acesso-egresso/quickstart.md)
+- Formação declarada e validação posterior (fonte digital ou acervo, quarentena analítica e dados de consulta cifrados; somente demonstração): [quickstart da Feature 019](specs/019-formacao-declarada-validacao/quickstart.md)
+- Minha trajetória no Ifes (`/minha-trajetoria/`; devolutiva depois da pesquisa, montada só com fatos institucionais e com card vertical 9:16 em PNG; ingresso e agregados vêm de uma fonte de contexto simulada, separada da fonte acadêmica, carregada pelo `preparar_demonstracao`; somente demonstração): [quickstart da Feature 021](specs/021-minha-trajetoria-narrativa/quickstart.md)
+- Documentação institucional, funcional e conceitual (página estática; abrir `docs/documentacao/index.html` no navegador): [docs/documentacao/](docs/documentacao/index.html)

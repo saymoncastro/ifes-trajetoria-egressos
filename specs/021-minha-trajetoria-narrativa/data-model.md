@@ -119,7 +119,7 @@ Nenhum app da 001, 018 ou 019 importa este app (FR-071; research R1 e R13).
 
 | Entrada | `fonte_de_contexto: FonteDeContextoDaTrajetoria`, `pessoa: Pessoa` |
 |---|---|
-| Saída | `ResultadoDaCarga(situacao: CARREGADO \| INDISPONIVEL \| SEM_CONCLUSOES, complementos_criados, agregados_criados, divergencias)` |
+| Saída | `ResultadoDaCarga(situacao: CARREGADO \| INDISPONIVEL \| SEM_CONCLUSOES, complementos_criados, agregados_criados, sinais)` — `sinais` (`Sinal`) registra divergências da fonte para o log, sem dados pessoais |
 | Transação | A consulta à fonte acontece fora da transação. A gravação acontece numa transação própria. Os logs saem depois do commit |
 | Garantias | Nunca lança `ContextoIndisponivel`; nunca altera Pessoa nem Conclusão; nunca é chamada por incorporação, acesso, declaração ou view da narrativa |
 
@@ -170,8 +170,9 @@ A forma serializada está em [contracts/narrativa.md](contracts/narrativa.md).
 
 ### 3.3 Card (artefato)
 
-- `card_svg(compartilhavel, tema, nome) -> str`: 1080 × 1920, área segura (research
-  R10).
+- `card_svg(compartilhavel, tema=TEMA_CARD, nome=None, demonstracao=True) -> str`:
+  1080 × 1920, área segura (research R10); `demonstracao` controla a indicação de dados
+  fictícios (FR-037).
 - `png_de(svg) -> bytes | None`: rasterização isolada (research R11).
 - O PNG é o artefato principal. Nada é gravado.
 
