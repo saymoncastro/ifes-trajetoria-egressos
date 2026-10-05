@@ -1,0 +1,78 @@
+{% comment %}Bloco do vídeo no capítulo "Seu card" (Feature 022; contracts/rotas.md). Funciona
+sem JavaScript: pedir por formulário, acompanhar por recarga, baixar por link. O script só
+atualiza o estado sozinho e liga o compartilhamento nativo (melhoria progressiva).{% endcomment %}
+{% with t=video.textos %}
+<div class="narrativa-video" id="video" aria-live="polite" data-estado="{{ video.estado }}" data-sufixo="{{ video.sufixo }}">
+  <h3>{{ t.TITULO }}</h3>
+  {% if video.estado == "nenhum" %}
+  <p>{{ t.CONVITE }}</p>
+  <form method="post" action="/minha-trajetoria/video/">{% csrf_token %}
+    {% if card.com_nome %}<input type="hidden" name="nome" value="1">{% endif %}
+    <button type="submit">{{ t.GERAR }}</button>
+  </form>
+  {% elif video.estado == "preparando" %}
+  <p>{{ t.PREPARANDO }}</p>
+  <p class="narrativa-nota">{{ t.CONTINUAR }}</p>
+  <p><a class="botao" href="/minha-trajetoria/{{ video.sufixo }}#video">{{ t.ATUALIZAR }}</a></p>
+  {% elif video.estado == "pronto" %}
+  <video class="narrativa-previa" controls playsinline preload="metadata" width="270" height="480" poster="{{ card.arquivo }}" aria-describedby="video-descricao" src="/minha-trajetoria/video.mp4{{ video.sufixo }}"></video>
+  <p id="video-descricao" class="visualmente-oculto">{{ card.alt }}</p>
+  <p class="narrativa-acoes">
+    <a class="botao" href="/minha-trajetoria/video.mp4{{ video.sufixo }}" download="{{ t.ARQUIVO }}">{{ t.BAIXAR }}</a>
+    <button type="button" class="secundario" id="compartilhar-video" hidden>{{ t.COMPARTILHAR }}</button>
+  </p>
+  {% else %}
+  <p>{{ t.FALHOU }}</p>
+  <form method="post" action="/minha-trajetoria/video/">{% csrf_token %}
+    {% if card.com_nome %}<input type="hidden" name="nome" value="1">{% endif %}
+    <button type="submit">{{ t.TENTAR }}</button>
+  </form>
+  {% endif %}
+  <script>
+  /* 022 FR-035: melhoria progressiva. Em preparo, consulta o estado a cada 3 s e recarrega a
+     página quando ele muda. Pronto, liga o menu de compartilhamento do próprio celular
+     quando o navegador compartilha arquivos de vídeo. Sem o script, tudo funciona por
+     recarga e por download. */
+  (function () {
+    var bloco = document.getElementById("video");
+    if (!bloco || !window.fetch) return;
+    var sufixo = bloco.dataset.sufixo;
+    if (bloco.dataset.estado === "preparando") {
+      var consultar = function () {
+        fetch("/minha-trajetoria/video/estado" + sufixo, { credentials: "same-origin" })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+          .then(function (d) {
+            if (d.estado !== "preparando") location.reload();
+            else setTimeout(consultar, 3000);
+          })
+          .catch(function () {});
+      };
+      setTimeout(consultar, 3000);
+    }
+    var botao = document.getElementById("compartilhar-video");
+    if (!botao || !window.File || !navigator.canShare || !navigator.share) return;
+    try {
+      if (!navigator.canShare({ files: [new File([""], "x.mp4", { type: "video/mp4" })] })) return;
+    } catch (e) { return; }
+    botao.hidden = false;
+    // O vídeo só é baixado quando o egresso pede para compartilhar, não a cada visita. Se o
+    // navegador recusar o compartilhamento depois da espera do download, o arquivo fica
+    // pronto e o próximo toque compartilha na hora.
+    var arquivo = null;
+    var compartilhar = function () {
+      navigator.share({ files: [arquivo] }).catch(function () {});
+    };
+    botao.addEventListener("click", function () {
+      if (arquivo) return compartilhar();
+      fetch("/minha-trajetoria/video.mp4" + sufixo, { credentials: "same-origin" })
+        .then(function (r) { return r.ok ? r.blob() : Promise.reject(); })
+        .then(function (blob) {
+          arquivo = new File([blob], "{{ t.ARQUIVO }}", { type: "video/mp4" });
+          compartilhar();
+        })
+        .catch(function () {});
+    });
+  })();
+  </script>
+</div><!-- #video -->
+{% endwith %}

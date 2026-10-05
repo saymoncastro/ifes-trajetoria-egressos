@@ -60,6 +60,7 @@
   })();
   </script>
   {% endif %}
+  {% if video.disponivel %}{% include "video/bloco.html" %}{% endif %}
 </section>
 {% else %}
 <section class="narrativa-capitulo" aria-labelledby="capitulo-{{ capitulo.chave }}">

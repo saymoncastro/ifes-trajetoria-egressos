@@ -42,4 +42,21 @@ jobs:
       - run: uv run python manage.py check
       - run: uv run python manage.py makemigrations --check --dry-run
       - run: uv run python manage.py migrate
+      # 022: renderizador de vídeo (Node + Remotion + Chrome Headless Shell). Sem ele, os
+      # testes de mídia falham no CI (CI=true), nunca são pulados (research R14, R15).
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: video/package-lock.json
+      - run: npm ci --prefix video
+      # Depois do `npm ci` (que recria node_modules): o Chrome Headless Shell (~190 MB) só é
+      # baixado quando a versão do Remotion muda.
+      - uses: actions/cache@v4
+        with:
+          path: video/node_modules/.remotion
+          key: navegador-remotion-${{ runner.os }}-${{ hashFiles('video/package-lock.json') }}
+      - run: npm --prefix video run garantir-navegador
       - run: uv run pytest
+        env:
+          CI: "true"

@@ -25,6 +25,14 @@ def relogio(monkeypatch):
     return relogio
 
 
+@pytest.fixture(autouse=True)
+def sem_video(monkeypatch):
+    """Os testes da 021 verificam a página sem o vídeo da 022, que tem testes próprios
+    (`tests/video/`). Com o renderizador indisponível, a página é exatamente a da 021
+    (022 FR-037), mesmo numa máquina que tenha o Node instalado."""
+    monkeypatch.setattr("trajetoria.video.renderizador.disponivel", lambda: False)
+
+
 @pytest.fixture
 def referencia():
     return date(2026, 10, 4)
