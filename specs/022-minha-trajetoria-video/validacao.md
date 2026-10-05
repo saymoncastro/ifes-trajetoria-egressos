@@ -7,9 +7,8 @@ Registro das verificações da implementação. Dados sempre fictícios.
 - implementação concluída, validada localmente (macOS arm64) e **no CI Linux** (PR #33,
   mergeado);
 - **referências regeneradas no Linux** (T039), pelo workflow `referencias-video.yml`;
-- **pendentes:**
-  - a aprovação humana das referências (T040);
-  - o teste em celular real (T041).
+- **referências aprovadas pelo solicitante** em 2026-10-05 (T040);
+- **pendente:** o teste em celular real (T041).
 
 ## Porta de decisão (T019) — macOS arm64, Apple M5 Pro, Node 26.5
 
@@ -141,11 +140,13 @@ CPF (`servidor.log`, `processador.log`).
   - Testes novos da 022: 164 em `tests/video/`, 58 em `tests/narrativa/test_card_zonas.py` e
     7 em `tests/narrativa/test_fronteiras.py`.
 
-## Aprovação humana (T040) — pendente (referências do Linux)
+## Aprovação humana (T040) — aprovada
 
-Referências para revisão em `evidencias/`. Para cada caso: `referencia-<caso>.mp4`, os
-quadros `-q30`, `-q120` e `-qfim` e uma folha de contato com 9 instantes (`-folha.png`).
-Casos:
+**Referências do vídeo aprovadas pelo solicitante em 2026-10-05, sem ajustes.** São as
+geradas no Linux do CI (`referencias-plataforma.txt` = `Linux-x86_64`), versionadas em
+`evidencias/`. Para cada caso há os quadros `-q30`, `-q120` e `-qfim` e uma folha de
+contato com 9 instantes (`-folha.png`). Os MP4s são regenerados pelo workflow
+`referencias-video.yml` ou por `gerar_referencias.py`. Casos:
 
 - Maria sem nome;
 - Maria com nome;
