@@ -1,7 +1,8 @@
 # ADR 0007 — Renderização do vídeo da Minha trajetória
 
-Data: 2026-10-05. Estado: **proposto**. Spike local aprovado (macOS arm64); validação no CI
-(ubuntu) pendente na implementação da Feature 022.
+Data: 2026-10-05. Estado: **aceito**. Spike local aprovado (macOS arm64) e validação no CI
+(ubuntu-latest, Node 22) aprovada no PR #33. O uso em produção continua dependendo da
+DP-2201.
 
 ## Contexto
 
@@ -38,6 +39,13 @@ animando a composição já produzida pela 021 (alternativa A da
 | Quadro final × PNG do card | SSIM 0,988–0,991; diferenças só no antisserrilhado dos glifos |
 | Disco | `node_modules` 225 MB + navegador 193 MB (~590 MB com caches) |
 | Memória (processo Node) | ~0,9 GB |
+
+**CI ubuntu-latest (PR #33, 2026-10-05):**
+
+- Chrome Headless Shell de 91,9 MB, sem biblioteca de sistema extra;
+- render de 10,7 a 11,5 s por vídeo (concorrência 2);
+- último quadro × card com SSIM de 0,998;
+- suíte completa com 2.789 aprovados, em 20 min de `pytest`.
 
 ## Consequências
 

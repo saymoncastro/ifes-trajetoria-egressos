@@ -99,8 +99,10 @@ formações) e **uma única** linha de `stream`, sem áudio.
 
 ## Referências visuais
 
-Gere os quadros-chave e os MP4 dos casos de referência para a aprovação do solicitante
-(SC-008):
+As referências versionadas são geradas no Linux do CI pelo workflow manual "Referências do
+vídeo (022)" (`.github/workflows/referencias-video.yml`, artefato `referencias-video-022`).
+Regenere-as quando o template ou o card mudarem. Para gerar localmente os quadros-chave e
+os MP4 dos casos de referência (SC-008):
 
 ```bash
 uv run python specs/022-minha-trajetoria-video/evidencias/gerar_referencias.py

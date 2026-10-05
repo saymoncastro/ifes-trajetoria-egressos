@@ -126,17 +126,12 @@ def _plataforma_das_referencias() -> str:
 @pytest.mark.parametrize(("arquivo", "caso", "nome"), REFERENCIAS)
 @pytest.mark.parametrize("quadro", [30, 120])
 def test_quadros_chave_iguais_as_referencias(arquivo, caso, nome, quadro):
-    # Chromium no Linux e no macOS rasterizam as fontes de forma diferente: as referências só
-    # valem na plataforma em que foram geradas e aprovadas. A comparação com o card (acima) e
-    # a máscara de área segura valem em qualquer plataforma.
-    aqui = f"{platform.system()}-{platform.machine()}"
-    if _plataforma_das_referencias() != aqui:
-        pytest.skip(
-            f"referências geradas em {_plataforma_das_referencias()}, não em {aqui}: "
-            "regenere com evidencias/gerar_referencias.py nesta plataforma (T039)"
-        )
+    # Referências geradas no Linux do CI (workflow `referencias-video.yml`). Medido em
+    # 2026-10-05: macOS × Linux dão SSIM de 0,991 a 0,997 nestes quadros (só antisserrilhado
+    # dos glifos), com folga para o limite de 0,97. Por isso a comparação vale nas duas.
     referencia = midia.cinza((EVIDENCIAS / f"referencia-{arquivo}-q{quadro}.png").read_bytes())
     atual = midia.quadros(caso, nome, pedidos=(quadro,))[quadro]
     indice = midia.ssim(atual, referencia)
-    print(f"{arquivo} q{quadro}: SSIM {indice:.4f}")
+    aqui = f"{platform.system()}-{platform.machine()}"
+    print(f"{arquivo} q{quadro}: SSIM {indice:.4f} ({aqui} × {_plataforma_das_referencias()})")
     assert indice >= 0.97
