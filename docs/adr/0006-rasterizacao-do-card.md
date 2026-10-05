@@ -1,7 +1,7 @@
 # ADR 0006 — Rasterização do card da Minha trajetória
 
-Data: 2026-10-04. Estado: spike aprovado no macOS arm64. **A verificação no CI (ubuntu,
-Python 3.13) fica pendente até o primeiro push do PR da 021.**
+Data: 2026-10-04. Estado: spike aprovado no macOS arm64 e no CI (ubuntu, Python 3.13,
+check `testes` do PR #30 verde em 2026-10-05).
 
 ## Contexto
 
@@ -43,8 +43,10 @@ derivado do mesmo SVG que serve de representação-base (021 FR-031) e reprodut�
 | Tempo por card 1080 × 1920 | 28 ms (SVG simples) a 59 ms (pior caso) |
 | `tests/narrativa/test_png.py` | 6 testes verdes |
 
-**Pendente:** os mesmos testes no CI. Se falharem lá, a 021 para no card e a alternativa
-vai ao solicitante: o fallback SVG mantém a página, mas não atende ao story.
+**CI (ubuntu, Python 3.13):** o check `testes` do PR #30 passou em 2026-10-05, com as
+mesmas contagens da máquina local, onde `tests/narrativa/test_png.py` roda (2433 aprovados,
+3 pulados, 2 desmarcados). O log não lista os pulados por nome; a igualdade das contagens
+indica que o teste do PNG também rodou no CI.
 
 ## Alternativas rejeitadas
 

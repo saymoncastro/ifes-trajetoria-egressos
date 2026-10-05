@@ -29,9 +29,11 @@ implementação, teste executado nem aprovação institucional.
 - [x] Nenhum marcador [NEEDS CLARIFICATION].
   - As escolhas reversíveis estão em E1 a E7 e podem ser revistas no `/speckit-clarify`.
   - As regras institucionais estão em DP-2101 a DP-2109.
-- [x] Requisitos testáveis e inequívocos: 73 FRs (FR-070 a FR-073 acrescentados no
-  clarify e na revisão do plan) e uma matriz de verificação automatizada.
-- [x] Critérios de sucesso mensuráveis: 14 SCs.
+- [x] Requisitos testáveis e inequívocos: 83 FRs e uma matriz de verificação automatizada.
+  FR-070 a FR-073 vieram do clarify e da revisão do plan; FR-074 a FR-083, da
+  convergência visual de 2026-10-05.
+- [x] Critérios de sucesso mensuráveis: 15 SCs. O SC-015 traz critérios visuais objetivos
+  e uma porta de revisão do solicitante.
 - [x] Critérios de sucesso descrevem resultados observáveis, sem tecnologia.
 - [x] Cenários de aceitação definidos nas sete histórias: quatro P1, duas P2 e uma P3.
 - [x] Bordas identificadas:
@@ -101,3 +103,6 @@ implementação, teste executado nem aprovação institucional.
   - dimensões do card e limite de formações exibidas;
   - forma da operação de agregados na fronteira;
   - momento da carga.
+- **Convergência visual (2026-10-05):** a P1 visual foi reaberta pela auditoria de
+  convergência visual. A direção editorial (E8) entrou com requisitos e critérios visuais
+  mensuráveis (SC-015). As decisões V1 a V3 foram tomadas pelo solicitante.

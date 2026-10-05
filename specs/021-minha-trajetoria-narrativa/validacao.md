@@ -107,4 +107,19 @@ faixas em `--cor-texto`.
 **Continua pendente com o solicitante:** celular real com Safari no iOS e Chrome no
 Android; toque longo; menu de compartilhamento; story de teste no Instagram.
 
-**Continua pendente no CI:** o spike do PNG no ubuntu, no PR.
+**CI:** o spike do PNG passou no ubuntu (check `testes` do PR #30, 2026-10-05).
+
+## Fase 13 — card editorial e página em capítulos (2026-10-05)
+
+| Verificação | Resultado | Evidência |
+|---|---|---|
+| Critérios SC-015 (a)–(m) em 8 casos de referência (1, 2, 3, 4 e mais de 4 formações; com e sem destaques; com e sem nome; unidade sem imagem própria; formação sem unidade nem ano) | OK | `tests/narrativa/test_card_editorial.py` |
+| Os testes pegam regressões (mutação: ano no verde da marca, sobra sem divisão, nó sobre o texto) | Detectadas | — |
+| Catálogo de imagens: uma genérica, metadados, SVG sem texto, legenda sem ano | OK | `tests/narrativa/test_imagens.py` |
+| Página em capítulos a 320, 375 e 1280 px (Maria, P2): sem rolagem horizontal; indicador "Capítulo k de 4"; destaques 27 e 812 com a frase completa | OK | navegador do app |
+| Suíte completa e ruff | 2563 aprovados, 3 pulados, 2 desmarcados; ruff sem achados | local |
+| PNGs de referência pelo pipeline real | Gerados | `evidencias/referencia-*.png` |
+| **Aprovação do solicitante (SC-015, item 9)** | **Aprovado em 2026-10-05**, sem ajustes | os 7 `referencia-*.png` |
+
+Os casos em que o card mostra menos formações que as registradas seguem a ordem de corte do
+FR-082: "4 formações" mostra 3 e "e mais 1"; o pior caso mostra 1 e "e mais 6".

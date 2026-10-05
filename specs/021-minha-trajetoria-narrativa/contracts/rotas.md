@@ -23,7 +23,24 @@ Todas as rotas existem só com o modo de demonstração ligado. Desligado, o
 - **Sem efeito colateral:** nenhuma escrita em banco e nenhum log com dado pessoal
   (FR-008, FR-045).
 
-## Página `/minha-trajetoria/`
+## Página `/minha-trajetoria/` (estrutura revisada em 2026-10-05: capítulos; FR-026, FR-083)
+
+```text
+[faixa de demonstração existente]
+ABERTURA     imagem do catálogo + legenda "Unidade X · ilustração"
+             h1 Minha trajetória no Ifes · nome (se houver)
+             O Ifes registra N formações concluídas por você.
+CAPÍTULO     "Capítulo k de N" (só com 2 ou mais capítulos)
+  Sua formação              [P2] frase de início; nó da 1ª formação (ano, curso, atributos, "Há N anos")
+  Sua continuidade no Ifes  (só com 2 ou mais formações) linha do tempo + "Depois dessa formação…"
+  Naquele ano no Ifes       (só com agregado) cartões: número grande + frase completa + apuração
+  Seu card                  prévia PNG, nome, Baixar, Compartilhar (como abaixo)
+a  Voltar às suas formações → /formacoes/
+```
+
+A estrutura anterior, abaixo, fica como registro da versão implementada em 2026-10-04.
+
+### Versão de 2026-10-04 (superada na composição)
 
 ```text
 [faixa de demonstração existente]

@@ -239,6 +239,32 @@ specs/018-identificacao-acesso-egresso/spec.md  # nota: Minha Trajetória → 02
 **P3 (fora deste plan):** segundo tema (FR-065), formato 4:5 para o feed, marcos, dados
 declarados, imagens e vídeo (022). Dependem de spec ou de decisão pendente.
 
+### Revisão de 2026-10-05 — convergência visual
+
+A [auditoria de convergência visual](../../docs/auditorias/2026-10-04-021-convergencia-visual.md)
+reabriu a P1 visual. As decisões do solicitante foram:
+
+- **V1:** assinatura oficial no card de demonstração.
+- **V2:** ilustração vetorial própria.
+- **V3:** fecho "Essa história também é minha." com `#SouEgressoIfes`.
+
+O que muda:
+
+- **Card:** o `narrativa/card.py` passa a compor por zonas (research R19).
+- **Imagens:** entra o catálogo `narrativa/imagens.py` com uma ilustração genérica
+  (research R20).
+- **Página:** passa a ter capítulos (research R21).
+
+Domínio, montagem, P2 e rotas não mudam. Entra uma fase nova de tasks, "Convergência
+visual", com porta de revisão do solicitante sobre os PNGs de referência antes do merge.
+
+**Constitution Check, linha 19 (overengineering), revisitada.** Continua conforme:
+
+- componentes são funções, sem framework;
+- um ativo vetorial próprio;
+- nenhuma dependência nova;
+- nenhuma fonte nova.
+
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
@@ -247,4 +273,5 @@ declarados, imagens e vídeo (022). Dependem de spec ou de decisão pendente.
 | Arquivos de fonte versionados (só Open Sans Regular e Bold) | Sem fonte embutida, o PNG depende da máquina | Fontes do sistema não são determinísticas; base64 no SVG infla um formato secundário |
 | Dois apps novos (`narrativa`, `contexto_trajetoria`) | `narrativa` isola a devolutiva da jornada (008/014). `contexto_trajetoria` garante que 001, 018 e 019 não importem nada da 021 (FR-071) | `interface` mistura regras; models em `academico` seriam carregados pela 018; models em `narrativa` quebrariam "não persiste nada" |
 | Duas tabelas novas (P2) | Fatos institucionais com proveniência, carregados à parte e lidos depois sem consultar a fonte | Ampliar `ConclusaoAcademica` muda o núcleo para enriquecer a narrativa (E4); consulta na hora não serve a fonte em lote e acoplaria a página à fonte |
+| Ativo de imagem versionado (uma ilustração vetorial própria) e catálogo de imagens em código | A peça precisa de um elemento visual dominante (SC-015), e a imagem precisa de procedência e legenda honesta | Sem imagem, o card volta a ser relatório; foto de terceiros exige licença e crédito; IA é vedada |
 | Primeiro JavaScript do projeto (cerca de 20 linhas inline, opcional) | No celular, o menu de compartilhamento do sistema leva o PNG ao aplicativo escolhido com um toque. Os destinos dependem do dispositivo, e o Instagram não é garantido | Só salvar e baixar funciona e continua sendo o caminho base. O script só encurta o caminho, sem recurso externo, e não é necessário para nenhuma função |

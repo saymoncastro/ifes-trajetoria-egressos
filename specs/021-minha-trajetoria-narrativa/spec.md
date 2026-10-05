@@ -7,9 +7,13 @@
 
 **Created**: 2026-10-04
 
-**Status**: Implementada (P1 e P2) e validada na demonstração em 2026-10-04. Evidências em
-[validacao.md](validacao.md). Pendentes: spike do PNG no CI (ubuntu) e validação em celular
-real com story de teste. P3 fora desta entrega.
+**Status**: P1 e P2 implementadas na demonstração em 2026-10-04 (PR #30). A **P1 visual
+foi reaberta** em 2026-10-05 pela
+[auditoria de convergência visual](../../docs/auditorias/2026-10-04-021-convergencia-visual.md)
+e **reimplementada no mesmo dia**: card editorial por zonas e página em capítulos,
+seguindo a seção "Direção visual" e os critérios do SC-015. Os PNGs de referência foram
+aprovados pelo solicitante em 2026-10-05. Falta a validação no celular real e no story de
+teste (T031, T053). Evidências em [validacao.md](validacao.md).
 
 **Input**: Solicitação da Feature 021 — Minha Trajetória: narrativa visual personalizada.
 
@@ -139,6 +143,40 @@ TrajetoriaNarrativa   (pura, determinística, serializável; não persistida)
   - A única escolha de privacidade é incluir ou não o nome.
 - **E7 — Vídeo fica para a Feature 022.** A 021 fecha o contrato serializável que um
   renderer de vídeo consumirá.
+- **E8 — Direção visual editorial** (auditoria de convergência visual, 2026-10-05). O card
+  e a página são uma **peça editorial da trajetória**, não um relatório. A ambição visual é
+  a do mockup de referência: retrospectiva personalizada, com rigor institucional e
+  conteúdo determinístico. Ver a seção "Direção visual".
+
+### Direção visual
+
+O card é uma **composição editorial vertical** em zonas, de cima para baixo:
+
+1. **Abertura:** imagem institucional em sangria total, que **absorve o espaço livre do
+   quadro**. Leva legenda honesta ("Unidade X · ilustração") e a marca oficial.
+2. **Título:** "Minha trajetória / no Ifes", com o nome opcional.
+3. **Linha do tempo:** nós, traço, ano em destaque e curso.
+4. **Destaques:** até um par de números institucionais em cartões.
+5. **Fecho:** frase de pertencimento e hashtag.
+6. **Rodapé discreto:** instituição, demonstração e proveniência.
+7. **Faixa inferior:** grafismo, sem texto.
+
+A página repete o mesmo vocabulário em **capítulos**:
+
+- **Abertura.**
+- **Sua formação.**
+- **Sua continuidade no Ifes:** só com duas ou mais formações.
+- **Naquele ano no Ifes:** só com agregado.
+- **Seu card.**
+
+Um capítulo sem dado não aparece.
+
+**Mesmos dados, outra composição.** A `TrajetoriaNarrativa`, a montagem, a área segura, a
+composição adaptativa, o nome opcional e a precisão semântica continuam. Mudam a
+apresentação e o catálogo de formulações do card.
+
+Protótipos de referência:
+[auditoria, §4](../../docs/auditorias/2026-10-04-021-convergencia-visual.md#4-wireframe-estrutural-do-novo-card).
 
 ### Interpretação desta spec
 
@@ -204,6 +242,21 @@ TrajetoriaNarrativa   (pura, determinística, serializável; não persistida)
   segura com corpo de 40 px. Como o card deve se comportar? → A: Composição adaptativa. Até
   4 formações, tantas quantas couberem, mais "e mais N"; o par de agregados só se couber;
   nada é cortado (FR-033; validacao.md, Fase 3).
+
+### Session 2026-10-05 (auditoria de convergência visual)
+
+- Q: O card atual (texto empilhado, vazio no meio) atende à hipótese da 021? → A: Não. É um
+  relatório diagramado. A P1 visual foi reaberta com a direção editorial (E8, FR-074 a
+  FR-083, SC-015). A P2 já implementada não muda conceitualmente.
+- Q: A marca do Ifes entra no card da demonstração? → A: Sim, a assinatura oficial que o
+  sistema já exibe no cabeçalho, sobre pílula clara. A DP-2102 continua aberta para
+  produção, com a ACS (FR-036, FR-075).
+- Q: De onde vem a imagem institucional? → A: Ilustração vetorial própria e genérica, sem
+  licença de terceiros, com legenda "Unidade X · ilustração". O catálogo por unidade fica
+  pronto para fotografias licenciadas quando a ACS fornecer (FR-029, FR-076; DP-2106).
+- Q: O card tem frase de fecho? → A: Sim. "Essa história também é minha." e a hashtag
+  `#SouEgressoIfes`, ambas hipóteses de produto revisáveis. O uso em produção depende da
+  ACS (FR-079; DP-2110).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -657,22 +710,26 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 
 #### P1 — Página (story web)
 
-- **FR-026**: A página DEVE apresentar, nesta ordem e cada uma só quando houver dado que a
-  sustente:
-  1. o que o Ifes registra sobre você;
-  2. sua trajetória acadêmica;
-  3. outras formações no Ifes;
-  4. contexto daquele ano (P2);
-  5. o card.
+- **FR-026** *(revisado em 2026-10-05)*: A página DEVE ser organizada em capítulos visuais,
+  nesta ordem, cada um só quando houver dado que o sustente:
+  1. **abertura:** imagem institucional, título, nome e "o que o Ifes registra";
+  2. **sua formação:** primeira formação em destaque e, em P2, a frase de início;
+  3. **sua continuidade no Ifes:** só com duas ou mais formações;
+  4. **naquele ano no Ifes:** só com agregado selecionado;
+  5. **seu card.**
 
-  [Solicitante]
+  Um indicador de capítulo ("Capítulo 1 de N") é calculado sobre os capítulos presentes e
+  some quando há só um. [Solicitante; E8]
 - **FR-027**: Seção sem dado DEVE desaparecer por inteiro, sem título, placeholder,
   "em breve" ou indicação de conteúdo futuro. [Solicitante]
 - **FR-028**: A página DEVE funcionar por completo sem JavaScript, em rolagem vertical.
   Melhoria progressiva é opcional, como o compartilhamento nativo do FR-073, e NÃO DEVE
   ser necessária para ler, salvar nem baixar. [Arquitetura; 015; Const. XX, XXI]
-- **FR-029**: A página DEVE usar os tokens visuais da 015, sem fotos, sem marca por campus
-  e sem ativos externos (CDN). [Herdado; 015; DP-801]
+- **FR-029** *(revisado em 2026-10-05)*: A página DEVE usar o vocabulário visual da direção
+  editorial (E8): imagem institucional, linha do tempo, cartões de destaque. Usa os tokens
+  da 015 para texto e ações e o tema do card para os elementos editoriais. Não usa ativos
+  externos (CDN). A imagem vem do catálogo do FR-076 e nunca afirma retratar o período do
+  egresso. [Solicitante; 015; DP-801; DP-2106]
 - **FR-030**: A página DEVE terminar com uma ligação de volta à escolha de formações.
   [Arquitetura]
 
@@ -710,9 +767,11 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 - **FR-035**: O card NÃO DEVE conter Respostas, renda, emprego, situação profissional,
   deficiência, raça/cor, contato, CPF, data de nascimento ou qualquer dado de Formação
   Declarada. [Const. XVI]
-- **FR-036**: O card NÃO DEVE conter elemento de documento oficial: brasão, selo,
-  assinatura institucional, QR, identificador, número, data de emissão ou palavras como
-  "certificado", "comprovante" ou "declaração". [Herdado; 008 FR-063; DP-2102]
+- **FR-036** *(revisado em 2026-10-05)*: O card NÃO DEVE conter elemento de documento
+  oficial: brasão, selo, assinatura de autoridade, QR, identificador, número, data de
+  emissão ou palavras como "certificado", "comprovante" ou "declaração". A **marca do Ifes**
+  (assinatura visual oficial) é identidade, não autenticação, e entra pelo FR-075.
+  [Herdado; 008 FR-063; DP-2102]
 - **FR-037**: Na demonstração, o card DEVE indicar visivelmente que os dados são
   fictícios. [Arquitetura; 016/018/019]
 - **FR-038**: O nome do arquivo baixado DEVE ser neutro, sem nome, CPF, curso ou
@@ -721,9 +780,10 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   compartilhável, publicação em rede social nem integração com API de rede social.
   Compartilhar é ação do egresso, com a imagem salva ou pelo menu de compartilhamento do
   próprio celular. O sistema não envia nada a terceiros. [Arquitetura; E6; DP-2101]
-- **FR-040**: O card DEVE ter um tema em P1, derivado dos tokens da 015, num único formato:
-  **vertical 9:16, 1080 × 1920 px**, o formato de story do Instagram e de status de outras
-  redes. [Solicitante]
+- **FR-040** *(revisado em 2026-10-05)*: O card DEVE ter um tema em P1, **próprio e derivado
+  da marca** (verde profundo, verde da marca, creme e branco), com contraste AA verificado,
+  sem os hex de ação da 015. Formato único: **vertical 9:16, 1080 × 1920 px**, o formato de
+  story do Instagram e de status de outras redes. [Solicitante; E8]
 - **FR-072** *(revisão de 2026-10-04)*: Todo texto e todo elemento essencial do card DEVE
   ficar dentro de uma área segura central. As faixas superior e inferior, que a interface
   das redes sociais cobre no story, ficam só com fundo ou grafismo. As medidas das faixas
@@ -742,6 +802,74 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   - [Solicitante; Hipótese; Const. XX, XXI]
 - **FR-041**: O card NÃO DEVE incluir foto pessoal, upload de imagem nem conteúdo gerado
   por IA. [Solicitante]
+
+#### P1 — Direção visual editorial (revisão de 2026-10-05; auditoria de convergência visual)
+
+- **FR-074**: O card DEVE ser composto pelas zonas da seção "Direção visual", nesta ordem:
+  abertura, título, linha do tempo, destaques, fecho, rodapé, faixa inferior. Zona sem dado
+  some (destaques sem agregado; nome sem escolha). As demais se reacomodam.
+  [Solicitante; E8]
+- **FR-075**: A abertura DEVE trazer a marca oficial do Ifes, a mesma assinatura que o
+  sistema exibe no cabeçalho, sobre fundo claro que garanta leitura, dentro da área
+  segura. Na demonstração, sim. Para produção, a DP-2102 decide. [Solicitante; DP-2102]
+- **FR-076**: A imagem da abertura DEVE vir de um **catálogo de imagens institucionais**.
+  - **Escolha:** cada imagem é escolhida pela unidade da primeira formação exibida, com uma
+    imagem genérica do Ifes como alternativa obrigatória.
+  - **Metadados:** cada entrada DEVE registrar unidade (ou "genérica"), tipo
+    ("ilustração" ou "fotografia"), origem e licença.
+  - **Legenda:** a imagem DEVE ter legenda visível no card e na página, no formato "Unidade
+    X · ilustração" (ou "Ifes · ilustração"). Ela NUNCA traz ano, nem afirma retratar o
+    período ou um momento do egresso.
+  - **Na demonstração:** só a ilustração vetorial própria e genérica.
+  - **Fotografias:** entram só com origem e licença registradas (DP-2106).
+
+  [Solicitante; DP-2106]
+- **FR-077**: As formações DEVEM ser apresentadas como **linha do tempo**:
+  - um nó gráfico por formação exibida, com o ano em destaque quando houver;
+  - curso em negrito e atributos (unidade · nível · modalidade) em texto secundário;
+  - com duas ou mais formações, um traço ligando os nós.
+
+  A ordem e as relações temporais seguem o FR-019. [Solicitante; E8]
+- **FR-078**: Cada contexto agregado no card DEVE ser um **destaque**: número em corpo
+  grande (≥ 80 px) e rótulo de no máximo duas linhas, com a mesma semântica do FR-061.
+  Exemplos: "27 / conclusões deste curso / na unidade Serra em 2022" e "812 / conclusões
+  registradas / na unidade Serra em 2022". O sujeito continua sendo "conclusões"; nunca
+  pessoas, turma ou geração. A frase completa fica na página. A data de apuração vai para
+  o rodapé do card. [Solicitante; FR-061]
+- **FR-079**: O card DEVE terminar com o fecho fixo do catálogo, "Essa história também é
+  minha.", e a hashtag `#SouEgressoIfes`. Ambos são texto fixo, sem dado pessoal, hipóteses
+  de produto revisáveis. O uso em produção depende da ACS (DP-2110). [Solicitante;
+  Hipótese]
+- **FR-080**: O **quadro DEVE ser ocupado intencionalmente**.
+  - A abertura absorve o espaço livre, entre um mínimo e um máximo definidos no plan.
+  - Dentro da área segura, nenhuma faixa vazia contínua DEVE passar de 160 px nos casos de
+    1 a 4 formações, com e sem agregados.
+
+  [Solicitante; E8]
+- **FR-081**: A hierarquia tipográfica do card DEVE ter pelo menos quatro níveis
+  distintos:
+  - título ≥ 80 px;
+  - ano e número ≥ 44 px;
+  - curso ≥ 40 px;
+  - rodapé e proveniência ≤ 30 px.
+
+  O corpo mínimo é de 40 px no conteúdo e de 26 px no rodapé. O texto de apoio (atributos,
+  rótulos dos destaques, legenda e hashtag) fica entre 30 e 36 px, como no protótipo
+  aprovado. A proveniência só aparece no rodapé. [Solicitante; E8]
+- **FR-082**: A **ordem de corte** da composição adaptativa DEVE ser:
+  1. encolher a abertura até o mínimo;
+  2. retirar os destaques;
+  3. converter formações em "e mais N" (até 4 exibidas, tantas quantas couberem).
+
+  Nome, título, curso e fecho nunca são cortados. [Solicitante; FR-033]
+- **FR-083**: A página DEVE usar o mesmo vocabulário visual do card:
+  - abertura com a imagem e a legenda do FR-076;
+  - linha do tempo com nós e traço (em CSS, sem JavaScript);
+  - cartões de destaque com número grande seguido da frase completa do FR-061 e da
+    apuração.
+
+  Os capítulos se distinguem por bloco visual (fundo alternado), sem telas separadas nem
+  espera artificial. [Solicitante; E8; FR-028]
 
 #### P1 — Fronteiras com features existentes
 
@@ -841,7 +969,9 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   Com singular quando N = 1. O sujeito da contagem DEVE ser sempre "conclusões", nunca
   pessoas, estudantes ou egressos. NÃO DEVEM usar turma, geração, coorte, colegas, "se
   formaram com você", matriculados, ingressantes, percentuais, taxas ou comparação.
-  [Solicitante]
+
+  No card, a mesma semântica DEVE aparecer **decomposta em destaque** (FR-078), pelas
+  formulações curtas do catálogo. [Solicitante]
 - **FR-062**: Indisponibilidade da fonte na carga de complementos ou agregados NÃO DEVE
   gravar nada nem ser interpretada como zero ou ausência. [Herdado; 001 FR-025]
 - **FR-071** *(revisão de 2026-10-04)*: A capacidade de contexto da trajetória DEVE ser
@@ -890,7 +1020,8 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 #### Demonstração
 
 - **FR-069**: A feature DEVE ficar restrita à demonstração, como a 018 e a 019, enquanto
-  DP-2101, DP-2102, DP-2103 e DP-2105 não forem resolvidas. [Const. XXIX]
+  DP-2101, DP-2102, DP-2103, DP-2105, DP-2106 e DP-2110 não forem resolvidas.
+  [Const. XXIX]
 
 ### Matriz mínima de verificação automatizada
 
@@ -910,6 +1041,7 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 | Linguagem dos agregados | Sujeito sempre "conclusões"; nenhuma conversão em pessoas (FR-024, FR-061) |
 | Isolamento 001/018 | `PessoaEncontrada`, `ConclusaoNaFonte` e `CAMPOS_DE_CONTEXTO` inalterados; acesso, incorporação e declaração não importam a capacidade de contexto; contexto indisponível não afeta identificação nem incorporação (FR-071) |
 | Formato social | PNG 1080 × 1920; textos dentro da área segura; prévia salvável sem JavaScript (FR-040, FR-072, FR-073) |
+| Composição editorial | Zonas na ordem; elemento visual ≥ 20% do quadro; nós por formação; destaques com número ≥ 80 px; nenhuma faixa vazia > 160 px; ≥ 4 níveis tipográficos; legenda "· ilustração" sem ano (FR-074 a FR-083; SC-015) |
 | Coerência | Agregado < incorporados → não exibido (FR-060) |
 | Privacidade do card | Ausência de campos vedados e nome só com opção marcada (FR-034, FR-035) |
 | Acesso | Sem Participação concluída, ou outra Pessoa, ou sessão expirada → sem narrativa (FR-001, FR-002) |
@@ -988,6 +1120,18 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   este critério.
 - **SC-014**: Com a capacidade de contexto indisponível, 100% dos fluxos de identificação,
   incorporação, resposta e narrativa de P1 continuam funcionando.
+- **SC-015** *(critérios de aceitação visual; auditoria de convergência visual)*: em todos
+  os casos de referência (1, 2, 3, 4 e mais de 4 formações; com e sem agregados; com e sem
+  imagem da unidade; com e sem nome):
+  1. um elemento visual não textual ocupa ≥ 20% da área do quadro;
+  2. cada formação exibida tem nó gráfico; com 2 ou mais, há traço;
+  3. nenhuma contagem aparece em parágrafo: número ≥ 80 px e rótulo ≤ 2 linhas;
+  4. nenhuma faixa vazia contínua > 160 px dentro da área segura;
+  5. há ≥ 4 níveis tipográficos e a proveniência só aparece no rodapé;
+  6. todo texto fica na área segura, com contraste AA, sem sobreposição;
+  7. a imagem tem legenda "· ilustração" (ou "· fotografia"), sem ano;
+  8. nenhuma frase fora do catálogo e nenhum termo vedado;
+  9. o solicitante aprova o conjunto de PNGs de referência antes do merge.
 
 ## Assumptions
 
@@ -1102,7 +1246,10 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 - Camada de correspondência conceitual entre Versões do instrumento.
 - Marcos de pesquisa, extensão, monitoria, IC, estágio, bolsas ou mobilidade, e simulação
   deles.
-- Fotos pessoais, upload, fotos de campus ou históricas.
+- Fotos pessoais e upload. Fotografia histórica ou qualquer imagem apresentada como do
+  período do egresso. Na demonstração, fotografias de campus só entram com licença
+  registrada (FR-076); hoje, só a ilustração vetorial.
+- Tela de espera artificial ("Preparando sua trajetória") e telas separadas por capítulo.
 - IA generativa.
 - Página pública, permalink, publicação em redes sociais, integração com APIs de redes
   sociais (Instagram, LinkedIn, Lattes ou outras).
@@ -1141,10 +1288,12 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   - Impacto: FR-031 a FR-041, FR-069.
   - Tratamento provisório: download apenas na demonstração; nenhuma publicação pelo
     sistema.
-- **DP-2102** — DECISÃO PENDENTE: uso de marca, brasão ou assinatura do Ifes no card.
+- **DP-2102** — DECISÃO PENDENTE: uso da marca (assinatura visual) do Ifes em peça
+  compartilhável fora do sistema.
   - Instância competente: ACS.
-  - Impacto: FR-036.
-  - Tratamento provisório: sem marca gráfica; só o nome da instituição em texto.
+  - Impacto: FR-036, FR-075.
+  - Tratamento provisório: na demonstração, a assinatura oficial já usada no cabeçalho do
+    sistema (decisão do solicitante, 2026-10-05). Produção bloqueada até a ACS.
 - **DP-2103** — DECISÃO PENDENTE: nome exibido ao egresso e no card (nome civil × nome
   social; qual campo a fonte institucional fornece).
   - Instância competente: registro acadêmico, com o encarregado de dados.
@@ -1162,12 +1311,14 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   - Instância competente: CPAEG/Proex, com o registro acadêmico e o encarregado de dados.
   - Impacto: FR-033, FR-053 a FR-061.
   - Tratamento provisório: só a fonte simulada, só na demonstração, sem limiar inventado.
-- **DP-2106** — DECISÃO PENDENTE: acervo de imagens institucionais para a experiência
-  (origem, direito de uso, metadados de unidade e período).
+- **DP-2106** — DECISÃO PENDENTE: acervo de imagens institucionais por unidade (origem,
+  direito de uso, metadados de unidade e período).
   - Instância competente: ACS, com as unidades.
-  - Impacto: nenhum requisito desta feature.
-  - Tratamento provisório: nenhuma imagem. Uma imagem futura só seria decorativa e nunca
-    afirmaria retratar o período do egresso sem metadado.
+  - Impacto: FR-029, FR-076.
+  - Tratamento provisório: na demonstração, só a ilustração vetorial própria e genérica,
+    com legenda "· ilustração" (decisão do solicitante, 2026-10-05). O catálogo aceita
+    fotografias só com origem e licença registradas. Nenhuma imagem afirma o período do
+    egresso.
 - **DP-2107** — DECISÃO PENDENTE: correspondência conceitual estável entre Versões, que
   permitiria usar dados declarados (situação profissional, relação trabalho-formação).
   - Instância competente: CPAEG (= 002/DP-006).
@@ -1186,3 +1337,9 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
   - Impacto: FR-059.
   - Tratamento provisório: exibir só quando houver exatamente uma apuração conhecida;
     caso contrário, omitir. Na fonte simulada, há uma apuração por recorte.
+- **DP-2110** — DECISÃO PENDENTE: frase de fecho e hashtag de campanha (`#SouEgressoIfes`)
+  em peça compartilhável.
+  - Instância competente: ACS, com a CPAEG/Proex.
+  - Impacto: FR-079.
+  - Tratamento provisório: ambas na demonstração, como texto fixo do catálogo (decisão do
+    solicitante, 2026-10-05). Revisáveis sem mudar comportamento.

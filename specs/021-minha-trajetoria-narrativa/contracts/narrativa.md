@@ -61,11 +61,15 @@ vídeo da Feature 022 (FR-014). `serializar(narrativa)` produz este formato.
   ],
   "compartilhavel": {
     "formacoes": [{"curso": "…", "unidade": "…", "nivel": "…", "modalidade": "…",
-                   "ano_conclusao": 2022, "linhas": ["…", "…"]}],
+                   "ano_conclusao": 2022, "linhas_curso": ["…", "…"],
+                   "linhas_detalhe": ["Serra · Graduação · Presencial"]}],
     "formacoes_omitidas": 0,
     "formacoes_registradas": 2,
-    "contextos_agregados": [],
-    "nome_disponivel": true
+    "contextos_agregados": [{"metrica": "conclusoes_curso_unidade_ano", "numero": 27,
+                             "rotulo": ["conclusões deste curso", "na unidade Serra em 2022"]}],
+    "nome_disponivel": true,
+    "apuracao": "Dados institucionais apurados em 31/01/2026.",
+    "unidade_da_imagem": "Serra"
   }
 }
 ```
@@ -79,9 +83,15 @@ vídeo da Feature 022 (FR-014). `serializar(narrativa)` produz este formato.
 | `derivados[]` | Tipos fechados: `formacoes_registradas`, `tempo_desde_conclusao` (só com data, FR-020), `primeira_formacao` (só com menor ano único) |
 | `contextos_agregados[]` | P2: `{"metrica", "recorte": {"curso"?, "unidade", "ano"}, "valor", "apurado_em", "origem": "agregado"}`. Só agregados selecionados (FR-058 a FR-060) |
 | `secoes[]` | Ordem do FR-026, só as presentes (FR-027). `chave` é estável; `titulo` e `texto` vêm do catálogo |
-| `compartilhavel` | Só o FR-033; `contextos_agregados` com no máximo um par (métricas 1 e 2) da primeira formação que tiver agregado. **Sem nome**: a rota acrescenta o nome com `nome=1` e `nome_disponivel` (FR-034). `linhas` já quebradas para o card (research R10) |
+| `compartilhavel` | Só o FR-033. **Sem nome**: a rota acrescenta o nome com `nome=1` e `nome_disponivel` (FR-034). `linhas_curso` e `linhas_detalhe` já quebradas para a linha do tempo do card (research R10, R19); o ano fica fora do detalhe, no nó (FR-077) |
+| `compartilhavel.contextos_agregados[]` | *(revisão de 2026-10-05)* Destaques do card (FR-078): `metrica`, `numero` e `rotulo` de duas linhas do catálogo. No máximo um par (métricas 1 e 2), da primeira formação que tiver agregado. Se as duas apurações do par forem distintas, fica só o primeiro destaque: o rodapé tem uma apuração e nenhuma é escolhida por data (FR-059) |
+| `compartilhavel.apuracao` | Texto do rodapé do card, só com destaque |
+| `compartilhavel.unidade_da_imagem` | Unidade da primeira formação exibida; escolhe a imagem e a legenda da abertura (FR-076). Omitida sem unidade |
 
 ## Evolução
+
+- A revisão de 2026-10-05 (card editorial) mudou a forma de `compartilhavel` mantendo a
+  versão 1: o contrato ainda não foi publicado fora do PR #30.
 
 - Acrescentar um campo opcional, por exemplo `marcos[]` preenchido em P3, mantém a
   versão 1.

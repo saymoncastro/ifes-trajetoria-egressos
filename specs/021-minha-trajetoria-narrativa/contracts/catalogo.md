@@ -43,6 +43,26 @@ como "desde 2022, muita coisa mudou" afirmaria algo sem fonte.
 | `agregado_unidade` | métrica 2 selecionada | "Em {ano}, {n} conclusões foram registradas na unidade {unidade}." |
 | `apuracao` | junto de cada agregado | "Dados institucionais apurados em {apuracao}." |
 
+## Formulações do card editorial (revisão de 2026-10-05; FR-078, FR-079)
+
+No card, as contagens aparecem decompostas em **número + rótulo**, com a mesma semântica
+das formulações P2. Na página continua a frase completa.
+
+| Chave | Condição | Texto (proposta) |
+|---|---|---|
+| `destaque_curso` | métrica 1 no card | número `{n}`; rótulo "conclusão deste curso" / "conclusões deste curso" e "na unidade {unidade} em {ano}" |
+| `destaque_unidade` | métrica 2 no card | número `{n}`; rótulo "conclusão registrada" / "conclusões registradas" e "na unidade {unidade} em {ano}" |
+| `card_apuracao` | rodapé do card, com destaque | "Dados institucionais apurados em {apuracao}." |
+| `legenda_imagem` | sempre | "Unidade {unidade} · {tipo}"; sem unidade: "Ifes · {tipo}" (`tipo` = ilustração ou fotografia) |
+| `fecho` | sempre | "Essa história também é minha." |
+| `hashtag` | sempre | "#SouEgressoIfes" |
+| `capitulo` | página, com 2 ou mais capítulos | "Capítulo {k} de {total}" |
+
+Títulos de capítulo da página: "Sua formação", "Sua continuidade no Ifes", "Naquele ano no
+Ifes" e "Seu card". Eles substituem os títulos de seção anteriores. Rótulos de cartão sem
+número e sem verbo continuam vinculados à semântica do FR-061: o sujeito é "conclusões" e
+nunca pessoas.
+
 ## Formulações vedadas (teste de varredura)
 
 O texto renderizado da página e do card, em todos os cenários simulados de P1 e P2, NÃO

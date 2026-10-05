@@ -174,10 +174,11 @@ Três rotas GET no app `narrativa`, montadas na raiz:
   Mesmo contexto, mesmos bytes; sem data, UUID nem contador.
 - **Formato:** **1080 × 1920** (9:16), o story do Instagram e o status de outras redes
   (FR-040).
-- **Área segura (FR-072):**
-  - Todo texto fica entre y = 270 e y = 1570, com margens laterais de 90 px.
-  - As faixas de 0 a 270 (barra de perfil e progresso do story) e de 1570 a 1920 (campo
-    de resposta e ações) recebem só fundo ou grafismo dos tokens.
+- **Área segura (FR-072; revisada em 2026-10-05):**
+  - Todo texto fica entre y = 270 e y = 1650, com margens laterais de 90 px. Isso segue a
+    orientação da Meta para stories, que deixa cerca de 14% livres no topo e na base. O
+    valor anterior, 1570, era mais conservador que o necessário e alimentava o vazio.
+  - As faixas de 0 a 270 e de 1650 a 1920 recebem só imagem, fundo ou grafismo.
   - Os valores são constantes nomeadas do tema e há teste que garante que nenhum `<text>`
     sai do retângulo.
 - **Composição:**
@@ -189,8 +190,13 @@ Três rotas GET no app `narrativa`, montadas na raiz:
   - em P2, no máximo um par de frases de agregado (o da primeira formação com agregado;
     FR-033);
   - rodapé e marca de demonstração dentro da área segura.
-- **Legibilidade no celular:** corpo mínimo de 40 px para texto e 64 px para o título, na
-  escala 1080. Contraste AA entre os tokens de texto e de fundo.
+- **Legibilidade no celular (revisada em 2026-10-05):**
+  - corpo mínimo de 40 px no conteúdo e de 26 px no rodapé e na proveniência;
+  - título ≥ 80 px;
+  - contraste AA entre os tokens de texto e de fundo.
+- **A composição desta seção foi superada** pela R19 (direção editorial). Continuam valendo
+  o determinismo, a quebra por largura real dos glifos, a área segura e a composição
+  adaptativa.
 - **Quebra de linha:** calculada na montagem do compartilhável, por limite conservador de
   caracteres por linha e por tamanho de fonte. Não corta palavras nem trunca o nome. O teste
   usa o curso mais longo da fonte simulada.
@@ -412,3 +418,89 @@ recorte.
   reproduzi-lo.
   - `contracts/fonte-academica.md` da 001 ganha só uma nota: "a capacidade de contexto da
     trajetória é separada; ver 021".
+
+## R19 — Direção editorial do card: componentes e motor de zonas (revisão de 2026-10-05)
+
+- **Decisão:** o `narrativa/card.py` passa a compor o card em **zonas**, cada uma uma função
+  pequena que devolve elementos SVG posicionados:
+  - `marca`, `abertura` (imagem + legenda), `titulo`, `linha_do_tempo`/`no`, `destaques`,
+    `fecho`, `rodape`, `faixa_inferior`;
+  - sem framework, motor de temas nem configuração;
+  - o template `card.svg` só serializa os elementos.
+- **Mesma tabela de medidas para medir e desenhar.** Cada zona tem altura calculável antes
+  do desenho, o que evita a sobreposição vista no primeiro protótipo.
+- **Ocupação (FR-080):**
+  - altura da abertura = área segura − conteúdo medido, limitada a [mínimo, máximo];
+  - o título e o conteúdo começam logo abaixo dela;
+  - o fecho e o rodapé ficam na base da área segura.
+- **Corte (FR-082):** abertura até o mínimo → sem destaques → "e mais N".
+- **Tema (FR-040):** tokens próprios do card.
+
+  | Token | Valor |
+  |---|---|
+  | `profundo` | `#0e3b23` |
+  | `marca` | `#2f9e41`, só grafismo e título grande |
+  | `marca_escura` | `#257a33`, o ano da linha do tempo (4,8:1 no creme; no celular, o ano não é texto grande) |
+  | `creme` | `#f6f2e8` |
+  | `branco` | `#ffffff` |
+  | `texto` | `#1b1b1b` |
+  | `suave` | `#4a5058` |
+
+  O contraste AA é verificado por teste, no tamanho em que o story aparece no celular. Os
+  hex de ação da 015 continuam vetados.
+- **Marca (FR-075):** a mesma `interface/assinatura.svg` do cabeçalho, embutida num `<svg>`
+  aninhado sobre pílula branca. O PNG a rasteriza.
+- **Destaques (FR-078):** cartões lado a lado, com número de 88 px e rótulo de 30 px em até
+  2 linhas. Com um só agregado, o cartão ocupa a largura total.
+- **Fecho (FR-079):** "Essa história também é minha." (46 px, negrito) e `#SouEgressoIfes`
+  (pílula verde profunda), texto fixo do catálogo.
+- **Protótipo de referência:** `docs/auditorias/evidencias-021-visual/prototipo_card.py`
+  (esboço; o renderer o reescreve com testes).
+- **Alternativas descartadas:**
+  - **Fonte manuscrita para o fecho:** mais um arquivo de fonte, sem ganho proporcional.
+  - **Ícones de biblioteca:** a linha do tempo e os números cumprem o papel.
+  - **Telas por capítulo no card:** é uma peça só.
+
+## R20 — Catálogo de imagens institucionais (revisão de 2026-10-05)
+
+- **Decisão:** `narrativa/imagens.py` com um catálogo **em código**: tupla de entradas com
+  `unidade` (ou `None` para a genérica), `arquivo`, `tipo` ("ilustração" ou "fotografia"),
+  `origem` e `licenca`.
+- **Escolha:** pela unidade da primeira formação exibida. Sem entrada, cai na genérica.
+- **Legenda:** derivada do tipo e da unidade ("Unidade Serra · ilustração"; "Ifes ·
+  ilustração"), nunca com ano (FR-076).
+- **Ativo da demonstração:** **uma ilustração vetorial própria e genérica**
+  (`narrativa/imagens/ifes-generica.svg`), feita no projeto, sem licença de terceiros.
+  - Prédio, palmeiras e gramado estilizados, na paleta do card.
+  - Não representa nenhuma unidade real. A legenda diz "ilustração".
+  - A unidade só aparece na legenda, como fato da formação ("Unidade Serra").
+- **No card:** a imagem é embutida por `<image href="data:image/svg+xml;base64,…">`, ou
+  pelo SVG aninhado. Isso é determinístico, e o resvg rasteriza.
+- **Na página:** o mesmo arquivo, inline, como parte da abertura.
+- **Fotografias (DP-2106):** só entram como entradas novas do catálogo, com `origem` e
+  `licenca` preenchidas. Um teste exige os dois campos em toda entrada do tipo
+  "fotografia".
+- **Alternativas descartadas:**
+  - **Fotos de uso livre com crédito:** licença e crédito no próprio card; o solicitante
+    preferiu a ilustração.
+  - **Sem imagem até a ACS:** o card ficaria sem elemento dominante.
+  - **Imagem gerada por IA:** vedada (FR-041).
+
+## R21 — Página em capítulos (revisão de 2026-10-05)
+
+- **Decisão:** a mesma rota, `/minha-trajetoria/`, numa página única, com os capítulos
+  como blocos de largura total e fundo alternado.
+  - **Abertura:** imagem, legenda, `h1` e nome.
+  - **Capítulos:** sua formação, continuidade, naquele ano.
+  - **Seu card.**
+- **Indicador "Capítulo k de N":** calculado pelos capítulos presentes.
+- **Linha do tempo em CSS:** pseudo-elementos para nó e traço, sem JavaScript.
+- **Cartões de destaque:** número grande seguido da frase completa do catálogo e da
+  apuração.
+- **A montagem já emite as seções:** `o_que_o_ifes_registra`, `trajetoria_academica`,
+  `outras_formacoes`, `naquele_ano`. A view as distribui nos capítulos, sem regra de dado
+  nova.
+- **Alternativas descartadas:**
+  - **Telas separadas com "Próximo":** mais rotas e cliques, e não funcionaria tão bem sem
+    JavaScript.
+  - **Tela "Preparando…" com espera:** seria encenação, sem processamento real.

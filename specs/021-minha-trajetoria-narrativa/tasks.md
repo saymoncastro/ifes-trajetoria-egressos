@@ -153,7 +153,7 @@ macOS e no CI, mais a inspeção visual do PNG do pior caso.
 **Porta:** se T007 (PNG) ou T012 (pior caso visual) falhar, parar e decidir com o
 solicitante antes das fases seguintes.
 
-- [ ] T007 [US3] **Spike de rasterização (porta de decisão; primeira task depois da
+- [X] T007 [US3] **Spike de rasterização (porta de decisão; primeira task depois da
   fundação):**
   1. Acrescentar `"resvg-py>=0.5,<0.6"` em `pyproject.toml`. Rodar `uv lock`. Em
      `tests/dependencias.py`, acrescentar a linha
@@ -820,6 +820,155 @@ explícito abre as tasks.
 - [X] T055 Atualizar o **Status** de `spec.md` e o registro de implementação ao fim deste
   arquivo.
 
+## Fase 13 — Convergência visual: card editorial e página em capítulos (P1 visual reaberta) (10 tasks)
+
+**Origem:** [auditoria de convergência visual](../../docs/auditorias/2026-10-04-021-convergencia-visual.md),
+com as decisões do solicitante de 2026-10-05:
+
+- **V1:** assinatura oficial no card de demonstração;
+- **V2:** ilustração vetorial própria;
+- **V3:** fecho com `#SouEgressoIfes`.
+
+**Goal:** o card e a página passam de relatório textual a peça editorial da trajetória
+(E8, FR-074 a FR-083, SC-015), com os mesmos dados. Domínio, montagem das frases, P2 e
+rotas não mudam.
+
+**Porta:** o solicitante revisa o conjunto de PNGs de referência (T064) antes do merge do
+PR #30. Esta fase vem antes de qualquer outra mudança da P2.
+
+**Superadas na composição** (o pipeline, a área segura e a quebra por largura real
+continuam): T008 a T010 (card em texto empilhado), T029 (seção do card na página, que só
+muda de lugar) e a estrutura de seções do T021.
+
+### Testes
+
+- [X] T056 [P] [US3] Escrever `tests/narrativa/test_card_editorial.py` (SC-015, FR-074 a
+  FR-082). **Casos de referência:**
+  - 1, 2, 3, 4 e mais de 4 formações;
+  - com e sem agregados;
+  - com e sem nome;
+  - unidade sem imagem própria (cai na genérica).
+
+  **Para cada caso**, a partir do SVG gerado:
+  - **(a) Ordem das zonas:** abertura → título → linha do tempo → destaques → fecho →
+    rodapé, conferida pela coordenada y.
+  - **(b) Elemento dominante:** a abertura ocupa ≥ 20% da área do quadro.
+  - **(c) Linha do tempo:** um nó (`circle` da classe do nó) por formação exibida; traço
+    quando há 2 ou mais.
+  - **(d) Destaques:** número com `font-size` ≥ 80; rótulo com no máximo 2 linhas.
+  - **(e) Ocupação:** nenhuma faixa vazia contínua > 160 px entre elementos dentro de y
+    270–1650.
+  - **(f) Hierarquia e proveniência:**
+    - ≥ 4 tamanhos de fonte distintos;
+    - título ≥ 80;
+    - "Dados institucionais apurados" só abaixo do fecho, com tamanho ≤ 30.
+  - **(g) Área segura e legibilidade:**
+    - todo `<text>` dentro de x 90–990 e y 270–1650 (topo pelo tamanho, base pelo
+      descendente);
+    - sem sobreposição de caixas de texto;
+    - conteúdo ≥ 40 e rodapé ≥ 26.
+  - **(h) Legenda:** casa com "^(Unidade .+|Ifes) · (ilustração|fotografia)$" e não
+    contém ano de 4 dígitos.
+  - **(i) Catálogo e vedações:** nenhuma frase fora do catálogo e nenhum termo de
+    `VEDADAS`.
+  - **(j) Fecho e hashtag:** "Essa história também é minha." e "#SouEgressoIfes"
+    presentes.
+  - **(k) Determinismo:** a mesma entrada gera o mesmo SVG.
+  - **(l) Contraste:** AA de todo par texto/fundo do `TEMA_CARD`.
+  - **(m) Hex de ação da 015:** ausentes de `card.py` e do template.
+
+- [X] T057 [P] [US3] Escrever `tests/narrativa/test_imagens.py` (FR-076, R20):
+  - existe exatamente uma entrada genérica (`unidade is None`);
+  - toda entrada tem `tipo` em {"ilustração", "fotografia"} e `origem` e `licenca` não
+    vazios;
+  - o arquivo existe, é SVG válido e não contém `<text>`;
+  - a escolha é pela unidade da primeira formação exibida e cai na genérica;
+  - a legenda é "Unidade Serra · ilustração", ou "Ifes · ilustração" sem unidade.
+
+### Implementação
+
+- [X] T058 [US3] Criar `trajetoria/narrativa/imagens/ifes-generica.svg`:
+  - ilustração vetorial **própria**, sem texto e sem reproduzir prédio real;
+  - prédio, palmeiras e gramado estilizados na paleta do card, como no protótipo da
+    auditoria.
+
+  Criar também `trajetoria/narrativa/imagens.py` com a tupla `CATALOGO` (entradas
+  `ImagemInstitucional(unidade, arquivo, tipo, origem, licenca)`), `imagem_para(unidade)` e
+  `legenda(imagem, unidade)` (R20).
+
+- [X] T059 [US3] Em `trajetoria/narrativa/catalogo.py`, acrescentar as formulações do card
+  editorial de contracts/catalogo.md:
+  - `DESTAQUE_CURSO` e `DESTAQUE_UNIDADE` (rótulos singular/plural em 2 linhas);
+  - `CARD_APURACAO`, `LEGENDA`, `FECHO`, `HASHTAG`, `CAPITULO`;
+  - os títulos de capítulo.
+
+  Atualizar `FORMULACOES` e o teste estrutural do catálogo.
+
+- [X] T060 [US3] Em `trajetoria/narrativa/contrato.py` e `montagem.py`:
+  - `ContextoCompartilhavel` passa a `metrica`, `numero`, `rotulo: tuple[str, ...]`;
+  - `Compartilhavel` ganha `apuracao: str | None` (texto do rodapé) e `unidade_da_imagem`
+    (a unidade da primeira formação exibida).
+
+  A semântica não muda (FR-078): o mesmo par da primeira formação com agregado. Atualizar
+  `serializar`, contracts/narrativa.md (a versão do contrato continua 1, porque ainda não
+  foi publicado fora do PR) e os testes da montagem e do contrato.
+
+- [X] T061 [US3] Reescrever a composição de `trajetoria/narrativa/card.py` por zonas (R19)
+  e o template `templates/narrativa/card.svg`:
+  - **Zonas:** `marca` (a `interface/assinatura.svg` embutida), `abertura` (imagem do
+    catálogo + legenda + borda em onda), `titulo`, `linha_do_tempo`/`no`, `destaques`,
+    `fecho` (frase + pílula da hashtag), `rodape`, `faixa_inferior`.
+  - **Constantes:** `TEMA_CARD`, `AREA_SEGURA = (90, 270, 990, 1650)`, mínimo e máximo da
+    abertura.
+  - **Medidas:** uma única tabela para medir e desenhar.
+  - **Comportamento:** ocupação pela abertura e ordem de corte do FR-082.
+  - **Preservar:** `largura`, `quebrar_linhas`, `quebrar_atributos`, `descricao`
+    (`<title>`/`<desc>`) e `rasterizacao.py` sem mudança.
+  - **Testes antigos:** atualizar `tests/narrativa/test_card.py` onde ele fixava a
+    composição antiga (linha "N formações registradas no Ifes", rodapé em 1570).
+
+- [X] T062 [US1] Reestruturar a página em capítulos (FR-026, FR-083, R21):
+  - **`views.py`:** distribui as seções da narrativa em abertura e capítulos e calcula
+    "Capítulo k de N".
+  - **`minha_trajetoria.html`:**
+    - abertura com a imagem inline e a legenda;
+    - capítulos em blocos de largura total, com fundo alternado;
+    - linha do tempo com nó e traço em CSS;
+    - cartões de destaque com número grande + frase completa + apuração;
+    - seção do card no fim.
+  - **`narrativa.css`:** com os tokens do tema do card para os elementos editoriais.
+  - **Sem JavaScript novo.**
+  - **Testes:** atualizar `tests/narrativa/test_pagina.py`, `test_pagina_card.py`,
+    `test_acessibilidade.py` e `test_rotas.py` onde fixavam os títulos antigos. Acrescentar
+    os testes:
+    - indicador só com 2 ou mais capítulos;
+    - legenda sem ano;
+    - capítulo de continuidade só com 2 ou mais formações;
+    - capítulo "Naquele ano" só com agregado.
+
+- [X] T063 [US3] Criar `specs/021-minha-trajetoria-narrativa/evidencias/gerar_referencias.py`,
+  script avulso que usa o **renderer real**. Ele gera
+  `evidencias/referencia-{caso}.png` para os casos do T056:
+  - Ana (1 formação + agregados);
+  - Maria (2 + agregados, com e sem nome);
+  - Diego (3, sem agregados);
+  - 4 formações;
+  - pior caso (mais de 4, nomes longos);
+  - unidade sem imagem própria.
+
+### Validação e porta
+
+- [X] T064 Porta de revisão do solicitante:
+  - rodar a suíte completa e o ruff;
+  - verificar a página em 320, 375 e 1280 px no navegador do app;
+  - enviar os PNGs de referência ao solicitante;
+  - registrar a aprovação, ou os ajustes pedidos, em `validacao.md`.
+
+  **Sem aprovação, o PR #30 continua em rascunho.**
+
+- [X] T065 Atualizar o status da spec, a descrição do PR #30, as evidências e este registro.
+  Fazer o push. O CI do PNG (T007) roda nesse push.
+
 ---
 
 ## Dependências
@@ -925,3 +1074,40 @@ P1 completo + validação no celular → Fase 8 (fundação P2) → Fase 9 US5 �
   - **Ficam abertas:**
     - **T007:** CI do PNG no PR.
     - **T031 e T053:** validação no celular, com o solicitante.
+- **2026-10-05 — Pausa e reabertura da P1 visual:**
+  - A auditoria de convergência visual comparou o mockup, os PNGs atuais e os artefatos.
+  - O card foi considerado um relatório diagramado e a P1 visual foi reaberta. Decisões V1
+    a V3 do solicitante.
+  - Spec (E8, FR-026/029/036/040 revisados, FR-074 a FR-083, SC-015, DP-2102/2106
+    atualizadas, DP-2110), research (R10 revisado, R19 a R21), plan, contratos (`card.md`
+    reescrito, `catalogo.md`, `rotas.md`) e a Fase 13 (T056 a T065) foram atualizados.
+  - PR #30 convertido em rascunho.
+  - **Renderer ainda não alterado:** a revisão da direção visual pelo solicitante vem
+    antes.
+- **2026-10-05 — T007:** spike do PNG aprovado também no CI (ubuntu, Python 3.13): check
+  `testes` do PR #30 verde. ADR 0006 atualizada.
+- **2026-10-05 — Fase 13, T056 a T063 implementadas:**
+  - **Card editorial (T061):** `card.py` reescrito por zonas, com uma função por zona que
+    mede e desenha (marca, abertura, título, linha do tempo, destaques, fecho, rodapé,
+    faixa inferior). Abertura entre y = 420 e y = 890; ordem de corte do FR-082.
+  - **Decisões de medida na implementação** (registradas em `contracts/card.md`, FR-081 e
+    R19):
+    - texto de apoio entre 30 e 36 px, como no protótipo aprovado;
+    - legenda na faixa da marca quando não colide com ela;
+    - destaques lado a lado ou empilhados, conforme os rótulos cabem; sem caber, saem;
+    - token `marca_escura` (`#257a33`) para o ano: no celular, 44 px viram ~15 px, texto
+      comum, e o verde da marca daria 3,1:1;
+    - acima do máximo da abertura, a sobra se divide em volta do conteúdo.
+  - **Contrato (T060):** `ContextoCompartilhavel(metrica, numero, rotulo)`;
+    `Compartilhavel.apuracao` e `unidade_da_imagem`. Par com apurações distintas fica só
+    com o primeiro destaque. A linha "N formações registradas no Ifes" saiu do card.
+  - **Página (T062):** abertura com imagem e legenda, capítulos com indicador, linha do
+    tempo e cartões de destaque em CSS, sem JavaScript novo.
+  - **Testes:** `test_card_editorial.py` (critérios a–m em 8 casos), `test_imagens.py` e
+    os ajustes dos testes antigos. Checagem por mutação: contraste, ocupação e
+    sobreposição de nó com texto são detectados.
+  - **Referências (T063):** `evidencias/referencia-*.png`, 7 casos, pelo pipeline real.
+- **2026-10-05 — T064 e T065:** suíte completa (2563 aprovados, 3 pulados) e ruff limpos;
+  página verificada a 320, 375 e 1280 px; PNGs de referência **aprovados pelo solicitante**
+  sem ajustes. Status da spec, evidências e descrição do PR #30 atualizados; push feito.
+  Continuam abertas só T031 e T053 (celular real e story de teste, com o solicitante).
