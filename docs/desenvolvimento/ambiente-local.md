@@ -292,7 +292,7 @@ O que o preparo cria, só com dados fictícios: Pessoas e Conclusões Acadêmica
 simulada; a baseline do Formulário Egresso Ifes 2024 em rascunho e uma cópia publicada
 localmente; três Campanhas de demonstração; vínculos de governança dos operadores
 fictícios A (CPAEG), B (CSAEG Vitória) e C (sem vínculo); o contexto simulado da Minha
-trajetória.
+trajetória; os contatos de e-mail fictícios (`@example.invalid`) da Feature 020.
 
 **Recomeçar do zero** é recriar o banco (não existe operação para apagar Participações).
 Pare o `runserver` antes (ele mantém uma conexão aberta):
@@ -322,8 +322,9 @@ until curl -sf -o /dev/null http://127.0.0.1:8000/acesso/; do sleep 0.5; done; e
 
 Para parar: `pkill -f "runserver 127.0.0.1:8000"`.
 
-Use exatamente `127.0.0.1:8000`: a comunicação simulada (Feature 016) só aceita a URL de
-entrada `http://127.0.0.1:8000/acesso/`.
+Use exatamente `127.0.0.1:8000`: o envio por Lote em modo demonstração (Feature 020, que
+substituiu a comunicação simulada da 016) só aceita a URL de entrada
+`http://127.0.0.1:8000/acesso/`.
 
 ### 2.11 Abrir a aplicação
 

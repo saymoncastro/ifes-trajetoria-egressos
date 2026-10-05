@@ -94,9 +94,11 @@ com **[modo fechado]** e **[modo demonstração]**.
 | Saída (só com vídeo) | 443/tcp | `nodejs.org`, `registry.npmjs.org`, `remotion.media` e/ou `storage.googleapis.com` | Node, pacotes npm e Chrome Headless Shell |
 | Saída | 53, 123 | DNS e NTP institucionais | Resolução de nomes e relógio |
 
-**SMTP: não é necessário.** No estado atual não há envio real de e-mail. A comunicação da
-Feature 016 só aceita Mailpit em `127.0.0.1:1025` e destinatários `@example.invalid`
-(`trajetoria/comunicacao/seguranca.py`).
+**SMTP: não é necessário.** No estado atual não há envio real de e-mail. O envio por Lote
+da Feature 020 (que substituiu a comunicação simulada da 016) só funciona em modo
+demonstração, com Mailpit em `127.0.0.1:1025` e destinatários `@example.invalid`
+(`trajetoria/comunicacao/transporte.py`). O modo real existe só como validação e fica
+desativado até os Gates A e B (DP-2010).
 
 ### 1.4 DNS e TLS
 
@@ -545,7 +547,9 @@ Lido em `config/settings.py` e no código. "Obrigatória" refere-se a esta VM.
 | `TRAJETORIA_SESSAO_INATIVIDADE` | Não | `30` | Minutos de inatividade da sessão do egresso | Não |
 | `TRAJETORIA_SESSAO_DURACAO_MAXIMA` | Não | `480` | Duração máxima da sessão, em minutos | Não |
 | `TRAJETORIA_SELO_DECLARACAO_VALIDADE` | Não | `30` | Validade dos selos, em minutos | Não |
-| `TRAJETORIA_URL_ENTRADA_DEMONSTRACAO` | **Não defina** | — | Link do convite simulado (016). O código só aceita `http://127.0.0.1:8000/acesso/`; outro valor faz a comunicação recusar | Não |
+| `TRAJETORIA_URL_ENTRADA_DEMONSTRACAO` | **Não defina** | — | Link do convite de demonstração (020). O código só aceita `http://127.0.0.1:8000/acesso/`; outro valor faz o envio recusar | Não |
+| `TRAJETORIA_ENVIO_REAL`, `TRAJETORIA_REMETENTE_INSTITUCIONAL`, `TRAJETORIA_URL_ENTRADA` | **Não defina** | vazio | Envio real da Feature 020, desativado até os Gates A e B (DP-2010). Com a demonstração ligada, `TRAJETORIA_ENVIO_REAL=1` faz todo envio recusar | Não |
+| `TRAJETORIA_LOTE_ENVIO_POR_ACAO` | Não | `100` | Membros de um Lote processados por acionamento de "Enviar" | Não |
 | `EMAIL_BACKEND` | **Deixe vazio** | vazio | Vazio = comunicação desabilitada. O código recusa qualquer SMTP que não seja Mailpit em `127.0.0.1:1025` | Não |
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | Não | — | Idem; não configure SMTP institucional | (senha: Sim) |
 | `TRAJETORIA_VIDEO_PROJETO` | Não | `/opt/trajetoria/app/video` | Projeto Node do vídeo (padrão: `video/` do checkout) | Não |
@@ -1818,7 +1822,7 @@ afeta segurança, operação ou reprodutibilidade; **MELHORIA** reduz atrito.
 | L11 | Exportações (013) e dataset analítico (012) sem comando nem tela | IMPORTANTE (operação futura) | Só via `manage.py shell` |
 | L12 | Sem endpoint de health check | MELHORIA | Monitorar `/acesso/` (seção 18.3) |
 | L13 | `TRAJETORIA_CHAVE_PSEUDONIMIZACAO` e as variáveis do vídeo estavam ausentes do `.env.example` | MELHORIA | Corrigido junto com este guia |
-| L14 | Comunicação simulada (016) inutilizável fora de `127.0.0.1:8000` + Mailpit | MELHORIA (esperado) | Deixar `EMAIL_BACKEND` vazio |
+| L14 | Envio por Lote (020) só em demonstração, inutilizável fora de `127.0.0.1:8000` + Mailpit; envio real desativado (Gates A e B) | MELHORIA (esperado) | Deixar `EMAIL_BACKEND` vazio |
 | L15 | Procedimento validado em macOS, não numa VM Ubuntu 24.04 real (utilitários, unidades systemd, Nginx, bibliotecas do Chrome) | IMPORTANTE | Validar na primeira instalação e corrigir este guia |
 
 ---
