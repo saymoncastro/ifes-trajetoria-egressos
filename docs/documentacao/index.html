@@ -95,7 +95,7 @@
   <span class="rotulo-secao">Documentação de referência</span>
   <h1>Trajetória Ifes</h1>
   <p class="lide">O software que implementa o <strong>Núcleo Institucional de Acompanhamento de Egressos (NIAE)</strong> do Instituto Federal do Espírito Santo: o que ele resolve, como pensa o acompanhamento de egressos, o que já existe, o que está previsto e como cada parte se relaciona com a Política de Acompanhamento de Egressos (PAEG).</p>
-  <p class="meta">Base analisada: branch <code>main</code> no commit <code>ff12566</code> (Feature 019 integrada), Constituição do projeto v2.0.0 (emendada em 2026-10-04). Documento gerado em 2026-10-04 por análise do repositório. Não altera código, specs nem decisões.</p>
+  <p class="meta">Base analisada: branch <code>main</code> no commit <code>a65d7cb</code> (Feature 021 integrada), com as correções documentais de 2026-10-05 nas specs (seção 24). Constituição do projeto v2.0.0 (emendada em 2026-10-04). Documento atualizado em 2026-10-05 por análise do repositório. Não altera código nem decisões.</p>
 </div>
 
 <!-- ============================================================ 0 -->
@@ -103,7 +103,7 @@
   <span class="rotulo-secao">0 · Começar</span>
   <h2 id="h-como-ler">Como ler esta documentação</h2>
 
-  <p>Esta documentação foi construída <strong>a partir do que existe no repositório</strong>: código, testes, as 19 especificações de Feature, a Constituição do projeto, as ADRs, as auditorias e os documentos de referência. Ela não é promocional. Sempre que algo for afirmado, a seção indica de onde a afirmação vem.</p>
+  <p>Esta documentação foi construída <strong>a partir do que existe no repositório</strong>: código, testes, as 20 especificações de Feature (001 a 019 e 021), a Constituição do projeto, as ADRs, as auditorias e os documentos de referência. Ela não é promocional. Sempre que algo for afirmado, a seção indica de onde a afirmação vem.</p>
 
   <div class="destaque">
     <p><strong>Antes de tudo: nada está em uso produtivo.</strong> Todas as telas do sistema existem apenas no <strong>modo de demonstração</strong>, com dados fictícios. Com o modo desligado, que é o padrão, toda requisição responde 404 (<code>trajetoria/demonstracao/middleware.py</code>). O uso com dados reais depende de decisões institucionais ainda pendentes: base legal, fonte acadêmica oficial, identificação de operadores e competência para publicar o questionário. Elas estão listadas em <a href="#gaps-abertos">Lacunas ainda existentes</a>.</p>
@@ -115,7 +115,7 @@
     <li><span><span class="st st-impl">Implementado</span></span><span>Existe no código da branch analisada e tem testes automatizados.</span></li>
     <li><span><span class="st st-demo">Somente demonstração</span></span><span>Qualificador: a capacidade existe, mas só pode ser usada no modo de demonstração, com dados fictícios. Não há caminho produtivo.</span></li>
     <li><span><span class="st st-parc">Implementado parcialmente</span></span><span>Existe, mas não cobre todo o comportamento previsto ou esperado.</span></li>
-    <li><span><span class="st st-spec">Especificado</span></span><span>Definido em Feature aprovada, mas não implementado. <em>Na branch analisada não há nenhum caso: as 19 Features têm todas as tasks concluídas.</em></span></li>
+    <li><span><span class="st st-spec">Especificado</span></span><span>Definido em Feature aprovada, mas não implementado. <em>Na branch analisada não há nenhum caso: as 20 Features especificadas estão implementadas. A 021 tem 63 de 65 tasks concluídas; as duas abertas são validações manuais em celular real (T031, T053).</em></span></li>
     <li><span><span class="st st-plan">Planejado</span></span><span>Consta de nota de roadmap, research ou decisão arquitetural, sem spec aprovada.</span></li>
     <li><span><span class="st st-norm">Referência normativa</span></span><span>Obrigação ou orientação de norma, sem implementação necessariamente correspondente.</span></li>
     <li><span><span class="st st-org">Organizacional</span></span><span>Dispositivo normativo de natureza administrativa, que não exige funcionalidade de software.</span></li>
@@ -167,6 +167,7 @@
       <tr><td>Comunicação</td><td>Convite por e-mail simulado, só para contatos fictícios e servidor local.</td><td><span class="st st-parc">Parcial</span> (simulada); real <span class="st st-plan">Planejado</span> (020)</td></tr>
       <tr><td>Dataset analítico</td><td>Fotografia imutável e reprodutível de uma Campanha encerrada.</td><td><span class="st st-impl">Implementado</span>, sem tela</td></tr>
       <tr><td>Exportação</td><td>CSV/XLSX pseudonimizado, com dicionário, metadados e proveniência por coluna.</td><td><span class="st st-impl">Implementado</span>, sem tela</td></tr>
+      <tr><td>Minha trajetória no Ifes</td><td>Devolutiva ao egresso depois da pesquisa: narrativa das formações e card vertical (PNG) para compartilhar, só com fatos institucionais.</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span>; ingresso e agregados só simulados</td></tr>
       <tr><td>Indicadores da PAEG (Art. 10, III)</td><td>Empregabilidade, verticalização etc.</td><td><span class="st st-fora">Fora do escopo atual</span>: dados disponibilizados para consumidor externo</td></tr>
     </tbody>
   </table>
@@ -174,10 +175,10 @@
 
   <h3>Números da base analisada</h3>
   <ul>
-    <li>19 Features especificadas e implementadas (001 a 019), todas com 100% das tasks marcadas.</li>
+    <li>20 Features especificadas e implementadas (001 a 019 e 021). A numeração 020 está reservada à nota de roadmap de mobilização real, ainda sem spec.</li>
     <li>Constituição v2.0.0, com 29 princípios, 10 deles inegociáveis (NON-NEGOTIABLE).</li>
-    <li>5 ADRs, 6 auditorias e 1 nota de roadmap (Feature 020, ainda não especificada).</li>
-    <li>177 arquivos de teste e 1.614 funções de teste, que somam cerca de 2.226 casos com a parametrização (registro de validação da Feature 019). O resultado da execução nesta análise está em <a href="#arquitetura">Arquitetura técnica</a>.</li>
+    <li>6 ADRs, 8 auditorias e 1 nota de roadmap (Feature 020, ainda não especificada).</li>
+    <li>199 arquivos de teste e 1.807 funções de teste, que somam 2.568 casos coletados com a parametrização. O resultado da execução nesta análise está em <a href="#arquitetura">Arquitetura técnica</a>.</li>
   </ul>
 </section>
 
@@ -262,7 +263,7 @@
       <tr><th scope="row">Coleta de respostas</th><td>Adequada: 54 perguntas, 14 seções, ramificações (inventário).</td><td>Jornada por Seção, com rascunho, retomada, percurso condicional e conclusão imutável (Features 005, 006, 008, 014).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Identidade da pessoa</th><td>O instrumento não pede nome, CPF, e-mail nem matrícula (O-1). A configuração de identificação não foi verificada.</td><td>Pessoa com identidade interna e referência de origem (fonte + id externo). O acesso por CPF + data de nascimento é conferido por HMAC (018).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span>; nível de garantia <span class="st st-dp">DP-1801</span></td></tr>
       <tr><th scope="row">Relação pessoa × conclusão</th><td>Inexistente como estrutura: a formação é uma resposta (Q10–Q19).</td><td>Pessoa 1—N Conclusão Acadêmica; cada Participação ancorada em uma Conclusão (ou Formação Declarada).</td><td><span class="st st-impl">Implementado</span></td></tr>
-      <tr><th scope="row">Múltiplos cursos</th><td>"Uma formação por resposta"; quem escolhe qual responder é o egresso (O-9).</td><td>A tela "Sua trajetória no Ifes" lista todas as formações, cada uma com sua situação. O egresso escolhe a formação, e a Campanha é consequência (007).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
+      <tr><th scope="row">Múltiplos cursos</th><td>"Uma formação por resposta"; quem escolhe qual responder é o egresso (O-9).</td><td>A tela "Suas formações no Ifes" lista todas as formações, cada uma com sua situação. O egresso escolhe a formação, e a Campanha é consequência (007).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Respostas ao longo do tempo</th><td>Sem vínculo entre respostas de anos diferentes no instrumento. Ligação posterior dependeria de identificação não verificada.</td><td>Várias Participações da mesma Conclusão em Campanhas diferentes; nenhuma substitui outra (Princípio I).</td><td><span class="st st-impl">Implementado</span> (estrutura); sem séries reais ainda</td></tr>
       <tr><th scope="row">Dados acadêmicos</th><td>Declarados pelo egresso, de memória, em listas suspensas.</td><td>Vêm da Conclusão, por fonte acadêmica, e são apresentados como contexto ("Você está respondendo sobre: …").</td><td><span class="st st-parc">Parcial</span>: fonte simulada; fonte real <span class="st st-dp">001/DP-001</span></td></tr>
       <tr><th scope="row">Pré-preenchimento</th><td>Não usado no instrumento analisado. O Forms admite links pré-preenchidos.</td><td>Deliberadamente <strong>não</strong> há pré-preenchimento: dado institucional nunca vira resposta declarada (005 FR-042 a 045; 008 FR-028). O caminho previsto é <em>retirar</em> a pergunta e mostrar o contexto.</td><td><span class="st st-fora">Fora do escopo</span> (por princípio)</td></tr>
@@ -277,12 +278,13 @@
       <tr><th scope="row">Auditabilidade</th><td>Não verificável no repositório.</td><td>Registros imutáveis (Versão publicada, Participação concluída, decisão de validação, snapshot); revelação de dados de consulta registrada (019). Sem trilha geral de autoria (DP-903, DP-1701).</td><td><span class="st st-parc">Parcial</span></td></tr>
       <tr><th scope="row">Evolução do questionário</th><td>Alteração direta do formulário; listas de cursos mantidas à mão (O-14).</td><td>Editor de rascunho com diagnóstico (009); a publicação continua sem dono institucional.</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Reutilização histórica dos dados</th><td>As respostas históricas existem em planilha (inventário, O-17); a importação não foi decidida.</td><td>Snapshot reprodutível de Campanha encerrada; exportação versionada (contrato v2). A importação do legado está fora do escopo inicial.</td><td><span class="st st-impl">Implementado</span> (novos dados); legado <span class="st st-fora">Fora do escopo</span></td></tr>
+      <tr><th scope="row">Devolutiva ao egresso</th><td>Tela final "Este formulário chegou ao fim!" com agradecimento (inventário, Seção 14).</td><td>Depois da pesquisa, "Minha trajetória no Ifes": as formações registradas pelo Ifes, em narrativa e card compartilhável, sem dados declarados (021).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span>; uso real <span class="st st-dp">DP-2101 a 2110</span></td></tr>
       <tr><th scope="row">População e taxa de resposta</th><td>O formulário não conhece a população a que se destina: sem denominador.</td><td>População na abrangência da Campanha, calculada sobre as Conclusões; taxas de início e conclusão (011).</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
     </tbody>
   </table>
   </div>
 
-  <p class="evidencias"><strong>Evidências:</strong> <a href="../../docs/referencias/formulario-egresso-ifes-2024-inventario.md"><code>docs/referencias/formulario-egresso-ifes-2024-inventario.md</code></a> (O-1 a O-20); specs 001–019; <code>docs/adr/0003-q14-resposta-declarada.md</code>.</p>
+  <p class="evidencias"><strong>Evidências:</strong> <a href="../../docs/referencias/formulario-egresso-ifes-2024-inventario.md"><code>docs/referencias/formulario-egresso-ifes-2024-inventario.md</code></a> (O-1 a O-20); specs 001–021; <code>docs/adr/0003-q14-resposta-declarada.md</code>.</p>
 </section>
 
 <!-- ============================================================ 5 -->
@@ -531,7 +533,7 @@
   </ul>
   <div class="camada camada-sw">
     <span class="nome-camada">Software</span>
-    <p>Uma Participação por (Campanha, Conclusão) é garantida no banco (<code>participacao_par_unico</code>). Nada impede várias Participações da mesma Conclusão em Campanhas diferentes (001 FR-038; 005 FR-007 a 010). Na demonstração, a tela "Sua trajetória no Ifes" lista as formações da Pessoa e a situação de cada uma; ela não mostra o histórico de Participações anteriores (ID-10, decisão pendente na Feature 014).</p>
+    <p>Uma Participação por (Campanha, Conclusão) é garantida no banco (<code>participacao_par_unico</code>). Nada impede várias Participações da mesma Conclusão em Campanhas diferentes (001 FR-038; 005 FR-007 a 010). Na demonstração, a tela "Suas formações no Ifes" lista as formações da Pessoa e a situação de cada uma; ela não mostra o histórico de Participações anteriores (ID-10, decisão pendente na Feature 014). Desde a 021, a página "Minha trajetória no Ifes" narra as formações registradas, mas também não mostra Participações nem respostas.</p>
   </div>
 </section>
 
@@ -559,6 +561,7 @@
       <tr><td>Institucional</td><td><code>ConclusaoAcademica</code> (e <code>ReferenciaDeAcervo</code>, 019)</td><td>Cada registro guarda <code>fonte</code>, <code>id_externo</code> e <code>incorporado_em</code>. A proveniência é proporcional: não há linhagem por atributo (001 FR-035 a 037; Princípio IV).</td></tr>
       <tr><td>Declarado</td><td><code>Resposta</code>; <code>FormacaoDeclarada</code></td><td>Sempre ligado à Participação e à Versão apresentada. Nunca pré-preenchido com dado institucional (005 FR-042 a 045).</td></tr>
       <tr><td>Derivado</td><td>Calculado na consulta (elegibilidade, indicadores, percurso, situação analítica)</td><td>Não é persistido, exceto quando precisa ser congelado: <code>elegivel_no_snapshot</code> e contexto no snapshot (012).</td></tr>
+      <tr><td>Institucional complementar e agregado (021)</td><td><code>contexto_trajetoria.ComplementoDaConclusao</code> (ano e data de ingresso) e <code>ContextoInstitucionalAgregado</code> (contagens de conclusões por curso e unidade e por unidade, num ano)</td><td>Vêm de uma fronteira própria (<code>fonte_academica/contexto_da_trajetoria.py</code>), separada da fonte acadêmica, com <code>fonte</code>, <code>apurado_em</code> e <code>obtido_em</code>. Nunca atualizados em silêncio; o agregado não tem vínculo com Pessoa. Hoje só simulados (DP-2104, DP-2105). Ficam fora do snapshot, da exportação e dos critérios (021 FR-042, FR-047).</td></tr>
       <tr><td>Na exportação</td><td><code>trajetoria/exportacao/contrato.py</code></td><td>Cada coluna base traz sua proveniência (<code>institucional</code>, <code>derivado</code>, <code>coleta</code>, <code>declarado</code>) no Dicionário (013).</td></tr>
     </tbody>
   </table>
@@ -758,7 +761,7 @@
     <h3>Participação, respostas e jornada <span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></h3>
     <dl>
       <dt>Objetivo</dt><dd>Conduzir o egresso pelo questionário certo, sobre a formação certa, sem perder o que já respondeu.</dd>
-      <dt>Funcionamento</dt><dd>Tela de formações com a situação de cada uma: sem pesquisa, iniciar, retomar, já concluída ou ambígua. Uma tela por Seção. Salvar mesmo incompleto ("Salvar e continuar" / "Salvar e sair"). Percurso calculado pelas condicionais. Conclusão com aviso de que não poderá ser alterada. Funciona sem JavaScript, a partir de 320 px e com zoom de 200%.</dd>
+      <dt>Funcionamento</dt><dd>Tela de formações com a situação de cada uma: sem pesquisa, iniciar, retomar, já concluída ou ambígua. Uma tela por Seção. Salvar mesmo incompleto ("Salvar e continuar" / "Salvar e sair"). Percurso calculado pelas condicionais. Conclusão com aviso de que não poderá ser alterada. Funciona sem JavaScript, a partir de 320 px e com zoom de 200%. A tela de formações passou a se chamar "Suas formações no Ifes" (021).</dd>
       <dt>Conceitos</dt><dd>Participação, Resposta, rascunho, percurso, pendência, conclusão da participação, contextualização da formação.</dd>
       <dt>Situação</dt><dd>Implementado. Sem indicador de progresso, por decisão (008 FR-095). O egresso não vê suas respostas depois de concluir (<span class="st st-dp">008/DP-802</span>). Recusa (Q1 = "Não") é contada como concluída (<span class="st st-dp">006/DP-601</span>).</dd>
       <dt>Evidências</dt><dd><code>trajetoria/participacao/</code>, <code>trajetoria/interface/</code>, <code>tests/participacao/</code>, <code>tests/interface/</code>; Features 005, 006, 007, 008, 014, 015.</dd>
@@ -844,6 +847,19 @@
     </dl>
   </article>
 
+  <!-- 12.12b -->
+  <article class="capacidade" id="cap-narrativa">
+    <h3>Minha trajetória no Ifes: devolutiva ao egresso <span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></h3>
+    <dl>
+      <dt>Objetivo</dt><dd>Devolver ao egresso, depois da pesquisa, a própria trajetória acadêmica no Ifes, montada só com fatos institucionais confiáveis e sem inventar fatos, datas, estatísticas ou relações.</dd>
+      <dt>Funcionamento</dt><dd>Na confirmação, a ação única passa a ser "Ver minha trajetória no Ifes" (<code>/minha-trajetoria/</code>). A página tem capítulos: abertura com ilustração genérica identificada como "ilustração", "Sua formação", "Sua continuidade no Ifes" (com duas ou mais formações), "Naquele ano no Ifes" (quando há agregado) e "Seu card". O card vertical 9:16 (1080 × 1920) é um PNG para story, gerado a partir de um SVG reprodutível. O nome só entra no card por escolha explícita, que não é guardada. "Compartilhar" usa o menu nativo do celular, quando o navegador oferece. Não há página pública, link permanente nem integração com redes sociais. Nada é gravado.</dd>
+      <dt>Conceitos</dt><dd>Narrativa (contrato serializável v1), subconjunto compartilhável, catálogo fechado de frases (com formulações vedadas como "sua turma"), complemento da Conclusão (ingresso), contexto institucional agregado.</dd>
+      <dt>Situação</dt><dd>Implementado na demonstração (P1 e P2), com 63 de 65 tasks; faltam as validações em celular real (T031, T053). Só tem acesso quem tem Participação concluída ancorada em Conclusão: formação declarada (019) não gera narrativa. Uso real bloqueado por <span class="st st-dp">DP-2101</span> (compartilhamento), <span class="st st-dp">DP-2102</span> (marca), <span class="st st-dp">DP-2103</span> (nome civil × social), <span class="st st-dp">DP-2105</span> (agregados reais e limiar), <span class="st st-dp">DP-2106</span> (imagens) e <span class="st st-dp">DP-2110</span> (frase de fecho e <code>#SouEgressoIfes</code>). Vídeo fica para a Feature 022 <span class="st st-plan">Planejado</span>.</dd>
+      <dt>Evidências</dt><dd><code>trajetoria/narrativa/</code>, <code>trajetoria/contexto_trajetoria/</code>, <code>trajetoria/fonte_academica/contexto_da_trajetoria.py</code>, <code>tests/narrativa/</code>, <code>tests/contexto_trajetoria/</code>; Feature 021; ADR 0006; auditorias de 2026-10-04 (narrativa e convergência visual).</dd>
+      <dt>Relação normativa</dt><dd>Nenhum dispositivo da PAEG exige devolutiva. Há relação interpretativa com o Art. 6º (valorizar a interação do egresso com o Instituto) e o Art. 8º, V (egresso como referência para a divulgação e valorização do Ifes no mundo do trabalho); a 021 não cita esses artigos. A relação com o Portal do Egresso é <span class="st st-dp">DP-2108</span>.</dd>
+    </dl>
+  </article>
+
   <!-- 12.13 -->
   <article class="capacidade" id="cap-indicadores">
     <h3>Indicadores da PAEG e relatórios <span class="st st-fora">Fora do escopo atual</span></h3>
@@ -864,10 +880,11 @@
   <ol class="fluxo" aria-label="Jornada do egresso">
     <li><div class="passo"><strong>Convite (opcional)</strong><span>Link neutro para <code>/acesso/</code>. Responder não depende de convite: o acesso espontâneo é sempre possível.</span></div></li>
     <li><div class="passo passo-marca"><strong>Acesso: CPF e data de nascimento</strong><span>Sem conta nem senha. Se confirmado, cria-se uma sessão que identifica só a Pessoa.</span></div></li>
-    <li><div class="passo passo-marca"><strong>"Sua trajetória no Ifes"</strong><span>Lista das formações (Conclusões) com a situação de cada uma. Com uma única pendente, a entrada é direta.</span></div></li>
+    <li><div class="passo passo-marca"><strong>"Suas formações no Ifes"</strong><span>Lista das formações (Conclusões) com a situação de cada uma. Com uma única pendente, a entrada é direta. Desde a 021: "Ao final, você poderá ver sua trajetória no Ifes."</span></div></li>
     <li><div class="passo passo-marca"><strong>Contexto da formação</strong><span>"Você está respondendo sobre: curso, unidade, nível · modalidade · forma de oferta, ano". O contexto identifica, mas não responde.</span></div></li>
     <li><div class="passo"><strong>Questionário, Seção a Seção</strong><span>Q1 (termos) → informações pessoais → curso (Q10–Q19 ainda perguntadas) → avaliação → trabalho → estudo → impactos. Salvar e continuar, salvar e sair, voltar.</span></div></li>
     <li><div class="passo"><strong>Conclusão</strong><span>Tela própria com aviso de que, depois de concluída, não poderá ser alterada. Confirmação: "Suas respostas sobre {curso} foram registradas."</span></div></li>
+    <li><div class="passo passo-marca"><strong>"Minha trajetória no Ifes" (021)</strong><span>Narrativa das formações registradas e card vertical em PNG para salvar ou compartilhar. O nome só entra por escolha.</span></div></li>
   </ol>
 
   <h4>Caminho alternativo: formação não localizada (019)</h4>
@@ -990,7 +1007,8 @@
       <tr><th scope="row">Art. 6º</th><td>Averiguar inserção no trabalho, efetividade da formação, verticalização, impactos socioeconômicos.</td><td>As perguntas do Formulário 2024 que cobrem esses temas (Q33–Q54) foram migradas sem alteração de significado. A estrutura longitudinal permite observar mudanças ao longo do tempo.</td><td>003, Matriz de Migração; Princípio I</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Art. 7º</th><td>Coletar, identificar e mapear dados de egressos para acompanhar vida profissional e acadêmica.</td><td>Pessoa + Conclusões (identificar), Campanha + Participação (coletar), recortes (mapear).</td><td>Features 001, 004–008, 011</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Somente demonstração</span></td></tr>
       <tr><th scope="row">Art. 8º, I</th><td>Banco de dados que auxilie no aprimoramento dos PPCs.</td><td>Dados por Conclusão com curso e unidade; recorte por curso no acompanhamento; snapshot e exportação com contexto institucional congelado.</td><td>Features 011, 012, 013</td><td><span class="st st-impl">Implementado</span> (sem interface para 012/013)</td></tr>
-      <tr><th scope="row">Art. 8º, II, III, V, VII</th><td>Eventos, parcerias externas, egresso como referência, docentes em contato.</td><td>Fora do domínio do NIAE (Princípio VI). Podem pertencer a outros sistemas ou ao Portal.</td><td>Constituição, "Fronteira do Domínio"</td><td><span class="st st-fora">Fora do escopo</span></td></tr>
+      <tr><th scope="row">Art. 8º, V</th><td>Tornar o egresso referência para a divulgação e valorização do Ifes no mundo do trabalho.</td><td>Relação interpretativa desta documentação, não citada pela spec: o card compartilhável da 021 permite ao egresso divulgar a própria trajetória no Ifes, só na demonstração. Ações de divulgação institucional continuam fora do NIAE.</td><td>Feature 021; DP-2101, DP-2110</td><td><span class="st st-parc">Parcial</span> (interpretação) <span class="st st-demo">Somente demonstração</span></td></tr>
+      <tr><th scope="row">Art. 8º, II, III, VII</th><td>Eventos, parcerias externas, docentes em contato.</td><td>Fora do domínio do NIAE (Princípio VI). Podem pertencer a outros sistemas ou ao Portal.</td><td>Constituição, "Fronteira do Domínio"</td><td><span class="st st-fora">Fora do escopo</span></td></tr>
       <tr><th scope="row">Art. 8º, IV</th><td>Implementar e manter canal de comunicação com egressos.</td><td>Convite por e-mail apenas simulado. Contatos reais, atualização voluntária e canais estão planejados para a 020. A relação com o Portal está pendente.</td><td>Feature 016; DP-1601 a 1608; roadmap 020</td><td><span class="st st-parc">Parcial</span> (simulado) · <span class="st st-plan">Planejado</span></td></tr>
       <tr><th scope="row">Art. 8º, VI</th><td>Criar indicadores de avaliação contínua da vida profissional e do uso dos conhecimentos.</td><td>O sistema não calcula indicadores de resultado: entrega dados (012, 013) para consumidor externo. Indicadores operacionais (011) não são estes.</td><td>Princípio XIX; 011 FR-003</td><td><span class="st st-fora">Fora do escopo</span> (cálculo)</td></tr>
       <tr><th scope="row">Art. 9º, I e II</th><td>No último período do curso, apresentar a PAEG aos formandos e ressaltar sua relevância.</td><td>Atividade presencial da unidade.</td><td>—</td><td><span class="st st-org">Organizacional</span></td></tr>
@@ -1332,6 +1350,7 @@
       <tr><th scope="row">Risco de reidentificação</th><td>011/DP-1101; 013/DP-1303</td><td>Recortes pequenos e respostas sensíveis (Q2, Q4–Q6) exportadas.</td><td>—</td><td>Não</td><td>Definir limiar de supressão e tratamento de sensíveis antes de qualquer compartilhamento.</td></tr>
       <tr><th scope="row">Relatórios da CPAEG e das CSAEG</th><td>Matriz: Art. 14, Art. 21, IV, Art. 22, V</td><td>Relatórios previstos na PAEG sem suporte; a CSAEG não recebe dados da unidade.</td><td>Art. 14; Art. 21, IV; Art. 22, V</td><td>Não</td><td>Primeiro decidir se o relatório é produzido fora (GeN) e o que a CSAEG pode receber (DP-1004).</td></tr>
       <tr><th scope="row">Comparabilidade entre Versões</th><td>002/DP-006; sem identificador global de Pergunta</td><td>Séries longas atravessando Versões exigem correspondência manual.</td><td>Art. 10, III</td><td>Não</td><td>Tratar só quando existir a segunda Versão real (YAGNI).</td></tr>
+      <tr><th scope="row">Devolutiva com dados reais</th><td>021: DP-2101 a DP-2106, DP-2110</td><td>A "Minha trajetória" depende de decisões sobre compartilhamento, marca, nome social, imagens e agregados reais.</td><td>—</td><td>Não</td><td>Decidir com ACS, CPAEG/Proex e encarregado de dados. O limiar mínimo para agregados (DP-2105) é o ponto de maior risco de exposição.</td></tr>
       <tr><th scope="row">Respostas históricas do Forms</th><td>Inventário, ponto 6; 001 Out of Scope</td><td>A série anterior fica fora do sistema.</td><td>—</td><td>Não</td><td>Se importadas, manter como legado analítico, sem fingir Participações identificadas.</td></tr>
       <tr><th scope="row">Validação da experiência com pessoas reais</th><td>014 FR-050; 015 (ACS, D-02, D-03); 018 e 019 sem leitor de tela</td><td>Acessibilidade e identidade visual não estão confirmadas fora do laboratório.</td><td>Princípios XX, XXI</td><td>Não</td><td>Rodada de validação com egressos e tecnologias assistivas antes de um piloto.</td></tr>
     </tbody>
@@ -1340,7 +1359,7 @@
 
   <h3>Baixa prioridade: documentação e acabamento</h3>
   <ul>
-    <li>Cabeçalhos "Status: Draft" em specs implementadas; contratos e data-models não atualizados após revisões. Ver <a href="#inconsistencias">Inconsistências</a>.</li>
+    <li>Manter as notas de revisão das specs em dia a cada Feature. As inconsistências documentais acumuladas até a 021 foram corrigidas em 2026-10-05; as que restam estão em <a href="#inconsistencias">Inconsistências</a>.</li>
     <li>Tokens visuais definidos e não usados; propagação da identidade visual ao editor e ao acompanhamento (015, R1).</li>
     <li>Rótulo inicial das escalas (DP-301), dependente de confirmação documental.</li>
     <li>Ausência de trilha de autoria em Campanha e editor (DP-1701, DP-903), a decidir quando houver operadores reais.</li>
@@ -1371,7 +1390,9 @@
       <tr><td>mostra ao egresso as respostas que deu, nem o notifica da validação</td><td>008/DP-802; 019/DP-1908</td><td><span class="st st-dp">Pendente</span></td></tr>
       <tr><td>registra estudantes ainda não egressos</td><td>Princípio II (possível no futuro, nunca como egressos); 001 Out of Scope</td><td><span class="st st-fora">Fora do escopo</span></td></tr>
       <tr><td>resolve conflitos de validação, nem reabre decisões, nem funde Pessoas entre fontes</td><td>019: DP-1905, DP-1907, DP-1909</td><td><span class="st st-dp">Pendente</span></td></tr>
-      <tr><td>usa microserviços, filas, cache distribuído ou JavaScript obrigatório</td><td>Princípios XXII, XXIV; ADR 0001; 008 FR-082</td><td><span class="st st-fora">Por princípio</span></td></tr>
+      <tr><td>usa microserviços, filas, cache distribuído ou JavaScript obrigatório</td><td>Princípios XXII, XXIV; ADR 0001; 008 FR-082. O único JavaScript é opcional, cerca de 20 linhas na página da 021 (botão "Compartilhar"; research R8)</td><td><span class="st st-fora">Por princípio</span></td></tr>
+      <tr><td>publica a trajetória do egresso, cria link público, integra-se a APIs de redes sociais ou gera vídeo</td><td>021 FR-039 e Out of Scope; vídeo previsto para a Feature 022</td><td><span class="st st-fora">Fora do escopo</span> · vídeo <span class="st st-plan">Planejado</span></td></tr>
+      <tr><td>usa respostas ou dados declarados na narrativa, nem calcula agregados a partir da base local</td><td>021 FR-013, FR-044, FR-054; a base local é parcial</td><td><span class="st st-fora">Por princípio</span></td></tr>
       <tr><td>opera com dados reais</td><td><code>ModoDemonstracaoMiddleware</code>; DPs de base legal e identificação</td><td><span class="st st-dp">Bloqueado</span></td></tr>
     </tbody>
   </table>
@@ -1392,10 +1413,10 @@
       <tr><td>Python</td><td>3.13</td><td><code>pyproject.toml</code></td></tr>
       <tr><td>Django</td><td>5.2 LTS, monólito modular. Sem <code>admin</code>, <code>auth</code> ou <code>staticfiles</code>; só <code>sessions</code> (018).</td><td><code>config/settings.py</code></td></tr>
       <tr><td>PostgreSQL</td><td>16+; integridade e unicidade no banco (CHECK, UNIQUE, <code>ArrayField</code>)</td><td>ADR 0001; <code>.github/workflows</code></td></tr>
-      <tr><td>Bibliotecas de execução</td><td><code>psycopg</code> 3, <code>cryptography</code> (Fernet, ADR 0005), <code>XlsxWriter</code> (013)</td><td><code>pyproject.toml</code>; <code>tests/dependencias.py</code></td></tr>
+      <tr><td>Bibliotecas de execução</td><td><code>psycopg</code> 3, <code>cryptography</code> (Fernet, ADR 0005), <code>XlsxWriter</code> (013), <code>resvg-py</code> (rasterização SVG → PNG do card, ADR 0006), com fontes Open Sans (SIL OFL 1.1) versionadas</td><td><code>pyproject.toml</code>; <code>tests/dependencias.py</code></td></tr>
       <tr><td>Ferramentas</td><td>uv (dependências e lock), ruff (lint), pytest + pytest-django; openpyxl só nos testes</td><td><code>pyproject.toml</code>, <code>uv.lock</code></td></tr>
       <tr><td>Integração contínua</td><td>GitHub Actions com <code>postgres:16</code>: <code>ruff check</code>, <code>manage.py check</code>, <code>makemigrations --check</code>, <code>migrate</code>, <code>pytest</code></td><td><code>.github/workflows/</code></td></tr>
-      <tr><td>Interface</td><td>HTML renderizado no servidor, CSS inline, <strong>sem JavaScript</strong> e sem recursos de terceiros (008 FR-082)</td><td><code>trajetoria/interface/templates/</code></td></tr>
+      <tr><td>Interface</td><td>HTML renderizado no servidor, CSS inline, sem recursos de terceiros (008 FR-082). <strong>Sem JavaScript</strong>, exceto um trecho opcional na página "Minha trajetória" (021 R8)</td><td><code>trajetoria/interface/templates/</code></td></tr>
     </tbody>
   </table>
   </div>
@@ -1403,52 +1424,42 @@
   <h3>Componentes</h3>
   <figure class="diagrama largo">
     <div class="diagrama-moldura">
-    <svg viewBox="0 0 900 470" role="img" aria-labelledby="dc-t dc-d">
+    <svg viewBox="0 0 1000 470" role="img" aria-labelledby="dc-t dc-d">
       <title id="dc-t">Diagrama de componentes do Trajetória Ifes</title>
-      <desc id="dc-d">Quatro camadas. No topo, o portão do modo de demonstração protege as interfaces: interface, acesso, declaracao, editor, acompanhamento e comunicacao, além do adaptador demonstracao. Abaixo, o domínio: academico, instrumento, campanha, participacao, governanca, declaracao e analitico, com escrita apenas por operacoes. Abaixo, fronteiras e pacotes: fonte_academica com o contrato e as fontes simulada e de acervo, formulario_2024 e exportacao. Na base, a infraestrutura: PostgreSQL, sessões do Django, cache local por processo e Mailpit local.</desc>
-      <defs>
-        <marker id="ponta2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ponta" d="M0,0 L10,5 L0,10 z"/></marker>
-      </defs>
-      <!-- Portão -->
-      <rect class="caixa-dp" x="10" y="10" width="880" height="34" rx="4"/>
+      <desc id="dc-d">Quatro camadas. No topo, o portão do modo de demonstração protege as interfaces: interface, acesso, narrativa, editor, acompanhamento e comunicacao, além do adaptador demonstracao. Abaixo, o domínio: academico, instrumento, campanha, participacao, governanca, declaracao, analitico e contexto_trajetoria, com escrita apenas por operações próprias. Abaixo, fronteiras e pacotes: fonte_academica com os contratos da fonte acadêmica e do contexto da trajetória, formulario_2024 e exportacao. Na base, a infraestrutura.</desc>
+      <defs><marker id="ponta2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ponta" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+      <rect class="caixa-dp" x="10" y="10" width="980" height="34" rx="4"/>
       <text class="t-forte" x="24" y="32">ModoDemonstracaoMiddleware — sem TRAJETORIA_DEMONSTRACAO=1, toda requisição responde 404</text>
-
-      <!-- Interfaces -->
-      <rect class="moldura" x="10" y="56" width="880" height="96" rx="6"/>
+      <rect class="moldura" x="10" y="56" width="980" height="96" rx="6"/>
       <text class="t-titulo" x="24" y="76">INTERFACES (sem modelos, exceto acesso)</text>
       <rect class="caixa" x="24" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="34" y="110">interface</text><text class="t-pequeno" x="34" y="127">jornada (008/014)</text>
-      <rect class="caixa" x="164" y="88" width="120" height="50" rx="4"/><text class="t-forte" x="174" y="110">acesso</text><text class="t-pequeno" x="174" y="127">CPF+nasc. (018)</text>
-      <rect class="caixa" x="294" y="88" width="120" height="50" rx="4"/><text class="t-forte" x="304" y="110">editor</text><text class="t-pequeno" x="304" y="127">instrumento (009)</text>
-      <rect class="caixa" x="424" y="88" width="160" height="50" rx="4"/><text class="t-forte" x="434" y="110">acompanhamento</text><text class="t-pequeno" x="434" y="127">coleta + gestão (011/017)</text>
-      <rect class="caixa" x="594" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="604" y="110">comunicacao</text><text class="t-pequeno" x="604" y="127">simulada (016)</text>
-      <rect class="caixa-evo" x="734" y="88" width="142" height="50" rx="4"/><text class="t-forte" x="744" y="110">demonstracao</text><text class="t-pequeno" x="744" y="127">adaptador temporário</text>
-
-      <!-- Domínio -->
-      <rect class="moldura" x="10" y="172" width="880" height="110" rx="6"/>
-      <text class="t-titulo" x="24" y="192">DOMÍNIO (escrita só por operacoes.py; FKs novas com related_name="+")</text>
-      <rect class="caixa-marca" x="24" y="206" width="112" height="60" rx="4"/><text class="t-forte" x="34" y="230">academico</text><text class="t-pequeno" x="34" y="248">Pessoa, Conclusão</text>
-      <rect class="caixa-marca" x="146" y="206" width="112" height="60" rx="4"/><text class="t-forte" x="156" y="230">instrumento</text><text class="t-pequeno" x="156" y="248">Pesquisa…Opção</text>
-      <rect class="caixa-marca" x="268" y="206" width="112" height="60" rx="4"/><text class="t-forte" x="278" y="230">campanha</text><text class="t-pequeno" x="278" y="248">Campanha</text>
-      <rect class="caixa-marca" x="390" y="206" width="122" height="60" rx="4"/><text class="t-forte" x="400" y="230">participacao</text><text class="t-pequeno" x="400" y="248">Particip., Resposta</text>
-      <rect class="caixa-marca" x="522" y="206" width="112" height="60" rx="4"/><text class="t-forte" x="532" y="230">governanca</text><text class="t-pequeno" x="532" y="248">Vínculo</text>
-      <rect class="caixa-marca" x="644" y="206" width="112" height="60" rx="4"/><text class="t-forte" x="654" y="230">declaracao</text><text class="t-pequeno" x="654" y="248">Formação decl.</text>
-      <rect class="caixa-marca" x="766" y="206" width="110" height="60" rx="4"/><text class="t-forte" x="776" y="230">analitico</text><text class="t-pequeno" x="776" y="248">Snapshot</text>
-
-      <!-- Fronteiras -->
-      <rect class="moldura" x="10" y="302" width="880" height="86" rx="6"/>
+      <rect class="caixa" x="162" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="172" y="110">acesso</text><text class="t-pequeno" x="172" y="127">CPF+nasc. (018)</text>
+      <rect class="caixa" x="300" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="310" y="110">narrativa</text><text class="t-pequeno" x="310" y="127">trajetória (021)</text>
+      <rect class="caixa" x="438" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="448" y="110">editor</text><text class="t-pequeno" x="448" y="127">instrumento (009)</text>
+      <rect class="caixa" x="576" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="586" y="110">acompanha-</text><text class="t-pequeno" x="586" y="127">mento (011/017)</text>
+      <rect class="caixa" x="714" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="724" y="110">comunicacao</text><text class="t-pequeno" x="724" y="127">simulada (016)</text>
+      <rect class="caixa-evo" x="852" y="88" width="130" height="50" rx="4"/><text class="t-forte" x="862" y="110">demonstracao</text><text class="t-pequeno" x="862" y="127">adaptador temp.</text>
+      <rect class="moldura" x="10" y="172" width="980" height="110" rx="6"/>
+      <text class="t-titulo" x="24" y="192">DOMÍNIO (escrita só por operações próprias; FKs novas com related_name="+")</text>
+      <rect class="caixa-marca" x="24" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="34" y="228">academico</text><text class="t-pequeno" x="34" y="245">Pessoa, Conclusão</text>
+      <rect class="caixa-marca" x="145" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="155" y="228">instrumento</text><text class="t-pequeno" x="155" y="245">Pesquisa…Opção</text>
+      <rect class="caixa-marca" x="266" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="276" y="228">campanha</text><text class="t-pequeno" x="276" y="245">Campanha</text>
+      <rect class="caixa-marca" x="387" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="397" y="228">participacao</text><text class="t-pequeno" x="397" y="245">Partic., Resposta</text>
+      <rect class="caixa-marca" x="508" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="518" y="228">governanca</text><text class="t-pequeno" x="518" y="245">Vínculo</text>
+      <rect class="caixa-marca" x="629" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="639" y="228">declaracao</text><text class="t-pequeno" x="639" y="245">Formação decl.</text>
+      <rect class="caixa-marca" x="750" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="760" y="228">analitico</text><text class="t-pequeno" x="760" y="245">Snapshot</text>
+      <rect class="caixa-marca" x="871" y="206" width="113" height="60" rx="4"/><text class="t-forte" x="881" y="228">contexto_</text><text class="t-pequeno" x="881" y="245">trajetoria (021)</text>
+      <rect class="moldura" x="10" y="302" width="980" height="86" rx="6"/>
       <text class="t-titulo" x="24" y="322">FRONTEIRAS E PACOTES (Python puro ou sem app)</text>
-      <rect class="caixa-info" x="24" y="332" width="300" height="44" rx="4"/><text class="t-forte" x="34" y="350">fonte_academica</text><text class="t-pequeno" x="34" y="367">contrato FonteAcademica · simulada · acervo</text>
-      <rect class="caixa-info" x="336" y="332" width="250" height="44" rx="4"/><text class="t-forte" x="346" y="350">formulario_2024</text><text class="t-pequeno" x="346" y="367">declaração da baseline (003)</text>
-      <rect class="caixa-info" x="598" y="332" width="278" height="44" rx="4"/><text class="t-forte" x="608" y="350">exportacao</text><text class="t-pequeno" x="608" y="367">contrato de dados v2 · CSV/XLSX (013)</text>
-
-      <!-- Infra -->
-      <rect class="caixa-cinza" x="10" y="406" width="880" height="50" rx="4"/>
+      <rect class="caixa-info" x="24" y="332" width="380" height="44" rx="4"/><text class="t-forte" x="34" y="354">fonte_academica</text><text class="t-pequeno" x="34" y="371">contratos acadêmico e de contexto · simulada · acervo</text>
+      <rect class="caixa-info" x="416" y="332" width="250" height="44" rx="4"/><text class="t-forte" x="426" y="354">formulario_2024</text><text class="t-pequeno" x="426" y="371">declaração da baseline (003)</text>
+      <rect class="caixa-info" x="678" y="332" width="298" height="44" rx="4"/><text class="t-forte" x="688" y="354">exportacao</text><text class="t-pequeno" x="688" y="371">contrato de dados v2 · CSV/XLSX (013)</text>
+      <rect class="caixa-cinza" x="10" y="406" width="980" height="50" rx="4"/>
       <text class="t-forte" x="24" y="428">Infraestrutura</text>
-      <text class="t-pequeno" x="24" y="446">PostgreSQL 16+ · sessões em banco (018) · cache local por processo (018) · Mailpit local (016) · chaves no ambiente</text>
-
-      <line class="seta" x1="450" y1="152" x2="450" y2="170" marker-end="url(#ponta2)"/>
-      <line class="seta" x1="450" y1="282" x2="450" y2="300" marker-end="url(#ponta2)"/>
-    </svg>
+      <text class="t-pequeno" x="24" y="446">PostgreSQL 16+ · sessões em banco (018) · cache local por processo (018) · Mailpit local (016) · resvg-py e fontes Open Sans (021) · chaves no ambiente</text>
+      <line class="seta" x1="500" y1="152" x2="500" y2="170" marker-end="url(#ponta2)"/>
+      <line class="seta" x1="500" y1="282" x2="500" y2="300" marker-end="url(#ponta2)"/>
+      </svg>
     </div>
     <figcaption>As dependências vão de cima para baixo e, no domínio, das Features novas para as antigas. Nenhum app de domínio importa interfaces.</figcaption>
   </figure>
@@ -1456,6 +1467,7 @@
   <h3>Por que essas fronteiras existem</h3>
   <ul>
     <li><strong>Fonte acadêmica como contrato puro.</strong> <code>fonte_academica/contrato.py</code> não importa Django nem nenhuma fonte concreta. A fonte simulada, a de acervo histórico e uma segunda fonte que só existe nos testes cumprem o mesmo contrato, o que <em>prova</em> que trocar a fonte não exige mudar o núcleo (Princípio V; 001 R13). Peculiaridades do Q-Acadêmico ficarão no adaptador.</li>
+    <li><strong>Contexto da trajetória como fronteira à parte.</strong> Ingresso e agregados da 021 entram por um contrato próprio (<code>fonte_academica/contexto_da_trajetoria.py</code>), carregado separadamente. O contrato da fonte acadêmica, <code>CAMPOS_DE_CONTEXTO</code>, o snapshot e a exportação não mudam. Um adaptador real pode ler uma única visão da fonte e alimentar os dois contratos (021 FR-071; nota na 001).</li>
     <li><strong>Escrita só por <code>operacoes.py</code>.</strong> Regras que dependem de outra linha ou do tempo, como imutabilidade da Versão publicada, coleta aberta ou Participação concluída, ficam num único caminho de escrita testado, e não em gatilhos (ADR 0002).</li>
     <li><strong>Dependência de mão única.</strong> As FKs de modelos novos para antigos usam <code>related_name="+"</code>: a Versão não "conhece" a Campanha, e a Conclusão não "conhece" a Participação. Cada Feature acrescenta sem modificar as anteriores.</li>
     <li><strong>Derivar em vez de armazenar.</strong> O estado da Campanha, o percurso da jornada, a situação das formações, os indicadores e a situação analítica são calculados na consulta. Só se persiste o que precisa ser congelado (<code>concluida_em</code>, snapshot). Isso evita jobs e estados divergentes (004 R5; 006; 011 R1).</li>
@@ -1468,7 +1480,7 @@
   <p>Os testes protegem invariantes (Princípio XXVI): Pessoa × Conclusão, múltiplas participações, imutabilidade, percursos (os 17 da baseline), elegibilidade, autorização em todas as rotas, concorrência (threads), fidelidade da migração contra expectativa independente, privacidade (teste de AST que impede o acompanhamento de ler Pessoa ou Resposta), formatos de exportação e acessibilidade por HTTP.</p>
   <div class="camada camada-sw">
     <span class="nome-camada">Software · execução nesta análise</span>
-    <p>Em 2026-10-04, com banco PostgreSQL isolado: <strong>2.226 testes passaram, 3 foram ignorados (casos de contrato não aplicáveis à fonte de acervo) e 1 ficou fora da seleção (teste de volume, marcador <code>volume</code>)</strong>. Uma execução anterior, com o banco de testes padrão compartilhado com outra sessão, falhou por "database is being accessed by other users". A causa é ambiental, não defeito de código.</p>
+    <p>Em 2026-10-05, sobre a <code>main</code> com a Feature 021 e as correções documentais, com banco PostgreSQL isolado: <strong>2.563 testes passaram, 3 foram ignorados (casos de contrato não aplicáveis à fonte de acervo) e 2 ficaram fora da seleção (testes de volume, marcador <code>volume</code>)</strong>. Em 2026-10-04, antes da 021, eram 2.226. Uma execução anterior, com o banco de testes padrão compartilhado com outra sessão, falhou por "database is being accessed by other users". A causa é ambiental, não defeito de código.</p>
   </div>
 </section>
 
@@ -1476,31 +1488,32 @@
 <section class="doc" id="features" aria-labelledby="h-feat">
   <span class="rotulo-secao">22 · Histórico</span>
   <h2 id="h-feat">Evolução por Features</h2>
-  <p>Nomes exatos dos títulos das specs. Todas as tasks estão marcadas como concluídas. A coluna "Cabeçalho da spec" mostra o status declarado no próprio arquivo, que em vários casos está desatualizado.</p>
+  <p>Nomes exatos dos títulos das specs. A coluna "Cabeçalho da spec" mostra o status declarado no próprio arquivo, atualizado em 2026-10-05 com o PR de integração de cada Feature.</p>
 
   <div class="tabela tabela-muito-larga" role="region" aria-label="Features" tabindex="0">
   <table>
     <thead><tr><th scope="col">Nº</th><th scope="col">Nome</th><th scope="col">Capacidade entregue</th><th scope="col">Tasks</th><th scope="col">Situação</th><th scope="col">Cabeçalho da spec</th></tr></thead>
     <tbody>
-      <tr><td>001</td><td><a href="../../specs/001-nucleo-academico-fonte-simulada/spec.md">Núcleo acadêmico longitudinal e fonte institucional simulada</a></td><td>Pessoa, Conclusão Acadêmica, contrato da fonte, fonte simulada, incorporação idempotente</td><td>34/34</td><td><span class="st st-impl">Implementado</span></td><td>Approved</td></tr>
-      <tr><td>002</td><td><a href="../../specs/002-pesquisa-versao-instrumento/spec.md">Pesquisa, versão e estrutura do instrumento</a></td><td>Pesquisa, Versão (imutável quando publicada), Seção, Pergunta, Opção, regras</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>003</td><td><a href="../../specs/003-migracao-semantica-instrumento/spec.md">Migração semântica do instrumento institucional vigente</a></td><td>Formulário 2024 como baseline em rascunho; Matriz de Migração Q1–Q54</td><td>31/31</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>004</td><td><a href="../../specs/004-campanhas-populacao-elegivel/spec.md">Campanhas e população elegível</a></td><td>Campanha, abrangência, estados, abertura e encerramento</td><td>37/37</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>005</td><td><a href="../../specs/005-participacao-respostas-rascunho/spec.md">Participação em Campanha e respostas em rascunho</a></td><td>Participação, Resposta, validação por tipo</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>006</td><td><a href="../../specs/006-jornada-conclusao-participacao/spec.md">Jornada de resposta e conclusão da Participação</a></td><td>Percurso condicional, pendências, conclusão imutável</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>007</td><td><a href="../../specs/007-contextualizacao-formacao-entrada/spec.md">Contextualização da formação e entrada na pesquisa</a></td><td>Situação de cada formação; entrar pela formação</td><td>26/26</td><td><span class="st st-impl">Implementado</span></td><td>Draft</td></tr>
-      <tr><td>008</td><td><a href="../../specs/008-interface-navegavel-pesquisa/spec.md">Interface navegável mínima da pesquisa</a></td><td>Primeira interface; modo de demonstração</td><td>47/47</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Draft</td></tr>
-      <tr><td>009</td><td><a href="../../specs/009-editor-pesquisa-versao/spec.md">Editor institucional de Pesquisa e Versão</a></td><td>Edição de rascunhos, diagnóstico, pré-visualização</td><td>69/69</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Draft</td></tr>
+      <tr><td>001</td><td><a href="../../specs/001-nucleo-academico-fonte-simulada/spec.md">Núcleo acadêmico longitudinal e fonte institucional simulada</a></td><td>Pessoa, Conclusão Acadêmica, contrato da fonte, fonte simulada, incorporação idempotente</td><td>34/34</td><td><span class="st st-impl">Implementado</span></td><td>Approved (PR #2)</td></tr>
+      <tr><td>002</td><td><a href="../../specs/002-pesquisa-versao-instrumento/spec.md">Pesquisa, versão e estrutura do instrumento</a></td><td>Pesquisa, Versão (imutável quando publicada), Seção, Pergunta, Opção, regras</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #3)</td></tr>
+      <tr><td>003</td><td><a href="../../specs/003-migracao-semantica-instrumento/spec.md">Migração semântica do instrumento institucional vigente</a></td><td>Formulário 2024 como baseline em rascunho; Matriz de Migração Q1–Q54</td><td>31/31</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #4)</td></tr>
+      <tr><td>004</td><td><a href="../../specs/004-campanhas-populacao-elegivel/spec.md">Campanhas e população elegível</a></td><td>Campanha, abrangência, estados, abertura e encerramento</td><td>37/37</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #5)</td></tr>
+      <tr><td>005</td><td><a href="../../specs/005-participacao-respostas-rascunho/spec.md">Participação em Campanha e respostas em rascunho</a></td><td>Participação, Resposta, validação por tipo</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #7)</td></tr>
+      <tr><td>006</td><td><a href="../../specs/006-jornada-conclusao-participacao/spec.md">Jornada de resposta e conclusão da Participação</a></td><td>Percurso condicional, pendências, conclusão imutável</td><td>38/38</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #8)</td></tr>
+      <tr><td>007</td><td><a href="../../specs/007-contextualizacao-formacao-entrada/spec.md">Contextualização da formação e entrada na pesquisa</a></td><td>Situação de cada formação; entrar pela formação</td><td>26/26</td><td><span class="st st-impl">Implementado</span></td><td>Implementada (PR #9)</td></tr>
+      <tr><td>008</td><td><a href="../../specs/008-interface-navegavel-pesquisa/spec.md">Interface navegável mínima da pesquisa</a></td><td>Primeira interface; modo de demonstração</td><td>47/47</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada (PR #10)</td></tr>
+      <tr><td>009</td><td><a href="../../specs/009-editor-pesquisa-versao/spec.md">Editor institucional de Pesquisa e Versão</a></td><td>Edição de rascunhos, diagnóstico, pré-visualização</td><td>69/69</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada (PR #14)</td></tr>
       <tr><td>010</td><td><a href="../../specs/010-governanca-papeis-escopos/spec.md">Governança, papéis e escopos institucionais</a></td><td>Vínculos CPAEG/CSAEG, capacidades, operadores fictícios</td><td>48/48</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Approved</td></tr>
       <tr><td>011</td><td><a href="../../specs/011-acompanhamento-operacional-coleta/spec.md">Acompanhamento operacional da coleta</a></td><td>Indicadores agregados e recortes por escopo</td><td>58/58</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Approved</td></tr>
       <tr><td>012</td><td><a href="../../specs/012-dataset-analitico-reprodutivel/spec.md">Dataset analítico institucional reprodutível</a></td><td>Snapshot imutável de Campanha encerrada</td><td>42/42</td><td><span class="st st-impl">Implementado</span> (sem interface)</td><td>Approved</td></tr>
-      <tr><td>013</td><td><a href="../../specs/013-exportacoes-analiticas-gen/spec.md">Exportações analíticas e contrato de dados para o GeN</a></td><td>CSV/XLSX pseudonimizado com dicionário e metadados</td><td>44/44</td><td><span class="st st-impl">Implementado</span> (sem interface)</td><td>Draft</td></tr>
-      <tr><td>014</td><td><a href="../../specs/014-polish-jornada-egresso/spec.md">Polish consolidado da jornada do egresso</a></td><td>Salvar e sair, pendência × erro, alvos de toque, trajetória compacta</td><td>64/64</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Draft</td></tr>
-      <tr><td>015</td><td><a href="../../specs/015-identidade-visual-jornada/spec.md">Foundations e validação da identidade visual da jornada do egresso</a></td><td>Tokens, shell institucional, assinatura</td><td>46/46</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span>; validação institucional pendente</td><td>Draft</td></tr>
+      <tr><td>013</td><td><a href="../../specs/013-exportacoes-analiticas-gen/spec.md">Exportações analíticas e contrato de dados para o GeN</a></td><td>CSV/XLSX pseudonimizado com dicionário e metadados</td><td>44/44</td><td><span class="st st-impl">Implementado</span> (sem interface)</td><td>Implementada (PR #18)</td></tr>
+      <tr><td>014</td><td><a href="../../specs/014-polish-jornada-egresso/spec.md">Polish consolidado da jornada do egresso</a></td><td>Salvar e sair, pendência × erro, alvos de toque, trajetória compacta</td><td>64/64</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada (PR #21)</td></tr>
+      <tr><td>015</td><td><a href="../../specs/015-identidade-visual-jornada/spec.md">Foundations e validação da identidade visual da jornada do egresso</a></td><td>Tokens, shell institucional, assinatura</td><td>46/46</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span>; validação institucional pendente</td><td>Implementada (PR #24)</td></tr>
       <tr><td>016</td><td><a href="../../specs/016-mobilizacao-comunicacao-simulada/spec.md">Mobilização e comunicação simulada da pesquisa</a></td><td>Convite por e-mail simulado</td><td>50/50</td><td><span class="st st-parc">Parcial</span> (simulado)</td><td>Conceito aprovado; validado localmente</td></tr>
       <tr><td>017</td><td><a href="../../specs/017-gestao-minima-campanha/spec.md">Gestão mínima de Campanha</a></td><td>Criar, editar, abrir e encerrar pela CPAEG</td><td>43/43</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada e validada</td></tr>
-      <tr><td>018</td><td><a href="../../specs/018-identificacao-acesso-egresso/spec.md">Identificação e acesso do egresso por dados acadêmicos</a></td><td>CPF + nascimento com HMAC; sessão; limitação</td><td>50/50</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Draft ("aguarda revisão")</td></tr>
+      <tr><td>018</td><td><a href="../../specs/018-identificacao-acesso-egresso/spec.md">Identificação e acesso do egresso por dados acadêmicos</a></td><td>CPF + nascimento com HMAC; sessão; limitação</td><td>50/50</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada (PR #28)</td></tr>
       <tr><td>019</td><td><a href="../../specs/019-formacao-declarada-validacao/spec.md">Formação não localizada e validação posterior</a></td><td>Formação declarada, quarentena, validação, acervo; Constituição 2.0.0</td><td>69/69</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span></td><td>Implementada e validada</td></tr>
+      <tr><td>021</td><td><a href="../../specs/021-minha-trajetoria-narrativa/spec.md">Minha Trajetória — narrativa visual personalizada</a></td><td>Devolutiva ao egresso: narrativa das formações, card 9:16 em PNG, ingresso e agregados simulados</td><td>63/65</td><td><span class="st st-impl">Implementado</span> <span class="st st-demo">Demo</span>; validação em celular real pendente</td><td>P1 e P2 implementadas (PR #30)</td></tr>
       <tr><td>020</td><td><a href="../../docs/roadmap/020-mobilizacao-real-lotes.md">Mobilização real + Lotes</a> <em>(nota de roadmap)</em></td><td>Contatos institucionais e declarados, Lotes de mobilização</td><td>—</td><td><span class="st st-plan">Planejado</span></td><td>"Não é spec"</td></tr>
     </tbody>
   </table>
@@ -1517,7 +1530,8 @@
     <li><div class="passo"><strong>Experiência</strong><span>014–015: auditorias de UX, mobile e identidade aplicadas.</span></div></li>
     <li><div class="passo"><strong>Operação da rodada</strong><span>016–018: comunicação simulada, gestão de Campanha e acesso do egresso.</span></div></li>
     <li><div class="passo"><strong>Inclusão de quem não é localizado</strong><span>019: formação declarada e validação (emenda constitucional 2.0.0).</span></div></li>
-    <li><div class="passo passo-evo"><strong>Mobilização real</strong><span>020: planejada.</span></div></li>
+    <li><div class="passo"><strong>Devolutiva ao egresso</strong><span>021: "Minha trajetória no Ifes", narrativa e card compartilhável.</span></div></li>
+    <li><div class="passo passo-evo"><strong>Mobilização real e vídeo</strong><span>020 (nota de roadmap) e 022 (vídeo, citado como fora do escopo da 021): planejadas.</span></div></li>
   </ol>
 </section>
 
@@ -1528,9 +1542,12 @@
   <dl class="glossario">
     <div><dt id="g-abrangencia">Abrangência (da Campanha)</dt><dd><p>As formações às quais uma Versão se aplica numa Campanha. Sem critério, todas.</p><p class="tecnico">Técnico: critérios opcionais <code>ano_minimo</code>, <code>ano_maximo</code>, <code>unidades</code>, <code>niveis</code>, <code>modalidades</code>, <code>formas_oferta</code>.</p><p class="relacao">Relação: no código, "elegível" significa "na abrangência" (ADR 0004). Não é a definição de egresso nem foco de mobilização.</p></dd></div>
     <div><dt>Acervo histórico / Referência de Acervo</dt><dd><p>Registro em livro ou papel de uma formação que não está na base digital, referenciado pelo operador ("Livro 3, folha 12") com unidade, nível, curso e ano.</p><p class="relacao">Relação: entra como fonte acadêmica própria (<code>acervo_historico</code>) e gera Pessoa e Conclusão pela incorporação (019).</p></dd></div>
+    <div><dt>Agregado institucional (contexto agregado)</dt><dd><p>Contagem institucional de conclusões num recorte (curso na unidade no ano, ou unidade no ano), obtida da fonte e nunca calculada pela base local. Inclui a conclusão do egresso e não tem denominador.</p><p class="tecnico">Técnico: <code>contexto_trajetoria.ContextoInstitucionalAgregado</code> (021). Exibido só com exatamente uma apuração; sem limiar mínimo definido (DP-2105).</p></dd></div>
     <div><dt>Baseline</dt><dd><p>A Versão "Formulário Egresso Ifes 2024 — referência migrada", em rascunho, com as 54 perguntas fiéis ao original.</p><p class="relacao">Relação: a demonstração usa uma cópia publicada dela. O estatuto da baseline é 009/DP-902.</p></dd></div>
     <div><dt>Campanha</dt><dd><p>Aplicação de uma Versão a uma população, período ou contexto. "Pesquisa e Campanha NÃO são sinônimos."</p><p class="tecnico">Técnico: estado derivado (em preparação, em coleta, encerrada); imutável depois da primeira abertura.</p><p class="origem">Origem normativa: execução do questionário com periodicidade definida pela Proex e Proen (PAEG Art. 10, II).</p></dd></div>
     <div><dt>Capacidade</dt><dd><p>Algo que um operador pode fazer no sistema, decidido por uma regra nomeada a partir dos seus vínculos (por exemplo, <code>pode_elaborar_instrumento</code>).</p></dd></div>
+    <div><dt>Card (da trajetória)</dt><dd><p>Imagem vertical 9:16 (1080 × 1920) em PNG, gerada a partir de um SVG reprodutível, com o subconjunto compartilhável da narrativa. Sem respostas, dados sensíveis nem elementos de documento oficial; o nome só entra por escolha (021).</p></dd></div>
+    <div><dt>Complemento da Conclusão (ingresso)</dt><dd><p>Ano e, quando houver, data de ingresso da matrícula que resultou numa Conclusão. Dado institucional opcional, fora do contexto mínimo da Conclusão.</p><p class="tecnico">Técnico: <code>contexto_trajetoria.ComplementoDaConclusao</code> (021); hoje só simulado (DP-2104).</p></dd></div>
     <div><dt>Conclusão Acadêmica</dt><dd><p>Fato institucional: uma Pessoa concluiu uma formação, num contexto acadêmico e temporal. É a unidade de acompanhamento.</p><p class="tecnico">Técnico: <code>academico.ConclusaoAcademica</code> (curso, unidade, nível, modalidade, forma de oferta, ano, data, fonte, id externo).</p><p class="origem">Origem normativa: corresponde ao egresso da PAEG, Art. 3º, quando a fonte a reconhece como concluída.</p></dd></div>
     <div><dt>Constituição (do projeto)</dt><dd><p>Documento que rege o desenvolvimento do software, com 29 princípios e convenções DEVE/NÃO DEVE. Não se sobrepõe às normas do Ifes.</p><p class="tecnico">Técnico: <code>.specify/memory/constitution.md</code>, v2.0.0.</p></dd></div>
     <div><dt>Contexto da formação</dt><dd><p>O que a tela mostra sobre a formação a que a pesquisa se refere ("Você está respondendo sobre: …"). "Identifica; não responde."</p></dd></div>
@@ -1550,6 +1567,7 @@
     <div><dt>Material de verificação</dt><dd><p>HMACs do CPF e do par CPF + data de nascimento, importados da fonte e usados para conferir o acesso. Os valores em claro são descartados.</p><p class="tecnico">Técnico: <code>acesso.MaterialDeVerificacao</code> (018).</p></dd></div>
     <div><dt>Matriz de Migração</dt><dd><p>Artefato de documentação da Feature 003 que liga cada pergunta e elemento do formulário original à baseline, com categoria (MANTER, MANTER_COM_OBSERVAÇÃO, CORREÇÃO_EDITORIAL_EXPLÍCITA, CANDIDATA_A_CONTEXTO_INSTITUCIONAL…) e justificativa.</p></dd></div>
     <div><dt>Modo de demonstração</dt><dd><p>Configuração local (<code>TRAJETORIA_DEMONSTRACAO=1</code>) que habilita as telas com dados fictícios. Desligado, toda requisição é 404.</p></dd></div>
+    <div><dt>Narrativa ("Minha trajetória no Ifes")</dt><dd><p>Devolutiva ao egresso montada de forma determinística a partir das suas Conclusões, com um catálogo fechado de frases. Cada elemento indica a origem (institucional, derivado ou agregado). Não é persistida.</p><p class="tecnico">Técnico: <code>trajetoria/narrativa/</code>, contrato serializável v1 (021).</p></dd></div>
     <div><dt>NIAE</dt><dd><p>Núcleo Institucional de Acompanhamento de Egressos: designação funcional do núcleo tecnológico e de domínio que o Trajetória Ifes implementa. Não é unidade administrativa.</p></dd></div>
     <div><dt>Opção</dt><dd><p>Alternativa de uma pergunta de escolha. Pode admitir complemento textual ("Outro: …") e carregar a regra condicional.</p></dd></div>
     <div><dt>PAEG</dt><dd><p>Política de Acompanhamento de Egressos do Ifes, aprovada pela Resolução CS nº 177/2023.</p></dd></div>
@@ -1583,46 +1601,58 @@
 <section class="doc" id="inconsistencias" aria-labelledby="h-inc">
   <span class="rotulo-secao">24 · Referência</span>
   <h2 id="h-inc">Inconsistências encontradas</h2>
-  <p>Diferenças entre código, specs, contratos e documentos de referência, identificadas nesta análise. Nenhuma foi corrigida: esta tarefa não altera specs nem código.</p>
+  <p>A primeira versão desta documentação (2026-10-04) listou diferenças entre código, specs, contratos e documentos de referência. Em 2026-10-05, as que eram documentais foram <strong>corrigidas nas próprias specs</strong>, sempre por nota de revisão datada que preserva o texto original e aponta a fonte de verdade no código. Nenhum comportamento mudou. Também foram corrigidas inconsistências semelhantes encontradas na Feature 021. As que dependem de decisão, de informação externa ou de documento oficial permanecem abertas.</p>
 
-  <h3>Entre specs e código</h3>
-  <ul>
-    <li><strong>Status desatualizado nos cabeçalhos:</strong> 002–009, 013, 014 e 015 dizem "Draft", e a 018 diz "Aguarda revisão do solicitante antes de <code>/speckit-plan</code>", embora todas estejam implementadas e integradas.</li>
-    <li><strong>Contratos e data-models não reescritos depois de revisões posteriores</strong> (as revisões entraram como notas nas specs):
-      <ul>
-        <li>001 <code>contracts/fonte-academica.md</code> não tem <code>cpf</code> e <code>data_nascimento</code>, acrescentados pela 018;</li>
-        <li>005 <code>data-model.md</code> mostra <code>conclusao</code> obrigatória e não tem <code>concluida_em</code> nem <code>formacao_declarada</code>;</li>
-        <li>008 <code>contracts/rotas.md</code> e <code>demonstracao.md</code> ainda descrevem o cookie e o seletor de Pessoa, substituídos pela 018;</li>
-        <li>012 <code>data-model.md</code> diz que o registro não referencia Participação; a 019 acrescentou <code>participacao</code> e <code>origem_formacao</code>;</li>
-        <li>013 <code>contracts/pacote-de-dados.md</code> e <code>data-model.md</code> dizem contrato v1 com 14 colunas; o código tem v2 com 15;</li>
-        <li>016 FR-021, <code>contracts/configuracao-seguranca.md</code> e research R5 citam <code>/demonstracao/</code>; o código usa <code>/acesso/</code>;</li>
-        <li>015 <code>contracts/shell.md</code> descreve controles da faixa de demonstração que a 018 trocou;</li>
-        <li>011 research R14 e tasks descrevem uma Campanha de demonstração restrita a Serra e Vitória; depois da ADR 0004 ela não tem critério.</li>
-      </ul>
-    </li>
-    <li><strong>Requisitos de "não expor" superados sem nota:</strong> 005 FR-058, 006 FR-054 e 007 FR-049 foram reinterpretados pela 008 (demonstração). A nota de revisão da 004 sobre FR-056/DP-402 está posicionada em FR-057 e DP-409.</li>
-    <li><strong>010 FR-028/FR-035</strong> dizem "exatamente três capacidades". Hoje <code>governanca/regras.py</code> tem sete, acrescentadas por 011, 016, 017 e 019 com notas parciais.</li>
-    <li><strong>011 FR-100</strong> proíbe criar, editar, abrir e encerrar Campanha, sem nota de revisão. A 017 implementou isso no acompanhamento.</li>
-    <li><strong>009 DP-901</strong> cita "Art. 22, III" para o reporte à CPAEG. O dispositivo correto é o Art. 22, IV, corrigido pela 010.</li>
-    <li><strong>003</strong> chama a jornada de resposta de "Feature 004"; ela virou 005/006.</li>
-    <li><strong>012 FR-125 e 013 FR-115</strong> ("somente dados fictícios") não são impostos tecnicamente: snapshot e exportação não verificam o modo de demonstração.</li>
-    <li><strong>015 FR-001</strong> (nenhum valor visual fora dos tokens): nove tokens não são usados e há literais em <code>estilo.css</code>, justificados pelo compartilhamento com telas administrativas. As cores do SVG da assinatura diferem das do Manual da Marca; a diferença foi registrada e não corrigida.</li>
-    <li><strong>README</strong> lista quickstarts de 001, 002, 004–011 e 019; faltam 003 e 012–018.</li>
-  </ul>
+  <h3>Corrigidas em 2026-10-05</h3>
+  <div class="tabela tabela-muito-larga" role="region" aria-label="Inconsistências corrigidas" tabindex="0">
+  <table>
+    <thead><tr><th scope="col">Inconsistência</th><th scope="col">Correção</th><th scope="col">Arquivos</th></tr></thead>
+    <tbody>
+      <tr><td>Cabeçalhos "Draft" em specs implementadas; 018 "aguarda revisão antes de <code>/speckit-plan</code>"</td><td>Status atualizado para "Implementada e integrada à <code>main</code>", com data e PR de cada Feature (015 e 018 com as pendências de uso real)</td><td><code>specs/{002–009,013–015,018}/spec.md</code></td></tr>
+      <tr><td>Contrato da fonte acadêmica sem <code>cpf</code> e <code>data_nascimento</code> (018)</td><td>Assinatura de <code>PessoaEncontrada</code> e regra 9 (uso só para o material de acesso; nunca copiados para Pessoa)</td><td><code>specs/001/contracts/fonte-academica.md</code></td></tr>
+      <tr><td>Data-model da 005 sem <code>concluida_em</code> e <code>formacao_declarada</code>, com <code>conclusao</code> obrigatória</td><td>Nota com o estado atual do modelo e as migrações 0002 e 0003</td><td><code>specs/005/data-model.md</code></td></tr>
+      <tr><td>Contratos da 008 com cookie e seletor de Pessoa</td><td>Notas: sessão da 018, <code>/demonstracao/</code> → 301 para <code>/acesso/</code>, posse com declarante (019)</td><td><code>specs/008/contracts/{rotas,demonstracao}.md</code></td></tr>
+      <tr><td>Data-model da 012 sem <code>participacao</code> e <code>origem_formacao</code></td><td>Nota com os campos da 019, o CHECK e o preenchimento determinístico</td><td><code>specs/012/data-model.md</code></td></tr>
+      <tr><td>Contrato de dados da 013 em v1 com 14 colunas; código em v2 com 15</td><td>Contrato passa a v2, com histórico de versões e a coluna <code>origem_formacao</code>; data-model e spec anotados</td><td><code>specs/013/contracts/pacote-de-dados.md</code>, <code>data-model.md</code>, <code>spec.md</code></td></tr>
+      <tr><td>016 com <code>/demonstracao/</code> como destino do convite</td><td><code>/acesso/</code> no contrato de configuração, no research e no quickstart; nota sobre a Campanha renomeada pela ADR 0004</td><td><code>specs/016/{contracts/configuracao-seguranca.md,research.md,quickstart.md,spec.md}</code></td></tr>
+      <tr><td>Contrato do shell da 015 com controles antigos da faixa</td><td>Nota com o texto e o botão "Sair" atuais</td><td><code>specs/015/contracts/shell.md</code></td></tr>
+      <tr><td>011 descreve Campanha de demonstração restrita a Serra e Vitória</td><td>Notas da ADR 0004 no research, no plan e nas tasks</td><td><code>specs/011/{research,plan,tasks}.md</code></td></tr>
+      <tr><td>"Não expor" (005 FR-058, 006 FR-054, 007 FR-049) superado pela 008 sem nota</td><td>Notas de revisão: exposição só no modo de demonstração</td><td><code>specs/{005,006,007}/spec.md</code></td></tr>
+      <tr><td>Notas "(Revisado pela 017)" em requisitos vizinhos dos pretendidos</td><td>Reposicionadas conforme a tabela de impacto da 017: 004 FR-056 e DP-402; 010 FR-033 e FR-073; 011 FR-001, FR-016 e FR-100</td><td><code>specs/{004,010,011}/spec.md</code></td></tr>
+      <tr><td>010 FR-028 "exatamente três capacidades"; o código tem sete regras</td><td>Nota: três capacidades do editor; as demais regras nomeadas vieram de 011, 016, 017 e 019</td><td><code>specs/010/spec.md</code></td></tr>
+      <tr><td>009 DP-901 cita "Art. 22, III"</td><td>Corrigido para Art. 22, IV, com registro da correção</td><td><code>specs/009/spec.md</code></td></tr>
+      <tr><td>003 chama a jornada de "Feature 004"</td><td>Nota de numeração no topo da spec (jornada = 005/006)</td><td><code>specs/003/spec.md</code></td></tr>
+      <tr><td>012 FR-125 e 013 FR-115 sem garantia técnica</td><td>Esclarecimento: a restrição é operacional (sem chamador além dos testes) e deve ser reavaliada antes de qualquer superfície</td><td><code>specs/{012,013}/spec.md</code></td></tr>
+      <tr><td>015 FR-001 × tokens não usados e literais</td><td>Esclarecimento da exceção do research R1 e lista dos oito tokens reservados para a propagação</td><td><code>specs/015/spec.md</code></td></tr>
+      <tr><td>README sem os quickstarts de 003 e 012–018</td><td>Lista completa, mais o link para esta documentação</td><td><code>README.md</code></td></tr>
+      <tr><td>Evidência visual da 017 fora do repositório (<code>/tmp</code>)</td><td>Imagem (só dados fictícios) versionada e referência atualizada</td><td><code>specs/017/evidencias/017-campanha-encerrada.png</code>, <code>quickstart.md</code></td></tr>
+      <tr><td>021: tabela de DPs do plan desatualizada (DP-2102, DP-2106) e sem DP-2110; "R1–R18"</td><td>Plan alinhado à spec; Constitution Check cita DP-2101 a DP-2110; R1–R21</td><td><code>specs/021/plan.md</code></td></tr>
+      <tr><td>021: tasks com "73 FRs, 14 SCs" e "R1–R18"</td><td>83 FRs, 15 SCs, R1–R21</td><td><code>specs/021/tasks.md</code></td></tr>
+      <tr><td>021: US3 diz que o card não tem "assinatura" e mostra a contagem de formações</td><td>"Assinatura de autoridade" (a marca entra pelo FR-075); a linha de contagem saiu do card na revisão visual</td><td><code>specs/021/spec.md</code></td></tr>
+      <tr><td>021: nota prevista para 001 FR-012 não aplicada</td><td>Nota aplicada (complemento de ingresso admitido em modelo próprio)</td><td><code>specs/001/spec.md</code></td></tr>
+      <tr><td>021: data-model com <code>divergencias</code> e assinatura antiga de <code>card_svg</code>; research R10 com quebra "por caracteres"</td><td>Alinhados ao código (<code>sinais</code>; parâmetro <code>demonstracao</code>; quebra pela largura real dos glifos)</td><td><code>specs/021/{data-model,research}.md</code></td></tr>
+    </tbody>
+  </table>
+  </div>
 
-  <h3>Nos documentos de referência</h3>
-  <ul>
-    <li><strong>PAEG (PDF):</strong> o segundo capítulo aparece como "CAPÍTULO I — DA JUSTIFICATIVA". O sumário o lista como Capítulo II. É erro de numeração da fonte.</li>
-    <li><strong>Inventário:</strong> o PDF original do formulário não está versionado (contém URL administrativa); só o hash está registrado. A "referência sanitizada" prevista ainda não foi gerada. Afirmações do inventário não podem ser reconferidas apenas com o repositório.</li>
-    <li><strong>GeN:</strong> a sigla não é expandida em nenhum documento.</li>
-    <li><strong>017:</strong> a evidência visual citada fica em <code>/tmp</code>, fora do repositório.</li>
-  </ul>
-
-  <h3>Entre regulamentação e software</h3>
-  <ul>
-    <li>A PAEG prevê relatórios da CPAEG e das CSAEG (Art. 21, IV; Art. 22, V) e o Relatório Anual da Proex (Art. 14). O sistema não os apoia, e a CSAEG não recebe dados da sua unidade além dos agregados operacionais. Pode ser decisão consciente, mas não está registrada como tal.</li>
-    <li>A PAEG atribui à CSAEG "aplicar o questionário" (Art. 22, IV). No sistema, só a CPAEG gere Campanhas (017); a atuação da CSAEG é 004/DP-403.</li>
-  </ul>
+  <h3>Permanecem abertas</h3>
+  <div class="tabela tabela-larga" role="region" aria-label="Inconsistências que permanecem" tabindex="0">
+  <table>
+    <thead><tr><th scope="col">Item</th><th scope="col">Por que não foi corrigido</th><th scope="col">Situação</th></tr></thead>
+    <tbody>
+      <tr><td>PAEG (PDF): o segundo capítulo aparece como "CAPÍTULO I — DA JUSTIFICATIVA"; o sumário o lista como Capítulo II</td><td>Documento oficial do Ifes, versionado como referência. Não cabe ao projeto alterá-lo.</td><td><span class="st st-org">Documento oficial</span></td></tr>
+      <tr><td>Inventário do formulário: o PDF original não está versionado e a "referência sanitizada" não foi gerada</td><td>O original contém a URL administrativa de edição do Google Formulários. Gerar a versão sanitizada exige acesso ao formulário.</td><td><span class="st st-dp">Depende de ação externa</span></td></tr>
+      <tr><td>GeN: a sigla não é expandida em nenhum documento</td><td>Depende de informação institucional; não foi inventada.</td><td><span class="st st-dp">Depende de informação</span></td></tr>
+      <tr><td>A PAEG prevê relatórios da CPAEG, das CSAEG e o Relatório Anual (Art. 14; Art. 21, IV; Art. 22, V); o sistema não os apoia e a questão não está registrada como decisão pendente</td><td>Registrar ou não como DECISÃO PENDENTE, e em qual artefato, é decisão de produto.</td><td><span class="st st-dp">Decisão pendente não registrada</span></td></tr>
+      <tr><td>A PAEG atribui à CSAEG "aplicar o questionário" (Art. 22, IV); só a CPAEG gere Campanhas (017)</td><td>Já registrado como 004/DP-403; a divergência é intencional enquanto a decisão não vier.</td><td><span class="st st-dp">004/DP-403</span></td></tr>
+      <tr><td>012 FR-125 e 013 FR-115: sem barreira técnica</td><td>Esclarecido na spec. Impor a barreira mudaria comportamento e exige decisão.</td><td><span class="st st-dp">Opção em aberto</span></td></tr>
+      <tr><td>Cores do SVG da assinatura diferem das do Manual da Marca</td><td>Registrado na 015 (R3); depende da validação da ACS.</td><td><span class="st st-dp">015/D-03</span></td></tr>
+      <tr><td>021: <code>validacao.md</code> mantém trechos antigos (CI "pendente", medidas anteriores) e a ADR 0006 cita 2.433 testes, contra 2.563 da validação final</td><td>São registros históricos de fases diferentes; a resolução aparece adiante no mesmo arquivo.</td><td><span class="st st-org">Registro histórico</span></td></tr>
+      <tr><td>021: contrato da narrativa mantido em v1 após mudança do subconjunto compartilhável</td><td>Justificado na própria 021: o contrato ainda não foi publicado para consumidores.</td><td><span class="st st-org">Justificado</span></td></tr>
+      <tr><td>021: a jornada (<code>interface/views.py</code>) passou a importar <code>narrativa.consultas</code>; o teste de isolamento do FR-071 não cobre essa dependência</td><td>Não viola o FR-071 literalmente; é observação de arquitetura.</td><td><span class="st st-org">Observação</span></td></tr>
+    </tbody>
+  </table>
+  </div>
 </section>
 
 <!-- ============================================================ 25 -->
@@ -1644,16 +1674,19 @@
       <a href="../../docs/adr/0002-imutabilidade-versao-publicada.md">0002 Imutabilidade da Versão publicada (rejeitada nesta fase)</a> ·
       <a href="../../docs/adr/0003-q14-resposta-declarada.md">0003 Q14 permanece declarada</a> ·
       <a href="../../docs/adr/0004-abrangencia-da-campanha-nao-e-foco-de-mobilizacao.md">0004 Abrangência não é foco de mobilização</a> ·
-      <a href="../../docs/adr/0005-criptografia-dados-consulta-acervo.md">0005 Criptografia dos dados de consulta ao acervo</a>.</li>
+      <a href="../../docs/adr/0005-criptografia-dados-consulta-acervo.md">0005 Criptografia dos dados de consulta ao acervo</a> ·
+      <a href="../../docs/adr/0006-rasterizacao-do-card.md">0006 Rasterização do card</a>.</li>
     <li>Auditorias:
       <a href="../../docs/auditorias/2026-10-01-ux-feature-008.md">UX da Feature 008</a> ·
       <a href="../../docs/auditorias/2026-10-02-identidade-da-experiencia.md">Identidade da experiência</a> ·
       <a href="../../docs/auditorias/2026-10-03-mobile-first-experiencia.md">Mobile-first</a> ·
       <a href="../../docs/auditorias/2026-10-03-identidade-visual.md">Identidade visual</a> ·
       <a href="../../docs/auditorias/2026-10-03-identidade-acesso-egresso.md">Identidade e acesso do egresso</a> ·
-      <a href="../../docs/auditorias/2026-10-04-formacao-declarada-validacao.md">Formação declarada e validação</a>.</li>
+      <a href="../../docs/auditorias/2026-10-04-formacao-declarada-validacao.md">Formação declarada e validação</a> ·
+      <a href="../../docs/auditorias/2026-10-04-minha-trajetoria-narrativa.md">Minha trajetória: narrativa</a> ·
+      <a href="../../docs/auditorias/2026-10-04-021-convergencia-visual.md">Convergência visual da 021</a>.</li>
     <li><a href="../../docs/roadmap/020-mobilizacao-real-lotes.md">Nota de roadmap 020</a>.</li>
-    <li>Specs 001–019 em <code>specs/</code> (links em <a href="#features">Evolução por Features</a>).</li>
+    <li>Specs 001–019 e 021 em <code>specs/</code> (links em <a href="#features">Evolução por Features</a>).</li>
   </ul>
 
   <h3>Código e testes mais citados</h3>
@@ -1664,12 +1697,12 @@
     <li>Jornada: <code>trajetoria/participacao/percurso.py</code>, <code>entrada.py</code>, <code>operacoes.py</code>; <code>trajetoria/interface/</code>.</li>
     <li>Governança: <code>trajetoria/governanca/regras.py</code>. Portão: <code>trajetoria/demonstracao/middleware.py</code>.</li>
     <li>Exportação: <code>trajetoria/exportacao/contrato.py</code>.</li>
-    <li>Testes: <code>tests/</code> (177 arquivos); CI: <code>.github/workflows/</code>.</li>
+    <li>Testes: <code>tests/</code> (199 arquivos); CI: <code>.github/workflows/</code>.</li>
   </ul>
 
   <h3>O que é atual e o que é futuro nesta documentação</h3>
   <ul>
-    <li><strong>Descreve implementação atual</strong> (com a ressalva de demonstração): seções 6 a 14 (camadas "Software"), 21 e 22 (Features 001–019).</li>
+    <li><strong>Descreve implementação atual</strong> (com a ressalva de demonstração): seções 6 a 14 (camadas "Software"), 21 e 22 (Features 001–019 e 021).</li>
     <li><strong>Descreve regulamentação:</strong> seções 3, 7 (Egresso), 15 e 16.</li>
     <li><strong>Descreve modelo de negócio:</strong> camadas "Modelo de negócio" ao longo do texto, a partir da Constituição.</li>
     <li><strong>Descreve evolução futura ou pendente:</strong> camadas "Evolução", selos "Planejado" e "Decisão pendente", seções 19 e 20 e a linha da Feature 020.</li>
@@ -1677,7 +1710,7 @@
   </ul>
 
   <div class="rodape">
-    <p>Documentação gerada por análise do repositório na branch <code>main</code>, commit <code>ff12566</code>, em 2026-10-04. Ao integrar novas Features, revise as seções 1, 12, 16, 19 e 22. Esta página não tem dependências externas e funciona abrindo <code>docs/documentacao/index.html</code> diretamente no navegador.</p>
+    <p>Documentação gerada por análise do repositório em 2026-10-04 (<code>ff12566</code>) e atualizada em 2026-10-05 sobre a <code>main</code> em <code>a65d7cb</code> (Feature 021). Ao integrar novas Features, revise as seções 1, 12, 16, 19 e 22. Esta página não tem dependências externas e funciona abrindo <code>docs/documentacao/index.html</code> diretamente no navegador.</p>
   </div>
 </section>
 
