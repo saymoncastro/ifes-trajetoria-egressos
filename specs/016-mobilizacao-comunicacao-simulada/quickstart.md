@@ -54,7 +54,7 @@ export EMAIL_HOST_USER=''
 export EMAIL_HOST_PASSWORD=''
 export EMAIL_USE_TLS=0
 export EMAIL_USE_SSL=0
-export TRAJETORIA_URL_ENTRADA_DEMONSTRACAO=http://127.0.0.1:8000/demonstracao/
+export TRAJETORIA_URL_ENTRADA_DEMONSTRACAO=http://127.0.0.1:8000/acesso/  # revisado pela 018
 uv run python manage.py runserver 127.0.0.1:8000
 ```
 
@@ -76,7 +76,7 @@ Abrir `http://127.0.0.1:8000/acompanhamento/`, selecionar operador **B** pelo se
 | 5 | Acionar “Simular envio local” sem abrir coleta | 1 submetida, 1 aceita pelo transporte, 0 falhas; Campanha continua EM PREPARAÇÃO |
 | 6 | Abrir Mailpit | Uma mensagem para Bruno, apesar de suas duas formações; nenhuma para Carla `SIM-P-0010` sem contato |
 | 7 | Inspecionar texto e HTML | Mesmo conteúdo da prévia, um destinatário, nenhum CC/BCC/anexo/recurso externo; não há curso/unidade/identidade na URL |
-| 8 | Seguir CTA em navegador sem Pessoa selecionada | Entrada `/demonstracao/`, escolha fictícia; nenhum login, formação ou Participação criada |
+| 8 | Seguir CTA em navegador sem Pessoa selecionada | Entrada `/acesso/` (CPF e data de nascimento fictícios, desde a 018); nenhuma formação ou Participação criada |
 | 9 | Seguir CTA no navegador com Pessoa previamente selecionada | Entrada neutra; link não troca Pessoa nem inicia/retoma pesquisa |
 | 10 | Voltar à Comunicação por GET | Nenhuma mensagem adicional; resultado anterior não é histórico recuperável |
 | 11 | Repetir simulação explicitamente | Mais uma mensagem; interface avisa duplicação entre execuções, sem retry automático |

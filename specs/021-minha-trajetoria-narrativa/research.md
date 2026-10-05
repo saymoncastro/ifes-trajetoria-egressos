@@ -199,11 +199,15 @@ Três rotas GET no app `narrativa`, montadas na raiz:
   adaptativa.
 - **Quebra de linha:** calculada na montagem do compartilhável, por limite conservador de
   caracteres por linha e por tamanho de fonte. Não corta palavras nem trunca o nome. O teste
-  usa o curso mais longo da fonte simulada.
+  usa o curso mais longo da fonte simulada. *(Superado, registrado em 2026-10-05: a quebra
+  passou a usar a largura real dos glifos das fontes embutidas, numa tabela pré-extraída em
+  `trajetoria/narrativa/metricas.py`; ver ADR 0006.)*
 - **Fonte declarada:** `font-family="Open Sans, system-ui, sans-serif"`.
 - **Alternativas descartadas:**
   - **4:5 (feed):** fica como direção P3, porque o MVP tem um formato.
-  - **Medir texto com `fontTools`:** outra dependência sem ganho proporcional.
+  - **Medir texto com `fontTools`:** outra dependência sem ganho proporcional. *(Revisto: o
+    `fontTools` foi usado uma única vez, fora do projeto, para gerar `metricas.py`; continua
+    sem ser dependência.)*
   - **Fonte em base64 no SVG:** o SVG não é o artefato compartilhado.
 
 ## R11 — PNG: artefato principal, por `resvg-py` com fonte embutida, isolado e com fallback

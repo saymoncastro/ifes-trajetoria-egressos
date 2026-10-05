@@ -3,6 +3,22 @@
 Apps: `trajetoria.interface` (jornada) e `trajetoria.demonstracao` (adaptador
 temporário). Atende FR-001 a FR-011, FR-019 a FR-031, FR-050 a FR-066, FR-083 a FR-090.
 
+> **Nota de revisão pela Feature 018 (registrada em 2026-10-05).** Este contrato descreve a
+> entrada da 008. O comportamento atual é outro:
+>
+> - **Pessoa:** `pessoa_em_uso(request)` vem de `trajetoria/acesso/sessao.py`. É uma sessão
+>   Django em banco, criada pela confirmação de CPF e data de nascimento em `/acesso/`, e
+>   não mais um cookie assinado. Sem Pessoa, as rotas da jornada redirecionam (302) para
+>   `/acesso/`, não para `/demonstracao/`.
+> - **`/demonstracao/`:** redireciona permanentemente (301) para `/acesso/`. A lista de
+>   Pessoas e `POST /demonstracao/escolher/` não existem mais.
+> - **Posse** *(revisada pela 019)*: as rotas com `<participacao>` aceitam a Pessoa da
+>   sessão ou o declarante da Feature 019 (`_participacao_do_sujeito` em
+>   `trajetoria/interface/views.py`). Participação inexistente ou alheia continua 404.
+>
+> Fontes de verdade: `trajetoria/acesso/urls.py`, `trajetoria/demonstracao/urls.py` e
+> `trajetoria/interface/urls.py`.
+
 ## Garantias comuns
 
 - **Modo de demonstração**: com `settings.TRAJETORIA_DEMONSTRACAO` falso, **toda** rota

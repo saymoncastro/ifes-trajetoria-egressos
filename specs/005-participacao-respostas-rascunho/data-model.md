@@ -66,6 +66,21 @@ preferência ou de "atual" (FR-049).
 Pesquisa, canal, dispositivo, endereço de acesso, sessão, token, fotografia de
 elegibilidade (FR-003, FR-055; Clarifications).
 
+> **Nota de revisão (2026-10-05): estado atual do modelo.** Esta seção descreve a
+> Participação como desenhada na 005. Features posteriores acrescentaram, por migração
+> aditiva, dois campos:
+>
+> - `concluida_em` (data e hora, anulável), da **006**: ausente = rascunho; gravado uma
+>   única vez por `concluir` (006 FR-001 a FR-003). Migração
+>   `participacao/0002_participacao_concluida_em`.
+> - `formacao_declarada` (OneToOne → `declaracao.FormacaoDeclarada`, anulável,
+>   `PROTECT`), da **019**. Com ela, `conclusao` passou a ser **anulável**, e o CHECK
+>   `participacao_ancora_unica` exige exatamente uma âncora: Conclusão ou Formação
+>   Declarada. `UNIQUE (campanha, conclusao)` permanece. `pessoa` devolve `None`
+>   quando a âncora é declarada. Migração `participacao/0003`.
+>
+> Fonte de verdade: `trajetoria/participacao/models.py`.
+
 **Remoção**: nenhuma operação remove Participação (FR-017). `PROTECT` nas FKs impede que
 a remoção de Campanha ou Conclusão a apague; pela 004, só Campanha nunca aberta é
 removível, e ela não tem Participação.

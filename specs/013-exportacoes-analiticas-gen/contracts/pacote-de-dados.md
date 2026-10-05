@@ -1,11 +1,20 @@
-# Contrato de dados analíticos — versão 1 (Feature 013)
+# Contrato de dados analíticos — versão 2 (Features 013 e 019)
 
 Documento para **consumidores a jusante**: GeN, analistas, outras ferramentas. Descreve o
 que um pacote exportado contém e como lê-lo, **sem acesso ao sistema** (spec FR-120). O
 mecanismo de entrega ao GeN não faz parte deste contrato (DP-1302).
 
-`contrato_versao = 1` (Metadados). Mudam a versão: colunas base, nomes técnicos, tipos,
+`contrato_versao = 2` (Metadados). Mudam a versão: colunas base, nomes técnicos, tipos,
 representação, tabelas ou notas alteradas de forma incompatível (spec FR-065).
+
+**Histórico de versões**
+
+| Versão | Origem | Mudança |
+|--------|--------|---------|
+| 1 | Feature 013 | 14 colunas base. |
+| 2 | Feature 019 | Acrescenta a 15ª coluna base, `origem_formacao` (proveniência `derivado`), ao final das colunas base. Nenhuma coluna da versão 1 mudou de nome, tipo ou significado. |
+
+Fonte de verdade: `VERSAO_CONTRATO` e `COLUNAS_BASE` em `trajetoria/exportacao/contrato.py`.
 
 ---
 
@@ -30,7 +39,7 @@ representação, tabelas ou notas alteradas de forma incompatível (spec FR-065)
 
 | Tabela | CSV | XLSX | Conteúdo |
 |--------|-----|------|----------|
-| Dados | `dados.csv` | aba `Dados` | Uma linha por registro do snapshot; 14 colunas base + colunas de Pergunta |
+| Dados | `dados.csv` | aba `Dados` | Uma linha por registro do snapshot; 15 colunas base + colunas de Pergunta |
 | Dicionário | `dicionario.csv` | aba `Dicionário` | Uma linha por coluna de Dados (mesma ordem) + valores possíveis da escolha única |
 | Metadados | `metadados.csv` | aba `Metadados` | `chave`, `valor`, `tipo`: origem, contagens, versões e notas |
 
@@ -41,7 +50,13 @@ Estrutura completa em [data-model.md](../data-model.md).
 `conclusao_analitica_id`, `pessoa_analitica_id`, `elegivel_no_snapshot`, `unidade`,
 `curso`, `nivel`, `modalidade`, `forma_oferta`, `ano_conclusao`, `data_conclusao`,
 `possui_participacao`, `participacao_concluida`, `participacao_iniciada_em`,
-`participacao_concluida_em`.
+`participacao_concluida_em`, `origem_formacao` (desde a versão 2).
+
+`origem_formacao` informa como a Participação chegou à Conclusão: `institucional`
+(âncora institucional), `declarada_validada_fonte_digital` ou `declarada_validada_acervo`
+(declaração do egresso validada depois). Fica vazia quando não há Participação. O contexto
+acadêmico da linha é sempre o da Conclusão, dado institucional. Participações em
+quarentena (019) não entram no snapshot e, portanto, não aparecem no pacote.
 
 ### Colunas de Pergunta
 

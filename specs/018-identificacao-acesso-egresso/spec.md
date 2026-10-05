@@ -7,8 +7,8 @@
 
 **Created**: 2026-10-04
 
-**Status**: Draft, esclarecida em 2026-10-04. Aguarda revisão do solicitante antes de
-`/speckit-plan`.
+**Status**: Esclarecida em 2026-10-04; implementada e integrada à `main` em 2026-10-04
+(PR #28), restrita à demonstração. O uso real continua bloqueado por DP-1801 a DP-1803.
 
 **Input**: Solicitação da Feature 018. O egresso confirma o acesso informando **CPF e data
 de nascimento**. Esses dados são conferidos contra um material de verificação protegido

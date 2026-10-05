@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #8).
 
 **Input**: User description: "Feature 006 — Jornada de resposta e conclusão da
 Participação. Conduzir uma Participação em rascunho pelo instrumento da Versão aplicada à
@@ -898,6 +898,7 @@ delimitação desta feature.
 - **FR-054**: Capacidades de jornada e de conclusão são do domínio; NÃO DEVEM ser
   expostas a usuários ou perfis nem receber interface, URL ou API nesta feature
   (005/DP-505). [Const. — X, XVI]
+  *(Revisado pela 008 — registrado em 2026-10-05.)* A Feature 008 passou a expor estas capacidades por uma interface **somente no modo de demonstração**, com dados fictícios (008 FR-001, FR-002). Fora desse modo continuam sem exposição: toda requisição responde 404. A exposição produtiva continua dependente de 005/DP-505.
 
 ### Key Entities *(include if feature involves data)*
 

@@ -4,6 +4,13 @@ App: `trajetoria.demonstracao`. Atende FR-001 a FR-018. É um **adaptador tempor
 quando a fronteira real de identidade existir, este app é removido e a interface passa a
 obter a Pessoa resolvida de outro lugar, trocando uma importação (FR-005).
 
+> **Nota de revisão pela Feature 018 (registrada em 2026-10-05).** A escolha de Pessoa
+> fictícia por lista e o cookie `trajetoria_demonstracao_pessoa` descritos abaixo foram
+> substituídos pelo acesso por CPF e data de nascimento fictícios (`/acesso/`, Feature
+> 018). Hoje `/demonstracao/` só redireciona para `/acesso/`. O preparo do cenário
+> (`manage.py preparar_demonstracao`) também exige as chaves de acesso da 018. A escolha do
+> operador fictício (`/demonstracao/operador/`, Feature 010) continua válida.
+
 ## Setting
 
 `TRAJETORIA_DEMONSTRACAO: bool` — verdadeiro somente se a variável de ambiente

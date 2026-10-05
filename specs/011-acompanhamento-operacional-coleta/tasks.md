@@ -833,7 +833,7 @@ não consulta rascunho.
 
 - [X] T050 Em `trajetoria/demonstracao/cenario.py`:
   - acrescentar a constante
-    `CAMPANHA_ACOMPANHAMENTO = ("Demonstração — acompanhamento Serra e Vitória", {"unidades": ["Serra", "Vitória"]})`,
+    `CAMPANHA_ACOMPANHAMENTO = ("Demonstração — acompanhamento Serra e Vitória", {"unidades": ["Serra", "Vitória"]})`, *(Revisado pela ADR 0004: hoje `("Demonstração — rodada em preparação", {})`.)*
     **separada** de `CAMPANHAS`, para que `_exigir_campanhas_em_coleta` não a verifique;
   - em `preparar()`, dentro da transação e depois de `_versao_de_demonstracao()`: se não
     existe Campanha com esse nome, `op_campanha.criar_campanha(nome, materializar().versao)`

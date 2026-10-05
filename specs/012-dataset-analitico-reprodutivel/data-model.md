@@ -69,6 +69,23 @@ A Participação **não** é referenciada pelo registro. Ela é única por (Camp
 (`participacao_par_unico`), imutável depois do encerramento, e é encontrada na leitura pela
 Campanha do snapshot e pela `conclusao_id` do registro.
 
+> **Nota de revisão pela Feature 019 (registrada em 2026-10-05).** O parágrafo acima
+> descreve o desenho da 012. A 019 acrescentou ao `RegistroDoSnapshot`, pela migração
+> `analitico/0002_registro_participacao`:
+>
+> - `participacao` (FK → `participacao.Participacao`, anulável, `PROTECT`): o snapshot
+>   passa a **congelar** qual Participação oficial pertence ao registro. A Conclusão de
+>   uma Participação declarada validada só é conhecida depois da validação, e o par
+>   (Campanha, Conclusão) deixou de bastar para encontrá-la;
+> - `origem_formacao` (`institucional` | `declarada_validada_fonte_digital` |
+>   `declarada_validada_acervo`, anulável), com o CHECK `registro_origem_com_participacao`:
+>   os dois campos são ambos nulos (registro sem Participação) ou ambos preenchidos.
+>
+> A migração preenche os snapshots já existentes de forma determinística: até a 019, toda
+> Participação era institucional (019 research R14). Participações em quarentena não
+> entram no universo (019 FR-100 a FR-106). Fonte de verdade:
+> `trajetoria/analitico/models.py`.
+
 ### 1.4 Imutabilidade
 
 - Nenhuma operação altera ou remove snapshot ou registro (spec FR-050). A única escrita é a

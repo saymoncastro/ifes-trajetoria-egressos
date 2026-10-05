@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-01
 
-**Status**: Draft
+**Status**: Implementada e integrada à `main` em 2026-10-01 (PR #10).
 
 **Input**: User description: "Feature 008 — Interface navegável mínima da pesquisa. Primeiro
 vertical slice navegável do Trajetória Ifes: no navegador, com dados integralmente
