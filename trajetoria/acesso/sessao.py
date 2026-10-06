@@ -9,6 +9,7 @@ from django.db.models import OuterRef, Subquery
 from django.utils import timezone
 
 from trajetoria.academico.models import Pessoa
+from trajetoria.acesso import pendente
 from trajetoria.acesso.models import MaterialDeVerificacao
 from trajetoria.fonte_academica.simulada import FonteSimulada
 
@@ -29,7 +30,7 @@ def dados_de_sessao(pessoa, versao_material, agora):
 
 def estabelecer(request, confirmada, agora):
     request.session.cycle_key()
-    request.session.clear()
+    limpar_preservando_envio(request.session)
     request.session.update(dados_de_sessao(confirmada.pessoa, confirmada.versao_material, agora))
     request._pessoa_de_acesso = confirmada.pessoa
     request._declaracoes_de_acesso = None
@@ -79,7 +80,8 @@ def pessoa_em_uso(request):
         except (ValidationError, ValueError, TypeError, KeyError):
             invalida = True
     if invalida and not post_de_entrada(request):
-        sessao.flush()
+        descartar_preservando_envio(sessao)
+        request._sessao_expirada = True
     request._pessoa_de_acesso = pessoa
     return pessoa
 
@@ -92,6 +94,38 @@ def post_de_entrada(request):
 
 
 def encerrar(request):
+    pendente.descartar(request)
     request.session.flush()
     request._pessoa_de_acesso = None
     request._declaracoes_de_acesso = None
+
+
+# --- 023: sessão expirada e envio pendente ---------------------------------------------------
+
+
+def limpar_preservando_envio(sessao):
+    """`clear()` da sessão, mantendo só a chave opaca do envio pendente (023 FR-005): o
+    registro do envio fica fora da sessão do sujeito e atravessa a nova confirmação."""
+    chave = sessao.get(pendente.CHAVE)
+    sessao.clear()
+    if chave:
+        sessao[pendente.CHAVE] = chave
+
+
+def descartar_preservando_envio(sessao):
+    """`flush()` da sessão descartada, mantendo a chave do envio pendente na sessão nova."""
+    chave = sessao.get(pendente.CHAVE)
+    sessao.flush()
+    if chave:
+        sessao[pendente.CHAVE] = chave
+
+
+def destino_da_entrada(request):
+    """Para onde mandar quem pede uma tela do egresso sem sujeito (023 FR-001): com aviso
+    quando a sessão anterior acabou de ser descartada ou quando um envio foi guardado nesta
+    requisição; sem aviso, como antes, quando nunca houve sessão. Nenhum dado no endereço."""
+    if getattr(request, "_sessao_expirada", False) or pendente.guardado_nesta_requisicao(
+        request
+    ):
+        return "/acesso/?aviso=sessao"
+    return "/acesso/"

@@ -17,7 +17,7 @@ from django.utils.safestring import mark_safe
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
-from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.acesso.sessao import destino_da_entrada, pessoa_em_uso
 from trajetoria.narrativa import card, catalogo, consultas, imagens, rasterizacao
 from trajetoria.narrativa.composicao import ComposicaoImpossivel, composicao_visual
 from trajetoria.narrativa.montagem import montar
@@ -35,7 +35,7 @@ class Redirecionar(Exception):
 def _pessoa_e_narrativa(request):
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        raise Redirecionar("/acesso/")
+        raise Redirecionar(destino_da_entrada(request))  # 023 FR-001
     if not consultas.elegivel(pessoa):
         raise Redirecionar("/formacoes/")
     entrada = consultas.entrada_da_pessoa(

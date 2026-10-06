@@ -1303,3 +1303,14 @@ requisitos consolidados em outro. A correspondência está no
   Referência de acervo é a fonte.
 - **DP-1912** — **Decidida em 2026-10-04**: emenda MAJOR, Constituição 2.0.0, aplicada
   conforme o diff da auditoria §11. Mantida aqui só como registro.
+
+
+## Nota de revisão pela Feature 023 (2026-10-05)
+
+- **Selo vencido ou inválido:** volta à entrada com o aviso `?aviso=selo` ("Por segurança, confirme seus dados de novo para continuar."), em `/declaracao/`, `/declaracao/nova/` e `/declaracao/comecar/`.
+- **Formulário:** o nome indica preenchimento automático de nome; o nível é escolhido por botões de opção. Opções e validações não mudam.
+- **Confirmação:** mostra curso, unidade, nível e ano; "Começar" é a ação principal; "Corrigir" volta ao formulário preenchido, sem nova confirmação de CPF e data enquanto o selo valer.
+- **Lista de formações informadas:** cada formação em andamento diz onde o declarante parou e o máximo que falta.
+- **Envio pendente:** depois de estabelecer o declarante, um envio pendente de Participação fora das declarações do par é descartado.
+
+Referência: [023 — Jornada de resposta com menos esforço](../023-jornada-menos-esforco/spec.md).

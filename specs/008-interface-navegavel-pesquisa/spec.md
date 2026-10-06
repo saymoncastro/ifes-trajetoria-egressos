@@ -1631,3 +1631,15 @@ citadas como 00n/DP-nnn.
 FR-089 e FR-090 verificam o sujeito da sessão: Pessoa ou declarante. Pessoa acessa suas Conclusões; declarante acessa somente as declarações cujos UUIDs estão na sessão. O contexto declarado é rotulado como informado pelo egresso; após a conclusão nenhuma Resposta é exibida.
 
 Referência: [019 — Formação não localizada e validação posterior](../019-formacao-declarada-validacao/spec.md).
+
+
+## Nota de revisão pela Feature 023 (2026-10-05)
+
+- **FR-091:** uma única exceção ao "nenhum rascunho não enviado persistido": o envio de uma Seção que chega sem sujeito válido (sessão expirada ou ausente) é guardado num registro de sessão separado, com validade de 30 minutos, e volta como marcações na Seção depois da nova confirmação. Nunca vira Resposta sem novo envio da pessoa (023 FR-002 a FR-009).
+- **FR-095:** passa a existir o indicador "Parte X · faltam no máximo N partes", calculado a cada exibição a partir da Versão (caminho mais longo restante), sem percentual nem estimativa de tempo (023 FR-013, FR-014).
+- **Enunciados:** só as Perguntas opcionais mostram "(opcional)"; a obrigatoriedade continua anunciada à tecnologia assistiva (023 FR-023).
+- **Texto de abertura:** continua acompanhando a primeira Seção, em bloco recolhido "Sobre esta pesquisa" (023 FR-025).
+- **Complemento:** oculto até a Opção que o admite ser marcada (só CSS); a recusa do complemento sem a Opção continua, com o campo visível e mensagem nova (023 FR-018 a FR-020).
+- **FR-080:** inalterado; a jornada continua funcionando inteira sem JavaScript.
+
+Referência: [023 — Jornada de resposta com menos esforço](../023-jornada-menos-esforco/spec.md).

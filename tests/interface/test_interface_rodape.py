@@ -64,7 +64,8 @@ def test_envio_completo(client, cenario):
     ana = _ana_na_secao(client, cenario, 2)
     antes = len(c.retrato(ana)["respostas"])
     continuar = _secao(client, ana.pk, 2, _completa(cenario, 2))
-    assert continuar.status_code == 302 and continuar["Location"] == _url(ana.pk, 3)
+    assert continuar.status_code == 302
+    assert continuar["Location"] == _url(ana.pk, 3, "?aviso=anterior")  # 023 FR-016
     assert len(c.retrato(ana)["respostas"]) > antes
 
 
@@ -194,7 +195,7 @@ def test_salvar_e_sair_com_destino_de_finalizacao(client, cenario):
 def test_valor_desconhecido_de_depois_equivale_a_continuar(client, cenario):
     ana = _ana_na_secao(client, cenario, 2)
     dados = {**_completa(cenario, 2), "depois": "x"}
-    assert client.post(_url(ana.pk, 2), dados)["Location"] == _url(ana.pk, 3)
+    assert client.post(_url(ana.pk, 2), dados)["Location"] == _url(ana.pk, 3, "?aviso=anterior")
 
 
 def test_salvar_e_sair_e_retomar_vai_a_secao_atual(client, cenario):
@@ -216,10 +217,10 @@ def test_quatro_acoes_na_ordem_e_com_hierarquia(client, cenario):
     )
     saidas = html.index('<div class="saidas">')
     voltar = html.index(f'<a href="{_url(ana.pk, 1)}">Voltar à seção anterior</a>')
-    sem_salvar = html.index('<a href="/formacoes/">Sair sem salvar esta seção</a>')
-    assert continuar < sair < html.index("</form>", sair) < saidas < voltar < sem_salvar
+    assert continuar < sair < html.index("</form>", sair) < saidas < voltar
+    # 023 FR-026: "Sair sem salvar" só na reapresentação com erro de forma.
+    assert "Sair sem salvar esta seção" not in html
     texto = ci.texto_visivel(client.get(_url(ana.pk, 2)))
-    assert "O que já foi salvo antes continua guardado." in texto
     assert "Alterações não salvas nesta página serão descartadas." in texto
     assert "Sair e continuar depois" not in texto
 
@@ -228,7 +229,7 @@ def test_primeira_secao_sem_voltar(client, cenario):
     ana = _ana_na_secao(client, cenario, 1)
     html = client.get(_url(ana.pk, 1)).content.decode()
     assert "Voltar à seção anterior" not in html
-    assert '<a href="/formacoes/">Sair sem salvar esta seção</a>' in html
+    assert "Sair sem salvar esta seção" not in html  # 023 FR-026
 
 
 # --- Enter/"Ir" não envia (014 US3; FR-016, FR-017) ----------------------------------------

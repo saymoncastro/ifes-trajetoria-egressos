@@ -9,6 +9,7 @@ import pytest
 from tests.interface import construcao_interface as ci
 from tests.participacao import construcao as c
 from trajetoria.instrumento.models import TipoPergunta
+from trajetoria.interface import mensagens
 from trajetoria.interface.formularios import Valor
 from trajetoria.interface.gravacao import salvar_secao
 from trajetoria.participacao import operacoes as op
@@ -177,7 +178,7 @@ def test_complemento_sem_a_opcao(client, cenario, ana, com_opcao):
     dados["p7-complemento"] = "Texto fictício"
     resposta = _post(client, ana, 8, dados)
     assert resposta.status_code == 200
-    assert "Para descrever, marque a opção «Outro»." in ci.texto_visivel(resposta)
+    assert mensagens.COMPLEMENTO_SEM_OPCAO.format(opcao="Outro") in ci.texto_visivel(resposta)
     assert c.retrato(ana) == antes
 
 

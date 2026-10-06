@@ -40,13 +40,16 @@ PERMITIDOS_NA_INTERFACE = {
         "concluir",
     },
     "trajetoria.participacao.consultas": {"situacao_da_jornada"},
-    "trajetoria.participacao.percurso": {"Saida"},
+    # 023 FR-013: o máximo de partes restantes é a função pura do percurso.
+    "trajetoria.participacao.percurso": {"Saida", "maximo_restante"},
     "trajetoria.participacao.regras": {"Motivo", "ParticipacaoRejeitada"},
     "trajetoria.participacao.models": {"Participacao"},
     "trajetoria.instrumento.conteudo": None,
     "trajetoria.instrumento.models": {"Pergunta", "Opcao", "TipoPergunta"},
     "trajetoria.academico.models": {"ConclusaoAcademica", "Pessoa"},
-    "trajetoria.acesso.sessao": {"pessoa_em_uso"},  # 018: apenas a Pessoa resolvida
+    # 018: apenas a Pessoa resolvida; 023 FR-001: o destino da entrada com aviso.
+    "trajetoria.acesso.sessao": {"pessoa_em_uso", "destino_da_entrada"},
+    "trajetoria.acesso": {"pendente"},  # 023 FR-002 a FR-009: o envio pendente, opaco
     "trajetoria.declaracao.sessao": {"declaracoes_em_uso"},  # 019: apenas o declarante
     "trajetoria.narrativa.consultas": {"elegivel"},  # 021 FR-005: só a ligação à devolutiva
 }

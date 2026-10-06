@@ -2,7 +2,7 @@
   <legend>{% include "interface/perguntas/_enunciado.html" %} <span class="nota">(marque todas que se aplicam)</span></legend>
   {% include "interface/perguntas/_cabecalho.html" %}
   {% for opcao in item.opcoes %}
-  <div class="opcao">
+  <div class="opcao{% if opcao.complemento %} opcao-com-complemento{% endif %}">
     <input type="checkbox" id="{{ opcao.id }}" name="{{ item.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
     <label for="{{ opcao.id }}">{{ opcao.texto }}</label>
   </div>

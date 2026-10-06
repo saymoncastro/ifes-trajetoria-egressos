@@ -43,7 +43,8 @@ def test_fluxo_idempotente(client):
 
 
 def test_selo_invalido_chave_indisponivel(client, settings):
-    assert client.post("/declaracao/", {"selo": "adulterado"})["Location"] == "/acesso/"
+    # 023 FR-030: selo inválido volta à entrada com aviso.
+    assert client.post("/declaracao/", {"selo": "adulterado"})["Location"] == "/acesso/?aviso=selo"
     settings.TRAJETORIA_CHAVE_CONSULTA_ACERVO = ""
     r = client.post("/declaracao/", {"selo": ""})
     assert r.status_code == 503

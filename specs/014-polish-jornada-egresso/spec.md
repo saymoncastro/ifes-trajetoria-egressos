@@ -1024,3 +1024,13 @@ Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-
 FR-041: na confirmação ancorada em Conclusão Acadêmica, "Ver minha trajetória no Ifes" passa de ação única a **ação principal** e continua a primeira. Logo abaixo, com menor destaque, entra o convite opcional "Quer manter seu e-mail atualizado com o Ifes?" para `/meu-email/` (020 FR-009, E7). A confirmação declarada (019) não muda. A tela de conclusão é definida em conjunto por 014, 021 e 020: mudar uma exige conferir as três.
 
 Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).
+
+
+## Nota de revisão pela Feature 023 (2026-10-05)
+
+- **FR-009 e FR-013:** "Sair sem salvar esta seção" só aparece na reapresentação com erro de forma; nas demais, o rodapé tem "Salvar e continuar", "Salvar e sair" e, quando houver, "Voltar à seção anterior" (023 FR-026). Seções com mais de 8 Perguntas ganham, no meio, um segundo "Salvar e sair" (023 FR-010).
+- **FR-041 (revisada por 021 e 020):** a confirmação ancorada em Conclusão oferece, antes da Minha trajetória, a próxima formação pendente da Pessoa (023 FR-011, FR-028).
+- **FR-042 e FR-043:** exceções estreitas para o envio pendente transitório e para o indicador de partes; continua sem JavaScript, autosave ou armazenamento local (023 FR-034, FR-035).
+- **FR-012:** os avisos de "Salvar e sair" não mudam; entra o aviso "Parte anterior salva." ao avançar, sob a mesma regra de verdade da FR-008 (023 FR-016).
+
+Referência: [023 — Jornada de resposta com menos esforço](../023-jornada-menos-esforco/spec.md).

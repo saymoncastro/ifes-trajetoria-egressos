@@ -62,7 +62,8 @@ def test_sessao_expirada_nao_mostra_nada(client, cenario, relogio):
     cn.entrar(client, _maria_concluida(cenario))
     relogio.agora += settings.TRAJETORIA_SESSAO_INATIVIDADE + timedelta(minutes=1)
     resposta = client.get(URL)
-    assert resposta.status_code == 302 and resposta["Location"] == "/acesso/"
+    # 023 FR-001: com aviso, porque a sessão anterior acabou de expirar.
+    assert resposta.status_code == 302 and resposta["Location"] == "/acesso/?aviso=sessao"
 
 
 def test_sem_cache(client, cenario):
