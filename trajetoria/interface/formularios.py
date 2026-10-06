@@ -21,6 +21,8 @@ from trajetoria.interface import mensagens
 
 # Escolha única com mais Opções que isto vira lista suspensa (R10): critério só de contagem.
 LIMITE_RADIOS = 10
+# 023 FR-024 (hipótese): rádios de exatamente duas Opções curtas ficam lado a lado.
+LIMITE_LADO_A_LADO = 15
 
 RADIO, LISTA, CAIXAS, TEXTO, ESCALA = "radio", "lista", "caixas", "texto", "escala"
 
@@ -66,6 +68,7 @@ class Item:
     remover: dict | None = None  # marcado
     descricao_escala: str | None = None
     erros: list[str] = field(default_factory=list)
+    lado_a_lado: bool = False  # 023 FR-024
 
     @property
     def nome(self) -> str:
@@ -127,11 +130,19 @@ class FormularioDaSecao(forms.Form):
             self.limpos[pergunta.posicao] = valor
         return dados
 
-    def itens(self, erros_extra: dict[int, list[str]] | None = None) -> list[Item]:
+    def itens(
+        self, erros_extra: dict[int, list[str]] | None = None, *, com_erros: bool = True
+    ) -> list[Item]:
         """As Perguntas para o template: valores enviados (se houve envio) ou os gravados, e
-        os erros do formulário mais `erros_extra` (rejeições da 005, pendências da 006)."""
+        os erros do formulário mais `erros_extra` (rejeições da 005, pendências da 006).
+        `com_erros=False` (023 FR-007): só os valores, para restaurar um envio pendente; o
+        próximo envio de verdade valida como sempre."""
         erros_extra = erros_extra or {}
-        return [self._item(p, erros_extra.get(p.posicao, [])) for p in self.secao.perguntas]
+        itens = [self._item(p, erros_extra.get(p.posicao, [])) for p in self.secao.perguntas]
+        if not com_erros:
+            for item in itens:
+                item.erros = []
+        return itens
 
     def _atual(self, nome, *, lista=False):
         if self.is_bound:
@@ -169,14 +180,23 @@ class FormularioDaSecao(forms.Form):
                 marcados = {self._atual(nome) or ""}
             item.opcoes = [
                 {"valor": str(o.posicao), "texto": o.texto,
-                 "marcado": str(o.posicao) in marcados, "id": f"{nome}-o{o.posicao}"}
+                 "marcado": str(o.posicao) in marcados, "id": f"{nome}-o{o.posicao}",
+                 "complemento": o.complemento_textual}
                 for o in pergunta.opcoes
             ]  # fmt: skip
+            item.lado_a_lado = (
+                modo == RADIO
+                and len(pergunta.opcoes) == 2
+                and all(len(o.texto) <= LIMITE_LADO_A_LADO for o in pergunta.opcoes)
+            )
         if f"{nome}-complemento" in self.fields:
             opcao = next(o for o in pergunta.opcoes if o.complemento_textual)
+            valor = self._atual(f"{nome}-complemento") or ""
             item.complemento = {
-                "rotulo": f"Descreva: «{_nome(opcao)}»",
-                "valor": self._atual(f"{nome}-complemento") or "",
+                "rotulo": f"Descreva o que se encaixa em «{_nome(opcao)}»",
+                "valor": valor,
+                # 023 FR-018 a FR-020: com texto, o campo nunca fica oculto (erro ou restauração).
+                "sempre_visivel": bool(valor.strip()),
             }
         if f"{nome}-remover" in self.fields:
             item.remover = {"marcado": bool(self._atual(f"{nome}-remover"))}

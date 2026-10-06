@@ -22,7 +22,7 @@ from django.db.models.functions import Coalesce
 from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.campanha.consultas import EstadoCampanha, estado
 from trajetoria.campanha.models import Campanha
-from trajetoria.instrumento.conteudo import ConteudoSecao, conteudo_da_versao
+from trajetoria.instrumento.conteudo import ConteudoSecao, ConteudoVersao, conteudo_da_versao
 from trajetoria.participacao.models import Participacao, Resposta
 from trajetoria.participacao.percurso import (
     Passagem,
@@ -108,6 +108,9 @@ class SituacaoDaJornada:
     fora_do_percurso: frozenset[UUID]  # Perguntas com Resposta inativa
     impedimentos: tuple[Violacao, ...]  # o que impediria concluir agora
     admite_escrita: bool
+    # 023: a árvore da Versão já carregada, para leituras derivadas da interface (o máximo de
+    # partes restantes, `percurso.maximo_restante`). Só leitura; nada é calculado aqui.
+    conteudo: ConteudoVersao | None = None
 
     @property
     def pode_concluir(self) -> bool:
@@ -154,6 +157,7 @@ def situacao_da_jornada(
         fora_do_percurso=frozenset(respostas) - perguntas_do_percurso(passagens),
         impedimentos=impedimentos,
         admite_escrita=escrita,
+        conteudo=conteudo,
     )
 
 

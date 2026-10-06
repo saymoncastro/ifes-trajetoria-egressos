@@ -145,3 +145,53 @@ button.secundario:hover, button.secundario:active {
 /* Gate, rodada 1 (SC-005): título com palavra longa ("Informações") não cabia a 320 px com
    fonte a 200% e gerava rolagem horizontal; quebra a palavra só quando ela não cabe. */
 h1, h2 { overflow-wrap: break-word; hyphens: auto; }
+
+/* 023 — Jornada com menos esforço. Só CSS: sem JavaScript, nada muda onde não há suporte. */
+
+/* FR-018 a FR-020: o complemento aparece só com a Opção que o admite marcada; com texto (erro
+   ou restauração), nunca some. Sem :has(), o @supports falha e o campo fica sempre visível.
+   Fica aqui, e não em estilo.css, para a prévia do editor continuar mostrando tudo. */
+@supports selector(:has(*)) {
+  .pergunta .complemento:not(.sempre-visivel) { display: none; }
+  .pergunta:has(.opcao-com-complemento input:checked) .complemento,
+  .pergunta:has(option.opcao-com-complemento:checked) .complemento { display: block; }
+}
+
+/* FR-013: parte e máximo restante, discretos, acima do título. */
+.parte { margin: 0 0 var(--espaco-1); font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.parte-salva { color: var(--cor-sucesso); font-weight: var(--peso-medio); }
+.onde-parou { font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+
+/* FR-011: a próxima formação, separada das ligações que vêm depois. */
+.proxima-formacao { margin: var(--espaco-5) 0; }
+.proxima-formacao form { margin: var(--espaco-2) 0 var(--espaco-4); }
+
+/* FR-025: o convite da Versão recolhido; o resumo é um alvo de toque de 44 px. */
+details.abertura { margin: 0 0 var(--espaco-4); }
+details.abertura summary {
+  min-height: 2.75rem; display: flex; align-items: center; cursor: pointer;
+  color: var(--cor-acao); font-weight: var(--peso-medio);
+}
+
+/* FR-010: ponto seguro de salvamento no meio das Seções longas. */
+.ponto-do-meio {
+  margin: 0 0 var(--espaco-6); padding: var(--espaco-2) 0;
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
+}
+.ponto-do-meio p { margin: 0 0 var(--espaco-2); font-size: var(--fonte-5); }
+@media (max-width: 30em) {
+  .ponto-do-meio button { width: 100%; }
+}
+
+/* FR-021: os dois passos da não confirmação. */
+.passos { margin: var(--espaco-2) 0 0; padding-left: 1.25rem; }
+.passos li { margin-bottom: var(--espaco-2); }
+
+/* FR-031, FR-032: nível em botões de opção na declaração; "Sair" com menor ênfase. */
+.campo-opcoes { border: 0; padding: 0; }
+.campo-opcoes legend { margin-bottom: var(--espaco-1); }
+button.sair-discreto {
+  background: none; border: 0; padding: 0; color: var(--cor-acao); font-weight: 400;
+  text-decoration: underline;
+}

@@ -2,13 +2,14 @@
 {% block titulo %}Concluir a pesquisa{% endblock %}
 {% block conteudo %}
 <h1>Concluir a pesquisa</h1>
-{% include "interface/contexto.html" %}
+{# 023 FR-027: aviso de irreversibilidade e ação primeiro; revisão e contexto depois. #}
 <p>Você chegou ao fim da pesquisa. Depois de concluída, ela não poderá ser alterada.</p>
-<p>Se quiser revisar alguma resposta antes de concluir, volte a uma das seções:</p>
-<ul class="lista-secoes">
-  {% for secao in secoes %}<li><a href="{{ secao.endereco }}">{{ secao.nome }}</a></li>{% endfor %}
-</ul>
 <form method="post" action="{{ acao }}">{% csrf_token %}
   <div class="acoes"><button type="submit" class="primario">Concluir pesquisa</button></div>
 </form>
+<p>Se quiser revisar alguma resposta antes de concluir, volte a uma das partes:</p>
+<ul class="lista-secoes">
+  {% for secao in secoes %}<li><a href="{{ secao.endereco }}">{{ secao.nome }}</a></li>{% endfor %}
+</ul>
+{% include "interface/contexto.html" %}
 {% endblock %}

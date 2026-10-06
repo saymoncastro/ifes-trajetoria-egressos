@@ -7,16 +7,19 @@ Pessoa vem da sessão da confirmação de acesso (`pessoa_em_uso`), substituíve
 fronteira de identidade (FR-005).
 """
 
+import re
 from functools import wraps
+from math import ceil
 
 from django.core.exceptions import ValidationError
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from trajetoria.academico.models import ConclusaoAcademica
-from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.acesso import pendente
+from trajetoria.acesso.sessao import destino_da_entrada, pessoa_em_uso
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
@@ -24,9 +27,12 @@ from trajetoria.interface.apresentacao import (
     conclusao_efetiva,
     contexto_da_formacao,
     formacao_exibida,
+    linha_da_parte,
+    onde_parou_da_participacao,
     resumo_da_formacao,
     rotulo_da_formacao,
     rotulo_da_formacao_declarada,
+    rotulo_da_secao,
 )
 from trajetoria.interface.formularios import FormularioDaSecao
 from trajetoria.interface.gravacao import salvar_secao
@@ -41,7 +47,7 @@ from trajetoria.participacao.entrada import (
 )
 from trajetoria.participacao.models import Participacao
 from trajetoria.participacao.operacoes import concluir
-from trajetoria.participacao.percurso import Saida
+from trajetoria.participacao.percurso import Saida, maximo_restante
 from trajetoria.participacao.regras import Motivo, ParticipacaoRejeitada
 
 
@@ -92,7 +98,7 @@ def _pessoa(request, *, aceita_declarante=False):
     """A Pessoa resolvida (pela confirmação de acesso) ou o redirecionamento à entrada."""
     pessoa = pessoa_em_uso(request)
     if pessoa is None and not (aceita_declarante and declaracoes_em_uso(request) is not None):
-        raise _Resposta(redirect("/acesso/"))
+        raise _Resposta(redirect(destino_da_entrada(request)))
     return pessoa
 
 
@@ -134,7 +140,9 @@ def _base(participacao) -> str:
 def inicio(request):
     if pessoa_em_uso(request):
         return redirect("/formacoes/")
-    return redirect("/declaracao/" if declaracoes_em_uso(request) is not None else "/acesso/")
+    if declaracoes_em_uso(request) is not None:
+        return redirect("/declaracao/")
+    return redirect(destino_da_entrada(request))
 
 
 # --- Formações (007) ---------------------------------------------------------------------------
@@ -171,14 +179,46 @@ def _aviso(request, *permitidos: str) -> dict | None:
 
 
 def _formacao_apresentada(formacao) -> dict:
-    """Forma compacta (014 FR-034): linha principal e complementar, só com o informado."""
+    """Forma compacta (014 FR-034): linha principal e complementar, só com o informado. Em
+    andamento, também onde a pessoa parou (023 FR-017)."""
     return {
         "pk": formacao.conclusao.pk,
         "linha": resumo_da_formacao(formacao.conclusao),
         "complemento": complemento_da_formacao(formacao.conclusao),
         "situacao": mensagens.SITUACAO_DA_FORMACAO[formacao.situacao],
         "acao": _ACAO.get(formacao.situacao),
+        "onde_parou": (
+            onde_parou_da_participacao(formacao.participacao)
+            if formacao.situacao is SituacaoDaFormacao.DISPONIVEL_PARA_RETOMAR
+            else None
+        ),
     }
+
+
+# --- Envio pendente (023 FR-002 a FR-009) -----------------------------------------------------
+
+_CAMPO_DA_SECAO = re.compile(r"p\d{1,4}(?:-complemento|-remover)?")
+
+
+def _guardar_envio(request, participacao, posicao) -> None:
+    """Envio de Seção sem sujeito válido: guarda só os campos de Pergunta, sem gravar nada
+    (FR-002). A posse é verificada só ao restaurar, pelo sujeito que confirmar (FR-006)."""
+    dados = {
+        campo: request.POST.getlist(campo)
+        for campo in request.POST
+        if _CAMPO_DA_SECAO.fullmatch(campo)
+    }
+    pendente.guardar(request, participacao, posicao, dados)  # limites em `pendente`
+
+
+def _envio_da_participacao(request, participacao):
+    """O envio pendente válido desta Participação, ou `None`."""
+    envio = pendente.ler(request)
+    return envio if envio is not None and envio.participacao == participacao.pk else None
+
+
+def _sem_sujeito(request) -> bool:
+    return pessoa_em_uso(request) is None and declaracoes_em_uso(request) is None
 
 
 @require_GET
@@ -186,6 +226,17 @@ def _formacao_apresentada(formacao) -> dict:
 @_respondendo
 def formacoes(request):
     pessoa = _pessoa(request)
+    # 023 FR-006: depois da nova confirmação, o envio pendente da própria Pessoa leva de volta
+    # à Seção (uma vez); o de outro sujeito é descartado sem ser exibido.
+    envio = pendente.ler(request)
+    if envio is not None:
+        dona = Participacao.objects.filter(
+            pk=envio.participacao, conclusao__pessoa=pessoa, concluida_em__isnull=True
+        ).exists()
+        if not dona:
+            pendente.descartar(request)
+        elif not envio.apresentado:
+            return redirect(f"/participacoes/{envio.participacao}/")
     situacao = situacao_de_entrada(pessoa)
     destaque = situacao.pendentes if situacao.resolucao in _COM_ACAO else ()
     chaves = {f.conclusao.pk for f in destaque}
@@ -269,10 +320,16 @@ def entrar_view(request):
 def participacao(request, participacao):
     participacao = _participacao_do_sujeito(request, participacao)
     jornada = _jornada(request, participacao)
+    envio = _envio_da_participacao(request, participacao)
+    if envio is not None and (jornada.concluida_em is not None or not jornada.admite_escrita):
+        pendente.descartar(request)
+        envio = None
     if jornada.concluida_em is not None:
         return redirect(_base(participacao) + "concluida/")
     if not jornada.admite_escrita:
         return _tela(request, mensagens.PERIODO_ENCERRADO, **_da_participacao(participacao))
+    if envio is not None and not envio.apresentado:
+        return redirect(_base(participacao) + f"secoes/{envio.posicao}/")
     if jornada.finalizada:
         return redirect(_base(participacao) + "concluir/")
     return redirect(_base(participacao) + f"secoes/{jornada.secao_atual.posicao}/")
@@ -311,13 +368,19 @@ def _passagem(participacao, jornada, posicao):
 
 
 def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=None, *,
-                   pendencias=False):  # fmt: skip
+                   pendencias=False, recuperado=False):  # fmt: skip
     # Título e abertura vêm da Versão já carregada com a Participação (sem reler o conteúdo);
     # a primeira passagem do percurso é sempre a primeira Seção da Versão (006 FR-014).
     versao = participacao.campanha.versao
-    itens = formulario.itens(erros)
+    # Restauração de envio pendente (023 FR-007): os valores enviados, sem erros.
+    itens = formulario.itens(erros, com_erros=not recuperado)
     # Anterior **no percurso determinado** (006), nunca na ordem da Versão (FR-054).
     indice = jornada.passagens.index(passagem)
+    parte = indice + 1
+    # Ponto seguro de salvamento no meio das Seções longas (023 FR-010).
+    meio = (
+        ceil(len(itens) / 2) if len(itens) > mensagens.LIMITE_PONTO_DO_MEIO else None
+    )
     anterior = jornada.passagens[indice - 1].secao.posicao if indice else None
     resumo = [
         {"ancora": item.nome, "texto": f"{item.pergunta.texto} — {erro}"}
@@ -351,9 +414,30 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
                 if tipo == "pendencias" and _ha_resposta_na_secao(jornada, passagem.secao)
                 else None
             ),
-            "aviso": _aviso(request, "percurso"),
+            "aviso": (
+                {"texto": mensagens.RECUPERADO, "variante": "informacao"}
+                if recuperado
+                else _aviso(request, "percurso")
+            ),
+            # 023 FR-016: discreto, junto da parte, e só se a Seção anterior do percurso tem
+            # Resposta gravada (014 FR-008) — nunca pela simples presença do código no endereço.
+            "anterior_salva": (
+                mensagens.AVISOS["anterior"]
+                if request.GET.get("aviso") == "anterior"
+                and not recuperado
+                and indice
+                and _ha_resposta_na_secao(jornada, jornada.passagens[indice - 1].secao)
+                else None
+            ),
             "anterior": anterior and _base(participacao) + f"secoes/{anterior}/",
             "sair_sem_salvar_nota": mensagens.SAIR_SEM_SALVAR_NOTA,
+            # 023 FR-013, FR-015: parte no percurso e máximo restante; "Parte X" sem título.
+            "rotulo_secao": rotulo_da_secao(passagem.secao, parte),
+            "linha_da_parte": linha_da_parte(
+                parte, maximo_restante(jornada.conteudo, passagem.secao.id)
+            ),
+            "meio": meio,
+            "precisa_parar": mensagens.PRECISA_PARAR,
         },
     )
 
@@ -362,12 +446,31 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
 @never_cache
 @_respondendo
 def secao(request, participacao, posicao):
+    if request.method == "POST" and _sem_sujeito(request):
+        # 023 FR-002: sessão expirada ou ausente; guarda o envio e vai à entrada com aviso.
+        _guardar_envio(request, participacao, posicao)
     participacao = _participacao_do_sujeito(request, participacao)
     jornada = _jornada(request, participacao)
-    _exigir_rascunho_aberto(request, participacao, jornada)
-    passagem = _passagem(participacao, jornada, posicao)
+    envio = _envio_da_participacao(request, participacao)
+    try:
+        _exigir_rascunho_aberto(request, participacao, jornada)
+        passagem = _passagem(participacao, jornada, posicao)
+    except _Resposta:
+        # Participação concluída, coleta encerrada ou Seção fora do percurso (FR-008).
+        if envio is not None and envio.posicao == posicao:
+            pendente.descartar(request)
+        raise
     if request.method == "POST":
         return _salvar(request, participacao, jornada, passagem)
+    if envio is not None and envio.posicao == posicao:
+        dados = QueryDict(mutable=True)
+        for campo, valores in envio.dados.items():
+            dados.setlist(campo, valores)
+        pendente.marcar_apresentado(request)
+        formulario = FormularioDaSecao(passagem.secao, jornada.respostas, data=dados)
+        return _tela_da_secao(
+            request, participacao, jornada, passagem, formulario, recuperado=True
+        )
     formulario = FormularioDaSecao(passagem.secao, jornada.respostas)
     pendencias = None
     if request.GET.get("pendencias") == "1" and passagem is jornada.passagens[-1]:
@@ -409,6 +512,10 @@ def _salvar(request, participacao, jornada, passagem):
         return _tela_da_secao(
             request, participacao, jornada, passagem, formulario, resultado.erros_por_pergunta
         )
+    # Envio aceito: o envio pendente desta Seção já cumpriu seu papel (023 FR-008).
+    envio = _envio_da_participacao(request, participacao)
+    if envio is not None and envio.posicao == passagem.secao.posicao:
+        pendente.descartar(request)
     # O próximo passo é sempre o que a 006 calcula agora, com as Respostas gravadas.
     jornada = _jornada(request, participacao)
     passagem = _passagem(participacao, jornada, passagem.secao.posicao)
@@ -426,7 +533,9 @@ def _salvar(request, participacao, jornada, passagem):
     # Seção satisfeita com destino determinado: o percurso da 006 segue para ele, que é,
     # portanto, a passagem seguinte (006 FR-014).
     seguinte = jornada.passagens[jornada.passagens.index(passagem) + 1]
-    return redirect(_base(participacao) + f"secoes/{seguinte.secao.posicao}/")
+    # "Parte anterior salva." só com Resposta gravada na Seção enviada (023 FR-016; 014 FR-008).
+    aviso = "?aviso=anterior" if _ha_resposta_na_secao(jornada, passagem.secao) else ""
+    return redirect(_base(participacao) + f"secoes/{seguinte.secao.posicao}/" + aviso)
 
 
 # --- Conclusão (006) -----------------------------------------------------------------------------
@@ -449,10 +558,10 @@ def concluir_view(request, participacao):
         return _concluir(request, participacao)
     secoes = [
         {
-            "nome": p.secao.titulo or f"Seção {p.secao.posicao}",
+            "nome": rotulo_da_secao(p.secao, parte),
             "endereco": _base(participacao) + f"secoes/{p.secao.posicao}/",
         }
-        for p in jornada.passagens
+        for parte, p in enumerate(jornada.passagens, start=1)
     ]
     return render(
         request,
@@ -495,10 +604,17 @@ def concluida(request, participacao):
     """Confirmação simples: sem respostas, data, comprovante ou ação de editar (FR-062,
     FR-063). A Participação concluída é lida, nunca reaberta. A ação principal leva à Minha
     trajetória (021 FR-003, revista pela 020); abaixo, o convite secundário e opcional de
-    e-mail (020 FR-009, E7). A declarada continua como na 019 (021 FR-007)."""
+    e-mail (020 FR-009, E7). A declarada continua como na 019 (021 FR-007). Antes delas, a
+    próxima formação pendente da Pessoa, quando houver (023 FR-011, FR-012)."""
     participacao = _participacao_do_sujeito(request, participacao)
     if participacao.concluida_em is None:
         return redirect(_base(participacao))
+    proximas = _proximas_formacoes(request, participacao)
+    proxima = (
+        {**_formacao_apresentada(proximas[0]), "acao": mensagens.ACAO_PROXIMA[proximas[0].situacao]}
+        if proximas
+        else None
+    )
     curso = formacao_exibida(participacao).curso
     encerramento = participacao.campanha.versao.texto_encerramento
     return render(
@@ -522,5 +638,21 @@ def concluida(request, participacao):
             "contexto_formacao": contexto_da_formacao(formacao_exibida(participacao)),
             "rotulo_formacao": rotulo_da_formacao(participacao),
             "texto_encerramento": encerramento,
+            "proxima": proxima,
+            "outras_proximas": len(proximas) > 1,
+            "proxima_titulo": mensagens.PROXIMA_FORMACAO,
         },
     )
+
+
+def _proximas_formacoes(request, participacao) -> list:
+    """As formações a iniciar ou retomar da Pessoa, na ordem da 007, sem a recém-concluída
+    (023 FR-011). Nunca para a declarada, nem com ambiguidade ou sem pesquisa (FR-012)."""
+    pessoa = pessoa_em_uso(request)
+    if participacao.formacao_declarada_id or pessoa is None:
+        return []
+    return [
+        f
+        for f in situacao_de_entrada(pessoa).pendentes
+        if f.conclusao.pk != participacao.conclusao_id
+    ]

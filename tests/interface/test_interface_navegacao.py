@@ -49,7 +49,7 @@ def _pendencias_na_tela(html: str) -> set[str]:
 
 def test_s1_sim_vai_para_s2_e_seguir_nao_regrava(client, cenario, ana):
     resposta = _enviar(client, ana, cenario.base, 1, {"Q1": "Sim"})
-    assert resposta.status_code == 302 and resposta["Location"] == _url(ana, 2)
+    assert resposta.status_code == 302 and resposta["Location"] == _url(ana, 2) + "?aviso=anterior"
     antes = c.retrato(ana)
     assert client.get(resposta["Location"]).status_code == 200
     assert c.retrato(ana) == antes
@@ -92,7 +92,7 @@ def test_destino_e_o_da_006_inclusive_encaminhamento(client, cenario, ana):
         secoes = conteudo_da_versao(b.versao).secoes
         destino_006 = next(s.posicao for s in secoes if s.id == passagem.destino)
         assert destino_006 == destino
-        assert resposta["Location"] == _url(ana, destino)
+        assert resposta["Location"] == _url(ana, destino) + "?aviso=anterior"
 
 
 def test_ultima_secao_leva_a_conclusao(client, cenario, ana):
@@ -136,7 +136,7 @@ def test_revisitar_s3_e_trocar_o_ramo(client, cenario, ana):
     for posicao in (1, 2, 3, 6, 8, 9, 11):
         _enviar(client, ana, b, posicao, escolhas)
     resposta = _enviar(client, ana, b, 3, {**escolhas, "Q14": "Pós-Graduação"})
-    assert resposta["Location"] == _url(ana, 7)
+    assert resposta["Location"] == _url(ana, 7) + "?aviso=anterior"
     assert client.get(_url(ana, 6))["Location"].startswith(_url(ana, 7))  # S6 fora do percurso
     assert "Você é egresso(a) de qual Curso?" in ci.texto_visivel(client.get(_url(ana, 7)))
 
@@ -180,5 +180,6 @@ def test_destino_e_a_passagem_seguinte_do_percurso(client, cenario, ana):
     escolhas = {"Q1": "Sim", "Q14": "Pós-Graduação"}
     for posicao in (1, 2):
         _enviar(client, ana, b, posicao, escolhas)
-    assert _enviar(client, ana, b, 3, escolhas)["Location"] == _url(ana, 7)
-    assert _enviar(client, ana, b, 7, escolhas)["Location"] == _url(ana, 8)  # encaminhamento
+    assert _enviar(client, ana, b, 3, escolhas)["Location"] == _url(ana, 7) + "?aviso=anterior"
+    # Encaminhamento (023 FR-016: a Seção seguinte informa que a anterior foi salva).
+    assert _enviar(client, ana, b, 7, escolhas)["Location"] == _url(ana, 8) + "?aviso=anterior"

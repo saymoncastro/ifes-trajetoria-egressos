@@ -244,7 +244,7 @@ def test_tipografia_do_enunciado_e_dos_auxiliares(secao_8):
     auxiliares = (
         ({"pergunta"}, "explicacao", "p"),
         ({"pergunta"}, "descricao-escala", "p"),
-        ({"pergunta", "legend"}, "obrigatoria", "span"),
+        ({"pergunta", "legend"}, "opcional", "span"),  # 023 FR-023: só as opcionais têm marca
         ({"pergunta", "legend"}, "nota", "span"),
     )
     for ancestrais, classe, tag in auxiliares:
@@ -307,6 +307,7 @@ def test_variante_fixa_para_cada_codigo_de_aviso():
         "saida": "informacao",
         "situacao": "informacao",
         "percurso": "informacao",
+        "anterior": "sucesso",  # 023 FR-016
     }
 
 
@@ -429,8 +430,8 @@ def test_confirmacao_separada_da_ficha_sem_mudar_a_ficha(client, cenario):
         f"4px solid {mapa['--cor-marca']}"
     )
     assert ci.valor(html, set(), "contexto", "section", "background") == mapa["--cor-institucional"]
-    # A vizinhança existe quando não há agradecimento entre os blocos.
-    assert re.search(r'</div>\s*(<p>[^<]*</p>\s*)?<section class="contexto"', html)
+    # 023 FR-028: o contexto passou para o fim, depois das ações.
+    assert html.index("Ver minha trajetória no Ifes") < html.index('<section class="contexto"')
 
 
 # --- US4: trajetória, contexto, ação principal e divisores (FR-031 a FR-035) ----------------

@@ -866,3 +866,14 @@ Referência: [021 — Minha Trajetória: narrativa visual personalizada](../021-
 A sessão de Pessoa desta feature (`pessoa_em_uso`) também autoriza a página `/meu-email/` da 020, sem mudança. Sem Pessoa, inclusive na sessão do declarante, a página vai para `/acesso/`. O e-mail não vira credencial nem fator de verificação. FR-053 (link neutro) é preservado pelo envio por Lote.
 
 Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).
+
+
+## Nota de revisão pela Feature 023 (2026-10-05)
+
+- **FR-040:** a sessão da Pessoa pode conter, além dela, só a chave opaca do registro do envio pendente (sem Participação, Seção nem valores).
+- **FR-041 e FR-042:** quando a sessão deixa de valer, a volta à entrada leva o aviso de lista fechada `?aviso=sessao` ("Por segurança, confirme seus dados de novo para continuar."); sem sessão anterior, a entrada fica como antes. Os padrões de 30 minutos e 8 horas não mudam.
+- **FR-043:** a nova confirmação substitui integralmente a sessão do sujeito; só a chave do envio pendente atravessa, para ser usada pelo dono da Participação ou descartada. "Sair" apaga o registro.
+- **FR-032 e FR-033:** `NAO_CONFIRMADA` mantém a mesma mensagem e o mesmo conteúdo para toda causa; as saídas aparecem como dois passos numerados ("Conferir os dados", depois "Informar minha formação"). Depois de uma tentativa que falhou, a ligação "Continuar para suas formações" de uma sessão anterior não aparece.
+- **Dica da data:** "Só os números, por exemplo 05031994, ou DD/MM/AAAA".
+
+Referência: [023 — Jornada de resposta com menos esforço](../023-jornada-menos-esforco/spec.md).

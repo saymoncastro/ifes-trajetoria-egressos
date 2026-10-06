@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods, require_POST
 
-from trajetoria.acesso import mensagens
+from trajetoria.acesso import mensagens, pendente
 from trajetoria.acesso.demonstracao import painel
 from trajetoria.acesso.formularios import EntradaForm
 from trajetoria.acesso.normalizacao import normalizar_cpf, normalizar_data
@@ -77,18 +77,37 @@ def entrada(request):
         request,
         "acesso/entrada.html",
         {
+            "chegada": _chegada(request) if request.method == "GET" else (),
+            # 023 FR-022: depois de uma tentativa que falhou, nada de "Continuar para suas
+            # formações" de uma sessão anterior.
+            "tentativa_falhou": request.method == "POST",
+            "passos": (mensagens.PASSO_CONFERIR, mensagens.PASSO_INFORMAR),
             "form": form,
             "selo_declaracao": selo,
             "painel": painel(),
             "aviso": aviso,
             "prefixo_titulo": "Erro: " if form.errors else "",
-            "conferir": mensagens.CONFERIR if aviso == mensagens.NAO_CONFIRMADA else None,
+            "conferir": aviso == mensagens.NAO_CONFIRMADA,
         },
         status=status,
     )
     if espera is not None:
         resposta["Retry-After"] = str(espera)
     return resposta
+
+
+def _chegada(request):
+    """Aviso de chegada por código de lista fechada (023 FR-001, FR-003, FR-030). A frase do
+    envio guardado só aparece se o envio pendente existe e vale (regra de verdade)."""
+    codigo = request.GET.get("aviso")
+    if codigo == "sessao":
+        frases = [mensagens.SESSAO_ENCERRADA]
+        if pendente.ler(request) is not None:
+            frases.append(mensagens.ENVIO_GUARDADO)
+        return tuple(frases)
+    if codigo == "selo":
+        return (mensagens.SELO_VENCIDO,)
+    return ()
 
 
 @never_cache

@@ -29,6 +29,7 @@ __all__ = [
     "Passagem",
     "Saida",
     "finalizada",
+    "maximo_restante",
     "pendencias",
     "percorrer",
     "perguntas_do_percurso",
@@ -182,3 +183,48 @@ def respondidas(respostas: Mapping) -> dict[UUID, UUID | None]:
     mapeamento que `percorrer` usa: Pergunta → Opção escolhida (escolha única) ou `None`. Só
     lê o atributo `opcao_id` já carregado; não faz I/O."""
     return {pergunta_id: r.opcao_id for pergunta_id, r in respostas.items()}
+
+
+def maximo_restante(conteudo: ConteudoVersao, secao_id: UUID) -> int:
+    """O maior número de Seções que ainda podem ser apresentadas depois da Seção `secao_id`
+    (023 FR-013, FR-014; research R8): o caminho mais longo no grafo de Seções da Versão.
+
+    Pura e independente de Respostas: a partir da Seção exibida, considera todos os destinos
+    possíveis das perguntas com regra, porque a resposta ainda pode mudar até a pessoa deixar
+    a Seção. Por construção, nunca é menor que o número de Seções que de fato vêm depois. As
+    arestas seguem a precedência de `_destino`: destinos das Opções com regra e, quando a
+    pergunta com regra pode não decidir (ausente, opcional ou com Opção sem regra), o destino
+    padrão (encaminhamento, Seção seguinte ou finalização). Numa Versão publicada todo destino
+    é posterior (006 FR-015), então o grafo não tem ciclo."""
+    secoes = conteudo.secoes
+    indice = {secao.id: i for i, secao in enumerate(secoes)}
+    memoria: dict[int, int] = {}
+
+    def seguintes(i: int) -> set[int | None]:
+        secao = secoes[i]
+        destinos: set[int | None] = set()
+        com_regra = _com_regra(secao)
+        decide_sempre = False
+        for pergunta in com_regra:
+            for opcao in pergunta.opcoes:
+                if opcao.regra is not None:
+                    destinos.add(
+                        None if opcao.regra.finaliza else indice[opcao.regra.destino_secao_id]
+                    )
+            decide_sempre = pergunta.obrigatoria and all(o.regra for o in pergunta.opcoes)
+        if not decide_sempre:
+            if secao.encaminhamento_id is not None:
+                destinos.add(indice[secao.encaminhamento_id])
+            else:
+                destinos.add(i + 1 if i + 1 < len(secoes) else None)
+        return destinos
+
+    def depois(i: int) -> int:
+        if i not in memoria:
+            memoria[i] = max(
+                (0 if destino is None else 1 + depois(destino) for destino in seguintes(i)),
+                default=0,
+            )
+        return memoria[i]
+
+    return depois(indice[secao_id])

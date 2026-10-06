@@ -82,7 +82,7 @@ def test_quatro_tipos_complemento_escala_e_explicativo(client, cenario, ana):
     assert not re.search(r"\b1 = ", q20)  # rótulo inicial ausente não é inventado
     q26 = _bloco(html, 7)  # escolha múltipla com "Outro:"
     assert q26.count('type="checkbox"') == 6
-    assert 'name="p7-complemento"' in q26 and "Descreva: «Outro»" in q26
+    assert 'name="p7-complemento"' in q26 and "Descreva o que se encaixa em «Outro»" in q26
     q32 = _bloco(html, 13)  # explicativo
     assert "Não considerar auxilio estudantil como bolsa." in q32
     descrito = re.search(r'aria-describedby="([^"]+)"', q32).group(1).split()
@@ -142,9 +142,9 @@ def test_secao_sem_titulo_nao_ganha_h2_inventado(client, cenario, ana):
     principal = _formulario(html)
     assert "<h2" not in principal
     # 014 FR-023: sem título na Versão, o título principal é o da pesquisa — nada inventado —
-    # e o título da aba mantém a regra atual, único por tela.
+    # e o título da aba é o rótulo da Seção (023 FR-015), único por tela.
     assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == ["Egresso Ifes"]
-    assert re.search(r"<title>Seção 13 — ", html)
+    assert re.search(r"<title>Parte 8 — ", html)  # 023 FR-015: "Parte X", nunca "Seção 13"
 
 
 def test_sem_resposta_so_para_radio_e_escala_nao_obrigatorios(client, cenario, ana):

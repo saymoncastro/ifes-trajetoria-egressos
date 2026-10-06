@@ -57,7 +57,7 @@ def test_expiracao(preparado, client, relogio, settings, limite):
     else:
         settings.TRAJETORIA_SESSAO_INATIVIDADE = timedelta(days=1)
         relogio.agora += timedelta(hours=8, seconds=1)
-    assert client.get("/formacoes/")["Location"] == "/acesso/"
+    assert client.get("/formacoes/")["Location"] == "/acesso/?aviso=sessao"  # 023 FR-001
     assert not dict(client.session)
 
 
@@ -77,7 +77,7 @@ def test_renovacao_material_e_pessoa(preparado, client, relogio):
     MaterialDeVerificacao.objects.filter(pessoa__id_externo="SIM-P-0001").update(
         atualizado_em=relogio.agora
     )
-    assert client.get("/formacoes/")["Location"] == "/acesso/"
+    assert client.get("/formacoes/")["Location"] == "/acesso/?aviso=sessao"  # 023 FR-001
     assert not dict(client.session)
     sessao = client.session
     sessao.update(
@@ -132,7 +132,7 @@ def test_expiracao_preserva_rascunho(preparado, client, relogio, settings):
     assert antes
     settings.TRAJETORIA_SESSAO_INATIVIDADE = timedelta(seconds=1)
     relogio.agora += timedelta(seconds=2)
-    assert client.get(secao)["Location"] == "/acesso/"
+    assert client.get(secao)["Location"] == "/acesso/?aviso=sessao"  # 023 FR-001
     assert list(Resposta.objects.values()) == antes
     assert _confirmar(client).status_code == 303
     assert "checked" in client.get(secao).content.decode()

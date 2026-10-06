@@ -1,1 +1,1 @@
-{{ item.pergunta.texto }}{% if item.pergunta.obrigatoria %} <span class="obrigatoria">(obrigatória)</span>{% endif %}
+{{ item.pergunta.texto }}{% if item.pergunta.obrigatoria %}<span class="visualmente-oculto"> (obrigatória)</span>{% else %} <span class="opcional">(opcional)</span>{% endif %}

@@ -45,6 +45,8 @@ AVISOS = {
         "O que você respondeu nesta seção está salvo. Você pode continuar a pesquisa quando quiser."
     ),
     "saida": "Você pode continuar a pesquisa quando quiser.",
+    # 023 FR-016: só quando a Seção enviada tem Resposta gravada (014 FR-008).
+    "anterior": "Parte anterior salva.",
 }
 # Variante visual fixa de cada aviso (015 FR-026): sucesso só quando algo foi salvo.
 VARIANTE_DO_AVISO = {
@@ -52,6 +54,7 @@ VARIANTE_DO_AVISO = {
     "percurso": "informacao",
     "salvo": "sucesso",
     "saida": "informacao",
+    "anterior": "sucesso",
 }
 # Nota de "Sair sem salvar esta seção" (014 FR-013).
 SAIR_SEM_SALVAR_NOTA = "O que já foi salvo antes continua guardado."
@@ -83,7 +86,11 @@ SECAO_SALVA = "O que você respondeu nesta seção está salvo."
 ESCOLHA_INVALIDA = "Selecione uma das opções apresentadas."
 ESCALA_INVALIDA = "Selecione um valor da escala."
 OBRIGATORIA = "Esta pergunta é obrigatória."
-COMPLEMENTO_SEM_OPCAO = "Para descrever, marque a opção «{opcao}»."
+# 023 FR-020: a recusa continua (005 FR-030); a mensagem diz as duas saídas.
+COMPLEMENTO_SEM_OPCAO = (
+    "Você escreveu uma descrição para «{opcao}», mas a opção não está marcada. "
+    "Marque «{opcao}» ou apague a descrição."
+)
 POR_MOTIVO = {
     Motivo.OPCAO_DE_OUTRA_PERGUNTA: ESCOLHA_INVALIDA,
     Motivo.VALOR_INCOMPATIVEL: ESCOLHA_INVALIDA,
@@ -111,3 +118,17 @@ FORMACAO_INDISPONIVEL = ("Formação não disponível.", ())
 
 REGISTRADA_DECLARADA = ("Obrigado. Sua resposta foi registrada. "
                        "A formação informada passará por verificação institucional.")
+
+# 023 FR-007: restauração de um envio pendente depois da nova confirmação.
+RECUPERADO = (
+    "Recuperamos o que você tinha marcado nesta parte. Confira e toque em Salvar e continuar."
+)
+# 023 FR-010: ponto seguro de salvamento no meio das Seções longas.
+PRECISA_PARAR = "Precisa parar? O que você marcou até aqui fica salvo."
+LIMITE_PONTO_DO_MEIO = 8  # hipótese de produto: Seções com mais Perguntas que isto
+# 023 FR-011: próxima formação pendente na confirmação.
+PROXIMA_FORMACAO = "Você também pode responder sobre:"
+ACAO_PROXIMA = {
+    SituacaoDaFormacao.DISPONIVEL_PARA_INICIAR: "Responder sobre esta formação",
+    SituacaoDaFormacao.DISPONIVEL_PARA_RETOMAR: "Continuar a pesquisa desta formação",
+}

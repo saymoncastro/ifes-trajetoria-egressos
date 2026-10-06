@@ -60,14 +60,17 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     assert client.get(_url(participacao))["Location"] == _url(participacao, "secoes/1/")
     assert "É com muita satisfação" in ci.texto_visivel(client.get(_url(participacao, "secoes/1/")))
     # 6. Q1 = Sim.
-    assert _enviar(client, participacao, 1, escolhas)["Location"] == _url(participacao, "secoes/2/")
+    assert _enviar(client, participacao, 1, escolhas)["Location"] == _url(
+        participacao, "secoes/2/?aviso=anterior"
+    )
     # 7. Ramos reais; uma pendência; "Outro:" com complemento em S8.
     pendente = _enviar(client, participacao, 2, escolhas, p2=None)
     assert pendente["Location"] == _url(participacao, "secoes/2/?pendencias=1")
     assert "Esta pergunta é obrigatória." in ci.texto_visivel(client.get(pendente["Location"]))
     for posicao, destino in ((2, 3), (3, 6), (6, 8)):
         resposta = _enviar(client, participacao, posicao, escolhas)
-        assert resposta["Location"] == _url(participacao, f"secoes/{destino}/")
+        # 023 FR-016: a Seção seguinte informa que a anterior foi salva.
+        assert resposta["Location"] == _url(participacao, f"secoes/{destino}/?aviso=anterior")
     secao8 = ci.secao_do_conteudo(participacao.campanha.versao, 8)
     q26 = next(p for p in secao8.perguntas if p.id == _chaves(participacao)["Q26"])
     outro = next(o for o in q26.opcoes if o.complemento_textual)
@@ -78,7 +81,7 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
         escolhas,
         **{f"p{q26.posicao}": ["1", str(outro.posicao)], f"p{q26.posicao}-complemento": "Zine"},
     )
-    assert resposta["Location"] == _url(participacao, "secoes/9/")
+    assert resposta["Location"] == _url(participacao, "secoes/9/?aviso=anterior")
     # 8. Respostas salvas.
     assert respostas_atuais(participacao)[q26.id].complemento == "Zine"
     # 9. No meio de S9: parte das respostas, depois abandona a demonstração.
@@ -97,7 +100,8 @@ def test_e2e_1_jornada_principal_com_retomada_e_conclusao(client, demonstracao):
     # 12. Continua até o fim.
     for posicao, destino in ((9, 11), (11, 12), (12, 13)):
         resposta = _enviar(client, participacao, posicao, escolhas)
-        assert resposta["Location"] == _url(participacao, f"secoes/{destino}/")
+        # 023 FR-016: a Seção seguinte informa que a anterior foi salva.
+        assert resposta["Location"] == _url(participacao, f"secoes/{destino}/?aviso=anterior")
     fim = _enviar(client, participacao, 13, escolhas)
     assert fim["Location"] == _url(participacao, "concluir/")
     # 13–14. Conclui e vê a confirmação.

@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
-from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.acesso.sessao import destino_da_entrada, pessoa_em_uso
 from trajetoria.contato.endereco import EnderecoInvalido
 from trajetoria.contato.operacoes import informar_email
 from trajetoria.narrativa.consultas import elegivel as narrativa_disponivel
@@ -36,7 +36,8 @@ def _pagina(request, pessoa, *, situacao=None, erro=None, status=200):
 def meu_email(request):
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        return HttpResponse(status=303, headers={"Location": "/acesso/"})
+        # 023 FR-001: com aviso quando a sessão acabou de expirar.
+        return HttpResponse(status=303, headers={"Location": destino_da_entrada(request)})
     if request.method == "GET":
         return _pagina(request, pessoa)
     if request.POST.get("acao") != "salvar":

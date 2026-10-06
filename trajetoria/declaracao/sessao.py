@@ -12,7 +12,11 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from trajetoria.acesso.sessao import post_de_entrada
+from trajetoria.acesso.sessao import (
+    descartar_preservando_envio,
+    limpar_preservando_envio,
+    post_de_entrada,
+)
 from trajetoria.declaracao.models import FormacaoDeclarada
 
 _FORMACOES = "declaracao.formacoes"
@@ -25,7 +29,7 @@ _CACHE = "_declaracoes_de_acesso"
 
 def estabelecer_declarante(request, uuids, agora):
     request.session.cycle_key()
-    request.session.clear()
+    limpar_preservando_envio(request.session)
     request.session.update(
         {
             _FORMACOES: [str(id) for id in uuids],
@@ -74,7 +78,8 @@ def _revalidar(request):
         return uuids
     except (ValueError, TypeError, KeyError, ValidationError):
         if not post_de_entrada(request):
-            sessao.flush()
+            descartar_preservando_envio(sessao)
+            request._sessao_expirada = True
         return None
 
 

@@ -60,7 +60,8 @@ def test_controles_por_tipo_e_sem_envio(client, pesquisa):
     html = resposta.content.decode()
     assert 'type="radio"' in html and 'type="checkbox"' in html and 'type="text"' in html
     assert "<form" not in html and 'type="submit"' not in html
-    assert "Descreva: «Outro»" in html  # rótulo da 008 (UX-14), reutilizado na prévia
+    # Rótulo da 008 (UX-14), revisto pela 023 (FR-019), reutilizado na prévia.
+    assert "Descreva o que se encaixa em «Outro»" in html
     assert not resposta.cookies
     # 014 (FR-018 a FR-022): a prévia acompanha os controles da jornada — o grupo exclusivo
     # da escala é o próprio contêiner dos pontos, não o fieldset.

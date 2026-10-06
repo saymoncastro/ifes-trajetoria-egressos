@@ -37,9 +37,15 @@ def test_dependencia_unidirecional_e_material_fora_de_operador():
                     and no.module.startswith("trajetoria.acesso")
                 ):
                     # 020: a página "Meu e-mail" usa a mesma sessão de Pessoa (FR-011).
+                    # 023: o destino da entrada com aviso (FR-001) e, só nas telas de Seção,
+                    # o envio pendente (FR-002 a FR-009), cujo conteúdo é opaco para a 018.
                     assert pasta in ("interface", "contato") and p.name == "views.py"
+                    if no.module == "trajetoria.acesso":
+                        assert pasta == "interface"
+                        assert {a.name for a in no.names} == {"pendente"}
+                        continue
                     assert no.module == "trajetoria.acesso.sessao"
-                    assert {a.name for a in no.names} <= {"pessoa_em_uso"}
+                    assert {a.name for a in no.names} <= {"pessoa_em_uso", "destino_da_entrada"}
                 if isinstance(no, ast.Import):
                     assert not any(a.name.startswith("trajetoria.acesso") for a in no.names)
         if pasta in ("exportacao", "analitico", "acompanhamento", "comunicacao", "editor",

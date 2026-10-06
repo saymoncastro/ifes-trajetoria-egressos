@@ -5,9 +5,12 @@ from trajetoria.declaracao.consultas import opcoes_de_nivel, opcoes_de_unidade
 
 
 class FormacaoForm(forms.Form):
-    nome = forms.CharField(label="Seu nome", max_length=200)
+    # 023 FR-031: o navegador pode preencher o nome; o nível é escolhido com um toque.
+    nome = forms.CharField(
+        label="Seu nome", max_length=200, widget=forms.TextInput(attrs={"autocomplete": "name"})
+    )
     unidade = forms.ChoiceField(label="Unidade do Ifes")
-    nivel = forms.ChoiceField(label="Nível de ensino")
+    nivel = forms.ChoiceField(label="Nível de ensino", widget=forms.RadioSelect)
     curso = forms.CharField(label="Curso", max_length=300, strip=False)
     ano_conclusao = forms.IntegerField(
         label="Ano de conclusão",
@@ -17,14 +20,17 @@ class FormacaoForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for campo, opcoes in [("unidade", opcoes_de_unidade()), ("nivel", opcoes_de_nivel())]:
-            self.fields[campo].choices = [("", "Selecione")] + [(v, v) for v in opcoes]
+        self.fields["unidade"].choices = [("", "Selecione")] + [
+            (v, v) for v in opcoes_de_unidade()
+        ]
+        self.fields["nivel"].choices = [(v, v) for v in opcoes_de_nivel()]
         self.fields["ano_conclusao"].max_value = timezone.localdate().year
         for nome, campo in self.fields.items():
             campo.widget.attrs["id"] = nome
             campo.error_messages["required"] = "Preencha este campo."
             campo.error_messages["invalid_choice"] = "Selecione uma opção da lista."
             campo.error_messages["invalid"] = "Confira este campo."
+        self.fields["nivel"].error_messages["required"] = "Selecione o nível de ensino."
         if self.is_bound:
             self.is_valid()
             for nome in self.errors:

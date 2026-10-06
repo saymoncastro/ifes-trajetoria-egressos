@@ -6,8 +6,19 @@
 <p>{{ registro }}</p>
 </div>
 {% if agradecimento %}<p>{{ agradecimento }}</p>{% endif %}
-{% include "interface/contexto.html" %}
 {% if texto_encerramento %}<div class="encerramento">{{ texto_encerramento|linebreaks }}</div>{% endif %}
+{# 023 FR-011, FR-028: a próxima formação pendente vem antes das demais ações. #}
+{% if proxima %}<section class="proxima-formacao" aria-labelledby="titulo-proxima">
+<h2 id="titulo-proxima">{{ proxima_titulo }}</h2>
+{% include "interface/formacao.html" with formacao=proxima %}
+{% if proxima.onde_parou %}<p class="onde-parou">{{ proxima.onde_parou }}</p>{% endif %}
+<form method="post" action="/formacoes/entrar/">{% csrf_token %}
+  <input type="hidden" name="formacao" value="{{ proxima.pk }}">
+  <button type="submit" class="primario">{{ proxima.acao }}</button>
+</form>
+{% if outras_proximas %}<p><a href="/formacoes/">Ver todas as suas formações</a></p>{% endif %}
+</section>{% endif %}
 {% if declarada %}<p><a href="/declaracao/">Ver suas formações informadas</a></p>{% else %}<p><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></p>
 <p class="nota convite-contato"><a href="/meu-email/">Quer manter seu e-mail atualizado com o Ifes?</a></p>{% endif %}
+{% include "interface/contexto.html" %}
 {% endblock %}

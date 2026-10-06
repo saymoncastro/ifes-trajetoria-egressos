@@ -4,7 +4,7 @@
   {% include "interface/perguntas/_cabecalho.html" %}
   <select id="{{ item.nome }}-campo" name="{{ item.nome }}"{% if item.descrito_por %} aria-describedby="{{ item.descrito_por }}"{% endif %}{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}{% if item.erros %} aria-invalid="true"{% endif %}>
     <option value="">Selecione…</option>
-    {% for opcao in item.opcoes %}<option value="{{ opcao.valor }}"{% if opcao.marcado %} selected{% endif %}>{{ opcao.texto }}</option>
+    {% for opcao in item.opcoes %}<option value="{{ opcao.valor }}"{% if opcao.complemento %} class="opcao-com-complemento"{% endif %}{% if opcao.marcado %} selected{% endif %}>{{ opcao.texto }}</option>
     {% endfor %}
   </select>
   {% include "interface/perguntas/_complemento_remover.html" %}
@@ -14,9 +14,9 @@
   <legend id="{{ item.nome }}-enunciado">{% include "interface/perguntas/_enunciado.html" %}</legend>
   {% include "interface/perguntas/_cabecalho.html" %}
   {# Só as Opções formam o grupo exclusivo; a caixa de remoção fica fora (014 FR-022). #}
-  <div class="opcoes" role="radiogroup" aria-labelledby="{{ item.nome }}-enunciado"{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}>
+  <div class="opcoes{% if item.lado_a_lado %} opcoes-lado-a-lado{% endif %}" role="radiogroup" aria-labelledby="{{ item.nome }}-enunciado"{% if item.pergunta.obrigatoria %} aria-required="true"{% endif %}>
     {% for opcao in item.opcoes %}
-    <div class="opcao">
+    <div class="opcao{% if opcao.complemento %} opcao-com-complemento{% endif %}">
       <input type="radio" id="{{ opcao.id }}" name="{{ item.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}>
       <label for="{{ opcao.id }}">{{ opcao.texto }}</label>
     </div>

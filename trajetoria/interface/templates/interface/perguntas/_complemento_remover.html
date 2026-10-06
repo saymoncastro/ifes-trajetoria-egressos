@@ -1,5 +1,5 @@
 {% if item.complemento %}
-<div class="complemento">
+<div class="complemento{% if item.complemento.sempre_visivel %} sempre-visivel{% endif %}">
   <label for="{{ item.nome }}-complemento">{{ item.complemento.rotulo }}</label>
   <input type="text" id="{{ item.nome }}-complemento" name="{{ item.nome }}-complemento" value="{{ item.complemento.valor }}">
 </div>

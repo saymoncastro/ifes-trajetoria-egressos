@@ -1,7 +1,9 @@
 {% extends "interface/base.html" %}
-{% block titulo %}{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}Seção {{ passagem.secao.posicao }}{% endif %}{% endblock %}
+{% block titulo %}{{ rotulo_secao }}{% endblock %}
 {% block conteudo %}
 {% if aviso %}<p class="aviso aviso-{{ aviso.variante }}" role="status">{{ aviso.texto }}</p>{% endif %}
+{# 023 FR-013: parte no percurso e máximo restante; nunca percentual nem tempo. #}
+<p class="parte">{% if anterior_salva %}<span class="parte-salva" role="status">{{ anterior_salva }}</span><br>{% endif %}{{ linha_da_parte }}</p>
 {# Título principal = a Seção; sem título na Versão, o da pesquisa (014 FR-023; nada inventado). #}
 <h1>{% if passagem.secao.titulo %}{{ passagem.secao.titulo }}{% else %}{{ titulo_pesquisa }}{% endif %}</h1>
 {% if resumo_erros %}
@@ -15,7 +17,8 @@
 </div>
 {% endif %}
 {% include "interface/contexto_compacto.html" %}
-{% if primeira and texto_abertura %}<div class="abertura">{{ texto_abertura|linebreaks }}</div>{% endif %}
+{# 023 FR-025: o convite da Versão, recolhido; o texto da Seção (termos) continua visível. #}
+{% if primeira and texto_abertura %}<details class="abertura"><summary>Sobre esta pesquisa</summary>{{ texto_abertura|linebreaks }}</details>{% endif %}
 {% if passagem.secao.texto %}<div class="texto-secao">{{ passagem.secao.texto|linebreaks }}</div>{% endif %}
 <form method="post" action="{{ acao }}" novalidate>{% csrf_token %}
   {# Botão padrão desabilitado: Enter/"Ir" num campo não envia a Seção (014 FR-016; research R2). #}
@@ -26,6 +29,13 @@
     {% elif item.modo == "radio" %}{% include "interface/perguntas/escolha_unica.html" %}
     {% elif item.modo == "caixas" %}{% include "interface/perguntas/escolha_multipla.html" %}
     {% else %}{% include "interface/perguntas/escala.html" %}{% endif %}
+    {% if forloop.counter == meio %}
+    {# 023 FR-010: ponto seguro de salvamento; o mesmo envio de "Salvar e sair". #}
+    <div class="ponto-do-meio">
+      <p>{{ precisa_parar }}</p>
+      <button type="submit" name="depois" value="sair" class="secundario">Salvar e sair</button>
+    </div>
+    {% endif %}
   {% endfor %}
   <div class="acoes acoes-secao">
     <button type="submit" class="primario">Salvar e continuar</button>
@@ -34,6 +44,7 @@
 </form>
 <div class="saidas">
   {% if anterior %}<p><a href="{{ anterior }}">Voltar à seção anterior</a><br><span class="nota">Alterações não salvas nesta página serão descartadas.</span></p>{% endif %}
-  <p><a href="{% if declarada %}/declaracao/{% else %}/formacoes/{% endif %}">Sair sem salvar esta seção</a><br><span class="nota">{{ sair_sem_salvar_nota }}</span></p>
+  {# 023 FR-026: só quando o envio foi recusado e salvar não é possível até corrigir. #}
+  {% if tipo_resumo == "erros" %}<p><a href="{% if declarada %}/declaracao/{% else %}/formacoes/{% endif %}">Sair sem salvar esta seção</a><br><span class="nota">{{ sair_sem_salvar_nota }}</span></p>{% endif %}
 </div>
 {% endblock %}

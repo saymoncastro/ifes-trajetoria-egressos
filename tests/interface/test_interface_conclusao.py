@@ -54,7 +54,8 @@ def test_tela_de_conclusao(client, cenario, ana):
     assert "Depois de concluída, ela não poderá ser alterada." in texto
     assert "Concluir pesquisa" in texto and "Sobre a sua formação" in texto
     assert f'href="{_url(ana, "secoes/1/")}"' in html and "Termos e condições" in texto
-    assert "Seção 13" in texto  # Seção sem título: o número do próprio instrumento
+    # Seção sem título: "Parte X" (023 FR-015), nunca o número interno "Seção 13".
+    assert re.search(r"\bParte \d+\b", texto) and "Seção 13" not in texto
     assert ci.TEXTO_FICTICIO not in texto  # nenhum valor declarado
     assert "no-store" in resposta["Cache-Control"]
 
