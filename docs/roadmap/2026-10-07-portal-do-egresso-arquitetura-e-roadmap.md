@@ -393,7 +393,7 @@ relacionamento" da Constituição.
   - Que "Portal do Egresso" é **denominação provisória** da experiência de demonstração.
   - Que a divisão física em módulos é decidida nas specs.
   - Que **a coleta é independente do Portal**: acesso direto ao instrumento pelas Campanhas,
-    destino preservado após a identificação e funcionamento com a camada desabilitada.
+    caminho de entrada preservado após a identificação e funcionamento com a camada desabilitada.
   - Que **não há link específico de Campanha**, e a independência não exige um. O convite
     continua neutro (018 FR-053; ADR 0004) e leva à entrada do instrumento.
 - **Valor para o egresso.** Nenhum direto. A S0 destrava o resto sem contornar a Constituição.
@@ -678,7 +678,7 @@ conclusão.
   │
   ▼
  S1  Início e shell do Portal + trajetória por regra positiva (revisa 021 FR-001/002/E2, 022 FR-001)
-     + acesso direto ao instrumento e destino preservado, com testes de independência
+     + acesso direto ao instrumento e caminho de entrada preservado, com testes de independência
   │
   ▼
  ◆ Checkpoint 1 — modelo mental e navegação
