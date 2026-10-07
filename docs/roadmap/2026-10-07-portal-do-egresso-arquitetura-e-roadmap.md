@@ -17,7 +17,7 @@
   Portal.**
   - Campanhas continuam divulgando acesso direto ao instrumento.
   - O egresso responde sem passar pelo Início do Portal.
-  - O destino legítimo pedido antes da identificação é preservado depois dela.
+  - O caminho de entrada (instrumento ou Portal) é preservado depois da identificação.
   - A 024 verifica tudo isso por testes (seção 6, S1).
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
@@ -296,7 +296,7 @@ Regras da fronteira, testáveis do mesmo jeito que os testes de fronteira que o 
    - Portal (PAEG, Art. 10, I) e questionário (Art. 10, II) são ações distintas.
    - Campanhas divulgam acesso direto ao instrumento, por e-mail ou outro canal.
    - O egresso se identifica e responde sem passar pelo Início.
-   - O destino legítimo pedido antes da identificação é preservado depois dela.
+   - O caminho de entrada (instrumento ou Portal) é preservado depois da identificação.
    - Com o Portal desabilitado, a coleta funciona como hoje.
 
    Esta regra entrou com a S0 (ADR 0008; Constituição 2.1.0, "Camada de relacionamento").
@@ -327,10 +327,13 @@ São poucas e localizadas:
      template base compartilhado.
    - A jornada da pesquisa continua visualmente idêntica.
    - O shell do Portal acrescenta a navegação, com os tokens da 015 e sem tokens novos.
-2. **Destino do login e de `/`.**
-   - Passa a ser o Início do Portal **quando não houver destino legítimo pedido antes da
-     identificação**. O acesso direto ao instrumento pelo convite continua levando à
-     pesquisa (ADR 0008).
+2. **Entrada do Portal.**
+   - O Início do Portal ganha uma entrada neutra. O acesso direto ao instrumento pelo
+     convite continua levando à pesquisa (ADR 0008).
+   - A 024 compara duas formas:
+     - entradas distintas, mantendo `/acesso/` → `/formacoes/`;
+     - destino de lista fechada.
+   - Prefere-se a que preserve os contratos existentes com menos alterações.
    - `/formacoes/`, `/participacoes/…`, `/minha-trajetoria/` e `/meu-email/` mantêm rotas e
      comportamentos, exceto a regra de acesso à trajetória (S1).
 3. **Tabelas novas só nas specs S2 e S3.**
@@ -426,7 +429,7 @@ relacionamento" da Constituição.
 - **Novos conceitos.**
   - O shell com navegação só para áreas que existem: Início, Minha trajetória, Atualizar
     (= pesquisa) e Meu e-mail.
-  - A rota do Início e o novo destino do login.
+  - A rota do Início e sua entrada neutra.
   - O nome provisório "Portal do Egresso".
 - **Dois caminhos de acesso, a mesma coleta (ADR 0008).**
   - **Estado atual, conferido no código:**
@@ -436,10 +439,11 @@ relacionamento" da Constituição.
       pesquisa;
     - a 023 retoma ali o envio guardado (FR-006);
     - nenhuma tela preserva o destino pedido antes da identificação.
-  - **Ajuste necessário na 024.** Trocar o destino padrão para o Início sem desviar o acesso
-    direto. A spec escolhe o mecanismo:
-    - uma rota neutra própria da entrada do instrumento; ou
-    - um destino de lista fechada.
+  - **Ajuste necessário na 024.** Introduzir o Início sem desviar o acesso direto. A spec
+    compara e escolhe o mecanismo:
+    - **entradas neutras distintas:** o convite mantém `/acesso/` → `/formacoes/` e o Portal
+      tem entrada própria. É a alternativa mais simples, preferida pelo solicitante;
+    - **destino de lista fechada.**
 
     Em qualquer caso: nunca URL livre (para não abrir redirecionamento aberto), nunca
     identidade, token, formação ou Campanha no endereço, e com autorização e elegibilidade
@@ -447,8 +451,8 @@ relacionamento" da Constituição.
 - **Testes obrigatórios de independência.**
   - Acesso espontâneo ao Portal.
   - Acesso direto ao instrumento pelo link externo do convite.
-  - Destino preservado depois da identificação, inclusive após sessão expirada, e com a
-    retomada do envio guardado da 023.
+  - Caminho de entrada preservado depois da identificação, inclusive após sessão expirada,
+    e com a retomada do envio guardado da 023.
   - Participação em andamento e Participação concluída.
   - Campanha encerrada; pessoa fora da abrangência ou sem pesquisa disponível.
   - Trajetória Ifes funcionando com a camada do Portal desabilitada.
@@ -758,7 +762,7 @@ Itens atraentes, mas que seriam overengineering agora:
 | D1 | A camada Portal/Relacionamento vive neste software, como hipótese reversível restrita à demonstração, e depende do NIAE num só sentido | S0 (ADR 0008 + emenda 2.1.0), concluída |
 | D2 (provisório) | "Portal do Egresso" é o nome provisório da experiência de demonstração; "Trajetória Ifes" é o nome da capacidade de acompanhamento | S0; textos da S1 |
 | D3 | A trajetória institucional, com card e vídeo, fica acessível a quem tem ao menos uma Conclusão Acadêmica, independentemente de pesquisa (alternativa a) | S1, revisando a 021 e a 022 |
-| D7 | A coleta é independente do Portal: acesso direto ao instrumento pelas Campanhas, destino legítimo preservado após a identificação e funcionamento com a camada desabilitada | S0 (ADR 0008; Constituição 2.1.0); testes na S1 |
+| D7 | A coleta é independente do Portal: acesso direto ao instrumento pelas Campanhas, caminho de entrada preservado após a identificação e funcionamento com a camada desabilitada | S0 (ADR 0008; Constituição 2.1.0); testes na S1 |
 
 ### 11.2 Continuam pendentes
 

@@ -46,7 +46,7 @@ Sobre o acesso pelas Campanhas, o código mostra o seguinte:
 - **A retomada de envio depende desse destino.** A 023 guarda um envio pendente quando a sessão
   expira e o retoma a partir de `/formacoes/` (023 FR-006).
 
-Se a Feature 024 trocar o destino padrão do login para o Início do Portal sem mais nada, o
+Se a Feature 024 trocasse o destino padrão do login para o Início do Portal sem mais nada, o
 egresso que chega pelo convite cai no Portal, e não na pesquisa. A coleta passaria a depender
 do Portal.
 
@@ -83,12 +83,18 @@ as da Constituição 2.1.0 (Fronteira do Domínio, "Camada de relacionamento"):
      institucional.
    - O egresso se identifica e responde sem passar pela página inicial do Portal.
    - Qualquer que seja o caminho, o instrumento, a Campanha e a Participação são os mesmos.
-5. **O destino legítimo sobrevive à identificação.**
-   - Quando a pessoa pede uma tela legítima do egresso antes de se identificar, ela chega a
-     essa tela depois da identificação.
+5. **O caminho de entrada escolhido sobrevive à identificação.**
+   - Quem entra pelo instrumento chega ao instrumento. Quem entra pelo Portal chega ao
+     Portal.
    - Valem a autenticação, a autorização (a Participação tem de ser da Pessoa) e a
      elegibilidade (a resolução da entrada e a admissão da Campanha).
-   - O Início do Portal é o destino só quando não houver outro.
+   - Uma sessão identificada pode navegar entre as duas experiências, respeitadas as regras
+     de acesso de cada tela.
+   - O mecanismo é escolhido pela 024. Há duas opções:
+     - entradas neutras distintas, uma por caminho, mantendo `/acesso/` → `/formacoes/`;
+     - preservação de destino por lista fechada.
+   - Em qualquer opção, a preferência é pela que preserve os contratos existentes com menos
+     alterações.
 6. **O link do convite continua neutro.**
    - Ele leva à entrada do instrumento, não ao Início do Portal.
    - Continua sem identidade, token, formação ou Campanha (018 FR-053).
@@ -114,15 +120,16 @@ Esta ADR **não** representa adoção institucional. Continuam pendentes:
   - a Fronteira do Domínio, que ganha a subseção "Camada de relacionamento";
   - o item 12 dos Princípios Resumidos.
 - **A Feature 024 (Início do egresso e shell do Portal) deve:**
-  - trocar o destino padrão do login para o Início sem prejudicar o acesso direto. O
-    mecanismo é escolha da spec: uma rota neutra própria para a entrada do instrumento ou um
-    destino de lista fechada. Nunca uma URL livre, para não abrir redirecionamento aberto, e
-    nunca dado de identidade no endereço;
+  - introduzir o Início do Portal sem prejudicar o acesso direto. O mecanismo é escolha da
+    spec: entradas neutras distintas (o convite mantém `/acesso/` → `/formacoes/`; o Portal
+    tem entrada própria) ou destino de lista fechada. Nunca uma URL livre, para não abrir
+    redirecionamento aberto, e nunca dado de identidade no endereço;
   - preservar a retomada do envio guardado da 023 (FR-006);
   - ter testes para cada um destes casos:
     - acesso espontâneo ao Portal;
     - acesso direto ao instrumento pelo link externo do convite;
-    - preservação do destino depois da identificação, inclusive quando a sessão expira;
+    - preservação do caminho de entrada depois da identificação, inclusive quando a sessão
+      expira;
     - Participação em andamento e Participação concluída;
     - Campanha encerrada e pessoa fora da abrangência ou sem pesquisa disponível;
     - Trajetória Ifes funcionando com a camada do Portal desabilitada;
