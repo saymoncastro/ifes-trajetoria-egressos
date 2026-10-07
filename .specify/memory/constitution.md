@@ -46,9 +46,13 @@ cadastro, divulgação de oportunidades de estágio/emprego, continuidade dos es
 eventos, a serem definidas por cada unidade (Art. 13). Esse ambiente mais amplo não é
 automaticamente escopo deste software.
 
-A forma de relação entre o Trajetória Ifes e o Portal do Egresso previsto na PAEG
-(componente de acompanhamento do Portal, sistema integrado a ele ou outra composição) é
-`DECISÃO PENDENTE` e NÃO DEVE ser presumida pelo desenvolvimento.
+A forma institucional de relação entre o Trajetória Ifes e o Portal do Egresso previsto na
+PAEG (componente de acompanhamento do Portal, sistema integrado a ele ou outra composição)
+é `DECISÃO PENDENTE` das instâncias competentes e NÃO DEVE ser presumida pelo
+desenvolvimento. Enquanto ela não for tomada, uma experiência de relacionamento com o
+egresso PODE ser desenvolvida neste software apenas como hipótese de produto reversível,
+restrita à demonstração, nos termos da seção "Camada de relacionamento" da Fronteira do
+Domínio (ADR 0008). Isso NÃO constitui adoção institucional do Portal.
 
 O Trajetória Ifes DEVE ser arquitetado para:
 
@@ -623,6 +627,36 @@ ferramentas de BI; eventos; oportunidades profissionais; outros serviços instit
 
 Integração com esses sistemas NÃO transfere automaticamente sua responsabilidade ao NIAE.
 
+### Camada de relacionamento (Portal do Egresso em demonstração)
+
+Uma camada de relacionamento com o egresso PODE existir neste software, fora do domínio
+central, como hipótese de produto reversível e restrita à demonstração (ADR 0008). Ela
+ocupa o lugar que, no diagrama da Arquitetura de Integração, cabe às soluções
+institucionais externas: consome o núcleo e pode ser substituída por um Portal
+institucional sem reescrita do domínio central. Valem as regras:
+
+- **Dependência num só sentido.** A camada PODE depender do núcleo; nenhum componente do
+  núcleo DEVE depender dela.
+- **O núcleo não é escrito pela camada.** Pessoa, Conclusão Acadêmica, Formação Declarada,
+  Participação, Respostas e contatos só são criados ou alterados pelas capacidades do
+  próprio núcleo.
+- **Dados da camada não são dado analítico.** Fatos próprios do relacionamento NÃO DEVEM
+  integrar snapshots, exportações analíticas nem indicadores do acompanhamento.
+- **A coleta é independente da camada.** Portal do Egresso (PAEG, Art. 10, I) e aplicação
+  do questionário (Art. 10, II) são ações distintas. Instrumento, Campanha e Participação
+  DEVEM funcionar com a camada desabilitada. A Campanha DEVE poder divulgar acesso direto
+  ao instrumento, por e-mail ou outro canal institucional, e o egresso DEVE poder
+  identificar-se e responder sem passar pela página inicial da camada. Instrumento,
+  Campanha e Participação são os mesmos, qualquer que seja o caminho de acesso.
+- **Verificável.** Essas regras DEVEM ser protegidas por testes de fronteira e de acesso.
+- **Denominação provisória.** "Portal do Egresso" designa a experiência apenas na
+  demonstração; "Trajetória Ifes" continua designando o núcleo e a capacidade de
+  acompanhamento. Nome definitivo e adoção institucional são `DECISÃO PENDENTE`.
+
+Fatos próprios do relacionamento, como conteúdo institucional curado ou manifestações do
+egresso, só existem quando uma spec os justificar, e pertencem à camada, não ao domínio
+central. A organização física da camada em módulos é decidida pelas specs.
+
 ## Arquitetura de Integração
 
 A arquitetura DEVE preservar conceitualmente a seguinte organização:
@@ -762,7 +796,9 @@ Toda evolução do Trajetória Ifes DEVE preservar sobretudo:
 9. periodicidade pertence à governança, não ao código;
 10. a tecnologia não redefine a PAEG;
 11. a Pessoa é institucional; campus e curso pertencem ao contexto acadêmico;
-12. o Trajetória Ifes implementa o NIAE, não todo o Portal do Egresso;
+12. o Trajetória Ifes implementa o NIAE, não todo o Portal do Egresso; uma camada de
+    relacionamento pode depender do núcleo, nunca o contrário, e a coleta funciona sem
+    ela;
 13. integração institucional é preferível à duplicação de domínios externos;
 14. preservar histórico é mais importante que facilitar edição retroativa;
 15. minimizar esforço desnecessário do egresso;
@@ -817,4 +853,4 @@ A Constituição usa versionamento semântico:
   escrito no plan (*Complexity Tracking*) e aceitos em revisão; desvios de princípios
   NON-NEGOTIABLE NÃO são admitidos sem emenda.
 
-**Version**: 2.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-04
+**Version**: 2.1.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-07
