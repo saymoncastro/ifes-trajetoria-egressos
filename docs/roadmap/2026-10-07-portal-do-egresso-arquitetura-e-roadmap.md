@@ -19,6 +19,9 @@
   - O egresso responde sem passar pelo Início do Portal.
   - O caminho de entrada (instrumento ou Portal) é preservado depois da identificação.
   - A 024 verifica tudo isso por testes (seção 6, S1).
+- **Revisão 3 (2026-10-08).** O solicitante autorizou antecipar **só a especificação** da
+  S2 (Feature 025), com o Checkpoint 1 ainda não concluído. A implementação da 025
+  continua condicionada à avaliação dos resultados do Checkpoint 1 (seção 6, S2).
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -493,6 +496,22 @@ escrito antes do teste.
 
 ### S2 — Oportunidades curadas *(025; M; primeiro fato persistente novo)*
 
+**Situação (2026-10-08): especificação antecipada, implementação condicionada.**
+
+- **Decisão do solicitante.** Com o Checkpoint 1 ainda não concluído, ele autorizou antecipar
+  **exclusivamente a especificação** da 025
+  ([spec](../../specs/025-oportunidades-curadas-portal/spec.md)).
+- **Exceção restrita à spec.** O protocolo do Checkpoint 1 diz que "a S2 e a S3 não começam
+  antes da leitura dos resultados". Esta decisão abre exceção só para a spec.
+- **O que continua vedado** até a leitura dos resultados conforme o
+  [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md):
+  - plan, tasks, código e migrações da 025;
+  - qualquer passo da S3 (026).
+- **Se um critério de compreensão do Checkpoint 1 falhar:**
+  - a S1 é corrigida primeiro;
+  - a spec da 025 é revista se a correção mudar o Início ou a navegação.
+- **O Checkpoint 1 não é dado como aprovado** por esta antecipação.
+
 - **Problema.** O Portal só tem algo a oferecer se houver conteúdo institucional pertinente.
 - **Valor para o egresso.**
   - Caminhos concretos: formação, curso, evento, pesquisa e extensão, carreira.
@@ -689,6 +708,7 @@ conclusão.
   ▼
  ◆ Checkpoint 1 — modelo mental e navegação
    (com o teste moderado da jornada; mockup à parte para Oportunidades/Volte ao Ifes)
+   [2026-10-08: só a spec da S2 foi antecipada; plan, tasks e código aguardam este ponto]
   │
   ├──────────────┐
   ▼              ▼
