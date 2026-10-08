@@ -53,7 +53,7 @@ dados.** A pertinência sai só do que o Ifes já registra.
 | A Conclusão Acadêmica tem curso, unidade, nível, modalidade, forma de oferta e ano, todos como texto da fonte, sem catálogo | `trajetoria/academico/models.py`; 001/DP-007; 010/DP-1005 | A pertinência só pode comparar esses textos por igualdade exata |
 | **Não existe classificação de área do conhecimento**, eixo tecnológico, área CNPq, CINE ou equivalente, em curso nenhum | Busca em `trajetoria/`, `specs/` e `docs/` | "Oportunidade da área de tecnologia" não é calculável. O público é dito por **curso, nível ou unidade**, nunca por área |
 | **Não existe identificador estável de curso.** A Conclusão só tem o `id_externo` do próprio registro da conclusão. O contrato da fonte (`ConclusaoNaFonte`) não transporta código de curso, de matriz nem de oferta | `trajetoria/fonte_academica/contrato.py`; `trajetoria/academico/models.py` | O curso é identificado pelo texto registrado. Incluir um código de curso exigiria mudar o contrato da fonte (001), o que fica fora desta feature (DP-2507) |
-| A demonstração já tem duas grafias para o mesmo curso na mesma unidade: "Tecnologia em Análise e Desenvolvimento de Sistemas" (Ana) e "Análise e Desenvolvimento de Sistemas" (Maria) | `trajetoria/fonte_academica/cenarios.py` | A limitação da comparação exata é real e precisa ser visível ao operador |
+| A fonte simulada usa **uma única** grafia por curso. Ana e Maria têm a mesma constante (`TADS` = "Tecnologia em Análise e Desenvolvimento de Sistemas"). *(Corrigido em 2026-10-08, no plan: a versão anterior desta linha afirmava duas grafias, com base num resumo não conferido na fonte.)* Na fonte real, grafias divergentes continuam possíveis (DP-1005; 001/DP-007) | `trajetoria/fonte_academica/cenarios.py` | A limitação da comparação exata é real, mas a demonstração não a exercita. Os testes a exercitam com uma Conclusão de teste |
 | A abrangência da Campanha compara conjuntos de valores com igualdade exata: todos os critérios definidos, qualquer valor do conjunto | 004 FR-018 a FR-022; ADR 0004 | A semântica de comparação é reaproveitada. O conceito não é: abrangência de Campanha não é público de divulgação (ADR 0004) |
 | A governança tem dois papéis, CPAEG (institucional) e CSAEG (por unidade, em texto), e uma regra nomeada por ação | `trajetoria/governanca/`; 010 FR-028 a FR-034 | A curadoria vira uma regra nova, nomeada, no mesmo padrão |
 | A PAEG atribui à CSAEG a gestão do Portal do Egresso na unidade | PAEG Art. 13, parágrafo único; Art. 22, III; 010 A14 | Fundamento para a CSAEG curar na própria unidade. A atuação institucional não tem artigo equivalente (DP-2501) |
@@ -537,9 +537,10 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
   a oportunidade. Risco registrado.
 - **Muitas oportunidades pertinentes.** A página lista todas, na ordem do FR-016, e o Início
   mostra só a primeira. Paginação fica fora até haver volume real (Princípio XXII).
-- **Duas grafias do mesmo curso** (por exemplo, "Tecnologia em Análise e Desenvolvimento de
-  Sistemas" e "Análise e Desenvolvimento de Sistemas"). São valores distintos. A oportunidade
-  só alcança as duas se o operador marcar as duas.
+- **Duas grafias do mesmo curso** (caso possível na fonte real; nos testes, por exemplo,
+  "Tecnologia em Análise e Desenvolvimento de Sistemas" e "Análise e Desenvolvimento de
+  Sistemas"). São valores distintos. A oportunidade só alcança as duas se o operador marcar
+  as duas.
 - **Critérios satisfeitos por formações diferentes.** Não bastam. Todos os critérios precisam
   ser satisfeitos por uma mesma Conclusão (FR-012).
 - **Endereço de parceiro** (por exemplo, `gov.br`). É aceito como site externo, com o domínio
@@ -855,7 +856,6 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
     por nível (Pós-graduação) e por unidade (Vitória);
   - uma com dois critérios, que nenhuma persona satisfaça combinando formações diferentes;
   - uma de unidade (Vitória) aberta a egressos de outras unidades;
-  - um curso com as duas grafias da demonstração;
   - uma Agendada, uma Encerrada, uma Retirada e um Rascunho com período em curso;
   - ao menos uma persona sem oportunidade dirigida (por exemplo, Elisa, de Alegre).
 
@@ -1026,7 +1026,7 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
 | **Portal vazio ou desatualizado** (operacional, o maior) | O egresso volta e não encontra nada, ou encontra coisa vencida | Expiração automática (FR-032); o Início esconde o bloco vazio (FR-021); estado vazio honesto (FR-018). Para uso real: ter quem cure (DP-2501) e, antes de adotar, avaliar com ao menos uma unidade se ela consegue manter a alimentação. Essa avaliação é operacional e fica fora desta feature |
 | Virar CMS ou mural de anúncios | Custo de manutenção, perda de confiança | Atributos fechados (FR-001), texto curto e simples (FR-002), link oficial obrigatório (FR-004), sem imagem, sem destaque, sem urgência (FR-022) |
 | Pertinência pobre sem área do conhecimento | Oportunidade "de tecnologia" exige listar cursos um a um | Valores escolhidos entre os registrados (FR-007). Uma classificação por área seria decisão institucional futura, não desta feature |
-| Grafia instável de unidade e curso na fonte | O público deixa de casar em silêncio. A própria demonstração já tem o caso: Ana tem "Tecnologia em Análise e Desenvolvimento de Sistemas" e Maria tem "Análise e Desenvolvimento de Sistemas", ambas na Serra | Igualdade exata, documentada (FR-012). A curadoria lista os valores atuais, e o operador marca as duas grafias. DP-1005 e 001/DP-007 herdadas; código de curso estável é DP-2507. O catálogo fictício (FR-042) exercita esse caso |
+| Grafia instável de unidade e curso na fonte | O público deixa de casar em silêncio. A fonte simulada não tem o caso (uma grafia por curso); a fonte real pode ter | Igualdade exata, documentada (FR-012). A curadoria lista os valores atuais, e o operador marca todas as grafias. DP-1005 e 001/DP-007 herdadas; código de curso estável é DP-2507. Os testes exercitam o caso (FR-043, item 1) |
 | Link oficial malicioso ou quebrado | Phishing ou frustração | Validação mínima da forma do endereço (sem usuário, sem IP, só `https`), classificação site do Ifes × externo, domínio à vista do egresso e do operador (FR-004), registro de quem publicou (FR-033), retirada imediata (FR-031). Lista de domínios ou autorização de parceiros: DP-2504 |
 | "Pesquisa e extensão" confundida com a pesquisa de acompanhamento | O egresso acha que precisa responder algo | Vocabulário do FR-022; observado no Checkpoint 2 (SC-014) |
 | Navegação com cinco itens a 320 px e fonte a 200% | Rolagem horizontal ou quebra ruim. A 375 px, os quatro itens atuais já ocupam a linha inteira | Quebra em linhas sem rolagem, alvos de 44×44 px e síntese do Início acima da dobra (FR-020, SC-008), com medição na validação |
