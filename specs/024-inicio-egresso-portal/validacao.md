@@ -27,7 +27,7 @@ Data: 2026-10-07; passada de teclado em 2026-10-08.
 |---|---|---|
 | SC-003: entrada pelo Portal | `/` → `/entrar/` → uma identificação → `/inicio/`. Do Início, trajetória, pesquisa e e-mail estão a um toque, pela navegação ou pelas ações | **Passa** |
 | SC-004: acima da dobra a 375×812 | Com a faixa de demonstração e a navegação, o `h1` e a síntese ("O Ifes registra 2 formações…") ficam visíveis sem rolar ([02](evidencias/02-inicio-topo-375.jpg)). Não foi preciso mover a ilustração | **Passa** |
-| SC-004: sem rolagem horizontal a 320 px | Início, formações, trajetória e e-mail: `scrollWidth` = 320 com fonte a 100%. Com fonte a 200%: Início, formações e e-mail = 320 | **Passa** nas telas da 024 (ver achado A1) |
+| SC-004: sem rolagem horizontal a 320 px | Início, formações, trajetória e e-mail: `scrollWidth` = 320 com fonte a 100%. Com fonte a 200%: Início, formações e e-mail = 320; trajetória = 320 depois da correção do achado A1 (2026-10-08) | **Passa** (A1 corrigido) |
 | SC-007: Seções inalteradas | O HTML do cabeçalho de `/acesso/` e de uma Seção é idêntico ao gravado na T001 (`tests/portal/test_navegacao.py::test_shell_sem_navegacao_identico`). As Seções não têm navegação | **Passa** |
 | SC-002: caminho do convite | `/acesso/` → `/formacoes/` → Seções, com os mesmos endereços e o mesmo número de telas e toques. A escolha de formações ganha a faixa de navegação, de cerca de 45 px, e a frase "A pesquisa tem no máximo 9 partes." O número bate com o "9 partes" previsto pela reauditoria R-02 ([04](evidencias/04-formacoes-navegacao-375.jpg)) | **Passa** (nenhuma tela nem toque a mais) |
 | SC-005: Portal desligado | `tests/portal/test_desabilitado.py`: a raiz é a da 008, `/entrar/` e `/inicio/` dão 404, nenhuma tela tem `<nav`, e o convite funciona até a confirmação | **Passa** |
@@ -77,8 +77,14 @@ Data: 2026-10-07; passada de teclado em 2026-10-08.
 
 ## Achados fora do escopo
 
-- **A1 — Rolagem horizontal na trajetória da 021 com fonte a 200% e 320 px.**
-  - O que acontece: os destaques numéricos de "Naquele ano no Ifes" (`.narrativa-numero` e
-    as frases ao lado) chegam a 382 px.
+- **A1 — Rolagem horizontal na trajetória da 021 com fonte a 200% e 320 px. Corrigido em 2026-10-08.**
+  - O que acontecia: os destaques numéricos de "Naquele ano no Ifes" (`.narrativa-numero` e
+    as frases ao lado) chegavam a 382 px. A linha do tempo também transbordava, encoberta
+    pelos destaques.
   - Origem: a folha da 021, anterior à 024. A navegação não participa.
-  - Encaminhamento: tratar numa correção da 021, sem misturar com esta feature.
+  - Correção: só no CSS da 021. Respiro lateral `min(1rem, 5vw)`, hifenização de palavras
+    longas e grade dos destaques com `minmax(0, 1fr)`. Detalhes na nota de correção da
+    [spec da 021](../021-minha-trajetoria-narrativa/spec.md) e no PR #43.
+  - Verificação: com Maria (SIM-P-0003), `scrollWidth` igual à largura a 320 px e a 375 px,
+    com fonte a 100% e a 200%. Teste:
+    `tests/narrativa/test_pagina.py::test_css_cabe_em_320px_com_fonte_a_200`.
