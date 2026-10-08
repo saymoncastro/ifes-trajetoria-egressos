@@ -40,7 +40,18 @@ Data: 2026-10-07.
   - a ordem do documento é "Pular para o conteúdo" → "Sair" → cabeçalho → itens da navegação → conteúdo;
   - o foco é a regra global `:focus-visible` da 015, sem sobrescrita;
   - os itens da navegação e as ações do Início têm `min-height: var(--alvo)` (44 px).
-- **Pendente:** passada manual com teclado e leitor de tela antes do Checkpoint 1.
+- **Passada de teclado (2026-10-08, banco recriado, 375×812, persona Maria):**
+  - **`/entrar/`.** Ordem de foco: "Pular para o conteúdo" → CPF → data → "Continuar" →
+    botões do painel. Todos com o contorno de 3 px e o halo da 015.
+  - **`/inicio/`.** Ordem de foco: "Pular para o conteúdo" → "Sair" → Início → Minha
+    trajetória → Pesquisa → Meu e-mail → as três ações → "Escolher a formação". Todos os
+    alvos com 44 px de altura, o pular com 40 px. "Pular para o conteúdo" põe o foco em
+    `main#conteudo`.
+  - **Árvore de acessibilidade.** `banner`, `navigation` "Portal do Egresso" (item atual
+    com `aria-current="page"`), `main`, duas `region` nomeadas pelos `h2`, `contentinfo`.
+    Títulos h1 → h2 → h2. A ilustração não aparece na árvore; a legenda aparece como texto.
+- **Pendente:** teste com leitor de tela real (VoiceOver ou NVDA). Ver P4 em
+  [checkpoint-1/preparacao-sessao.md](evidencias/checkpoint-1/preparacao-sessao.md).
 
 ## Ajustes feitos durante a validação
 

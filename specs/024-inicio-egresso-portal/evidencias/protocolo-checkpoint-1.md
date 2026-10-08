@@ -27,7 +27,9 @@ Não são critérios de sucesso:
   parecida com sua história (Maria: duas formações; Ana: uma formação) e fala a partir da
   própria experiência.
 - **Ambiente.** A demonstração local com o Portal ligado, no celular do participante ou em
-  viewport de 375×812. Gravar a tela só com consentimento, que segue o procedimento do NIAE.
+  viewport de 375×812, a partir de um banco recém-preparado em cada sessão (ver
+  [preparação](checkpoint-1/preparacao-sessao.md)). Gravar a tela só com consentimento. O
+  termo, a guarda e a retenção são `DECISÃO PENDENTE` (P3 da preparação).
 - **Mesma sessão do teste da jornada.** A reauditoria de 2026-10-06 recomendou um teste da
   jornada da pesquisa. Ele pode ocorrer **depois** das tarefas abaixo, na mesma sessão.
 - **Oportunidades e Volte ao Ifes não aparecem no produto.** Se o moderador quiser explorar
@@ -82,6 +84,7 @@ participante como **sim**, **parcial** ou **não**. "Parcial" não conta para a 
 
 ## Registro
 
-Uma ficha por participante em `evidencias/checkpoint-1/`, sem nome, CPF ou contato: só as
+Uma ficha por participante em `evidencias/checkpoint-1/`, a partir do
+[modelo](checkpoint-1/ficha-participante.md), sem nome, CPF ou contato: só as
 anotações por critério, frases literais curtas e tempos das tarefas 5 e 6. A síntese vai
 para `validacao.md`, numa seção "Checkpoint 1".
