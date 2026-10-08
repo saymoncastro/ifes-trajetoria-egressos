@@ -3,6 +3,14 @@
 Escrito em 2026-10-07, **antes** de qualquer sessão de teste. Critérios: spec da 024, SC-008 a
 SC-016; roadmap §7.
 
+> **Situação (2026-10-08): NÃO APLICADO.**
+> - Nenhuma sessão com egressos foi feita.
+> - O teste com leitor de tela também não foi feito.
+> - A passada de teclado e da árvore de acessibilidade ([validação](../validacao.md)) é
+>   evidência técnica, não resultado com egressos.
+> - Os resultados entram em outro PR, depois da aplicação.
+> - A S2 e a S3 não começam antes da leitura dos resultados conforme este protocolo.
+
 ## O que o teste quer saber
 
 Se o modelo mental mudou:
@@ -26,8 +34,14 @@ Não são critérios de sucesso:
 - **Persona.** O sistema só tem dados fictícios. Cada participante entra como a persona mais
   parecida com sua história (Maria: duas formações; Ana: uma formação) e fala a partir da
   própria experiência.
-- **Ambiente.** A demonstração local com o Portal ligado, no celular do participante ou em
-  viewport de 375×812. Gravar a tela só com consentimento, que segue o procedimento do NIAE.
+- **Ambiente.** No primeiro ciclo: a demonstração local com o Portal ligado, **no
+  computador do moderador, com viewport de 375×812**, a partir de um banco recém-preparado
+  em cada sessão (ver [preparação](checkpoint-1/preparacao-sessao.md)). O servidor local
+  (`127.0.0.1`) não é acessível pelo celular do participante. Usar o celular exigiria
+  publicar o servidor na rede, o que fica fora deste ciclo.
+- **Participação e gravação.** O termo de participação, a eventual gravação, a guarda e a
+  retenção são `DECISÃO PENDENTE` (P3 da preparação). Dispensar a gravação não dispensa o
+  procedimento de participação.
 - **Mesma sessão do teste da jornada.** A reauditoria de 2026-10-06 recomendou um teste da
   jornada da pesquisa. Ele pode ocorrer **depois** das tarefas abaixo, na mesma sessão.
 - **Oportunidades e Volte ao Ifes não aparecem no produto.** Se o moderador quiser explorar
@@ -57,8 +71,9 @@ pessoa usá-las.
 
 ## Critérios e como observar
 
-**Limiar.** "A maioria" = pelo menos **4 de 5** participantes. Cada critério é anotado por
-participante como **sim**, **parcial** ou **não**. "Parcial" não conta para a maioria.
+**Limiar** (proposto; confirmação em P1 da preparação). "A maioria" = pelo menos **4 de 5**
+participantes, **em cada critério**. Cada critério é anotado por participante como **sim**,
+**parcial** ou **não**. "Parcial" não conta para a maioria.
 
 | Critério | Tarefa | "Sim" quando a pessoa… |
 |---|---|---|
@@ -76,12 +91,13 @@ participante como **sim**, **parcial** ou **não**. "Parcial" não conta para a 
 
 | Resultado | Decisão |
 |---|---|
-| Compreensão (SC-008 a SC-012) atinge a maioria | A premissa se sustenta; seguir para a S2 e a S3 |
-| Compreensão falha | Corrigir a S1 (textos, ordem, abertura) antes da S2 e da S3. Não construir tabelas novas |
+| **Cada** critério de compreensão (SC-008 a SC-012) atinge a maioria | A premissa se sustenta; seguir para a S2 e a S3 |
+| Ao menos um critério de compreensão não atinge a maioria | Corrigir a S1 (textos, ordem, abertura) antes da S2 e da S3. Não construir tabelas novas |
 | Só a navegação (SC-013 a SC-016) falha | Ajustar navegação e textos dentro da 024, sem replanejar |
 
 ## Registro
 
-Uma ficha por participante em `evidencias/checkpoint-1/`, sem nome, CPF ou contato: só as
+Uma ficha por participante em `evidencias/checkpoint-1/`, a partir do
+[modelo](checkpoint-1/ficha-participante.md), sem nome, CPF ou contato: só as
 anotações por critério, frases literais curtas e tempos das tarefas 5 e 6. A síntese vai
 para `validacao.md`, numa seção "Checkpoint 1".

@@ -1,6 +1,11 @@
 # Validação — Feature 024
 
-Data: 2026-10-07.
+Data: 2026-10-07; passada de teclado em 2026-10-08.
+
+> **Checkpoint 1: não aplicado.** Nenhuma sessão com egressos e nenhum teste com leitor de
+> tela foram feitos. Este documento registra só verificações técnicas. Os resultados com
+> egressos entram em outro PR, conforme o
+> [protocolo](evidencias/protocolo-checkpoint-1.md).
 
 - **Ambiente:** banco de demonstração recriado do zero (`preparar_demonstracao`), servidor
   local e navegador do app com viewport emulado.
@@ -40,7 +45,20 @@ Data: 2026-10-07.
   - a ordem do documento é "Pular para o conteúdo" → "Sair" → cabeçalho → itens da navegação → conteúdo;
   - o foco é a regra global `:focus-visible` da 015, sem sobrescrita;
   - os itens da navegação e as ações do Início têm `min-height: var(--alvo)` (44 px).
-- **Pendente:** passada manual com teclado e leitor de tela antes do Checkpoint 1.
+- **Passada de teclado (2026-10-08, banco recriado, 375×812, persona Maria):**
+  - **`/entrar/`.** Ordem de foco: "Pular para o conteúdo" → CPF → data → "Continuar" →
+    botões do painel. Todos com o contorno de 3 px e o halo da 015.
+  - **`/inicio/`.** Ordem de foco: "Pular para o conteúdo" → "Sair" → Início → Minha
+    trajetória → Pesquisa → Meu e-mail → as três ações → "Escolher a formação". "Sair",
+    os itens da navegação, as ações e o convite têm 44 px de altura. O link "Pular para o
+    conteúdo" tem 40 px: é o mesmo da 015, anterior à 024, e fica acima do mínimo de
+    24 px da WCAG 2.2, mas abaixo dos 44 px da 014. "Pular para o conteúdo" põe o foco em
+    `main#conteudo`.
+  - **Árvore de acessibilidade.** `banner`, `navigation` "Portal do Egresso" (item atual
+    com `aria-current="page"`), `main`, duas `region` nomeadas pelos `h2`, `contentinfo`.
+    Títulos h1 → h2 → h2. A ilustração não aparece na árvore; a legenda aparece como texto.
+- **Não realizado:** teste com leitor de tela real (VoiceOver ou NVDA). Ver P4 em
+  [checkpoint-1/preparacao-sessao.md](evidencias/checkpoint-1/preparacao-sessao.md).
 
 ## Ajustes feitos durante a validação
 
