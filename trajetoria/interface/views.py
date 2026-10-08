@@ -21,6 +21,7 @@ from trajetoria.academico.models import ConclusaoAcademica
 from trajetoria.acesso import pendente
 from trajetoria.acesso.sessao import destino_da_entrada, pessoa_em_uso
 from trajetoria.declaracao.sessao import declaracoes_em_uso
+from trajetoria.instrumento.conteudo import conteudo_da_versao
 from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
     complemento_da_formacao,
@@ -154,13 +155,9 @@ _ACAO = {
 # Mensagem de estado por situação, informada uma vez (014 FR-036); o título é sempre o da
 # trajetória (FR-030).
 _TELA_DE_FORMACOES = {
-    ResolucaoDaEntrada.SEM_FORMACAO: (
-        "Não encontramos formações concluídas no Ifes associadas a você."
-    ),
-    ResolucaoDaEntrada.SEM_PESQUISA: (
-        "No momento, não há pesquisa disponível para as suas formações."
-    ),
-    ResolucaoDaEntrada.SEM_ENTRADA_PENDENTE: "Não há pesquisa pendente para você neste momento.",
+    ResolucaoDaEntrada.SEM_FORMACAO: mensagens.SEM_FORMACAO,
+    ResolucaoDaEntrada.SEM_PESQUISA: mensagens.SEM_PESQUISA,
+    ResolucaoDaEntrada.SEM_ENTRADA_PENDENTE: mensagens.SEM_ENTRADA_PENDENTE,
     ResolucaoDaEntrada.ENTRADA_RESOLVIDA: None,
     ResolucaoDaEntrada.SELECAO_NECESSARIA: None,
 }
@@ -178,10 +175,30 @@ def _aviso(request, *permitidos: str) -> dict | None:
     return {"texto": mensagens.AVISOS[codigo], "variante": mensagens.VARIANTE_DO_AVISO[codigo]}
 
 
-def _formacao_apresentada(formacao) -> dict:
+def _tamanho(formacao, conteudos: dict) -> str | None:
+    """024 FR-014: "no máximo N partes" para a formação disponível para iniciar, com N = a
+    Seção de entrada mais o caminho mais longo depois dela (`maximo_restante`, 023). O
+    conteúdo é lido uma vez por Versão na requisição."""
+    if formacao.situacao is not SituacaoDaFormacao.DISPONIVEL_PARA_INICIAR:
+        return None
+    versao_id = formacao.campanha.versao_id
+    if versao_id not in conteudos:
+        conteudos[versao_id] = conteudo_da_versao(formacao.campanha.versao)
+    conteudo = conteudos[versao_id]
+    if not conteudo.secoes:
+        return None
+    n = 1 + maximo_restante(conteudo, conteudo.secoes[0].id)
+    if n == 1:
+        return mensagens.TAMANHO_DA_PESQUISA_UMA
+    return mensagens.TAMANHO_DA_PESQUISA.format(n=n)
+
+
+def _formacao_apresentada(formacao, conteudos: dict | None = None) -> dict:
     """Forma compacta (014 FR-034): linha principal e complementar, só com o informado. Em
-    andamento, também onde a pessoa parou (023 FR-017)."""
+    andamento, também onde a pessoa parou (023 FR-017). Para iniciar, o tamanho máximo da
+    pesquisa (024 FR-014), quando `conteudos` é passado."""
     return {
+        "tamanho": None if conteudos is None else _tamanho(formacao, conteudos),
         "pk": formacao.conclusao.pk,
         "linha": resumo_da_formacao(formacao.conclusao),
         "complemento": complemento_da_formacao(formacao.conclusao),
@@ -242,7 +259,8 @@ def formacoes(request):
     chaves = {f.conclusao.pk for f in destaque}
     mensagem = _TELA_DE_FORMACOES[situacao.resolucao]
     # Na ordem devolvida pela 007, sem reordenar (014 FR-035).
-    pendentes = [_formacao_apresentada(f) for f in destaque]
+    conteudos: dict = {}
+    pendentes = [_formacao_apresentada(f, conteudos) for f in destaque]
     linha = pendentes[0]["linha"] if pendentes else ""
     # A linha da formação vai destacada na frase, sem mudar o texto (015 FR-032).
     antes_da_linha, depois_da_linha = mensagens.ENTRADA_FATO.split("{linha}")
@@ -268,9 +286,8 @@ def formacoes(request):
             ],
             "aviso": _aviso(request, "situacao", "salvo", "saida"),
             "entrada_operacional": mensagens.ENTRADA_OPERACIONAL,
-            # 021 FR-005 e FR-070: ligação para a devolutiva e antecipação do benefício.
+            # 021 FR-005 e 024 FR-009: ligação para a trajetória de quem tem Conclusão.
             "narrativa_disponivel": narrativa_elegivel(pessoa),
-            "antecipacao": mensagens.ANTECIPACAO if pendentes else None,
         },
     )
 

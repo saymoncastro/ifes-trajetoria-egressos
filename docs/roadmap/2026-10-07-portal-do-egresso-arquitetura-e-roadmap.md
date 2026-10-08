@@ -402,6 +402,12 @@ relacionamento" da Constituição.
 
 ### S1 — Início do egresso e shell do Portal *(024; P/M; só leitura; sem modelo novo)*
 
+**Situação: implementada em 2026-10-07** ([spec](../../specs/024-inicio-egresso-portal/spec.md),
+[validação](../../specs/024-inicio-egresso-portal/validacao.md)). Próximo passo: o
+**Checkpoint 1**, com o
+[protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md)
+escrito antes do teste.
+
 - **Problema.** Depois do login, o egresso cai numa lista de pesquisas. Nada reconhece a
   história dele antes de pedir algo.
 - **Valor para o egresso.** Um lugar que mostra, nesta ordem:

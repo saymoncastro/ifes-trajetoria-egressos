@@ -30,10 +30,26 @@ def test_maria_depois_de_concluir_ve_as_duas_formacoes(client, cenario):
     assert "Especialização em Informática na Educação" in texto
 
 
-def test_sem_participacao_concluida_vai_para_formacoes(client, cenario):
+# Revisão da 021 FR-001/FR-002/E2 pela 024 (FR-009, FR-010): a trajetória é de quem tem
+# Conclusão Acadêmica, independentemente de participação em pesquisa.
+
+
+def test_com_conclusao_sem_participacao_ve_a_pagina(client, cenario):
     cn.entrar(client, cenario.pessoa("SIM-P-0003"))
     resposta = client.get(URL)
+    assert resposta.status_code == 200
+    texto = ci.texto_visivel(resposta)
+    assert "Tecnologia em Análise e Desenvolvimento de Sistemas" in texto
+    assert "Especialização em Informática na Educação" in texto
+
+
+def test_sem_conclusao_vai_para_formacoes(client, cenario):
+    from tests.portal import construcao as cp
+
+    cn.entrar(client, cp.pessoa_sem_conclusao())
+    resposta = client.get(URL)
     assert resposta.status_code == 302 and resposta["Location"] == "/formacoes/"
+    assert "Ver minha trajetória no Ifes" not in ci.texto_visivel(client.get("/formacoes/"))
 
 
 def test_sem_sessao_vai_para_acesso(client, cenario):

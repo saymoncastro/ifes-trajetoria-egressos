@@ -1643,3 +1643,10 @@ Referência: [019 — Formação não localizada e validação posterior](../019
 - **FR-080:** inalterado; a jornada continua funcionando inteira sem JavaScript.
 
 Referência: [023 — Jornada de resposta com menos esforço](../023-jornada-menos-esforco/spec.md).
+
+## Nota de revisão pela Feature 024 (2026-10-07)
+
+- **Raiz (`/`):** com o Portal ligado (padrão; `TRAJETORIA_PORTAL=0` desliga), a raiz é a entrada do Portal: sem sessão, `/entrar/`; com Pessoa, `/inicio/`; com declarante, `/declaracao/` (024 FR-005). Com o Portal desligado, a raiz é a desta feature. O endereço do convite continua `/acesso/` → `/formacoes/`.
+- **FR-080:** inalterado. O Portal e a navegação funcionam sem JavaScript.
+
+Referência: [024 — Início do egresso e shell do Portal](../024-inicio-egresso-portal/spec.md); [ADR 0008](../../docs/adr/0008-portal-do-egresso-camada-de-relacionamento.md).

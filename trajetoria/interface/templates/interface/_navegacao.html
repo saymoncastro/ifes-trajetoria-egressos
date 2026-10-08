@@ -1,0 +1,2 @@
+{% if navegacao %}<nav class="navegacao" aria-label="{{ navegacao_rotulo }}"><div class="coluna"><ul>{% for item in navegacao %}<li><a href="{{ item.endereco }}"{% if item.atual %} aria-current="page"{% endif %}>{{ item.rotulo }}</a></li>{% endfor %}</ul></div></nav>
+{% endif %}

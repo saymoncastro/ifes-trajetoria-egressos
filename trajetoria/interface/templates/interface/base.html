@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ prefixo_titulo }}{% block titulo %}{% endblock %} — Trajetória Ifes (demonstração)</title>
+<title>{{ prefixo_titulo }}{% block titulo %}{% endblock %} — {{ produto|default:"Trajetória Ifes" }} (demonstração)</title>
 <style>{% include "interface/estilo.css" %}
 {% include "interface/jornada.css" %}
 {% block estilo %}{% endblock %}</style>
@@ -28,9 +28,9 @@
     <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo">
 {% include "interface/assinatura.svg" %}
     </span>
-    <p class="produto-nome"><span class="nome">Trajetória Ifes</span> <span class="subtitulo">Acompanhamento de egressos</span></p>
+    <p class="produto-nome">{% block produto %}{% if produto %}<span class="nome">{{ produto }}</span> <span class="subtitulo">{{ produto_subtitulo }}</span>{% else %}<span class="nome">Trajetória Ifes</span> <span class="subtitulo">Acompanhamento de egressos</span>{% endif %}{% endblock %}</p>
   </div>
-</header>
+</header>{# Pontos de extensão neutros (024 research R7; contracts/navegacao.md): vazios, o HTML é o da 015. #}{% block navegacao %}{% endblock %}
 <main id="conteudo" tabindex="-1">
   <div class="coluna">
 {% block conteudo %}{% endblock %}

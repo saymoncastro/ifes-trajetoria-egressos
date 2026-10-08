@@ -30,6 +30,11 @@ ALLOWED_HOSTS = [
 # ele pode fazer vem só dos vínculos de governança (010). Ninguém publica (002/DP-001).
 TRAJETORIA_DEMONSTRACAO = os.environ.get("TRAJETORIA_DEMONSTRACAO") == "1"
 
+# Portal do Egresso (Feature 024; ADR 0008; research R8): camada de relacionamento sobre o
+# núcleo, ligada salvo `0`. Fica atrás do modo de demonstração, como tudo o mais. Desligada,
+# as rotas do Portal não existem e nenhuma tela mostra a navegação; a coleta não muda.
+TRAJETORIA_PORTAL = os.environ.get("TRAJETORIA_PORTAL") != "0"
+
 # Chave dedicada da pseudonimização analítica das exportações (Feature 013, FR-027): deriva
 # `conclusao_analitica_id` e `pessoa_analitica_id` por HMAC-SHA-256. Distinta de SECRET_KEY,
 # fora do repositório e sem valor padrão utilizável: vazia, toda exportação é recusada.
@@ -55,6 +60,7 @@ INSTALLED_APPS = [
     "trajetoria.narrativa",  # Feature 021: Minha trajetória (sem models).
     "trajetoria.contexto_trajetoria",  # Feature 021, P2: complemento e agregados.
     "trajetoria.contato",  # Feature 020: contato de e-mail da Pessoa, com proveniência.
+    "trajetoria.portal",  # Feature 024: Portal do Egresso em demonstração (sem models).
     "trajetoria.mobilizacao",  # Feature 020: Lotes de mobilização e envio por Lote.
     "trajetoria.video",  # Feature 022: vídeo (estado técnico, sem FK).
     "trajetoria.demonstracao",
@@ -77,7 +83,13 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "APP_DIRS": True,
-        "OPTIONS": {"context_processors": ["trajetoria.demonstracao.contexto.demonstracao"]},
+        "OPTIONS": {
+            "context_processors": [
+                "trajetoria.demonstracao.contexto.demonstracao",
+                # 024: itens da navegação do Portal; vazio com o Portal desligado.
+                "trajetoria.portal.contexto.navegacao",
+            ]
+        },
     }
 ]
 
