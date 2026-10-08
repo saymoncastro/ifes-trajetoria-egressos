@@ -6,12 +6,12 @@ identifique a pessoa.**
 - **Participante:** N
 - **Data:**
 - **Persona usada:** Ana / Maria / Diego
-- **Dispositivo:** celular próprio / computador a 375×812
+- **Dispositivo:** computador do moderador a 375×812 (primeiro ciclo)
 - **Perfil:** número de formações no Ifes: __; anos desde a conclusão mais antiga: __
 
 ## Critérios
 
-Marcar **sim**, **parcial** ou **não**. Só "sim" conta para a maioria.
+Marcar **sim**, **parcial** ou **não**. Só "sim" conta para o limiar (4 de 5 em cada critério).
 
 | Critério | Tarefa | Resultado | Evidência (frase literal curta ou comportamento) |
 |---|---|---|---|
