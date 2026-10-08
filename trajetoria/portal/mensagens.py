@@ -7,6 +7,7 @@ PRODUTO = "Portal do Egresso"
 PRODUTO_SUBTITULO = "Instituto Federal do Espírito Santo"
 ROTULO_NAVEGACAO = "Portal do Egresso"
 ROTULO_ENTRADA = "Entrada do Portal do Egresso"
+TITULO_ENTRADA = "Confirme seus dados para entrar no Portal do Egresso"
 
 NAVEGACAO_INICIO = "Início"
 NAVEGACAO_TRAJETORIA = "Minha trajetória"

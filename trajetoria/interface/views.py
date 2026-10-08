@@ -22,7 +22,6 @@ from trajetoria.acesso import pendente
 from trajetoria.acesso.sessao import destino_da_entrada, pessoa_em_uso
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.instrumento.conteudo import conteudo_da_versao
-from trajetoria.instrumento.models import Versao
 from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
     complemento_da_formacao,
@@ -184,7 +183,7 @@ def _tamanho(formacao, conteudos: dict) -> str | None:
         return None
     versao_id = formacao.campanha.versao_id
     if versao_id not in conteudos:
-        conteudos[versao_id] = conteudo_da_versao(Versao(pk=versao_id))
+        conteudos[versao_id] = conteudo_da_versao(formacao.campanha.versao)
     conteudo = conteudos[versao_id]
     if not conteudo.secoes:
         return None

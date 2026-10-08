@@ -190,3 +190,35 @@ class TestCaminhosEquivalentes:
         cp.entrar(client, ana)
         assert client.get("/inicio/").status_code == 200
         assert _local(client.get("/formacoes/")) == f"/participacoes/{participacao}/"
+
+
+# --- Revisão de código: a sessão anterior, o cache da raiz e o título da aba ----------------
+
+
+@pytest.mark.parametrize("endereco", ["/acesso/", "/entrar/"])
+def test_tentativa_falha_nao_mexe_na_sessao_anterior(client, cenario, relogio, settings,
+                                                      endereco):
+    """018: um resultado sem confirmação nunca modifica a sessão anterior, em qualquer
+    entrada que identifica (024 FR-002)."""
+    cp.com_material("SIM-P-0003")
+    cp.entrar(client, cenario.pessoa("SIM-P-0001"))
+    antes = dict(client.session)
+    relogio.agora += timedelta(minutes=2)  # passaria a renovar o último uso
+    errado = {"cpf": MARIA.cpf, "data_nascimento": "01/01/1990"}
+    assert client.post(endereco, errado).status_code == 200
+    assert dict(client.session) == antes
+    # Com a sessão já vencida, a tentativa falha também não a descarta.
+    settings.TRAJETORIA_SESSAO_INATIVIDADE = timedelta(minutes=1)
+    client.post(endereco, errado)
+    assert dict(client.session) == antes
+
+
+def test_raiz_nao_e_guardada_em_cache(client, cenario):
+    assert "no-store" in client.get("/")["Cache-Control"]
+
+
+def test_titulo_da_aba_segue_o_produto(client, cenario):
+    entrar = client.get("/entrar/").content.decode()
+    acesso = client.get("/acesso/").content.decode()
+    assert "— Portal do Egresso (demonstração)</title>" in entrar
+    assert "— Trajetória Ifes (demonstração)</title>" in acesso

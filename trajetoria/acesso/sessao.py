@@ -87,10 +87,13 @@ def pessoa_em_uso(request):
 
 
 def post_de_entrada(request):
-    """POST de `/acesso/`: um resultado sem confirmação nunca modifica a sessão anterior,
+    """POST de identificação: um resultado sem confirmação nunca modifica a sessão anterior,
     nem por renderizar a faixa. Público para o sujeito declarante da 019 (`declaracao.sessao`),
-    que segue a mesma regra."""
-    return request.method == "POST" and request.path == "/acesso/"
+    que segue a mesma regra. Toda entrada que identifica (`/acesso/` e as que usam
+    `views.identificar`, 024) marca a requisição; o caminho fica como garantia."""
+    return request.method == "POST" and (
+        getattr(request, "_post_de_entrada", False) or request.path == "/acesso/"
+    )
 
 
 def encerrar(request):

@@ -52,6 +52,9 @@ def identificar(
     formulário; `aviso_de_envio=False` suprime a frase do envio guardado, que só é verdadeira
     no caminho que leva à escolha de formações (024 FR-007). Este módulo não conhece quem o
     chama; `contexto` só acrescenta apresentação (por exemplo, o nome do produto)."""
+    # Marca antes de qualquer leitura de sessão (faixa, navegação): um POST sem confirmação
+    # não pode renovar nem descartar a sessão anterior, qualquer que seja o endereço (018).
+    request._post_de_entrada = request.method == "POST"
     if not base_somente_simulada():
         return render(
             request,

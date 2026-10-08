@@ -209,10 +209,19 @@ Nenhum ajuste muda requisito da spec. Os testes cobrem todos.
   navegação continua em `jornada.css`, porque é do slot neutro.
 - **Navegação preguiçosa.** O provedor devolve os itens num `SimpleLazyObject`: só consulta o
   banco quando a tela mostra a navegação. As consultas das Seções não mudam.
-- **Orçamento de consultas de `/formacoes/`:** 9 → 14. São +4 da leitura do conteúdo da
-  Versão, uma vez por Versão, para "no máximo N partes", e +1 do item "Minha trajetória" na
-  navegação. O limite está documentado em `tests/interface/test_interface_formacoes.py`.
+- **Orçamento de consultas de `/formacoes/`:** 9 → 14. São +5 da Versão da Campanha e do
+  seu conteúdo, lidos uma vez por Versão, para "no máximo N partes". O item "Minha
+  trajetória" da navegação não acrescenta consulta: `elegivel` fica memorizado na Pessoa da
+  requisição. O limite está documentado em `tests/interface/test_interface_formacoes.py`.
 - **Textos de estado públicos.** `SEM_FORMACAO`, `SEM_PESQUISA` e `SEM_ENTRADA_PENDENTE` foram
   para `interface/mensagens.py`, e o Início reaproveita as mesmas frases (T022).
-- **Lista permitida da interface.** `trajetoria.instrumento.models.Versao` entrou na lista,
-  como referência à Versão da Campanha, sem leitura extra (`tests/interface/test_interface_fronteiras.py`).
+- **Revisão de código (2026-10-07).**
+  - **Sessão anterior.** `acesso.sessao.post_de_entrada` passou a reconhecer qualquer
+    entrada que identifica, por uma marca que `identificar` põe na requisição, e não só
+    `/acesso/`. Sem isso, uma tentativa falha em `/entrar/` renovava ou descartava a sessão
+    anterior (regra da 018). Há teste nas duas entradas.
+  - **Cache e título.** A raiz tem `never_cache`. O título da aba segue o nome do produto
+    ("Portal do Egresso" nas páginas do Portal).
+  - **SVG da abertura.** A preparação do SVG decorativo é compartilhada
+    (`narrativa.imagens.svg_decorativo`).
+  - **Textos.** O título de `/entrar/` está em `portal/mensagens.py`.

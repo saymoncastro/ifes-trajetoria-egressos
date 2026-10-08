@@ -45,8 +45,7 @@ PERMITIDOS_NA_INTERFACE = {
     "trajetoria.participacao.regras": {"Motivo", "ParticipacaoRejeitada"},
     "trajetoria.participacao.models": {"Participacao"},
     "trajetoria.instrumento.conteudo": None,
-    # 024 FR-014: a referência à Versão da Campanha, para ler seu conteúdo sem leitura extra.
-    "trajetoria.instrumento.models": {"Pergunta", "Opcao", "TipoPergunta", "Versao"},
+    "trajetoria.instrumento.models": {"Pergunta", "Opcao", "TipoPergunta"},
     "trajetoria.academico.models": {"ConclusaoAcademica", "Pessoa"},
     # 018: apenas a Pessoa resolvida; 023 FR-001: o destino da entrada com aviso.
     "trajetoria.acesso.sessao": {"pessoa_em_uso", "destino_da_entrada"},

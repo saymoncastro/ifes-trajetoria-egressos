@@ -30,8 +30,11 @@ def elegivel(pessoa) -> bool:
     """Regra positiva da 024 (FR-009; revisa 021 FR-001, FR-002 e E2, e 022 FR-001): a Pessoa
     identificada com ao menos uma Conclusão Acadêmica tem trajetória institucional,
     independentemente de participação em pesquisa. Formação Declarada (019) não é Conclusão
-    e fica de fora por construção."""
-    return pessoa.conclusoes.exists()
+    e fica de fora por construção. O resultado fica na própria instância (a Pessoa da sessão
+    é uma por requisição): a página e a navegação não repetem a consulta."""
+    if not hasattr(pessoa, "_tem_conclusao"):
+        pessoa._tem_conclusao = pessoa.conclusoes.exists()
+    return pessoa._tem_conclusao
 
 
 def _ingresso(conclusao) -> dict:

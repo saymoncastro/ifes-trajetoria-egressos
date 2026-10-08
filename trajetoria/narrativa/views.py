@@ -105,17 +105,7 @@ def _abertura(narrativa):
     registro = narrativa.secao("o_que_o_ifes_registra")
     return {
         # Ativo versionado do catálogo, decorativo: a legenda é o texto.
-        "imagem": mark_safe(
-            # Inline no HTML, o SVG dispensa o xmlns (e nenhuma URL aparece na página).
-            imagens.conteudo(imagem)
-            .replace(' xmlns="http://www.w3.org/2000/svg"', "", 1)
-            .replace(
-                "<svg ",
-                '<svg aria-hidden="true" focusable="false" class="narrativa-imagem" '
-                'preserveAspectRatio="xMidYMax slice" ',
-                1,
-            )
-        ),
+        "imagem": imagens.svg_decorativo(imagem),
         "legenda": imagens.legenda(imagem, unidade),
         "frases": list(registro.frases) if registro else [],
     }

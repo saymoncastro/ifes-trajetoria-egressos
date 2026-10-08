@@ -198,9 +198,9 @@ def test_sem_pessoa_vai_para_a_entrada(client, inst):
 def test_consultas_limitadas(client, inst, django_assert_max_num_queries):
     c.campanha_aberta(inst.versao)
     ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0004"))
-    # 018: inclui leitura da sessão; 3 formações. 024: +4 do conteúdo da Versão, lido uma vez
-    # por Versão para "no máximo N partes" (FR-014), e +1 do item "Minha trajetória" na
-    # navegação do Portal (FR-023).
+    # 018: inclui leitura da sessão; 3 formações. 024: +5 da Versão da Campanha e do seu
+    # conteúdo, lidos uma vez por Versão para "no máximo N partes" (FR-014). O item "Minha
+    # trajetória" da navegação reaproveita a consulta da página (`elegivel` memorizado).
     with django_assert_max_num_queries(14):
         client.get("/formacoes/")
 

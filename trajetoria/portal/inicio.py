@@ -9,8 +9,6 @@ vira texto visível (FR-018).
 import dataclasses
 import logging
 
-from django.utils.safestring import mark_safe
-
 from trajetoria.interface import mensagens as estados
 from trajetoria.narrativa import imagens
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
@@ -32,19 +30,7 @@ _ORIGEM = {INSTITUCIONAL: mensagens.REGISTRO_DO_IFES, DERIVADO: mensagens.DERIVA
 def _abertura(unidade):
     """A ilustração do catálogo da 021, decorativa; a legenda é o texto (021 FR-076)."""
     imagem = imagens.imagem_para(unidade)
-    return {
-        "imagem": mark_safe(
-            imagens.conteudo(imagem)
-            .replace(' xmlns="http://www.w3.org/2000/svg"', "", 1)
-            .replace(
-                "<svg ",
-                '<svg aria-hidden="true" focusable="false" class="narrativa-imagem" '
-                'preserveAspectRatio="xMidYMax slice" ',
-                1,
-            )
-        ),
-        "legenda": imagens.legenda(imagem, unidade),
-    }
+    return {"imagem": imagens.svg_decorativo(imagem), "legenda": imagens.legenda(imagem, unidade)}
 
 
 def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:

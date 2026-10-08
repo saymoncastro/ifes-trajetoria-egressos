@@ -15,7 +15,6 @@ from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
 from trajetoria.portal.inicio import montar_inicio
 
-TITULO_ENTRADA = "Confirme seus dados para entrar no Portal do Egresso"
 _PRODUTO = {"produto": mensagens.PRODUTO, "produto_subtitulo": mensagens.PRODUTO_SUBTITULO}
 
 
@@ -31,6 +30,7 @@ def _destino_com_sujeito(request) -> str | None:
     return None
 
 
+@never_cache
 @require_GET
 def entrada(request):
     """A raiz com o Portal ligado (FR-005): acesso espontâneo."""
@@ -48,7 +48,7 @@ def entrar(request):
         request,
         destino="/inicio/",
         acao="/entrar/",
-        titulo=TITULO_ENTRADA,
+        titulo=mensagens.TITULO_ENTRADA,
         rotulo=mensagens.ROTULO_ENTRADA,
         continuar=None,
         aviso_de_envio=False,
