@@ -46,6 +46,7 @@ da sua atuação."
 
 | Campo | Controle | Regra | Mensagem de erro (provisória) |
 |---|---|---|---|
+| Orientação de conteúdo | texto fixo acima de Título e Resumo: "Evite urgência e promessas, como 'últimas vagas' ou 'não perca'. Os prazos ficam na página oficial." | FR-022 | — |
 | Título | texto, `maxlength=120` | FR-002 | "Informe um título de até 120 caracteres." |
 | Resumo | área de texto, `maxlength=300` | FR-002 | "Informe um resumo de até 300 caracteres." |
 | Categoria | rádio, 6 opções | FR-003 | "Escolha uma categoria." |

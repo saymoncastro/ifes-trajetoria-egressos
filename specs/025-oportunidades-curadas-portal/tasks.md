@@ -50,9 +50,9 @@ Cada história termina com a suíte verde.
 - [ ] T002 Registrar a linha de base com a suíte e as verificações verdes:
   - `uv run ruff check .`, `uv run python manage.py check`, `uv run python manage.py makemigrations --check --dry-run` e `uv run pytest`;
   - a duração da suíte;
-  - a 375×812 e fonte a 100%, com Ana, Maria e Diego e o banco recém-preparado (sem o bloco, que ainda não existe): a posição vertical (px) do `section.inicio-convite` no `/inicio/`, a altura de `nav.navegacao` nas seis telas com navegação e a posição do `h1` e da síntese.
+  - a 375×812 e fonte a 100%, com Ana, Maria e Diego e o banco recém-preparado, **registro da 024** (navegação de quatro itens, sem o bloco): a posição vertical (px) do `section.inicio-convite` no `/inicio/`, a altura de `nav.navegacao` nas cinco telas com navegação e a posição do `h1` e da síntese.
 
-  Salvar as medidas em `specs/025-oportunidades-curadas-portal/validacao.md`, seção "Linha de base". Elas são a referência do SC-008 e da T046.
+  Salvar as medidas em `specs/025-oportunidades-curadas-portal/validacao.md`, seção "Linha de base". Elas documentam o estado anterior. **Não são** a referência do SC-008, que é medida na T046 já com a navegação de cinco itens.
 
 ---
 
@@ -106,6 +106,7 @@ Cada história termina com a suíte verde.
   - cada uma em `transaction.atomic` com `select_for_update`;
   - revalidar o estado (`estado(..., hoje)`) e `administra`;
   - normalizar o público: lista vazia vira `NULL`;
+  - título e resumo: recusar valores que só têm espaços ("1 a 120 caracteres, sem só espaços", data-model), com `strip()` antes de medir, nos motivos `TITULO` e `RESUMO`;
   - recusar com `OportunidadeRejeitada`. Os motivos mínimos são `TITULO`, `RESUMO`, `CATEGORIA`, `UNIDADE_FORA_DO_ESCOPO`, `ENDERECO`, `PERIODO_INVERTIDO`, `FIM_ANTES_DE_HOJE` (edição de publicada e publicação com fim passado), `ESTADO` (conflito) e `FORA_DO_ESCOPO`;
   - publicar e retirar gravam o momento e o identificador opaco do operador (FR-033);
   - nada mais é gravado.
@@ -115,12 +116,12 @@ Cada história termina com a suíte verde.
   - `opcoes_de_publico()`: valores distintos, não nulos e ordenados de `ConclusaoAcademica.curso`, `.nivel` e `.unidade`, como escritos (R8);
   - `unidades_responsaveis(escopo)`: para a CPAEG, `""` mais as unidades distintas das Conclusões; para a CSAEG, as unidades do escopo.
 - [ ] T010 [P] Pontos neutros no núcleo (contracts/rotas.md). Nenhum deles cita a camada:
-  1. em `trajetoria/demonstracao/views.py`, transformar `_DESTINOS` num registro com `registrar_destino(chave: str, endereco: str)`, com o comentário do 011 R13 preservado (destino fechado, nunca do cliente);
+  1. em `trajetoria/demonstracao/views.py`, transformar `_DESTINOS` num registro com `registrar_destino(chave: str, endereco: str, ativo: Callable[[], bool] = lambda: True)`. `operadores` e `escolher_operador` só aceitam a chave se `ativo()` for verdadeiro **no pedido**. O comentário do 011 R13 continua (destino fechado, nunca do cliente). Teste no núcleo, em `tests/interface/test_demonstracao_operador.py`: uma chave registrada com `ativo=False` é tratada como desconhecida e cai no padrão `/editor/`;
   2. criar `trajetoria/demonstracao/sinais.py` com `cenario_preparado = Signal()`;
-  3. em `trajetoria/demonstracao/cenario.py`, enviar `cenario_preparado.send(sender=None, data=data_local)` no fim de `preparar()`, dentro da transação.
+  3. em `trajetoria/demonstracao/cenario.py`, capturar `data = timezone.localdate()` no início de `preparar()` e enviar `cenario_preparado.send(sender=None, data=data)` no fim, dentro da transação.
 - [ ] T011 Em `trajetoria/portal/apps.py`, implementar `PortalConfig.ready()`:
-  - registrar `registrar_destino("curadoria", "/curadoria/oportunidades/")` só com `settings.TRAJETORIA_PORTAL`;
-  - conectar o receptor de `trajetoria/portal/oportunidades/demonstracao.py` a `cenario_preparado` (R3, R4).
+  - registrar **sempre** `registrar_destino("curadoria", "/curadoria/oportunidades/", ativo=lambda: settings.TRAJETORIA_PORTAL)` (R3, revisado);
+  - criar `trajetoria/portal/oportunidades/demonstracao.py` com o receptor `carregar_catalogo(sender, data, **kwargs)` **vazio** (docstring citando o R4) e conectá-lo a `cenario_preparado`. O catálogo é preenchido na T014.
 - [ ] T012 Revisar os testes de fronteira da 024 em `tests/portal/test_fronteiras.py` (R1):
   - `test_portal_sem_modelo_nem_migracao` passa a ser `test_portal_um_modelo_sem_fk_para_o_nucleo`: exatamente um modelo (`Oportunidade`); migrações do app só com `CreateModel`/`AddField`/`AddConstraint`; nenhum `ForeignKey`;
   - `test_nucleo_nao_menciona_o_portal` continua igual e precisa passar com os pontos da T010;
@@ -142,7 +143,7 @@ com explicação e link oficial, na página e no Início.
 **Independent Test**: com o catálogo fictício, a lista de cada persona coincide com o oráculo
 de contracts/pertinencia.md (SC-002).
 
-- [ ] T014 [P] [US1] Criar `trajetoria/portal/oportunidades/demonstracao.py`, com:
+- [ ] T014 [P] [US1] Preencher `trajetoria/portal/oportunidades/demonstracao.py` (criado vazio na T011), com:
   - o catálogo O1–O10 de contracts/pertinencia.md, com datas relativas a `D` (a `data` recebida do sinal), `uuid5` fixos e endereços em `https://oportunidades.example/…`;
   - a carga idempotente pelas operações da T008: O1–O8 publicados com o operador da tabela; O9 publicado e retirado; O10 em rascunho;
   - o receptor `carregar_catalogo(sender, data, **kwargs)`.
@@ -226,8 +227,9 @@ de contracts/pertinencia.md (SC-002).
   - **ausência** de datas, contagens e `<script>`;
   - parâmetros ignorados;
   - **nada gravado** (contagens de `tests/portal/construcao.py`);
-  - consultas sem `participacao_resposta`, `contato_contatodapessoa` e `declaracao_`;
-  - O7–O10 nunca aparecem.
+  - consultas sem `participacao_resposta`, `contato_contatodapessoa`, `declaracao_` e `campanha_` (FR-008, FR-011);
+  - O7–O10 nunca aparecem;
+  - **FR-002, texto simples:** uma oportunidade com título `<script>alert(1)</script> & <b>x</b>` e resumo com `<a href="…">` aparece **escapada** (`&lt;script&gt;`, sem tag gerada) na página e no Início. A busca por `<script` e por `<b>` no HTML de resposta não encontra nada fora do shell.
 - [ ] T029 [P] [US1] Testes do Início em `tests/portal/test_oportunidades_inicio.py`:
   - ordem dos blocos (reconhecimento < ações < Oportunidades < convite);
   - um único destaque, o primeiro do oráculo;
@@ -268,7 +270,8 @@ só pelas operações.
   - unidade responsável `Select` com `unidades_responsaveis(escopo)` ("Ifes (institucional)" só para a CPAEG);
   - endereço `URLInput` com `inputmode=url`;
   - início e fim como datas (`%Y-%m-%d`);
-  - três `MultipleChoiceField` com `CheckboxSelectMultiple` (`opcoes_de_publico`) e a ajuda fixa do público.
+  - três `MultipleChoiceField` com `CheckboxSelectMultiple` (`opcoes_de_publico`) e a ajuda fixa do público;
+  - a orientação de conteúdo do FR-022, como texto fixo acima de título e resumo. Ela orienta e **não** bloqueia vocabulário (FR-022, esclarecido).
 
   O formulário não grava: só a T008 grava.
 - [ ] T034 [US2] Views em `trajetoria/portal/oportunidades/views_curadoria.py`:
@@ -296,7 +299,10 @@ só pelas operações.
   - prévia de publicação com domínio e aviso de site externo;
   - publicação com fim no passado recusada;
   - `publicada_por` igual ao identificador do operador, que nunca aparece no HTML;
-  - CSRF exigido.
+  - CSRF exigido;
+  - **SC-007:** com o operador B, cadastrar e publicar seguindo só links e botões, com `follow=True`. A sequência de telas `200` exibidas é exatamente lista → formulário → confirmação de publicação → lista (4). Os campos preenchidos são só os do FR-001;
+  - **FR-002:** a mesma verificação de escape da T028 na lista da curadoria e na prévia de publicação;
+  - **FR-010:** não há rota nem ação de excluir. `DELETE` e `POST …/excluir/` respondem 404 ou 405, e nenhuma linha some.
 
 **Checkpoint**: US1 e US2 funcionam juntas.
 
@@ -318,7 +324,8 @@ D+1. Depois de retirada, some imediatamente.
   - Rascunho retirado nunca pode ser publicado;
   - edição de publicada com fim antes de hoje recusada, com a mensagem "Para encerrar antes do prazo, retire a oportunidade.";
   - Encerrada e Retirada sem ações;
-  - **conflito**: um operador retira e outro confirma publicação ou edição → 409, nada gravado (FR-034).
+  - **conflito**: um operador retira e outro confirma publicação ou edição → 409, nada gravado (FR-034);
+  - **SC-006, ações sobre registro alheio:** com O2 (Serra) e o operador B (CSAEG Vitória), GET e POST em `…/editar/`, `…/publicar/` e `…/retirar/` respondem **404**, e a oportunidade fica idêntica (comparar a linha antes e depois). O mesmo vale para O1 (institucional). Com o operador A, os mesmos pedidos são aceitos.
 
 **Checkpoint**: o ciclo de vida completo está coberto.
 
@@ -367,7 +374,8 @@ desligado, `/oportunidades/` e `/curadoria/…` dão 404.
   - snapshot de uma Campanha encerrada e exportações CSV/XLSX gerados antes e depois de publicar O1–O6: **bytes idênticos** (SC-009);
   - `analitico` e `exportacao` não importam `trajetoria.portal` (AST);
   - nenhuma tabela do núcleo muda de contagem ao cadastrar, editar, publicar ou retirar;
-  - o núcleo não cita a camada (já na T012).
+  - o núcleo não cita a camada (já na T012);
+  - **FR-041, nenhum dado pessoal novo:** a tabela `portal_oportunidade` não tem coluna que identifique egresso (só os campos do data-model; nenhuma FK, garantido pela T012). As views do egresso não têm formulário nem POST (`/oportunidades/` só aceita `GET`).
 - [ ] T042 [P] [US6] Em `tests/portal/test_desabilitado.py`:
   - `/oportunidades/` e `/curadoria/oportunidades/` → 404;
   - a escolha de operador **não** aceita o destino `curadoria`, que cai no padrão `/editor/`;
@@ -386,7 +394,8 @@ desligado, `/oportunidades/` e `/curadoria/…` dão 404.
   - em `specs/024-inicio-egresso-portal/contracts/inicio.md` e `contracts/navegacao.md`, o bloco e o quinto item.
 - [ ] T045 Rodar `uv run ruff check .`, `uv run python manage.py check`, `uv run python manage.py makemigrations --check --dry-run` e `uv run pytest`, todos verdes. Registrar os números em `specs/025-oportunidades-curadas-portal/validacao.md`.
 - [ ] T046 **P-270 — medida e decisão.** No navegador a 375×812 e fonte a 100%, com o banco recém-preparado:
-  - medir a posição do convite com o bloco para Ana, Maria e Diego e comparar com a T002;
+  - **referência:** depois da T023 (navegação de cinco itens), com o bloco **desligado** por configuração de teste (catálogo vazio, ou `D` posterior a todas as divulgações), medir a posição do convite para Ana, Maria e Diego;
+  - **com o bloco:** mesmo banco e mesma data do oráculo, medir de novo; o deslocamento é a diferença entre as duas medidas (research R9, "Interpretação do SC-008");
   - se algum deslocamento passar de 270 px, ativar as variantes da T026 **em ordem** (1, depois 2, depois 3) até caber, medindo de novo a cada etapa;
   - se a variante 3 ainda passar, **parar**: não remover nenhuma informação; registrar as medidas em `validacao.md` e levar o caso ao solicitante (revisão do FR-021 ou do SC-008);
   - registrar a variante adotada e as medidas.
@@ -417,12 +426,12 @@ desligado, `/oportunidades/` e `/curadoria/…` dão 404.
 - **US4** (T039) depende da US2.
 - **US5** (T040) depende da US1.
 - **US6** (T041–T042) depende da Foundational e das rotas da US1 e da US2.
-- **Polish** (T043–T049) depois de todas. A T046 depende da T026 e da T002.
+- **Polish** (T043–T049) depois de todas. A T046 depende da T023 e da T026.
 
 ### Parallel Opportunities
 
 - Na Foundational: T005, T006, T007, T009, T010 e T013 em paralelo (arquivos diferentes). A
-  T008 depende de T005 e T007; a T011, de T010 e T014.
+  T008 depende de T005 e T007; a T011, da T010.
 - Na US1: T017, T018 e T019 (testes de pertinência) em paralelo com T021 (templates). T027,
   T028 e T029 depois da T025.
 - Na US2: T033 e T035 em paralelo; T036 depois da T034.

@@ -55,8 +55,14 @@ e exigiria revisar a fronteira da 010.
 
 **Decisão.** O mapa fechado de destinos da escolha de operador (`demonstracao/views.py`,
 `_DESTINOS`) passa a ter um ponto de extensão neutro, `registrar_destino(chave, endereco)`.
-- O `PortalConfig.ready()` registra `"curadoria"` → `/curadoria/oportunidades/` só com o
-  Portal ligado.
+- O `PortalConfig.ready()` registra `"curadoria"` → `/curadoria/oportunidades/` **sempre**,
+  com um predicado de ativação:
+  `registrar_destino("curadoria", "/curadoria/oportunidades/", ativo=lambda: settings.TRAJETORIA_PORTAL)`.
+- O mapa só aceita o destino se `ativo()` for verdadeiro **no pedido**, como o provedor da
+  navegação, que relê a configuração a cada pedido (024). Com o Portal desligado,
+  `?destino=curadoria` é ignorado e a escolha cai no padrão (`/editor/`). *(Revisado em
+  2026-10-08, depois do `/speckit-analyze`: um registro feito só na inicialização não
+  acompanharia o Portal desligado em tempo de execução.)*
 - Sem operador, a curadoria redireciona para `/demonstracao/operador/?destino=curadoria`.
 
 **Motivo.** É o mesmo padrão do 011 R13: um destino fechado, nunca um endereço do cliente. O
