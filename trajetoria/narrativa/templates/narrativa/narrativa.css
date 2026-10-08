@@ -6,6 +6,9 @@
   --card-marca: #2f9e41;        /* só grafismo: nós, traço, filete */
   --card-marca-escura: #257a33; /* o ano: 4,8:1 no creme */
   --card-creme: #f6f2e8;
+  /* Respiro lateral dos blocos: 16 px a 100% de fonte; com a fonte ampliada em tela estreita
+     não cresce além de 5vw, para o texto caber sem rolagem horizontal (FR-068). */
+  --respiro-lateral: min(var(--espaco-4), 5vw);
 }
 
 /* Abertura: imagem do catálogo com legenda honesta, título e registro (FR-076). */
@@ -22,9 +25,11 @@
 .narrativa-nome { color: var(--cor-texto-suave); font-size: var(--fonte-3); margin: 0 0 var(--espaco-2); }
 .narrativa-registro { font-size: var(--fonte-3); margin: 0; }
 
-/* Capítulos: blocos de largura total com fundo alternado, sem telas separadas (R21). */
-.narrativa-capitulo { margin: 0 0 var(--espaco-5); padding: var(--espaco-5) var(--espaco-4);
-  border-radius: var(--raio); background: var(--card-creme); }
+/* Capítulos: blocos de largura total com fundo alternado, sem telas separadas (R21). Palavras
+   longas ("Desenvolvimento") hifenizam ou quebram em vez de alargar o bloco (FR-068). */
+.narrativa-capitulo { margin: 0 0 var(--espaco-5); padding: var(--espaco-5) var(--respiro-lateral);
+  border-radius: var(--raio); background: var(--card-creme);
+  overflow-wrap: anywhere; hyphens: auto; }
 .narrativa-capitulo:nth-of-type(even) { background: var(--cor-fundo);
   border: var(--borda-fina) solid var(--cor-borda-suave); }
 .narrativa-capitulo h2 { color: var(--card-profundo); margin-top: 0; }
@@ -54,9 +59,9 @@
 
 /* Destaques: número grande seguido da frase completa e da apuração (FR-078, FR-083). */
 .narrativa-destaques { list-style: none; margin: 0 0 var(--espaco-3); padding: 0;
-  display: grid; gap: var(--espaco-3); }
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--espaco-3); }
 .narrativa-destaques li { background: #ffffff; border-radius: var(--raio);
-  border-left: .5rem solid var(--card-marca); padding: var(--espaco-3) var(--espaco-4); }
+  border-left: .5rem solid var(--card-marca); padding: var(--espaco-3) var(--respiro-lateral); }
 .narrativa-numero { display: block; color: var(--card-profundo); font-weight: 700;
   font-size: 2.5rem; line-height: 1.1; }
 .narrativa-destaques p { margin: var(--espaco-1) 0 0; }

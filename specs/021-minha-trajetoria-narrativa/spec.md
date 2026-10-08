@@ -1364,3 +1364,13 @@ Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mo
 - **Inalterados:** FR-003, FR-004, FR-007 e FR-008. A confirmação continua levando à trajetória, e a Participação ancorada em Formação Declarada continua sem narrativa.
 
 Referência: [024 — Início do egresso e shell do Portal](../024-inicio-egresso-portal/spec.md); [ADR 0008](../../docs/adr/0008-portal-do-egresso-camada-de-relacionamento.md).
+
+## Nota de correção: FR-068 com fonte a 200% (2026-10-08)
+
+- **Defeito:** a 320 px, com a fonte do navegador a 200%, a página tinha rolagem horizontal (`scrollWidth` = 397). Era o achado A1 da [validação da 024](../024-inicio-egresso-portal/validacao.md). Os espaçamentos em `rem` deixavam cerca de 112 px para o texto. Palavras longas como "Desenvolvimento" alargavam os destaques de "Naquele ano no Ifes" até 382 px. A linha do tempo também transbordava, mas o transbordo maior dos destaques encobria esse.
+- **Correção (só CSS, em `narrativa.css`):**
+  - os capítulos e os destaques usam um respiro lateral de `min(1rem, 5vw)`, que mantém os 16 px com fonte a 100%;
+  - nos capítulos, palavras longas hifenizam (`hyphens: auto`, `lang="pt-BR"`) ou quebram;
+  - a grade dos destaques usa `minmax(0, 1fr)`.
+- **Inalterados:** textos, dados, contrato da narrativa e card.
+- **Verificação:** com Maria (SIM-P-0003), `scrollWidth` igual à largura a 320 px e a 375 px, com fonte a 100% e a 200%. Teste: `tests/narrativa/test_pagina.py::test_css_cabe_em_320px_com_fonte_a_200`.
