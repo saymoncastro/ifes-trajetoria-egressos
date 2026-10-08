@@ -21,10 +21,12 @@ O plan entrega a área de Oportunidades como primeiro fato persistente da camada
     agendado (R5).
 - **Pertinência por função pura** sobre as Conclusões da Pessoa (R7).
   - Todos os critérios precisam valer na mesma Conclusão, por igualdade exata.
-  - A explicação é gerada por modelos fixos.
+  - A explicação é gerada por modelos fixos e cita **todos** os critérios definidos, com o
+    valor satisfeito.
 - **Experiência do egresso:**
   - página `/oportunidades/`;
-  - bloco com **um** destaque no Início, com orçamento de 270 px (R9);
+  - bloco com **um** destaque no Início, com orçamento de 270 px e compactação sem perda de
+    informação (R9);
   - quinto item na navegação, com largura estável dos itens (R10; A5 da avaliação por IA).
 - **Curadoria** em `/curadoria/oportunidades/`, no padrão da gestão de Campanha (017).
   - Regra nomeada e escopo de administração na própria camada (R2).
@@ -207,7 +209,10 @@ neutros, que não citam a camada.
 
 ## Riscos de implementação
 
-- **Orçamento de 270 px** (R9). Há plano B definido: a linha de origem sai do Início.
+- **Orçamento de 270 px** (R9). A compactação é feita em três etapas, sem remover
+  informação exigida (FR-004, FR-013). Se não couber, o caso volta ao solicitante. *(A versão
+  anterior previa tirar a linha de origem, o que violaria a spec; corrigido na revisão do
+  plan.)*
 - **Lista de cursos longa na fonte real** (R8). Fica para quando houver volume real.
 - **Datas do catálogo relativas a `D`.** Um banco preparado em outro dia mostra outro
   recorte. O quickstart exige banco recriado.

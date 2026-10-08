@@ -140,6 +140,10 @@ O domínio exibido é o nome de máquina em minúsculas, sem `www.` removido.
 
 **Explicação.** Os textos ficam em `mensagens.py`; os modelos estão em
 [contracts/pertinencia.md](contracts/pertinencia.md).
+- **Todos os critérios definidos são citados** (FR-013). *(Revisado em 2026-10-08.)* Cada
+  formação é descrita com o valor que satisfaz cada critério: curso, nível ("formação de
+  …") e unidade ("na unidade …"). A versão anterior citava só a formação quando havia
+  critério de curso e podia omitir nível e unidade exigidos pelo público.
 - A unidade aparece como "unidade X", não "campus X". É o vocabulário da 021 e da 024, e o
   Cefor não é campus.
 - A unidade responsável aparece numa linha própria, "Oferecida pela unidade X" ou "Oferecida
@@ -185,8 +189,25 @@ os critérios de Campanha, e a ADR 0004 separa abrangência de público.
 
 A soma é ≈ 250–270 px.
 
-**Plano B, se a medida passar de 270 px.** A linha de origem sai do Início e fica só na
-página. A medida é feita na validação, com Maria, Diego e Ana.
+**Se a medida passar de 270 px: compactar, nunca omitir.** *(Revisado em 2026-10-08, na revisão
+do plan.)* A versão anterior previa tirar a linha de origem do Início. Isso violaria o FR-004
+(domínio e classificação do site junto do link) e o FR-013 (unidade responsável), e foi
+descartado. As etapas, aplicadas em ordem até caber, todas com tokens da 015:
+
+1. **Margens internas.** `--espaco-1` entre os parágrafos do destaque, em vez da margem
+   padrão de parágrafo.
+2. **Tipo menor.** Explicação e origem em `--fonte-5` (15 px), com `--entrelinha-enunciado`
+   (1,4). O título continua em `--fonte-4`.
+3. **Um parágrafo só.** Explicação e origem viram um único parágrafo; a origem é a segunda
+   frase. Isso economiza uma margem.
+
+Nenhuma etapa remove o título, a explicação completa, a unidade responsável, a
+classificação do site ou o domínio. Se ainda passar de 270 px, a implementação **para** e o
+caso volta ao solicitante, para revisar o FR-021 ou o SC-008. Não há corte silencioso de
+informação.
+
+A medida é feita na validação, com Ana, Maria e Diego, a 375×812 e fonte a 100%. O destaque
+mais longo do oráculo é o O6 de Diego.
 
 **Interpretação do SC-008.** "Em relação à mesma persona sem o bloco" compara o Início com a
 navegação de cinco itens, com e sem o bloco. A quebra da navegação é medida à parte, pelo

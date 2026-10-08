@@ -19,13 +19,39 @@
 
 ## Explicação (FR-013; textos provisórios)
 
-| Caso | Modelo | Exemplo |
+*(Revisado em 2026-10-08: a explicação cita **todos** os critérios definidos, com o valor que a
+formação satisfaz. A versão anterior podia omitir nível e unidade quando havia critério de
+curso.)*
+
+**Frase:** "Aparece porque você concluiu {formações}." Sem público: "Aberta a todos os egressos
+do Ifes."
+
+**Cada formação** é descrita por partes, nesta ordem:
+
+| Parte | Quando | Texto |
 |---|---|---|
-| Sem público | "Aberta a todos os egressos do Ifes." | — |
-| Critério de curso (com ou sem outros) | "Aparece porque você concluiu {formações}." Cada formação é "{curso} ({unidade}, {ano})" | "Aparece porque você concluiu Tecnologia em Redes de Computadores (Serra, 2023)." |
-| Sem curso, com nível e/ou unidade | "Aparece porque você concluiu uma formação{ de {nível}}{ na unidade {unidade}}: {formações}." Cada formação é "{curso} ({ano})", com a unidade entre parênteses quando não houver critério de unidade | "Aparece porque você concluiu uma formação de Pós-graduação: Mestrado Profissional em Química (Vila Velha, 2020)." |
-| Várias formações | Unidas por vírgula e "e", na ordem da 007 | "… na unidade Vitória: Técnico em Edificações (2014) e Bacharelado em Engenharia Civil (2020)." |
-| Dado ausente na formação | O fragmento ausente é omitido, sem "não informado" | "… Técnico em Química (2012)." |
+| Curso | Sempre que houver curso na Conclusão | "{curso}" |
+| Nível | Se houver critério de nível | ", formação de {nível}" |
+| Unidade | Se houver critério de unidade | " na unidade {unidade}" |
+| Parênteses | Sempre que houver algum dado | "({unidade}, {ano})" sem critério de unidade; "({ano})" com critério de unidade |
+
+**Várias formações:** unidas por vírgula e "e", na ordem da 007.
+
+**Dado ausente na Conclusão:** o fragmento é omitido, sem "não informado". Se faltar o curso,
+usa-se "uma formação".
+
+| Critérios definidos | Exemplo |
+|---|---|
+| curso | "Aparece porque você concluiu Tecnologia em Redes de Computadores (Serra, 2023)." |
+| nível | "Aparece porque você concluiu Mestrado Profissional em Química, formação de Pós-graduação (Vila Velha, 2020)." |
+| unidade | "Aparece porque você concluiu Técnico em Edificações na unidade Vitória (2014) e Bacharelado em Engenharia Civil na unidade Vitória (2020)." |
+| curso + nível | "Aparece porque você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas, formação de Graduação (Serra, 2022)." |
+| curso + unidade | "Aparece porque você concluiu Tecnologia em Redes de Computadores na unidade Serra (2023)." |
+| curso + nível + unidade | "Aparece porque você concluiu Técnico em Química, formação de Técnico na unidade Vila Velha (2012)." |
+| nível + unidade | "Aparece porque você concluiu Técnico em Química, formação de Técnico na unidade Vila Velha (2012)." |
+
+**Invariante testável:** para toda oportunidade com público, o valor satisfeito de **cada**
+critério definido aparece literalmente na explicação de **cada** formação citada.
 
 **Linha de origem**, que acompanha todo item:
 - "Oferecida pela unidade {unidade_responsavel}", ou "Oferecida pelo Ifes" quando
@@ -60,13 +86,13 @@ mesmo tempo, Pós-graduação e da Serra.
 
 | Persona | "Pela sua formação" (em ordem) | "Para todos os egressos" | Destaque no Início | Não pode aparecer |
 |---|---|---|---|---|
-| Ana (SIM-P-0001) | O2: "…você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas (Serra, 2022)." | O1 | O2 | O3–O10 |
-| Bruno (SIM-P-0002) | O4: "…uma formação na unidade Vitória: Técnico em Edificações (2014) e Bacharelado em Engenharia Civil (2020)." | O1 | O4 | O2, O3, O5–O10 |
-| Maria (SIM-P-0003) | O2 (TADS, Serra, 2022); O3: "…uma formação de Pós-graduação: Especialização em Informática na Educação (Cefor, 2025)." | O1 | O2 | **O5**, O4, O6–O10 |
-| Diego (SIM-P-0004) | O6: "…uma formação de Técnico na unidade Vila Velha: Técnico em Química (2012)."; O3: "…de Pós-graduação: Mestrado Profissional em Química (Vila Velha, 2020)." | O1 | O6 | O2, O4, O5, O7–O10 |
+| Ana (SIM-P-0001) | O2: "Aparece porque você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas (Serra, 2022)." | O1 | O2 | O3–O10 |
+| Bruno (SIM-P-0002) | O4: "Aparece porque você concluiu Técnico em Edificações na unidade Vitória (2014) e Bacharelado em Engenharia Civil na unidade Vitória (2020)." | O1 | O4 | O2, O3, O5–O10 |
+| Maria (SIM-P-0003) | O2: "…Tecnologia em Análise e Desenvolvimento de Sistemas (Serra, 2022)."; O3: "Aparece porque você concluiu Especialização em Informática na Educação, formação de Pós-graduação (Cefor, 2025)." | O1 | O2 | **O5**, O4, O6–O10 |
+| Diego (SIM-P-0004) | O6: "Aparece porque você concluiu Técnico em Química, formação de Técnico na unidade Vila Velha (2012)."; O3: "Aparece porque você concluiu Mestrado Profissional em Química, formação de Pós-graduação (Vila Velha, 2020)." | O1 | O6 | O2, O4, O5, O7–O10 |
 | Fernanda (SIM-P-0007) | — | O1 | O1 | O2–O10 |
-| Carla (SIM-P-0010) | O4: "…na unidade Vitória: Licenciatura em Pedagogia (2016)." | O1 | O4 | demais |
-| Carla (SIM-P-0011) | O2: "…Tecnologia em Redes de Computadores (Serra, 2023)." | O1 | O2 | demais |
+| Carla (SIM-P-0010) | O4: "Aparece porque você concluiu Licenciatura em Pedagogia na unidade Vitória (2016)." | O1 | O4 | demais |
+| Carla (SIM-P-0011) | O2: "Aparece porque você concluiu Tecnologia em Redes de Computadores (Serra, 2023)." | O1 | O2 | demais |
 | Pessoa sem Conclusão (teste) | — | — | sem bloco | todas |
 
 - **Ordem dentro do grupo.** Por `inicio` decrescente: O4 (D−2) > O2 (D−3) > O6 (D−4) > O3 (D−5).

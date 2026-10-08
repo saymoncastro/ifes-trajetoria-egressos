@@ -58,8 +58,10 @@ oráculo é vazia.
 ```
 
 - **Medida (SC-008):** a 375×812 com fonte a 100%, o convite desce no máximo 270 px em relação
-  à mesma persona sem o bloco. Se passar, vale o plano B do R9: a linha de origem sai do
-  Início.
+  à mesma persona sem o bloco.
+- **Se passar:** compactação do R9, em três etapas (margens, tipo de 15 px, um parágrafo só).
+  Ela **nunca** remove título, explicação, unidade responsável, classificação do site nem
+  domínio (FR-004, FR-013). Se ainda passar, o caso volta ao solicitante.
 - **Convite:** inalterado (024 FR-020, com a revisão de 2026-10-08).
 - **Vocabulário:** a palavra "Oportunidade" só aparece neste bloco. A "pesquisa" de
   acompanhamento só é chamada no convite (R11).
