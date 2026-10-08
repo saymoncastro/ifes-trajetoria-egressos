@@ -86,6 +86,26 @@ def test_css_sem_largura_fixa_nem_nowrap():
     assert "http" not in css
 
 
+def _regra(css, seletor):
+    return re.search(rf"(?:^|\n){re.escape(seletor)} \{{([^}}]*)\}}", css).group(1)
+
+
+def test_css_cabe_em_320px_com_fonte_a_200(pagina):
+    """FR-068 (achado A1 da 024): a 320 px com fonte a 200%, os espaçamentos em rem deixavam
+    ~112 px para o texto, e "Desenvolvimento" alargava destaques e linha do tempo até 397 px."""
+    css = CSS.read_text()
+    assert "--respiro-lateral: min(var(--espaco-4), 5vw);" in css
+    capitulo = _regra(css, ".narrativa-capitulo")
+    assert "padding: var(--espaco-5) var(--respiro-lateral);" in capitulo
+    assert "overflow-wrap: anywhere;" in capitulo
+    assert "hyphens: auto;" in capitulo
+    assert "grid-template-columns: minmax(0, 1fr);" in _regra(css, ".narrativa-destaques")
+    destaque = _regra(css, ".narrativa-destaques li")
+    assert "padding: var(--espaco-3) var(--respiro-lateral);" in destaque
+    # A hifenização depende do idioma do documento.
+    assert '<html lang="pt-BR"' in pagina.content.decode()
+
+
 def test_indicador_so_com_dois_ou_mais_capitulos():
     from trajetoria.narrativa.montagem import montar
     from trajetoria.narrativa.views import _capitulos
