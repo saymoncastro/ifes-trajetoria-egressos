@@ -710,3 +710,10 @@ Cada caso é verificado sem inspeção humana de todos os quadros.
   - Impacto: FR-029.
   - Tratamento provisório: na demonstração, retenção técnica curta, fixada no plan (da
     ordem de horas, nunca mais de 24 h), com descarte automático.
+
+## Nota de revisão pela Feature 024 (2026-10-07)
+
+- **FR-001:** o vídeo segue a regra de acesso da trajetória revista pela 024 (FR-009): Pessoa identificada com ao menos uma Conclusão Acadêmica, independentemente de participação em pesquisa. A geração continua só por ação explícita (FR-002).
+- **Nota de produção:** abrir o vídeo a todas as Pessoas com Conclusão aumenta a procura pela geração. A capacidade (`TRAJETORIA_VIDEO_CONCORRENCIA`) deve ser revista antes do uso real, sem bloquear a demonstração.
+
+Referência: [024 — Início do egresso e shell do Portal](../024-inicio-egresso-portal/spec.md); [ADR 0008](../../docs/adr/0008-portal-do-egresso-camada-de-relacionamento.md).

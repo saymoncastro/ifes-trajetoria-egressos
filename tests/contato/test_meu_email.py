@@ -91,7 +91,8 @@ def test_links_de_saida(ana):
     cliente, _ = ana
     html = cliente.post(URL, {"acao": "agora_nao"}).content.decode()
     assert 'href="/formacoes/"' in html
-    assert 'href="/minha-trajetoria/"' not in html  # sem Participação concluída ainda
+    # 024 FR-009 (revisa 021 FR-001): a trajetória não depende de participação concluída.
+    assert 'href="/minha-trajetoria/">Ver minha trajetória no Ifes' in html
 
 
 def test_csrf_exigido(settings):

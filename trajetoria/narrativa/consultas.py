@@ -1,7 +1,8 @@
 """Leitura dos fatos da narrativa (Feature 021; research R2, R14).
 
-Só leitura: nada aqui grava (FR-008). A Participação concluída é apenas o gatilho de acesso;
-a narrativa é da Pessoa e reúne todas as suas Conclusões Acadêmicas (FR-001, FR-016).
+Só leitura: nada aqui grava (FR-008). A narrativa é da Pessoa e reúne todas as suas
+Conclusões Acadêmicas (FR-001, FR-016). Desde a 024 (FR-009), o acesso não depende de
+participação em pesquisa.
 Nenhuma Resposta é lida (FR-044). Complemento e agregados vêm do que a carga do contexto da
 trajetória gravou (P2); nada é calculado da base local como valor (FR-055).
 """
@@ -17,7 +18,6 @@ from trajetoria.narrativa.contrato import (
     EntradaDaNarrativa,
     FatoDaFormacao,
 )
-from trajetoria.participacao.models import Participacao
 
 logger = logging.getLogger("trajetoria.narrativa")
 
@@ -27,11 +27,11 @@ _CONTEXTO = (
 
 
 def elegivel(pessoa) -> bool:
-    """Ao menos uma Participação concluída ancorada em Conclusão Acadêmica da Pessoa. A
-    âncora declarada (019) fica de fora por construção (`conclusao__pessoa`)."""
-    return Participacao.objects.filter(
-        conclusao__pessoa=pessoa, concluida_em__isnull=False
-    ).exists()
+    """Regra positiva da 024 (FR-009; revisa 021 FR-001, FR-002 e E2, e 022 FR-001): a Pessoa
+    identificada com ao menos uma Conclusão Acadêmica tem trajetória institucional,
+    independentemente de participação em pesquisa. Formação Declarada (019) não é Conclusão
+    e fica de fora por construção."""
+    return pessoa.conclusoes.exists()
 
 
 def _ingresso(conclusao) -> dict:

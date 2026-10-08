@@ -330,10 +330,12 @@ substituiu a comunicação simulada da 016) só aceita a URL de entrada
 
 | URL | O que é |
 |---|---|
-| `http://127.0.0.1:8000/` | Redireciona para `/acesso/` |
-| `http://127.0.0.1:8000/acesso/` | Entrada do egresso: CPF e data de nascimento **fictícios**. A própria página mostra o painel "Dados fictícios para demonstração" |
+| `http://127.0.0.1:8000/` | Entrada do Portal do Egresso (Feature 024): redireciona para `/entrar/` ou, com sessão, para `/inicio/`. Com `TRAJETORIA_PORTAL=0`, redireciona para `/acesso/` como antes |
+| `http://127.0.0.1:8000/entrar/` | Identificação pelo Portal: a mesma de `/acesso/`, mas leva ao Início (Feature 024) |
+| `http://127.0.0.1:8000/inicio/` | Início do Portal: o que o Ifes registra, ações e convite à pesquisa (Feature 024) |
+| `http://127.0.0.1:8000/acesso/` | Entrada do egresso pelo convite: CPF e data de nascimento **fictícios**; leva a `/formacoes/`. A própria página mostra o painel "Dados fictícios para demonstração" |
 | `http://127.0.0.1:8000/formacoes/` | Formações da Pessoa confirmada (exige acesso) |
-| `http://127.0.0.1:8000/minha-trajetoria/` | Devolutiva após a pesquisa concluída (Feature 021) |
+| `http://127.0.0.1:8000/minha-trajetoria/` | Minha trajetória, com card e vídeo, para quem tem Conclusão Acadêmica, mesmo sem ter respondido (Features 021 e 024) |
 | `http://127.0.0.1:8000/demonstracao/operador/` | Escolha do operador fictício A, B ou C |
 | `http://127.0.0.1:8000/acompanhamento/` | Acompanhamento da coleta e gestão de Campanha (exige operador) |
 | `http://127.0.0.1:8000/editor/` | Editor do instrumento (exige operador) |

@@ -52,3 +52,16 @@ próprias).
 | Tamanho da assinatura | 63 px de altura (símbolo de 36 px) a partir de 22em (352 px); 54 px (símbolo de 31 px) abaixo disso | O nome do produto fica ao lado da assinatura com fonte a 100% |
 | Altura do rodapé | ≤ 120 px a 375 px | Sem a linha de demonstração |
 | Rolagem horizontal | 0 | 320 a 1280 px, fonte de 100% a 200% |
+
+## Nota de revisão pela Feature 024 (2026-10-07)
+
+- **Pontos de extensão neutros em `interface/base.html`:** o bloco `produto` (padrão
+  "Trajetória Ifes" / "Acompanhamento de egressos", ou `produto` e `produto_subtitulo` do
+  contexto) e o bloco `navegacao`, vazio. Com os dois no padrão, o HTML do shell é
+  idêntico ao desta feature (024 SC-007, verificado por teste).
+- **Navegação:** "sem navegação" continua valendo para as Seções, a tela de concluir, a
+  identificação e a declaração. Com o Portal ligado, a escolha de formações, a confirmação,
+  Minha trajetória, Meu e-mail e o Início mostram a navegação do Portal logo abaixo do
+  cabeçalho ([024 contracts/navegacao.md](../../024-inicio-egresso-portal/contracts/navegacao.md)).
+- **Nome do produto:** "Portal do Egresso" (provisório, D2) na entrada do Portal e no
+  Início. As demais telas mantêm "Trajetória Ifes".

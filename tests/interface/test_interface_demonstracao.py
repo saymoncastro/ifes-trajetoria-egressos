@@ -72,9 +72,11 @@ def test_painel_ficticio_nao_depende_do_preparo(client):
 
 
 def test_inicio_redireciona_conforme_a_pessoa(client, pessoas):
-    assert client.get("/")["Location"] == "/acesso/"
+    # Raiz revisada pela 024 (FR-005): com o Portal ligado, é a entrada do Portal. Com ele
+    # desligado, a raiz é a desta feature (tests/portal/test_desabilitado.py).
+    assert client.get("/")["Location"] == "/entrar/"
     ci.entrar_como(client, pessoas["SIM-P-0001"])
-    assert client.get("/")["Location"] == "/formacoes/"
+    assert client.get("/")["Location"] == "/inicio/"
 
 
 def test_cookie_antigo_nao_autoriza_jornada(client):

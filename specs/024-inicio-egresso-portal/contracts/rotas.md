@@ -9,7 +9,7 @@ Portal existem só com `TRAJETORIA_PORTAL` diferente de `"0"` (research R8).
 |---|---|---|---|---|
 | `/` | GET | 303 → `/entrar/` | 303 → `/inicio/` | 303 → `/declaracao/` |
 | `/entrar/` | GET | 200, formulário da 018, rotulado "Entrada do Portal do Egresso" | 303 → `/inicio/` | 303 → `/declaracao/` |
-| `/entrar/` | POST | Mesma verificação da 018. Confirmada: 303 → `/inicio/`. Demais resultados iguais aos de `/acesso/` (422, 429 com `Retry-After`, 503, "não confirmada" com selo da 019) | idem | idem |
+| `/entrar/` | POST | Mesma verificação da 018. Confirmada: 303 → `/inicio/`. Demais resultados iguais aos de `/acesso/` (erros de formato com resumo, 429 com `Retry-After`, 503, 422 de base indevida, "não confirmada" com selo da 019) | idem | idem |
 | `/inicio/` | GET | 303 → `/entrar/?aviso=sessao` se a sessão acabou de expirar; senão 303 → `/entrar/` | 200 | 303 → `/declaracao/` |
 
 Regras:

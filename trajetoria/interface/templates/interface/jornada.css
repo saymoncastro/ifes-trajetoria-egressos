@@ -195,3 +195,19 @@ button.sair-discreto {
   background: none; border: 0; padding: 0; color: var(--cor-acao); font-weight: 400;
   text-decoration: underline;
 }
+
+/* 024 (contracts/navegacao.md; research R10): navegação, só quando o contexto a fornece. Lista
+   de links que quebra linha, sem menu escondido e sem JavaScript; alvos de 44 px (014). O
+   item atual é marcado por texto em negrito e fio, não só por cor. */
+.navegacao { border-bottom: var(--borda-fina) solid var(--cor-borda-suave); }
+.navegacao ul {
+  list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-4);
+}
+.navegacao a {
+  display: inline-flex; align-items: center; min-height: var(--alvo); min-width: var(--alvo);
+  color: var(--cor-acao); font-size: var(--fonte-5);
+}
+.navegacao a[aria-current="page"] {
+  color: var(--cor-texto); font-weight: var(--peso-forte); text-decoration: none;
+  box-shadow: inset 0 calc(-1 * var(--borda-acento)) 0 var(--cor-acao);
+}

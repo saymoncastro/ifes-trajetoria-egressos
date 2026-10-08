@@ -189,3 +189,30 @@ Nenhuma violação a justificar. Uma nota de projeto: o padrão "ligado salvo `0
 `TRAJETORIA_PORTAL` difere do padrão "só `1` liga" do modo de demonstração. A razão é que a
 camada inteira já fica atrás do modo de demonstração, e uma variável obrigatória nova
 quebraria ambientes já preparados (research R8).
+
+## Ajustes registrados na implementação (2026-10-07)
+
+Nenhum ajuste muda requisito da spec. Os testes cobrem todos.
+
+- **Identificação parametrizada.** O plano previa uma função privada `_entrada`. Ela virou a
+  função pública `acesso.views.identificar`, com destino, ação, título, rótulo, `continuar`,
+  `aviso_de_envio` e `contexto`. O Portal passa o título "Confirme seus dados para entrar no
+  Portal do Egresso", porque a mesma frase "para acessar a pesquisa" contradiria a hipótese
+  do Checkpoint 1. O `acesso` continua sem conhecer o Portal.
+- **Nome do produto por contexto.** O bloco neutro `produto` aceita `produto` e
+  `produto_subtitulo` do contexto. Assim, a identificação reaproveitada também mostra
+  "Portal do Egresso" em `/entrar/`.
+- **Rotas em `config/rotas.py`.** Com `rotas` em `config/urls.py`, a primeira importação do
+  `urlconf` dentro de um teste com o Portal desligado fixava as rotas sem o Portal para o resto
+  da sessão. O `config/urls.py` agora só chama `rotas(settings.TRAJETORIA_PORTAL)`.
+- **Estilo do Início no app `portal`** (`portal/inicio.css`), e não em `jornada.css`. A
+  navegação continua em `jornada.css`, porque é do slot neutro.
+- **Navegação preguiçosa.** O provedor devolve os itens num `SimpleLazyObject`: só consulta o
+  banco quando a tela mostra a navegação. As consultas das Seções não mudam.
+- **Orçamento de consultas de `/formacoes/`:** 9 → 14. São +4 da leitura do conteúdo da
+  Versão, uma vez por Versão, para "no máximo N partes", e +1 do item "Minha trajetória" na
+  navegação. O limite está documentado em `tests/interface/test_interface_formacoes.py`.
+- **Textos de estado públicos.** `SEM_FORMACAO`, `SEM_PESQUISA` e `SEM_ENTRADA_PENDENTE` foram
+  para `interface/mensagens.py`, e o Início reaproveita as mesmas frases (T022).
+- **Lista permitida da interface.** `trajetoria.instrumento.models.Versao` entrou na lista,
+  como referência à Versão da Campanha, sem leitura extra (`tests/interface/test_interface_fronteiras.py`).

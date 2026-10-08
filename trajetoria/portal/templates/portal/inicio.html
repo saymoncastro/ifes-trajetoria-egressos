@@ -1,0 +1,40 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block estilo %}{% include "narrativa/narrativa.css" %}
+{% include "portal/inicio.css" %}{% endblock %}
+{% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
+{% block conteudo %}
+{# 024 contracts/inicio.md: reconhecimento → proveniência → ações → convite (FR-016). #}
+{% if reconhecimento %}
+<div class="narrativa-abertura inicio-abertura">
+  <figure class="narrativa-figura">
+    {{ reconhecimento.abertura.imagem }}
+    <figcaption>{{ reconhecimento.abertura.legenda }}</figcaption>
+  </figure>
+  <h1>{{ titulo }}</h1>
+  {% for frase in reconhecimento.sintese %}<p class="narrativa-registro">{{ frase }}</p>{% endfor %}
+</div>
+<ul class="inicio-formacoes">
+  {% for formacao in reconhecimento.formacoes %}
+  <li>{% for frase in formacao %}<p{% if frase.atributos %} class="inicio-atributos"{% endif %}>{{ frase.texto }}{% if frase.origem %} <span class="inicio-origem">{{ frase.origem }}</span>{% endif %}</p>{% endfor %}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<h1>{{ titulo }}</h1>
+{% if sem_formacao %}<p>{{ sem_formacao }}</p>{% endif %}
+{% endif %}
+{% if proveniencia %}<p class="inicio-proveniencia">{{ proveniencia }}</p>{% endif %}
+<section aria-labelledby="inicio-acoes">
+  <h2 id="inicio-acoes">{{ titulo_acoes }}</h2>
+  <ul class="lista-simples inicio-acoes">
+    {% for acao in acoes %}<li><a href="{{ acao.endereco }}">{{ acao.rotulo }}</a></li>{% endfor %}
+  </ul>
+</section>
+{% if convite %}
+<section class="inicio-convite" aria-labelledby="inicio-convite">
+  <h2 id="inicio-convite">{{ titulo_convite }}</h2>
+  <p>{{ convite.texto }}</p>
+  {% if convite.acao %}<p><a class="botao" href="/formacoes/">{{ convite.acao }}</a></p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

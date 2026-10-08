@@ -538,6 +538,7 @@ Lido em `config/settings.py` e no código. "Obrigatória" refere-se a esta VM.
 | `PGPASSWORD` | Só com banco remoto | `<DB_PASSWORD>` | Senha | **Sim** |
 | `PGSSLMODE`, `PGSSLROOTCERT` | Só com banco remoto | `verify-full` | TLS da conexão; lidas pela libpq, não pelas settings | Não |
 | `TRAJETORIA_DEMONSTRACAO` | Define o modo | vazio (fechado) ou `1` | Modo de demonstração. Só `1` ativa | Não |
+| `TRAJETORIA_PORTAL` | Não | vazio (ligado) ou `0` | Portal do Egresso em demonstração (024; ADR 0008). Só `0` desliga; desligado, a coleta funciona igual. Fica atrás do modo de demonstração | Não |
 | `TRAJETORIA_COOKIE_SEGURO` | **Sim** (`1`) | `1` | `SESSION_COOKIE_SECURE` | Não |
 | `TRAJETORIA_CHAVE_ACESSO_LOCALIZACAO` | **Sim** [modo demonstração] | `<64 hex>` | HMAC que localiza o CPF sem guardá-lo (018). ≥ 32 caracteres, distinta das demais | **Sim** |
 | `TRAJETORIA_CHAVE_ACESSO_VERIFICACAO` | **Sim** [modo demonstração] | `<64 hex>` | HMAC de CPF + nascimento (018). ≥ 32 caracteres, distinta das demais | **Sim** |

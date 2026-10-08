@@ -1354,3 +1354,13 @@ Etiquetas de origem (Princípio XIII): [Arquitetura], [Hipótese], [Solicitante]
 FR-003: a ação da confirmação ancorada em Conclusão passa de "única" a **ação principal**. "Ver minha trajetória no Ifes" continua a primeira; abaixo, com menor destaque, vem o convite opcional de e-mail da 020 (FR-009, E7). A independência funcional se mantém: a narrativa, o card e o vídeo não dependem de contato e não mostram o convite, e `narrativa`, `video` e `contexto_trajetoria` não importam `contato` nem `mobilizacao` (FR-009, FR-070 inalterados). O impacto na tela de conclusão é compartilhado e foi revisto em conjunto.
 
 Referência: [020 — Mobilização real, Lotes e contatos do egresso](../020-mobilizacao-real-lotes-contatos/spec.md).
+
+## Nota de revisão pela Feature 024 (2026-10-07)
+
+- **FR-001 e E2:** a hipótese foi revista pelo solicitante. A página "Minha trajetória no Ifes", o card e o vídeo ficam disponíveis à Pessoa identificada com ao menos uma Conclusão Acadêmica, **independentemente de participação em pesquisa** (024 FR-009). Não há mais gatilho de Participação. O grão continua sendo a Pessoa. A regra vale com ou sem o Portal.
+- **FR-002:** só quem não tem Conclusão Acadêmica vai para a escolha de formações, sem mensagem que revele narrativa (024 FR-010).
+- **FR-005:** a ligação para a trajetória em `/formacoes/` aparece para quem tem Conclusão, mesmo sem Participação.
+- **FR-070:** a antecipação ("Ao final, você poderá ver sua trajetória no Ifes.") foi retirada, porque o benefício já está disponível. Em seu lugar, para a formação disponível para iniciar, aparece "A pesquisa tem no máximo N partes." (024 FR-013, FR-014).
+- **Inalterados:** FR-003, FR-004, FR-007 e FR-008. A confirmação continua levando à trajetória, e a Participação ancorada em Formação Declarada continua sem narrativa.
+
+Referência: [024 — Início do egresso e shell do Portal](../024-inicio-egresso-portal/spec.md); [ADR 0008](../../docs/adr/0008-portal-do-egresso-camada-de-relacionamento.md).

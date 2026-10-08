@@ -118,7 +118,7 @@ def test_templates_e_textos_novos_sem_termo_vedado():
 
     fontes = [p.read_text(encoding="utf-8") for p in
               Path("trajetoria/narrativa/templates/narrativa").glob("*.html")]
-    fontes += [mensagens.ANTECIPACAO, mensagens.TITULO_TRAJETORIA]
+    fontes += [mensagens.TAMANHO_DA_PESQUISA, mensagens.TITULO_TRAJETORIA]
     for texto in fontes:
         texto = re.sub(r"<script>.*?</script>", "", texto, flags=re.S)  # código, não texto
         texto = re.sub(r"\{%.*?%\}|\{\{.*?\}\}", "", texto)  # sintaxe de template

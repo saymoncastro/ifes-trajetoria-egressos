@@ -23,12 +23,21 @@ SITUACAO_DA_FORMACAO = {
 # se confundir com a devolutiva "Minha trajetória no Ifes"). A frase de entrada usa só a linha
 # da formação (curso · unidade · ano informados): nenhuma qualificação fixa da unidade.
 TITULO_TRAJETORIA = "Suas formações no Ifes"
+
+# Estados da entrada (014 FR-036), públicos desde a 024 (T022): outras telas reaproveitam a
+# mesma frase, sem segunda redação.
+SEM_FORMACAO = "Não encontramos formações concluídas no Ifes associadas a você."
+SEM_PESQUISA = "No momento, não há pesquisa disponível para as suas formações."
+SEM_ENTRADA_PENDENTE = "Não há pesquisa pendente para você neste momento."
+
 ENTRADA_FATO = "Você concluiu {linha}."
 ENTRADA_SEM_ATRIBUTOS = "Encontramos uma formação sua no Ifes."
 ENTRADA_CONTINUACAO = "O Ifes quer saber como sua trajetória seguiu depois disso."
-# 021 FR-070: antecipa o benefício, sem conteúdo personalizado; texto da interface, nunca da
-# Versão. Só com pesquisa a iniciar ou retomar.
-ANTECIPACAO = "Ao final, você poderá ver sua trajetória no Ifes."
+# 024 FR-013, FR-014 (revisa 021 FR-070): a trajetória já está disponível, então não se
+# antecipa como benefício. Antes do primeiro toque, o tamanho máximo da pesquisa, pela mesma
+# regra do indicador da 023 ("no máximo"); nunca tempo nem percentual. Só ao iniciar.
+TAMANHO_DA_PESQUISA = "A pesquisa tem no máximo {n} partes."
+TAMANHO_DA_PESQUISA_UMA = "A pesquisa tem 1 parte."
 SELECAO = (
     "Cada formação tem sua própria pesquisa. Escolha por qual começar ou continuar; as outras "
     "continuam disponíveis aqui."

@@ -220,3 +220,13 @@ def test_scripts_so_inline_sem_recurso_externo(cliente):
     assert scripts and all(s == "<script>" for s in scripts)
     bloco = _bloco(cliente.get(PAGINA))
     assert "http" not in bloco.split("<script>")[1]
+
+
+def test_video_sem_participacao(cenario, renderizador_falso, client):
+    """Revisão da 022 FR-001 pela 024 (FR-009): o vídeo segue a regra da trajetória, de quem
+    tem Conclusão Acadêmica, independentemente de participação em pesquisa."""
+    ana = cenario.pessoa("SIM-P-0001")
+    cn.entrar(client, ana)
+    assert 'id="video"' in client.get(PAGINA).content.decode()
+    assert client.post(PEDIR)["Location"] == "/minha-trajetoria/#video"
+    assert G.objects.get().estado == G.SOLICITADO

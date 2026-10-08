@@ -12,7 +12,7 @@ do Egresso" e a navegação.
 | 2 | Título (`h1`) | "Sua história com o Ifes" | Fixo | Sempre |
 | 3 | Síntese | Frase da seção `o_que_o_ifes_registra`, por exemplo "O Ifes registra 2 formações concluídas por você." | Narrativa (021) | Há Conclusão |
 | 4 | Formações | Uma linha por formação (curso, unidade, nível, ano), na ordem da 007, cada uma com "Registro do Ifes" em texto | Narrativa: `formacoes` | Há Conclusão |
-| 5 | Derivados | Até dois, com a explicação da 021: tempo desde a conclusão, primeira formação | Narrativa: `derivados` | Quando a 021 os produz |
+| 5 | Derivados | Dentro de cada formação, as frases derivadas da 021 (por exemplo, "Há 1 ano desde essa conclusão."), com o selo "Calculado a partir dos registros". A linha de atributos herda a origem do fato e não repete o selo *(ajuste da implementação)* | Narrativa: frases da seção `trajetoria_academica` | Quando a 021 os produz |
 | 6 | Proveniência | "Essas informações vêm dos registros acadêmicos do Ifes. Nada aqui foi respondido por você." | Fixo | Há Conclusão |
 | 7 | O que você pode fazer | Lista de ações (abaixo) | — | Sempre |
 | 8 | Convite | Bloco único, conforme a situação (abaixo) | `situacao_de_entrada` (007) | Conforme a situação |
@@ -46,10 +46,10 @@ Uma única vez, com título de nível 2 "Pesquisa de acompanhamento".
 | Resolução / situação (007) | Texto (provisório) | Ação |
 |---|---|---|
 | `ENTRADA_RESOLVIDA`, a formação está disponível para iniciar | "Há uma pesquisa aberta sobre {curso}. Respondê-la é como você atualiza sua trajetória com o Ifes." | "Responder" → `/formacoes/` |
-| `ENTRADA_RESOLVIDA`, a formação está disponível para retomar | O mesmo texto, mais o "onde parou" da 023 | "Continuar" → `/formacoes/` |
+| `ENTRADA_RESOLVIDA`, a formação está disponível para retomar | O mesmo texto. O "onde parou" da 023 aparece em `/formacoes/`, a um toque, sem segunda leitura da jornada no Início *(ajuste da implementação)* | "Continuar" → `/formacoes/` |
 | `SELECAO_NECESSARIA` | "Há pesquisas abertas sobre {n} das suas formações. Respondê-las é como você atualiza sua trajetória com o Ifes." | "Escolher a formação" → `/formacoes/` |
-| `SEM_ENTRADA_PENDENTE` | "Você não tem pesquisa pendente agora." | Nenhuma |
-| `SEM_PESQUISA` | "No momento, não há pesquisa aberta para as suas formações." | Nenhuma |
+| `SEM_ENTRADA_PENDENTE` | A frase da escolha de formações (014 FR-036): "Não há pesquisa pendente para você neste momento." | Nenhuma |
+| `SEM_PESQUISA` | A frase da escolha de formações: "No momento, não há pesquisa disponível para as suas formações." | Nenhuma |
 | `SEM_FORMACAO` | Bloco ausente | — |
 
 ## Vedações verificadas em teste (FR-019, FR-021; research R11)

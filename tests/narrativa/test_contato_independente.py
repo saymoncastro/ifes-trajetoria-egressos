@@ -65,5 +65,8 @@ def test_narrativa_e_card_identicos_com_e_sem_contato(client, maria):
     depois = retrato()
     assert antes == depois
     for texto in depois:
+        # A navegação do Portal (024 FR-023) liga sempre a "Meu e-mail", com ou sem contato;
+        # fora dela, a página não menciona o contato.
+        texto = re.sub(r"<nav .*?</nav>", "", texto, flags=re.S)
         assert CONVITE not in texto and "/meu-email/" not in texto
         assert "example.invalid" not in texto

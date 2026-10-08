@@ -10,6 +10,7 @@ from tests.participacao import construcao as c
 from tests.participacao import construcao_entrada as ce
 from trajetoria.academico.models import ConclusaoAcademica, Pessoa
 from trajetoria.fonte_academica.simulada import FonteSimulada
+from trajetoria.interface import mensagens
 from trajetoria.interface.apresentacao import (
     complemento_da_formacao,
     contexto_da_formacao,
@@ -197,7 +198,10 @@ def test_sem_pessoa_vai_para_a_entrada(client, inst):
 def test_consultas_limitadas(client, inst, django_assert_max_num_queries):
     c.campanha_aberta(inst.versao)
     ci.entrar_como(client, ce.pessoa_da_fonte("SIM-P-0004"))
-    with django_assert_max_num_queries(9):  # 018: inclui leitura da sessão; 3 formações
+    # 018: inclui leitura da sessão; 3 formações. 024: +4 do conteúdo da Versão, lido uma vez
+    # por Versão para "no máximo N partes" (FR-014), e +1 do item "Minha trajetória" na
+    # navegação do Portal (FR-023).
+    with django_assert_max_num_queries(14):
         client.get("/formacoes/")
 
 
@@ -374,25 +378,36 @@ def test_ordem_das_outras_formacoes_e_a_da_007(client, inst):
     assert posicoes == sorted(posicoes) and len(outras) == 2
 
 
-# --- 021: ligação para a Minha trajetória e antecipação (FR-005, FR-070; R15, R16) ----------
+# --- 021 FR-005, revista pela 024 (FR-009, FR-013, FR-014; reauditoria R-02) -----------------
 
 
-def test_ligacao_para_a_narrativa_so_depois_de_concluir(client, inst):
-    campanha = c.campanha_aberta(inst.versao)
-    resposta, texto = _tela(client, "SIM-P-0001")
-    assert "Ver minha trajetória no Ifes" not in texto
-    ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
+def test_ligacao_para_a_narrativa_antes_de_participar(client, inst):
+    c.campanha_aberta(inst.versao)
     resposta, texto = _tela(client, "SIM-P-0001")
     assert 'href="/minha-trajetoria/">Ver minha trajetória no Ifes' in resposta.content.decode()
 
 
-def test_antecipacao_so_com_pesquisa_a_responder(client, inst):
+def test_sem_antecipacao_e_com_tamanho_ao_iniciar(client, inst):
+    from trajetoria.instrumento.conteudo import conteudo_da_versao
+    from trajetoria.participacao.percurso import maximo_restante
+
     campanha = c.campanha_aberta(inst.versao)
+    conteudo = conteudo_da_versao(inst.versao)
+    n = 1 + maximo_restante(conteudo, conteudo.secoes[0].id)
+    tamanho = mensagens.TAMANHO_DA_PESQUISA.format(n=n)
     _, texto = _tela(client, "SIM-P-0001")
-    assert "Ao final, você poderá ver sua trajetória no Ifes." in texto
-    ce.participacao_concluida(campanha, ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get(), inst)
+    assert "Ao final, você poderá ver" not in texto
+    assert tamanho in texto
+    ana = ce.pessoa_da_fonte("SIM-P-0001").conclusoes.get()
+    ce.participacao_em_rascunho(campanha, ana)
     _, texto = _tela(client, "SIM-P-0001")
-    assert "Ao final, você poderá ver sua trajetória no Ifes." not in texto
+    assert tamanho not in texto  # retomar: vale o "onde parou" da 023
+
+
+def test_tamanho_em_cada_formacao_da_selecao(client, inst):
+    c.campanha_aberta(inst.versao)
+    _, texto = _tela(client, "SIM-P-0003")
+    assert texto.count("A pesquisa tem no máximo") == 2
 
 
 def test_aviso_liga_as_formacoes():

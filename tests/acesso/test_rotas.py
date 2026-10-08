@@ -20,14 +20,15 @@ def test_entrada_e_confirmacao(preparado, client):
     r = post(client)
     assert r.status_code == 303 and r["Location"] == "/formacoes/"
     assert len(dict(client.session)) == 4 and linhas_de_dominio() == antes
-    assert client.get("/")["Location"] == "/formacoes/"
+    # Raiz revisada pela 024 (FR-005): com o Portal ligado, é a entrada do Portal.
+    assert client.get("/")["Location"] == "/inicio/"
     assert client.get("/formacoes/").status_code == 200
     assert client.get("/editor/").status_code == 302
     assert client.get("/acompanhamento/").status_code == 302
 
 
 def test_metodos_csrf_compatibilidade_e_raiz(preparado, client, settings):
-    assert client.get("/")["Location"] == "/acesso/"
+    assert client.get("/")["Location"] == "/entrar/"  # 024 FR-005: entrada do Portal
     assert client.get("/formacoes/")["Location"] == "/acesso/"
     assert Client(enforce_csrf_checks=True).post("/acesso/").status_code == 403
     assert client.put("/acesso/").status_code == 405

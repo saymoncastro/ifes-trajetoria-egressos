@@ -8,6 +8,7 @@
   color: #1b1b1b; }
 .com-erro #email { border-color: #b50909; }
 {% endblock %}
+{% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
 {% block conteudo %}
 <h1>Seu e-mail para contato do Ifes</h1>
 {% if situacao == "salvo" %}
