@@ -528,11 +528,20 @@ def _faixa(html: str) -> str:
     return m[1]
 
 
+def _nome_esperado(html: str) -> tuple[str, str]:
+    """Revisado pela 024 em 2026-10-08 (avaliação por IA, A1): com o Portal ligado, as telas
+    que exibem a navegação do Portal (024 FR-022) usam o nome dele; as demais, o da 015."""
+    if '<nav class="navegacao"' in html:
+        return "Portal do Egresso", "Instituto Federal do Espírito Santo"
+    return "Trajetória Ifes", "Acompanhamento de egressos"
+
+
 def test_cabecalho_com_nome_do_produto_em_texto(telas_da_jornada):
     for nome, html in telas_da_jornada.items():
         cabecalho = _parte(html, "header")
         texto = re.sub(r"<[^>]+>", " ", cabecalho)
-        assert "Trajetória Ifes" in texto and "Acompanhamento de egressos" in texto, nome
+        produto, subtitulo = _nome_esperado(html)
+        assert produto in texto and subtitulo in texto, nome
         assert "<h1" not in cabecalho and "<a " not in cabecalho, nome
         assert "<form" not in cabecalho and "Pessoa fictícia" not in cabecalho, nome
 
@@ -544,7 +553,9 @@ def test_controles_de_demonstracao_na_faixa(client, cenario):
     assert "Pessoa fictícia: Ana Exemplo" in faixa
     assert "Trocar de pessoa" not in faixa
     assert "Encerrar demonstração" not in faixa
-    assert 'action="/acesso/sair/"' in faixa
+    # Revisado pela 024 em 2026-10-08 (A2): nas telas do Portal, "Sair" volta à entrada do
+    # Portal; nas Seções e sem o Portal, continua em /acesso/sair/ (tests/portal).
+    assert 'action="/sair/"' in faixa
     assert ">Sair</button>" in faixa
     assert "Ambiente de demonstração." in faixa
 
@@ -654,7 +665,8 @@ def test_assinatura_antes_do_nome_em_toda_tela_da_jornada(telas_da_jornada):
         )
         assert m, nome
         assert m[1] == svg, nome  # incluída inline, sem alteração
-        assert cabecalho.index('class="assinatura"') < cabecalho.index("Trajetória Ifes"), nome
+        produto, _ = _nome_esperado(html)
+        assert cabecalho.index('class="assinatura"') < cabecalho.index(produto), nome
 
 
 def test_assinatura_ausente_fora_da_jornada(telas_fora_da_jornada):

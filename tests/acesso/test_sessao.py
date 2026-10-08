@@ -109,7 +109,9 @@ def test_sair_cookie_e_troca_independente(preparado, client, relogio):
     assert _confirmar(client, BRUNO).status_code == 303
     assert client.session.session_key != chave
     assert "Bruno Exemplo" in client.get("/formacoes/").content.decode()
-    assert 'action="/acesso/sair/"' in client.get("/formacoes/").content.decode()
+    # 024 FR-034 (revisão de 2026-10-08): com o Portal ligado, as telas com a navegação do
+    # Portal saem por /sair/; /acesso/sair/ continua valendo, como abaixo.
+    assert 'action="/sair/"' in client.get("/formacoes/").content.decode()
     assert client.get("/acesso/sair/").status_code == 405
     assert Client(enforce_csrf_checks=True).post("/acesso/sair/").status_code == 403
     r = client.post("/acesso/sair/")

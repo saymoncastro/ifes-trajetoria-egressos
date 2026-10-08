@@ -10,7 +10,7 @@
 </head>
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
-{# Faixa de demonstração: ambiente fictício e controles de demonstração, fora do produto (015 FR-021; research R4). #}
+{# Faixa de demonstração: ambiente fictício e controles de demonstração, fora do produto (015 FR-021; research R4). O destino de "Sair" é um slot neutro com o padrão de hoje (024, revisão de 2026-10-08). #}
 <div class="faixa-demonstracao" role="note">
   <div class="coluna">
     <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. A confirmação usa CPF e data de nascimento fictícios e não é autenticação forte.</p>
@@ -18,7 +18,7 @@
     <p class="pessoa">Pessoa fictícia: {{ pessoa_demonstracao.nome|default:"sem nome informado" }}</p>
     {% endif %}
     {% if pessoa_demonstracao or declarante_demonstracao %}
-    <form method="post" action="/acesso/sair/">{% csrf_token %}<button type="submit">Sair</button></form>
+    <form method="post" action="{{ acao_sair|default:"/acesso/sair/" }}">{% csrf_token %}<button type="submit">Sair</button></form>
     {% endif %}
   </div>
 </div>
@@ -39,7 +39,7 @@
 <footer class="rodape">
   <div class="coluna">
     <p>Instituto Federal do Espírito Santo</p>
-    <p class="ambiente">Trajetória Ifes — demonstração local com dados fictícios.</p>
+    <p class="ambiente">{{ produto|default:"Trajetória Ifes" }} — demonstração local com dados fictícios.</p>
   </div>
 </footer>
 </body>

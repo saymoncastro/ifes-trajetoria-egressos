@@ -34,6 +34,6 @@
 {% endif %}
 <ul class="lista-simples">
 {% if narrativa_disponivel %}<li><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></li>{% endif %}
-<li><a href="/formacoes/">Ver suas formações no Ifes</a></li>
+<li>{% if retorno %}<a href="{{ retorno.endereco }}">{{ retorno.rotulo }}</a>{% else %}<a href="/formacoes/">Ver suas formações no Ifes</a>{% endif %}</li>
 </ul>
 {% endblock %}

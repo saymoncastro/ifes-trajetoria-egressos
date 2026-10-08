@@ -93,12 +93,76 @@ def test_sem_conclusao_sem_item_da_trajetoria(client, cenario):
     assert [i[0] for i in itens] == ["/inicio/", "/formacoes/", "/meu-email/"]
 
 
+def _nome_do_produto(html: str) -> str:
+    return re.search(r'<span class="nome">([^<]+)</span>', _shell(html)).group(1)
+
+
 def test_cabecalho_do_produto(client, cenario):
-    cp.entrar(client, cenario.pessoa("SIM-P-0001"))
-    inicio = client.get("/inicio/").content.decode()
-    formacoes = client.get("/formacoes/").content.decode()
-    assert f'<span class="nome">{mensagens.PRODUTO}</span>' in inicio
-    assert '<span class="nome">Trajetória Ifes</span>' in formacoes
-    for html in (inicio, formacoes):
+    """FR-024, revisado em 2026-10-08 (avaliação por IA, A1): "Portal do Egresso" em toda tela
+    com a navegação do Portal; "Trajetória Ifes" nas Seções e em `/acesso/`."""
+    ana = cenario.pessoa("SIM-P-0001")
+    participacao = cenario.concluir(ana.conclusoes.first())
+    cp.entrar(client, ana)
+    telas = ("/inicio/", "/formacoes/", "/minha-trajetoria/", "/meu-email/",
+             f"/participacoes/{participacao.pk}/concluida/")
+    for url in telas:
+        html = client.get(url).content.decode()
+        assert _nav(html), url
+        assert _nome_do_produto(html) == mensagens.PRODUTO, url
+        assert f'<p class="ambiente">{mensagens.PRODUTO} —' in html, url
         cabecalho = _shell(html)
         assert cabecalho.index('class="assinatura"') < cabecalho.index('class="produto-nome"')
+    assert _nome_do_produto(Client().get("/acesso/").content.decode()) == "Trajetória Ifes"
+
+
+def test_secao_mantem_o_nome_da_pesquisa(client, cenario):
+    resposta = ci.iniciar(client, cenario.pessoa("SIM-P-0001"))
+    secao = client.get(resposta["Location"], follow=True).content.decode()
+    assert "/secoes/" in secao and _nome_do_produto(secao) == "Trajetória Ifes"
+
+
+# --- Saída e retorno (revisão de 2026-10-08: A2, A3, A4) ------------------------------------
+
+def _acao_sair(html: str) -> str:
+    return re.search(r'<form method="post" action="([^"]+)"><input[^>]*><button[^>]*>Sair<',
+                     html).group(1)
+
+
+def test_sair_das_telas_do_portal_volta_a_entrada_do_portal(client, cenario):
+    ana = cenario.pessoa("SIM-P-0001")
+    cp.entrar(client, ana)
+    for url in ("/inicio/", "/formacoes/", "/minha-trajetoria/", "/meu-email/"):
+        assert _acao_sair(client.get(url).content.decode()) == "/sair/", url
+    resposta = client.post("/sair/")
+    assert resposta.status_code == 303 and resposta["Location"] == "/entrar/"
+    assert client.get("/inicio/")["Location"].startswith("/entrar/")
+
+
+def test_sair_das_secoes_continua_pelo_convite(client, cenario):
+    resposta = ci.iniciar(client, cenario.pessoa("SIM-P-0001"))
+    secao = client.get(resposta["Location"], follow=True).content.decode()
+    assert _acao_sair(secao) == "/acesso/sair/"
+
+
+def test_sair_do_portal_so_por_post(client, cenario):
+    cp.entrar(client, cenario.pessoa("SIM-P-0001"))
+    assert client.get("/sair/").status_code == 405
+    assert client.get("/inicio/").status_code == 200
+
+
+def test_fim_da_trajetoria_e_do_email_voltam_ao_inicio(client, cenario):
+    cp.entrar(client, cenario.pessoa("SIM-P-0003"))
+    trajetoria = client.get("/minha-trajetoria/").content.decode()
+    assert f'<a href="/inicio/">{mensagens.VOLTAR_AO_INICIO}</a>' in trajetoria
+    assert "Voltar às suas formações" not in trajetoria
+    email = client.get("/meu-email/").content.decode()
+    assert f'<a href="/inicio/">{mensagens.VOLTAR_AO_INICIO}</a>' in email
+    assert "Ver suas formações no Ifes" not in email
+
+
+def test_sair_com_alvo_minimo(client, cenario):
+    """Revisão de 2026-10-08 (A6): o "Sair" da faixa tem o alvo mínimo da 014."""
+    cp.entrar(client, cenario.pessoa("SIM-P-0001"))
+    estilo = client.get("/inicio/").content.decode()
+    regra = re.search(r"\n\.faixa-demonstracao button \{([^}]*)\}", estilo).group(1)
+    assert "min-width: var(--alvo)" in regra and "min-height: var(--alvo)" in regra
