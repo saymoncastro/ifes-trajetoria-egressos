@@ -46,7 +46,7 @@ Uma única vez, com título de nível 2 "Pesquisa de acompanhamento".
 | Resolução / situação (007) | Texto (provisório) | Ação |
 |---|---|---|
 | `ENTRADA_RESOLVIDA`, a formação está disponível para iniciar | "Há uma pesquisa aberta sobre {curso}. Respondê-la é como você atualiza sua trajetória com o Ifes." | "Responder" → `/formacoes/` |
-| `ENTRADA_RESOLVIDA`, a formação está disponível para retomar | O mesmo texto. O "onde parou" da 023 aparece em `/formacoes/`, a um toque, sem segunda leitura da jornada no Início *(ajuste da implementação)* | "Continuar" → `/formacoes/` |
+| `ENTRADA_RESOLVIDA`, a formação está disponível para retomar | `CONVITE_RETOMAR`: diz que a pessoa já começou e pode continuar de onde parou. A Seção exata da 023 ("Você parou em «…»") aparece em `/formacoes/`, a um toque, porque sai das Respostas, que o Início não lê (FR-017) *(revisado em 2026-10-08, A7; resolve a divergência entre spec e contrato)* | "Continuar" → `/formacoes/` |
 | `SELECAO_NECESSARIA` | "Há pesquisas abertas sobre {n} das suas formações. Respondê-las é como você atualiza sua trajetória com o Ifes." | "Escolher a formação" → `/formacoes/` |
 | `SEM_ENTRADA_PENDENTE` | A frase da escolha de formações (014 FR-036): "Não há pesquisa pendente para você neste momento." | Nenhuma |
 | `SEM_PESQUISA` | A frase da escolha de formações: "No momento, não há pesquisa disponível para as suas formações." | Nenhuma |

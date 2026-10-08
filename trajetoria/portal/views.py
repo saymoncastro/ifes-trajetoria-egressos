@@ -7,9 +7,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from trajetoria.acesso.sessao import pessoa_em_uso
+from trajetoria.acesso.sessao import encerrar, pessoa_em_uso
 from trajetoria.acesso.views import identificar
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
@@ -69,3 +69,12 @@ def inicio(request):
     contexto = montar_inicio(pessoa, timezone.localdate(), settings.TRAJETORIA_DEMONSTRACAO)
     contexto.update(_PRODUTO)
     return render(request, "portal/inicio.html", contexto)
+
+
+@never_cache
+@require_POST
+def sair(request):
+    """"Sair" a partir das telas do Portal (revisão de 2026-10-08, A2): encerra a sessão como a
+    018 e volta à entrada do Portal. Destino fixo; as Seções continuam saindo por `/acesso/`."""
+    encerrar(request)
+    return _ir("/entrar/")

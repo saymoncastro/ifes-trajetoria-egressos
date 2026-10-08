@@ -90,5 +90,5 @@
 </section>
 {% endif %}
 {% endfor %}
-<p class="narrativa-voltar"><a href="/formacoes/">Voltar às suas formações</a></p>
+<p class="narrativa-voltar">{% if retorno %}<a href="{{ retorno.endereco }}">{{ retorno.rotulo }}</a>{% else %}<a href="/formacoes/">Voltar às suas formações</a>{% endif %}</p>
 {% endblock %}

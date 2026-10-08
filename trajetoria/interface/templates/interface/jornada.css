@@ -81,6 +81,8 @@
 }
 .faixa-demonstracao button {
   background: none; border: 0; padding: 0; font-weight: var(--peso-normal);
+  /* Alvo mínimo da 014 também no "Sair" (avaliação por IA de 2026-10-08, A6). */
+  min-width: var(--alvo); min-height: var(--alvo);
 }
 
 .produto {

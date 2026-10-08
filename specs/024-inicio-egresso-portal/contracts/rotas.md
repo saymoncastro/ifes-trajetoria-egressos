@@ -11,6 +11,7 @@ Portal existem só com `TRAJETORIA_PORTAL` diferente de `"0"` (research R8).
 | `/entrar/` | GET | 200, formulário da 018, rotulado "Entrada do Portal do Egresso" | 303 → `/inicio/` | 303 → `/declaracao/` |
 | `/entrar/` | POST | Mesma verificação da 018. Confirmada: 303 → `/inicio/`. Demais resultados iguais aos de `/acesso/` (erros de formato com resumo, 429 com `Retry-After`, 503, 422 de base indevida, "não confirmada" com selo da 019) | idem | idem |
 | `/inicio/` | GET | 303 → `/entrar/?aviso=sessao` se a sessão acabou de expirar; senão 303 → `/entrar/` | 200 | 303 → `/declaracao/` |
+| `/sair/` *(2026-10-08, FR-034)* | POST (CSRF) | 303 → `/entrar/` | Encerra a sessão como a 018; 303 → `/entrar/` | Idem |
 
 Regras:
 
@@ -28,7 +29,7 @@ Regras:
 | Rota | Muda? | Detalhe |
 |---|---|---|
 | `/acesso/` (GET/POST) | **Não** no comportamento | Confirmada → `/formacoes/`. O template recebe `acao`, `continuar` e rótulo por parâmetro (research R3); com os valores padrão, o HTML é o de hoje |
-| `/acesso/sair/` | Não | 303 → `/acesso/` |
+| `/acesso/sair/` | Não | 303 → `/acesso/`. Com o Portal ativo, é o "Sair" das Seções, de concluir e da declaração; as telas com a navegação do Portal usam `/sair/` (FR-034) |
 | `/` (Portal **desabilitado**) | Não | `interface.views.inicio`, como hoje |
 | `/formacoes/` | Texto | Sem a frase de antecipação. Com "A pesquisa tem no máximo N partes." para a formação disponível para iniciar (FR-013, FR-014). Slot de navegação (FR-022) |
 | `/minha-trajetoria/`, `card.png`, `card.svg`, `video/…` | Regra de acesso | Pessoa com ao menos uma Conclusão Acadêmica (FR-009). Sem Conclusão → 302 `/formacoes/`. Sem sessão → `/acesso/` (023 FR-001), como hoje |

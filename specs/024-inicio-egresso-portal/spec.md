@@ -347,6 +347,10 @@ indisponíveis.
 
   A única diferença admitida é a do FR-022. [Const. 2.1.0; ADR 0008]
 
+  *(Revisado em 2026-10-08.)* Nas telas com a navegação do Portal, também são admitidos o
+  nome do produto (FR-024), o destino de "Sair" (FR-034) e a ligação de fim de página
+  (FR-035). Endereços, estados, telas e toques do percurso continuam os de hoje.
+
 #### Minha trajetória antes da pesquisa (regra positiva)
 
 - **FR-009**: **A Pessoa identificada com ao menos uma Conclusão Acadêmica DEVE poder
@@ -410,7 +414,7 @@ indisponíveis.
   | Situação | Texto | Ação |
   |---|---|---|
   | Há pesquisa a iniciar | Diz que há uma pesquisa de acompanhamento aberta para a(s) formação(ões) e que respondê-la é como a pessoa atualiza sua trajetória com o Ifes | "Responder" |
-  | Há pesquisa a retomar | Mesmo texto, com "onde parou" da 023 | "Continuar" |
+  | Há pesquisa a retomar | Diz que a pessoa já começou a responder e pode continuar de onde parou. A Seção exata ("Você parou em «…»", 023) aparece na escolha de formações, a um toque, porque sai das Respostas, que o Início não lê (FR-017) *(revisado em 2026-10-08, avaliação por IA, A7)* | "Continuar" |
   | Sem entrada pendente ou sem pesquisa | Frase de estado verdadeira, sem cobrança | Nenhuma |
   | Sem formação | Nenhum convite | Nenhuma |
 
@@ -451,6 +455,12 @@ indisponíveis.
   nas páginas do Portal, com nome provisório registrado (S3). "Trajetória Ifes" DEVE
   continuar identificando a pesquisa de acompanhamento onde ela é oferecida. A faixa de
   demonstração e o "Sair" não mudam. [Solicitante S3; 015]
+
+  *(Revisado em 2026-10-08, avaliação por IA, A1.)* "Páginas do Portal" são **todas as
+  telas que exibem a navegação do Portal** (FR-022): Início, escolha de formações,
+  confirmação, Minha trajetória e Meu e-mail. Nelas, o cabeçalho e o rodapé dizem "Portal do
+  Egresso". As Seções, a tela de concluir, `/acesso/` e a declaração mantêm "Trajetória
+  Ifes". Sem o Portal, nada muda. O destino de "Sair" é o do FR-034.
 - **FR-025**: A navegação DEVE:
   - funcionar sem JavaScript;
   - caber a partir de 320 px sem rolagem horizontal, com fonte de 100% a 200%;
@@ -512,9 +522,33 @@ indisponíveis.
   7. trajetória, card e vídeo antes de qualquer Participação, sem efeito colateral;
   8. Trajetória Ifes com o Portal desabilitado (FR-027);
   9. nenhum parâmetro do cliente decide destino (FR-006);
-  10. fronteira de dependência (FR-028) e ausência de gravação (FR-029).
+  10. fronteira de dependência (FR-028) e ausência de gravação (FR-029);
+  11. *(revisão de 2026-10-08)* nome do produto por tela, destino de "Sair", ligação de fim
+      de página e convite de retomada (FR-020, FR-024, FR-034 a FR-036), com o Portal ligado
+      e desligado.
 
   [Const. XXVI; ADR 0008]
+
+#### Revisão pós-avaliação por IA (2026-10-08)
+
+Origem: [avaliação por IA dos checkpoints](../../docs/auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md),
+achados A1 a A4, A6 e A7, priorizados pelo solicitante antes da primeira sessão do Checkpoint
+1. A avaliação não aplica o Checkpoint 1, que continua **não aplicado**.
+
+- **FR-034**: Com o Portal ativo, "Sair" nas telas com a navegação do Portal (FR-022) DEVE
+  encerrar a sessão como a 018 e levar à entrada do Portal. Nas demais telas (Seções,
+  concluir, declaração), DEVE continuar levando a `/acesso/`. O destino é fixo por tela,
+  sem valor vindo do cliente (FR-006). Sem o Portal, "Sair" é o de hoje. [Arquitetura;
+  avaliação A2]
+- **FR-035**: Com o Portal ativo, a ligação de fim de página de Minha trajetória e de Meu
+  e-mail DEVE ser "Voltar ao Início". Sem o Portal, continuam "Voltar às suas formações" e
+  "Ver suas formações no Ifes". [Hipótese; avaliação A3, A4]
+- **FR-036**: O botão "Sair" da faixa de demonstração DEVE ter alvo de pelo menos 44×44 px
+  CSS (014). [Const. XX; avaliação A6]
+
+Ficam para depois:
+- A5 (quebra da navegação), junto com a 025, que acrescenta o quinto item;
+- A8 e A11 (textos da 021 e da 014), depois do teste.
 
 ### Requisitos revisados
 
@@ -529,6 +563,9 @@ implementação, numa nota de revisão em cada spec afetada.
 | **021 FR-070** | `/formacoes/` PODE antecipar o benefício ("Ao final, você poderá ver…") | Antecipação retirada, porque o benefício já está disponível. Em seu lugar, o tamanho máximo da pesquisa (FR-013, FR-014) |
 | **022 FR-001** | Vídeo nas condições de acesso da 021 (sessão e Participação concluída) | Vídeo nas condições do FR-009 |
 | **015 shell** | "Sem navegação"; produto "Trajetória Ifes" | Com o Portal ativo: navegação nas telas do FR-022 e nome "Portal do Egresso" nas páginas do Portal (FR-024). Sem o Portal: inalterado |
+| **015 shell** (revisão de 2026-10-08) | Com o Portal ativo: "Portal do Egresso" só no Início; "Sair" sempre para `/acesso/` | "Portal do Egresso" em toda tela com a navegação do Portal (FR-024, revisado); "Sair" dessas telas para a entrada do Portal (FR-034); alvo de 44×44 px (FR-036) |
+| **021, fim da página** (sem FR próprio) | "Voltar às suas formações" | Com o Portal ativo: "Voltar ao Início" (FR-035) |
+| **020, `/meu-email/`** (sem FR próprio) | "Ver suas formações no Ifes" | Com o Portal ativo: "Voltar ao Início" (FR-035) |
 | **008, raiz `/`** | Pessoa → `/formacoes/`; declarante → `/declaracao/`; sem sessão → `/acesso/` | Com o Portal ativo: entrada do Portal (FR-005). Sem o Portal: inalterado |
 
 **Não são revisados:**

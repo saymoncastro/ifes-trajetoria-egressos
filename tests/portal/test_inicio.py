@@ -115,6 +115,10 @@ def test_convite_para_retomar(client, cenario):
     ci.iniciar(client, ana)
     convite = _convite(client.get("/inicio/"))
     assert f'href="/formacoes/">{mensagens.ACAO_CONTINUAR}<' in convite
+    # Revisão de 2026-10-08 (A7): diz que a pessoa já começou, sem ler Respostas (FR-017).
+    curso = "Tecnologia em Análise e Desenvolvimento de Sistemas"
+    assert mensagens.CONVITE_RETOMAR.format(curso=curso) in convite
+    assert mensagens.CONVITE_UMA.format(curso=curso) not in convite
 
 
 def test_convite_com_varias_formacoes(client, cenario):

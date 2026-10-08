@@ -13,6 +13,7 @@ NAVEGACAO_INICIO = "Início"
 NAVEGACAO_TRAJETORIA = "Minha trajetória"
 NAVEGACAO_PESQUISA = "Pesquisa"
 NAVEGACAO_EMAIL = "Meu e-mail"
+VOLTAR_AO_INICIO = "Voltar ao Início"
 
 TITULO = "Sua história com o Ifes"
 REGISTRO_DO_IFES = "Registro do Ifes"
@@ -39,6 +40,14 @@ CONVITE_UMA_SEM_CURSO = (
 CONVITE_VARIAS = (
     "Há pesquisas abertas sobre {n} das suas formações. Respondê-las é como você atualiza "
     "sua trajetória com o Ifes."
+)
+CONVITE_RETOMAR = (
+    "Você começou a responder a pesquisa sobre {curso}. Pode continuar de onde parou; é "
+    "assim que você atualiza sua trajetória com o Ifes."
+)
+CONVITE_RETOMAR_SEM_CURSO = (
+    "Você começou a responder a pesquisa sobre a sua formação. Pode continuar de onde parou; "
+    "é assim que você atualiza sua trajetória com o Ifes."
 )
 ACAO_RESPONDER = "Responder"
 ACAO_CONTINUAR = "Continuar"

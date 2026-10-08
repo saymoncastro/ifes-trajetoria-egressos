@@ -69,7 +69,10 @@ def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
 
 def _convite(situacao) -> dict | None:
     """Um único bloco, pela resolução da 007 (FR-020). A ação sempre leva à escolha de
-    formações, que decide e conduz como hoje (e mostra o "onde parou" da 023)."""
+    formações, que decide e conduz como hoje (e mostra o "onde parou" da 023).
+
+    Para a formação a retomar, o texto diz que a pessoa já começou (revisão de 2026-10-08,
+    A7). A Seção exata não aparece aqui: ela sai das Respostas, que o Início não lê (FR-017)."""
     resolucao = situacao.resolucao
     if resolucao == ResolucaoDaEntrada.SEM_FORMACAO:
         return None
@@ -83,13 +86,14 @@ def _convite(situacao) -> dict | None:
     formacao = situacao.pendentes[0]  # ENTRADA_RESOLVIDA
     curso = formacao.conclusao.curso
     retomar = formacao.situacao == SituacaoDaFormacao.DISPONIVEL_PARA_RETOMAR
-    return {
-        "texto": (
-            mensagens.CONVITE_UMA.format(curso=curso) if curso
-            else mensagens.CONVITE_UMA_SEM_CURSO
-        ),
-        "acao": mensagens.ACAO_CONTINUAR if retomar else mensagens.ACAO_RESPONDER,
-    }
+    if retomar:
+        texto = (
+            mensagens.CONVITE_RETOMAR.format(curso=curso) if curso
+            else mensagens.CONVITE_RETOMAR_SEM_CURSO
+        )
+        return {"texto": texto, "acao": mensagens.ACAO_CONTINUAR}
+    texto = mensagens.CONVITE_UMA.format(curso=curso) if curso else mensagens.CONVITE_UMA_SEM_CURSO
+    return {"texto": texto, "acao": mensagens.ACAO_RESPONDER}
 
 
 def _acoes(com_trajetoria: bool) -> list[dict]:

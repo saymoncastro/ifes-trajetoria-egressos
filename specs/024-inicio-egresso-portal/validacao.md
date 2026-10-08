@@ -88,3 +88,35 @@ Data: 2026-10-07; passada de teclado em 2026-10-08.
   - Verificação: com Maria (SIM-P-0003), `scrollWidth` igual à largura a 320 px e a 375 px,
     com fonte a 100% e a 200%. Teste:
     `tests/narrativa/test_pagina.py::test_css_cabe_em_320px_com_fonte_a_200`.
+
+## Revisão pós-avaliação por IA (2026-10-08)
+
+**Origem.** Achados A1 a A4, A6 e A7 da
+[avaliação por IA dos checkpoints](../../docs/auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md),
+priorizados pelo solicitante antes da primeira sessão. Os requisitos estão na spec: FR-020 e
+FR-024 revisados, e FR-034 a FR-036 novos.
+
+**O Checkpoint 1 continua NÃO APLICADO.** Esta revisão só corrige inconsistências observáveis.
+
+| Achado | O que mudou | Verificação no navegador (375×812, banco da avaliação) |
+|---|---|---|
+| A1 — nome do produto | "Portal do Egresso" no cabeçalho e no rodapé das cinco telas com navegação. "Trajetória Ifes" nas Seções, em concluir e em `/acesso/` | Início, formações, trajetória e e-mail: "Portal do Egresso". Seção de Diego e `/acesso/`: "Trajetória Ifes" |
+| A2 — "Sair" | Nas telas com navegação, POST para `/sair/` → `/entrar/`. Nas Seções, continua `/acesso/sair/` | Sair no Início levou a "Confirme seus dados para entrar no Portal do Egresso". Na Seção, a ação é `/acesso/sair/` |
+| A3/A4 — fim de página | "Voltar ao Início" no fim da trajetória e do e-mail ([02](evidencias/revisao-2026-10-08/02-trajetoria-fim-voltar-ao-inicio-375.jpg)) | Trajetória e e-mail de Diego: "Voltar ao Início" → `/inicio/` |
+| A6 — alvo do "Sair" | `min-width` e `min-height` de 44 px | 44×44 px medidos |
+| A7 — convite em andamento | "Você começou a responder a pesquisa sobre {curso}. Pode continuar de onde parou; …". A Seção exata continua em `/formacoes/`, porque o Início não lê Respostas (FR-017) ([01](evidencias/revisao-2026-10-08/01-inicio-convite-retomar-375.jpg)) | Diego, com rascunho no Mestrado: texto novo e "Continuar". O convite ficou na mesma posição (1.512 px) |
+
+- **Sem o Portal** (`tests/portal/test_desabilitado.py::test_shell_saida_e_retorno_de_hoje`),
+  ficam os de hoje:
+  - o nome "Trajetória Ifes";
+  - "Sair" por `/acesso/sair/`;
+  - os links de fim de página;
+  - `/sair/` responde 404.
+- **Testes revisados com rastreabilidade:**
+  - 015: `test_interface_identidade.py`, com nome e "Sair" por tela;
+  - 018: `test_sessao.py`, com "Sair" em `/formacoes/`;
+  - 021: `test_pagina.py`, com o fim da página;
+  - 024: T039.
+- **Ficam para depois:**
+  - A5 (quebra da navegação a 375 px), com a 025;
+  - A8 e A11 (textos da 021 e da 014), depois do teste.

@@ -41,6 +41,20 @@ def test_nenhuma_tela_tem_navegacao(client, cenario):
         assert "<nav" not in resposta.content.decode(), url
 
 
+def test_shell_saida_e_retorno_de_hoje(client, cenario):
+    """Revisão de 2026-10-08: sem o Portal, nome, "Sair" e links de fim de página são os de
+    antes da revisão."""
+    cp.entrar(client, cenario.pessoa("SIM-P-0003"))
+    for url in ("/formacoes/", "/minha-trajetoria/", "/meu-email/"):
+        html = client.get(url).content.decode()
+        assert '<span class="nome">Trajetória Ifes</span>' in html, url
+        assert 'action="/acesso/sair/"' in html and 'action="/sair/"' not in html, url
+        assert 'href="/inicio/"' not in html, url
+    assert "Voltar às suas formações" in client.get("/minha-trajetoria/").content.decode()
+    assert "Ver suas formações no Ifes" in client.get("/meu-email/").content.decode()
+    assert client.post("/sair/").status_code == 404
+
+
 def test_caminho_do_convite_completo(client, cenario):
     cp.com_material("SIM-P-0003")
     assert cp.entrar_pelo_convite(client, "SIM-P-0003")["Location"] == "/formacoes/"

@@ -56,8 +56,11 @@ def test_nome_uma_vez_e_discreto(pagina):
     assert _principal(pagina).count("Maria Exemplo") == 1
 
 
-def test_volta_as_formacoes(pagina):
-    assert re.search(r'<a href="/formacoes/">Voltar às suas formações</a>', _principal(pagina))
+def test_volta_ao_inicio_com_o_portal(pagina):
+    """Revisado pela 024 em 2026-10-08 (avaliação por IA, A3/A4): com o Portal ligado, o fim
+    da página leva ao Início. Sem o Portal, "Voltar às suas formações" continua
+    (tests/portal/test_desabilitado.py)."""
+    assert re.search(r'<a href="/inicio/">Voltar ao Início</a>', _principal(pagina))
 
 
 def test_sem_placeholders_nem_recursos_externos(pagina):
