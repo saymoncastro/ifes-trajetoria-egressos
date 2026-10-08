@@ -19,7 +19,11 @@ leitura do resultado. Este arquivo é a lista prática do moderador.
 4. Resolver participação e eventual gravação com os responsáveis (P3).
 5. Verificar com leitor de tela antes das sessões (P4).
 6. Decidir se as sessões terão vídeo (P5).
-7. Aplicar, registrar e consolidar em outro PR. Se a compreensão passar, seguir para a S2 e
+7. *(Feito em 2026-10-08.)* Aplicar os ajustes A1–A4, A6 e A7 da
+   [avaliação por IA](../../../../docs/auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md)
+   (ver [validação](../../validacao.md), "Revisão pós-avaliação por IA"). Não é resultado
+   do Checkpoint 1.
+8. Aplicar, registrar e consolidar em outro PR. Se a compreensão passar, seguir para a S2 e
    a S3. Se falhar, ajustar a S1. Falhas só de navegação são ajustadas dentro da 024.
 
 ## Antes de começar o ciclo de sessões (uma vez)
@@ -60,7 +64,7 @@ source .env && uv run python manage.py runserver 127.0.0.1:8000
 
 - Seguir o roteiro do protocolo **na ordem**.
 - Não usar "portal", "pesquisa", "trajetória" nem "início" antes de o participante usá-las.
-- Se a pessoa clicar em "Sair", ela cai em `/acesso/`, fora deste teste. Anotar o momento e o que ela disse ao ver a tela, abrir de novo a raiz (`http://127.0.0.1:8000/`), escolher a mesma persona e retomar da tarefa em curso, sem comentar a mudança de tela.
+- Se a pessoa clicar em "Sair" numa tela do Portal, ela volta à entrada do Portal (`/entrar/`; 024 FR-034, revisão de 2026-10-08). Anotar o momento e o que ela disse, escolher a mesma persona e retomar da tarefa em curso, sem comentar. Se ela sair de dentro de uma Seção da pesquisa, cai em `/acesso/`, fora deste teste: abrir de novo a raiz (`http://127.0.0.1:8000/`) e seguir do mesmo modo.
 - Não ajudar nas tarefas 5 e 6. Se a pessoa travar por mais de 2 minutos, anotar "não" e seguir.
 - Cronometrar as tarefas 5 (achar a trajetória) e 6 (achar retrato e e-mail).
 - Anotar frases literais curtas, sem identificar a pessoa.

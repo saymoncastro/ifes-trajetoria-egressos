@@ -20,6 +20,10 @@ próprias).
      botão "Sair" (POST com CSRF para `/acesso/sair/`). "Trocar de pessoa" e "Encerrar
      demonstração" não existem mais. Fonte de verdade:
      `trajetoria/interface/templates/interface/base.html`.
+   - *(Revisado pela 024 em 2026-10-08.)* O destino do "Sair" é um slot neutro
+     (`acao_sair`), cujo padrão é `/acesso/sair/`. Com o Portal ativo, as telas com a
+     navegação do Portal usam `/sair/` (024 FR-034). O botão tem alvo de pelo menos 44×44
+     px (024 FR-036). Sem o Portal, nada muda.
 3. **Cabeçalho do produto** (`<header>`):
    - borda superior 4 px `--cor-marca` (fio de marca);
    - assinatura oficial (SVG inline, `role="img"`, nome acessível "Instituto Federal do

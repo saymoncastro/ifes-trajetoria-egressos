@@ -243,6 +243,7 @@ história termina com a suíte verde.
   - todo `href` da navegação responde 200;
   - nenhum `<script>`.
 - [X] T039 [US4] Em `tests/portal/test_navegacao.py`, cobrir o cabeçalho: "Portal do Egresso" no `/inicio/`; "Trajetória Ifes" nas demais telas; assinatura e ordem do shell da 015 preservadas nos dois casos.
+  - *(Revisado em 2026-10-08, avaliação por IA, A1.)* A leitura "só o `/inicio/`" foi trocada por "toda tela com a navegação do Portal" (FR-024, revisado). O teste passou a cobrir as cinco telas com navegação, as Seções e `/acesso/`.
 
 ### Implementation
 

@@ -2,6 +2,12 @@
 
 - **Data:** 2026-10-08.
 - **Natureza:** avaliação por agente de IA, com navegação real na demonstração local.
+- **Revisão do relatório (2026-10-08).** Depois da revisão do solicitante:
+  - A8 e A11 foram reformulados;
+  - as perguntas do roteiro do Checkpoint 2 passaram a ser abertas;
+  - os achados A1 a A4, A6 e A7 foram tratados na revisão pós-avaliação da
+    [spec da 024](../../specs/024-inicio-egresso-portal/spec.md) (FR-020, FR-024, FR-034 a
+    FR-036).
 - **Não é:** sessão com egressos.
 - **O que não faz:**
   - não atribui "sim", "parcial" ou "não" por participante;
@@ -242,8 +248,11 @@ O impacto é estimado pela IA quanto ao risco de **contaminar o Checkpoint 1**. 
 ### A8 — "Em 2022… Há 3 anos" (baixo-médio)
 
 - **Reprodução:** Ana (conclusão em 16/12/2022), Início e trajetória.
-- **Impacto:** SC-009. Uma conta aparentemente errada abala a confiança no "que o Ifes sabe".
-- **Ajuste sugerido:** "Há mais de 3 anos" ou "concluída em dezembro de 2022". É texto derivado da 021 e exige revisá-la.
+- **Natureza:** ambiguidade de texto, não erro de cálculo. São três anos completos.
+- **Impacto:** SC-009. Uma conta que parece errada pode abalar a confiança no "que o Ifes
+  sabe".
+- **Ajuste sugerido:** "Há 3 anos completos desde essa conclusão." Esclarece sem mudar a
+  regra. É texto derivado da 021 e exige revisá-la.
 
 ### A9 — A proveniência explícita fica abaixo da dobra (baixo)
 
@@ -260,7 +269,11 @@ O impacto é estimado pela IA quanto ao risco de **contaminar o Checkpoint 1**. 
 
 - **Reprodução:** Fernanda, depois de concluir: "Não há pesquisa pendente para você neste momento."
 - **Impacto:** SC-016.
-- **Ajuste sugerido:** frase sem vocabulário de obrigação, por exemplo "Você já respondeu à pesquisa aberta." A frase vem da 014 (FR-036) e também aparece na escolha de formações.
+- **Ajuste sugerido:** "Não há pesquisa para você responder neste momento."
+  - A primeira sugestão ("Você já respondeu à pesquisa aberta") foi descartada: no cenário
+    testado, Fernanda recusou os termos, e a frase induziria uma leitura errada.
+  - A frase vem da 014 (FR-036) e também aparece na escolha de formações. Antes da troca,
+    conferir todos os estados em que ela aparece.
 
 ### Fora do escopo da 024
 
@@ -292,13 +305,16 @@ Este roteiro **não** é protocolo aprovado. O protocolo do Checkpoint 2 deve se
 |---|---|
 | "Há alguma coisa aqui que o Ifes oferece para você agora?" | 025 SC-015: encontra uma oportunidade pertinente |
 | "Por que esta aparece para você?" (apontar uma) | 025 SC-011: a explicação corresponde à formação registrada |
-| "Quem está oferecendo isto? É do Ifes ou é propaganda?" | 025 SC-012; origem institucional e site do Ifes × externo |
+| "Quem oferece isso?" | 025 SC-012; origem institucional e site do Ifes × externo |
 | "O que acontece se você tocar no link?" | 025 SC-013 |
 | Persona sem oportunidade dirigida (por exemplo, Elisa): "O que você entende desta tela?" | 025 SC-016 (estado vazio) |
-| "Pesquisa e extensão" é a mesma coisa que a pesquisa de acompanhamento? | 025 SC-014 |
-| "Se quisesse ajudar o Ifes, onde faria isso?" | Roadmap CP2, comportamento 1 e 3 (026): acha Volte ao Ifes e o distingue da pesquisa |
-| "Quem vai receber isso? O que acontece depois? Como o Ifes vai falar com você?" | Roadmap CP2, compreensão 3; uso do contato |
-| "E se você mudar de ideia?" | Roadmap CP2, compreensão 4: retirada |
+| "O que você entende por Pesquisa e extensão?" | 025 SC-014 |
+| "Se quisesse ajudar o Ifes, onde faria isso?" | Roadmap CP2, comportamentos 1 e 3 (026): acha Volte ao Ifes e o distingue da pesquisa |
+| "O que você imagina que acontece depois que você registra isso?" | Roadmap CP2, compreensão 3: quem recebe e o que acontece; uso do contato |
+| "Você pode desfazer isso? Como?" | Roadmap CP2, compreensão 4: retirada |
+
+As perguntas são abertas, para não sugerir a resposta. Por exemplo, "É do Ifes ou é
+propaganda?" foi trocada por "Quem oferece isso?".
 
 **Lacuna.** O roadmap §7 pede registrar uma manifestação "em poucos toques", sem definir o
 limiar. Ele precisa ser fixado na spec da 026 ou no protocolo do Checkpoint 2, antes do
