@@ -22,7 +22,9 @@ from trajetoria.portal import mensagens
 _CONFIRMACAO = re.compile(r"^/participacoes/[^/]+/concluida/$")
 # As telas com a navegação do Portal (FR-022; contracts/navegacao.md). Lista fechada: o
 # caminho só decide o cabeçalho e os destinos fixos abaixo, nunca um endereço do cliente.
-_TELAS_COM_NAVEGACAO = frozenset({"/inicio/", "/formacoes/", "/minha-trajetoria/", "/meu-email/"})
+_TELAS_COM_NAVEGACAO = frozenset(
+    {"/inicio/", "/formacoes/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/"}
+)
 
 
 def _atual(caminho: str, endereco: str) -> bool:
@@ -33,8 +35,11 @@ def _atual(caminho: str, endereco: str) -> bool:
 
 def _itens(request, pessoa) -> list[dict]:
     itens = [(mensagens.NAVEGACAO_INICIO, "/inicio/")]
-    if elegivel(pessoa):
-        itens.append((mensagens.NAVEGACAO_TRAJETORIA, "/minha-trajetoria/"))
+    if elegivel(pessoa):  # uma consulta para os dois itens (025 FR-020)
+        itens += [
+            (mensagens.NAVEGACAO_TRAJETORIA, "/minha-trajetoria/"),
+            (mensagens.NAVEGACAO_OPORTUNIDADES, "/oportunidades/"),
+        ]
     itens += [
         (mensagens.NAVEGACAO_PESQUISA, "/formacoes/"),
         (mensagens.NAVEGACAO_EMAIL, "/meu-email/"),

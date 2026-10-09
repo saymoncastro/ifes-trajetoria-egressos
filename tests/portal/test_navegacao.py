@@ -45,7 +45,7 @@ def _itens(nav: str) -> list[tuple[str, str, bool]]:
     return [
         (endereco, rotulo, atual is not None and "aria-current" in atual)
         for endereco, atual, rotulo in re.findall(
-            r'<a href="([^"]+)"( aria-current="page")?>([^<]+)</a>', nav
+            r'<a href="([^"]+)" data-rotulo="[^"]*"( aria-current="page")?>([^<]+)</a>', nav
         )
     ]
 
@@ -53,7 +53,8 @@ def _itens(nav: str) -> list[tuple[str, str, bool]]:
 def test_navegacao_nas_telas_fora_das_secoes(client, cenario):
     ana = cenario.pessoa("SIM-P-0001")
     cp.entrar(client, ana)
-    esperado = ["/inicio/", "/minha-trajetoria/", "/formacoes/", "/meu-email/"]
+    # Revisado pela 025 (FR-020): "Oportunidades" entre "Minha trajetória" e "Pesquisa".
+    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/formacoes/", "/meu-email/"]
     for url in esperado:
         nav = _nav(client.get(url).content.decode())
         assert nav and f'aria-label="{mensagens.ROTULO_NAVEGACAO}"' in nav, url

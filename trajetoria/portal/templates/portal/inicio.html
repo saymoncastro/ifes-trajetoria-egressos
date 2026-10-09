@@ -1,10 +1,11 @@
 {% extends "interface/base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
 {% block estilo %}{% include "narrativa/narrativa.css" %}
-{% include "portal/inicio.css" %}{% endblock %}
+{% include "portal/inicio.css" %}
+{% include "portal/oportunidades.css" %}{% endblock %}
 {% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
 {% block conteudo %}
-{# 024 contracts/inicio.md: reconhecimento → proveniência → ações → convite (FR-016). #}
+{# 024 contracts/inicio.md: reconhecimento → proveniência → ações → Oportunidades (025) → convite. #}
 {% if reconhecimento %}
 <div class="narrativa-abertura inicio-abertura">
   <figure class="narrativa-figura">
@@ -30,6 +31,13 @@
     {% for acao in acoes %}<li><a href="{{ acao.endereco }}">{{ acao.rotulo }}</a></li>{% endfor %}
   </ul>
 </section>
+{% if oportunidades %}
+<section class="inicio-oportunidades{% if oportunidades.compacto %} compacto-{{ oportunidades.compacto }}{% endif %}" aria-labelledby="inicio-oportunidades">
+  <h2 id="inicio-oportunidades">{{ oportunidades.titulo }}</h2>
+  {% include "portal/_oportunidade.html" with item=oportunidades.destaque destaque=True compacto=oportunidades.compacto %}
+  <p class="inicio-ver-oportunidades"><a href="/oportunidades/">{{ oportunidades.ver }}</a></p>
+</section>
+{% endif %}
 {% if convite %}
 <section class="inicio-convite" aria-labelledby="inicio-convite">
   <h2 id="inicio-convite">{{ titulo_convite }}</h2>

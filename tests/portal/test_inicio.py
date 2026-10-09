@@ -30,6 +30,13 @@ def _principal(resposta) -> str:
     return html[html.index("<main"): html.index("</main>")]
 
 
+def _sem_oportunidades(principal: str) -> str:
+    """Revisado pela 025 (FR-021, FR-022; research R11): o bloco de Oportunidades pode citar
+    "Oportunidade" e um título com "pesquisa" (conteúdo do operador). Os vetos da 024 valem
+    fora dele."""
+    return re.sub(r'<section class="inicio-oportunidades.*?</section>', "", principal, flags=re.S)
+
+
 def test_ordem_reconhecimento_proveniencia_acoes_convite(client, cenario):
     resposta = _inicio(client, cenario.pessoa("SIM-P-0003"))
     html = _principal(resposta)
@@ -66,7 +73,7 @@ def test_todas_as_conclusoes_na_ordem_da_007(client, cenario):
 
 def test_sem_nome_e_sem_vocabulario_vedado(client, cenario):
     maria = cenario.pessoa("SIM-P-0003")
-    principal = _principal(_inicio(client, maria))
+    principal = _sem_oportunidades(_principal(_inicio(client, maria)))
     texto = re.sub(r"<[^>]+>", " ", principal)
     assert maria.nome not in texto  # FR-019: o Início não exibe o nome
     for vedado in VEDADOS:
@@ -74,7 +81,7 @@ def test_sem_nome_e_sem_vocabulario_vedado(client, cenario):
 
 
 def test_pesquisa_so_no_convite(client, cenario):
-    principal = _principal(_inicio(client, cenario.pessoa("SIM-P-0003")))
+    principal = _sem_oportunidades(_principal(_inicio(client, cenario.pessoa("SIM-P-0003"))))
     antes_do_convite = principal[: principal.index('class="inicio-convite"')]
     assert "pesquisa" not in re.sub(r"<[^>]+>", " ", antes_do_convite).lower()
 

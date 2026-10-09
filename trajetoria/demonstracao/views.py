@@ -1,5 +1,7 @@
 """Compatibilidade da entrada antiga e seleção do operador fictício, inalterada."""
 
+from collections.abc import Callable
+
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
@@ -23,7 +25,24 @@ def entrada(request):
 
 
 # Destinos fechados depois da escolha (011 research R13): nunca um endereço vindo do cliente.
-_DESTINOS = {"acompanhamento": "/acompanhamento/"}
+# O mapa é um ponto de extensão neutro (025 research R3): outro módulo pode registrar uma
+# chave com um predicado de ativação, avaliado a cada pedido.
+_DESTINOS: dict[str, tuple[str, Callable[[], bool]]] = {
+    "acompanhamento": ("/acompanhamento/", lambda: True),
+}
+
+
+def registrar_destino(chave: str, endereco: str, ativo: Callable[[], bool] = lambda: True):
+    """Acrescenta um destino fechado. `endereco` é fixo; `ativo()` decide, no pedido, se a
+    chave é aceita. Chave inativa é tratada como desconhecida."""
+    _DESTINOS[chave] = (endereco, ativo)
+
+
+def _destino(chave: str | None) -> str | None:
+    registro = _DESTINOS.get(chave)
+    if registro is None or not registro[1]():
+        return None
+    return registro[0]
 
 
 @require_GET
@@ -46,7 +65,7 @@ def operadores(request):
         {
             "operadores": lista,
             "rotulo_em_uso": rotulo_em_uso,
-            "destino": destino if destino in _DESTINOS else None,
+            "destino": destino if _destino(destino) else None,
         },
     )
 
@@ -56,8 +75,9 @@ def escolher_operador(request):
     operador = operador_ficticio(request.POST.get("operador"))
     if operador is None:
         raise Http404
-    # Destino fechado: editor (padrão) ou acompanhamento; sem endereço vindo do cliente.
-    resposta = redirect(_DESTINOS.get(request.POST.get("destino"), "/editor/"))
+    # Destino fechado: editor (padrão) ou um destino registrado e ativo; nunca um endereço
+    # vindo do cliente.
+    resposta = redirect(_destino(request.POST.get("destino")) or "/editor/")
     usar_operador(resposta, operador)
     return resposta
 

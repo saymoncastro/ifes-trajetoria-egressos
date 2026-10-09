@@ -46,6 +46,7 @@ from trajetoria.contato.carga import carregar_contatos
 from trajetoria.contexto_trajetoria.carga import carregar_contexto
 from trajetoria.demonstracao.base import base_somente_simulada
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
+from trajetoria.demonstracao.sinais import cenario_preparado
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.contatos_simulados import ContatosSimulados
 from trajetoria.fonte_academica.contexto_simulado import ContextoSimulado
@@ -126,6 +127,7 @@ def preparar(fonte_de_contexto=None, fonte_de_contatos=None) -> Resumo:
             "demonstração só é preparado num banco local com dados fictícios."
         )
     _exigir_campanhas_em_coleta()
+    data = timezone.localdate()
     try:
         with transaction.atomic():
             for pessoa in cenarios.PESSOAS:
@@ -141,6 +143,7 @@ def preparar(fonte_de_contexto=None, fonte_de_contatos=None) -> Resumo:
                     _abrir_campanha(nome, versao, criterios)
             _campanha_de_acompanhamento(baseline)
             _garantir_vinculos()
+            cenario_preparado.send(sender=None, data=data)
     except (
         MaterializacaoRecusada,
         OperacaoRejeitada,

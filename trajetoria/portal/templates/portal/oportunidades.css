@@ -1,0 +1,15 @@
+/* Oportunidades (025 FR-023; contracts/oportunidades-egresso.md): tokens da 015, sem token
+   novo, sem grade de cartões, sem imagem. */
+.oportunidade-categoria {
+  margin: 0 0 var(--espaco-1); font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+.oportunidade-titulo { margin: 0 0 var(--espaco-2); font-size: var(--fonte-4); }
+.oportunidade-titulo a { display: inline-block; min-height: var(--alvo); }
+.oportunidade-por-que { margin: 0 0 var(--espaco-1); }
+.oportunidade-origem { margin: 0; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.oportunidades-grupo { margin-top: var(--espaco-5); }
+/* Domínios e palavras longas quebram em vez de alargar a página (320 px, fonte a 200%;
+   FR-023), como na 021. */
+.oportunidade-titulo, .oportunidade-por-que, .oportunidade-origem, .oportunidade p {
+  overflow-wrap: anywhere;
+}

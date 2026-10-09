@@ -1,0 +1,15 @@
+{% comment %}Item de oportunidade (025 contracts/oportunidades-egresso.md): na página (h3), no
+destaque do Início (destaque=True) e na prévia da curadoria. Título, explicação, unidade
+responsável, origem do site e domínio sempre presentes (FR-004, FR-013). Texto escapado.{% endcomment %}
+{% if destaque %}
+<p class="oportunidade-titulo"><a href="{{ item.oportunidade.endereco }}" rel="noreferrer">{{ item.oportunidade.titulo }}<span class="visualmente-oculto"> — {{ item.origem_do_site }}: {{ item.dominio }}</span></a></p>
+{% if compacto >= 3 %}<p class="oportunidade-por-que">{{ item.explicacao }} <span class="oportunidade-origem">{{ item.oferecida }} · {{ item.origem_do_site }}: {{ item.dominio }}</span></p>
+{% else %}<p class="oportunidade-por-que">{{ item.explicacao }}</p>
+<p class="oportunidade-origem">{{ item.oferecida }} · {{ item.origem_do_site }}: {{ item.dominio }}</p>{% endif %}
+{% else %}
+<p class="oportunidade-categoria">{{ item.categoria }}</p>
+<h3 class="oportunidade-titulo"><a href="{{ item.oportunidade.endereco }}" rel="noreferrer">{{ item.oportunidade.titulo }}<span class="visualmente-oculto"> — {{ item.origem_do_site }}: {{ item.dominio }}</span></a></h3>
+<p>{{ item.oportunidade.resumo }}</p>
+<p class="oportunidade-por-que">{{ item.explicacao }}</p>
+<p class="oportunidade-origem">{{ item.oferecida }} · {{ item.origem_do_site }}: {{ item.dominio }}</p>
+{% endif %}

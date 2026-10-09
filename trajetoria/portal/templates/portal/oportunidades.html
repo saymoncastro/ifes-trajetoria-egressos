@@ -1,0 +1,21 @@
+{% extends "interface/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block estilo %}{% include "portal/oportunidades.css" %}{% endblock %}
+{% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
+{% block conteudo %}
+{# 025 contracts/oportunidades-egresso.md: h1, introdução, grupos (omitidos quando vazios). #}
+<h1>{{ titulo }}</h1>
+<p>{{ introducao }}</p>
+{% for titulo_grupo, itens in grupos %}
+<section class="oportunidades-grupo" aria-labelledby="grupo-{{ forloop.counter }}">
+  <h2 id="grupo-{{ forloop.counter }}">{{ titulo_grupo }}</h2>
+  <ul class="lista-simples">
+    {% for item in itens %}<li class="oportunidade">{% include "portal/_oportunidade.html" %}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% empty %}
+<p>{{ vazio }}</p>
+<p><a href="/inicio/">{{ voltar }}</a></p>
+{% endfor %}
+{% endblock %}

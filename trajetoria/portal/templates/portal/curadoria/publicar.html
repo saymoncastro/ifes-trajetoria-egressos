@@ -1,0 +1,16 @@
+{% extends "acompanhamento/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+{% include "portal/curadoria/_estilo.html" %}
+<h1>{{ titulo }}</h1>
+{% if erro %}<p role="alert" class="erro">{{ erro }}</p>{% endif %}
+<section aria-labelledby="previa" class="previa-oportunidade">
+  <h2 id="previa">Como os egressos verão</h2>
+  <ul class="lista-simples"><li class="oportunidade">{% include "portal/_oportunidade.html" %}</li></ul>
+</section>
+<p>{{ publico }}</p>
+<p>{{ periodo }}</p>
+<p><strong>{{ endereco }}</strong></p>
+{% if aviso_externo %}<p role="note" class="aviso">{{ aviso_externo }}</p>{% endif %}
+<form method="post">{% csrf_token %}<button type="submit">{{ acao }}</button> <a href="{{ voltar }}">{{ cancelar }}</a></form>
+{% endblock %}

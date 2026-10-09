@@ -11,6 +11,7 @@ TITULO_ENTRADA = "Confirme seus dados para entrar no Portal do Egresso"
 
 NAVEGACAO_INICIO = "Início"
 NAVEGACAO_TRAJETORIA = "Minha trajetória"
+NAVEGACAO_OPORTUNIDADES = "Oportunidades"
 NAVEGACAO_PESQUISA = "Pesquisa"
 NAVEGACAO_EMAIL = "Meu e-mail"
 VOLTAR_AO_INICIO = "Voltar ao Início"

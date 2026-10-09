@@ -72,6 +72,27 @@ def test_trajetoria_antes_da_pesquisa_independe_do_portal(client, cenario):
     assert client.get("/minha-trajetoria/").status_code == 200
 
 
+def test_oportunidades_e_curadoria_nao_existem(client, cenario):
+    """025 FR-039; SC-010."""
+    from tests.editor.construcao_editor import atuar_como
+
+    cp.entrar(client, cenario.pessoa("SIM-P-0003"))
+    assert client.get("/oportunidades/").status_code == 404
+    atuar_como(client, "demonstracao:operador-a")
+    assert client.get("/curadoria/oportunidades/").status_code == 404
+    assert "<nav" not in client.get("/formacoes/").content.decode()
+
+
+def test_escolha_de_operador_ignora_o_destino_curadoria(client, cenario):
+    """025 R3 (I1 do /speckit-analyze): com o Portal desligado no pedido, o destino
+    registrado fica inativo e a escolha cai no padrão."""
+    pagina = client.get("/demonstracao/operador/?destino=curadoria").content.decode()
+    assert 'name="destino"' not in pagina
+    escolha = client.post("/demonstracao/operador/escolher/",
+                          {"operador": "demonstracao:operador-a", "destino": "curadoria"})
+    assert escolha["Location"] == "/editor/"
+
+
 def test_rotas_sem_o_portal():
     from config.rotas import rotas
 
