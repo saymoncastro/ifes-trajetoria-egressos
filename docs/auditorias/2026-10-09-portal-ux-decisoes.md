@@ -10,8 +10,8 @@ instrumento.
 |---|---|---|---|
 | 1 | Layout e tokens próprios do Portal (R1, R2, R3) | **Aprovada** | 2026-10-09 |
 | 2 | Leitura da Constituição XXI para o Portal (R4) | **Aprovada** (interpretação, sem emenda) | 2026-10-09 |
-| 3 | D-02: cor de ação | Em discussão | — |
-| 4 | Fonte (R5) | Pendente | — |
+| 3 | D-02: cor de ação | **Aprovada** (tratamento provisório no Portal; D-02 definitiva segue institucional) | 2026-10-09 |
+| 4 | Fonte (R5) | Em discussão | — |
 | 5 | Fotografia institucional (R7) | Pendente | — |
 | 6 | Página pública (R9) | Pendente | — |
 | 7 | Vocabulário e saudação (R8) | Pendente | — |
@@ -70,3 +70,22 @@ emendada.
 
 Uma emenda de esclarecimento (PATCH) que cite o Portal no texto do XXI fica a critério da
 CPAEG e não é pré-requisito.
+
+## Decisão 3 — Cor de ação no Portal (tratamento provisório de D-02)
+
+**Aprovada pelo solicitante em 2026-10-09.**
+
+- **No Portal:** Direção A da 015, verde `#195128` (9,3:1) e variante forte `#00420c`
+  (11,8:1), como hipótese da demonstração. Entra pela camada de tokens do Portal
+  (decisão 1), redefinindo só `--cor-acao` e `--cor-acao-forte` no base do Portal.
+- **No instrumento:** continua a Direção B (azul do Padrão Digital de Governo, `#1351b4`),
+  como manda a 015 FR-014, até a decisão de D-02.
+- **Por que não contraria a 015 FR-014:** a regra evita levar à produção uma divergência
+  do PDG. O Portal é restrito à demonstração (ADR 0008), então a divergência não chega à
+  produção. O instrumento, que vai ao piloto, não muda.
+- **Custo aceito:** a cor de ação muda na passagem do Portal para o instrumento (por
+  exemplo, o botão do convite no Início e "Continuar" na pesquisa). Os protótipos devem
+  mostrar essa passagem.
+- **D-02 definitiva:** continua com Proex/CPAEG, TI e ACS (015, "Decisões pendentes").
+  Decidida, uma só direção permanece no código (015 FR-013): verde no instrumento também,
+  ou o Portal volta ao azul.
