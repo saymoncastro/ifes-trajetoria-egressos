@@ -22,6 +22,11 @@
 - **Revisão 3 (2026-10-08).** O solicitante autorizou antecipar **só a especificação** da
   S2 (Feature 025), com o Checkpoint 1 ainda não concluído. A implementação da 025
   continua condicionada à avaliação dos resultados do Checkpoint 1 (seção 6, S2).
+- **Revisão 4 (2026-10-08).** Depois da
+  [avaliação por IA dos checkpoints](../auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md)
+  e dos ajustes da 024 que ela motivou, o solicitante autorizou antecipar também **o plan e
+  as tasks** da 025. A implementação continua vedada. O Checkpoint 1 continua **NÃO
+  APLICADO** (seção 6, S2).
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -496,7 +501,7 @@ escrito antes do teste.
 
 ### S2 — Oportunidades curadas *(025; M; primeiro fato persistente novo)*
 
-**Situação (2026-10-08): especificação antecipada, implementação condicionada.**
+**Situação (2026-10-08): spec, plan e tasks antecipados; implementação condicionada.**
 
 - **Decisão do solicitante.** Com o Checkpoint 1 ainda não concluído, ele autorizou antecipar
   **exclusivamente a especificação** da 025
@@ -511,6 +516,22 @@ escrito antes do teste.
   - a S1 é corrigida primeiro;
   - a spec da 025 é revista se a correção mudar o Início ou a navegação.
 - **O Checkpoint 1 não é dado como aprovado** por esta antecipação.
+- **Revisão 4 (2026-10-08): plan e tasks também antecipados.**
+  - **Base.** Avaliação por IA com navegação real
+    ([relatório](../auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md)). Ela não
+    encontrou impedimento técnico para planejar Oportunidades. Os ajustes A1–A4, A6 e A7
+    foram feitos na 024 antes da primeira sessão.
+  - **Autorizado:** `/speckit-plan` e `/speckit-tasks` da 025.
+  - **Continua vedado:**
+    - código e migrações da 025;
+    - qualquer passo da 026.
+  - **Antes da implementação.** Registrar explicitamente se a antecipação também a abrange.
+    Sem esse registro, a implementação espera a leitura do Checkpoint 1.
+  - **Incerteza assumida.** A compreensão dos egressos (SC-008 a SC-012 da 024) **não** foi
+    validada. A IA não a mede. Se o Checkpoint 1 mostrar falha de compreensão:
+    - a S1 é corrigida primeiro;
+    - o plan e as tasks da 025 são revistos onde dependem do Início e da navegação. O custo
+      afundado se limita a documentação.
 
 - **Problema.** O Portal só tem algo a oferecer se houver conteúdo institucional pertinente.
 - **Valor para o egresso.**
@@ -708,7 +729,7 @@ conclusão.
   ▼
  ◆ Checkpoint 1 — modelo mental e navegação
    (com o teste moderado da jornada; mockup à parte para Oportunidades/Volte ao Ifes)
-   [2026-10-08: só a spec da S2 foi antecipada; plan, tasks e código aguardam este ponto]
+   [2026-10-08: spec, plan e tasks da S2 antecipados; código e migrações aguardam este ponto]
   │
   ├──────────────┐
   ▼              ▼

@@ -53,7 +53,7 @@ dados.** A pertinência sai só do que o Ifes já registra.
 | A Conclusão Acadêmica tem curso, unidade, nível, modalidade, forma de oferta e ano, todos como texto da fonte, sem catálogo | `trajetoria/academico/models.py`; 001/DP-007; 010/DP-1005 | A pertinência só pode comparar esses textos por igualdade exata |
 | **Não existe classificação de área do conhecimento**, eixo tecnológico, área CNPq, CINE ou equivalente, em curso nenhum | Busca em `trajetoria/`, `specs/` e `docs/` | "Oportunidade da área de tecnologia" não é calculável. O público é dito por **curso, nível ou unidade**, nunca por área |
 | **Não existe identificador estável de curso.** A Conclusão só tem o `id_externo` do próprio registro da conclusão. O contrato da fonte (`ConclusaoNaFonte`) não transporta código de curso, de matriz nem de oferta | `trajetoria/fonte_academica/contrato.py`; `trajetoria/academico/models.py` | O curso é identificado pelo texto registrado. Incluir um código de curso exigiria mudar o contrato da fonte (001), o que fica fora desta feature (DP-2507) |
-| A demonstração já tem duas grafias para o mesmo curso na mesma unidade: "Tecnologia em Análise e Desenvolvimento de Sistemas" (Ana) e "Análise e Desenvolvimento de Sistemas" (Maria) | `trajetoria/fonte_academica/cenarios.py` | A limitação da comparação exata é real e precisa ser visível ao operador |
+| A fonte simulada usa **uma única** grafia por curso. Ana e Maria têm a mesma constante (`TADS` = "Tecnologia em Análise e Desenvolvimento de Sistemas"). *(Corrigido em 2026-10-08, no plan: a versão anterior desta linha afirmava duas grafias, com base num resumo não conferido na fonte.)* Na fonte real, grafias divergentes continuam possíveis (DP-1005; 001/DP-007) | `trajetoria/fonte_academica/cenarios.py` | A limitação da comparação exata é real, mas a demonstração não a exercita. Os testes a exercitam com uma Conclusão de teste |
 | A abrangência da Campanha compara conjuntos de valores com igualdade exata: todos os critérios definidos, qualquer valor do conjunto | 004 FR-018 a FR-022; ADR 0004 | A semântica de comparação é reaproveitada. O conceito não é: abrangência de Campanha não é público de divulgação (ADR 0004) |
 | A governança tem dois papéis, CPAEG (institucional) e CSAEG (por unidade, em texto), e uma regra nomeada por ação | `trajetoria/governanca/`; 010 FR-028 a FR-034 | A curadoria vira uma regra nova, nomeada, no mesmo padrão |
 | A PAEG atribui à CSAEG a gestão do Portal do Egresso na unidade | PAEG Art. 13, parágrafo único; Art. 22, III; 010 A14 | Fundamento para a CSAEG curar na própria unidade. A atuação institucional não tem artigo equivalente (DP-2501) |
@@ -178,10 +178,14 @@ do operador:
 |---|---|
 | Sem público | "Aberta a todos os egressos do Ifes." |
 | Público por curso | "Aparece porque você concluiu Tecnologia em Redes de Computadores (Serra, 2023)." |
-| Público por nível | "Aparece porque você concluiu uma formação de Pós-graduação: Mestrado Profissional em Química (Vila Velha, 2020)." |
-| Público por unidade | "Aparece porque você concluiu uma formação no campus Vitória: Bacharelado em Engenharia Civil (2020)." |
+| Público por nível | "Aparece porque você concluiu Mestrado Profissional em Química, formação de Pós-graduação (Vila Velha, 2020)." |
+| Público por unidade | "Aparece porque você concluiu Bacharelado em Engenharia Civil na unidade Vitória (2020)." |
 | Mais de um critério | Uma só frase com a formação que satisfaz, citando os critérios definidos |
 | Várias formações satisfazem | Todas são citadas, na ordem da 007 |
+
+*A forma final dos textos está em [contracts/pertinencia.md](contracts/pertinencia.md) (plan, R7).
+Exemplos ajustados em 2026-10-08, depois do `/speckit-analyze`: "unidade" em vez de "campus",
+como na 021 e na 024 (o Cefor não é campus).*
 
 A explicação cita **só** os critérios que a oportunidade define e **só** fatos institucionais
 da formação. Ela nunca usa Resposta, Formação Declarada, contato, nome nem comportamento.
@@ -206,10 +210,10 @@ São duas dimensões independentes, e a spec não deriva uma da outra:
 | **Administração** | Quem pode ver, cadastrar, editar, publicar e retirar a oportunidade na curadoria | A unidade responsável, pelo escopo de governança | A CSAEG só administra oportunidades com unidade responsável entre as suas unidades. A CPAEG administra todas e é a única que usa "Ifes (institucional)" (FR-025, FR-026) |
 | **Público** | Quais egressos veem a oportunidade no Portal | Atributo do conteúdo, escolhido por quem a administra | Qualquer combinação de unidades, níveis e cursos, ou nenhuma (todos os egressos). Isso vale também para a CSAEG, como hipótese da demonstração (FR-026; DP-2502) |
 
-**Cenário que motivou a separação.** O campus Vitória oferece uma especialização aberta a
-egressos de todos os campi. A CSAEG Vitória a cadastra com unidade responsável Vitória e sem
+**Cenário que motivou a separação.** A unidade Vitória oferece uma especialização aberta a
+egressos de todas as unidades. A CSAEG Vitória a cadastra com unidade responsável Vitória e sem
 público. Ela continua sendo a única unidade que a administra. Um egresso da Serra a vê com a
-explicação "Aberta a todos os egressos do Ifes" e com "Oferecida pelo campus Vitória".
+explicação "Aberta a todos os egressos do Ifes" e com "Oferecida pela unidade Vitória".
 
 **Por que isso não amplia permissões indevidamente:**
 
@@ -354,13 +358,13 @@ o link oficial, e nenhuma oportunidade dirigida a outro curso ou unidade.
    com o mesmo texto e ação de hoje.
 9. **Given** uma oportunidade da unidade Vitória aberta a todos, **When** um egresso da Serra
    abre a página, **Then** ela aparece com "Aberta a todos os egressos do Ifes" e "Oferecida
-   pelo campus Vitória".
+   pela unidade Vitória".
 
 ---
 
 ### User Story 2 — Operador da unidade cadastra e publica uma oportunidade (Priority: P1)
 
-A pessoa que atua pela CSAEG do campus Vitória escolhe o operador fictício correspondente.
+A pessoa que atua pela CSAEG da unidade Vitória escolhe o operador fictício correspondente.
 Ela cadastra "Especialização em Gestão Pública — inscrições abertas", com resumo, categoria
 "Cursos e formação continuada", endereço oficial, divulgação de 10/10 a 30/11 e público
 unidade = Vitória. Ela revisa como o egresso verá e publica.
@@ -386,7 +390,7 @@ que a oportunidade aparece para Bruno (Vitória) e não aparece para Ana (Serra)
    é gravado.
 5. **Given** o operador CSAEG Vitória, **When** cadastra uma especialização com unidade
    responsável Vitória e sem público, ou com público unidade = Serra, **Then** o sistema
-   aceita. Depois de publicada, um egresso da Serra a vê com "Oferecida pelo campus Vitória".
+   aceita. Depois de publicada, um egresso da Serra a vê com "Oferecida pela unidade Vitória".
    Só operadores com escopo em Vitória, e a CPAEG, a administram. [Hipótese; DP-2502]
 6. **Given** um endereço que não é `https://` absoluto, com usuário ou senha, com número IP
    como destino, com espaços ou longo demais, ou um título vazio ou longo demais, um resumo
@@ -466,7 +470,7 @@ segunda, só a Maria e Diego.
 
 ### User Story 5 — Sem oportunidades, o Portal não finge (Priority: P2)
 
-Elisa concluiu Técnico em Agropecuária em Alegre. Hoje não há nenhuma oportunidade dirigida a
+Fernanda concluiu Técnico em Mecânica em Cariacica. Hoje não há nenhuma oportunidade dirigida a
 ela nem aberta a todos. O Início não mostra o bloco. Pela navegação, ela abre Oportunidades e
 lê uma frase verdadeira, sem promessa de prazo.
 
@@ -537,9 +541,10 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
   a oportunidade. Risco registrado.
 - **Muitas oportunidades pertinentes.** A página lista todas, na ordem do FR-016, e o Início
   mostra só a primeira. Paginação fica fora até haver volume real (Princípio XXII).
-- **Duas grafias do mesmo curso** (por exemplo, "Tecnologia em Análise e Desenvolvimento de
-  Sistemas" e "Análise e Desenvolvimento de Sistemas"). São valores distintos. A oportunidade
-  só alcança as duas se o operador marcar as duas.
+- **Duas grafias do mesmo curso** (caso possível na fonte real; nos testes, por exemplo,
+  "Tecnologia em Análise e Desenvolvimento de Sistemas" e "Análise e Desenvolvimento de
+  Sistemas"). São valores distintos. A oportunidade só alcança as duas se o operador marcar
+  as duas.
 - **Critérios satisfeitos por formações diferentes.** Não bastam. Todos os critérios precisam
   ser satisfeitos por uma mesma Conclusão (FR-012).
 - **Endereço de parceiro** (por exemplo, `gov.br`). É aceito como site externo, com o domínio
@@ -663,7 +668,7 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
     (curso, unidade e ano), na ordem da 007, e os critérios definidos (curso, nível ou
     unidade);
   - cite a unidade responsável quando ela não for a de nenhuma formação citada (por exemplo,
-    "Oferecida pelo campus Vitória");
+    "Oferecida pela unidade Vitória");
   - não use nenhum outro dado e não admita texto livre do operador.
 
   Os textos finais ficam no plan, sujeitos à regra de verdade (014 FR-008). [Hipótese;
@@ -739,6 +744,13 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
   - "recomendado", "selecionado para você por…";
   - estimativa de tempo;
   - progresso de perfil.
+
+  Os vetos acima valem para os **textos do sistema**: títulos de área, explicação, linha de
+  origem, estados e avisos. Título e resumo são conteúdo da unidade responsável e não são
+  bloqueados por vocabulário. O formulário de curadoria orienta: "Evite urgência e promessas,
+  como 'últimas vagas' ou 'não perca'. Os prazos ficam na página oficial." *(Esclarecido em
+  2026-10-08, depois do `/speckit-analyze`.)* [Hipótese; Const. X — o software não redefine a
+  responsabilidade editorial da unidade]
 
   [024 FR-020, FR-021; auditoria de 2026-10-02 §5]
 - **FR-023**: A página e o bloco DEVEM:
@@ -855,9 +867,9 @@ compará-los com os gerados sem oportunidades. Depois, desligar a camada e perco
     por nível (Pós-graduação) e por unidade (Vitória);
   - uma com dois critérios, que nenhuma persona satisfaça combinando formações diferentes;
   - uma de unidade (Vitória) aberta a egressos de outras unidades;
-  - um curso com as duas grafias da demonstração;
   - uma Agendada, uma Encerrada, uma Retirada e um Rascunho com período em curso;
-  - ao menos uma persona sem oportunidade dirigida (por exemplo, Elisa, de Alegre).
+  - ao menos uma persona sem oportunidade dirigida (por exemplo, Fernanda, de Cariacica; Elisa
+    não entra pela demonstração, porque não tem CPF).
 
   Os endereços DEVEM usar domínio reservado para exemplos, para nunca levar à página real de
   terceiros como se fosse oficial. A classificação site do Ifes × site externo é exercitada
@@ -993,7 +1005,7 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
 
 - **Dados da demonstração.** As personas do `preparar_demonstracao` cobrem os casos de
   pertinência sem mudar o núcleo. Carla (Redes, Serra) e Maria (ADS e Pós) servem para curso
-  e nível; Bruno, para unidade; Elisa, para estado vazio dirigido.
+  e nível; Bruno, para unidade; Fernanda, para estado vazio dirigido.
 - **Endereços e textos.** O endereço da página de Oportunidades, o da curadoria e os textos
   finais (explicações, estado vazio, rótulos) ficam no plan, sujeitos à regra de verdade e a
   captura de tela, como na 021, 023 e 024.
@@ -1026,7 +1038,7 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
 | **Portal vazio ou desatualizado** (operacional, o maior) | O egresso volta e não encontra nada, ou encontra coisa vencida | Expiração automática (FR-032); o Início esconde o bloco vazio (FR-021); estado vazio honesto (FR-018). Para uso real: ter quem cure (DP-2501) e, antes de adotar, avaliar com ao menos uma unidade se ela consegue manter a alimentação. Essa avaliação é operacional e fica fora desta feature |
 | Virar CMS ou mural de anúncios | Custo de manutenção, perda de confiança | Atributos fechados (FR-001), texto curto e simples (FR-002), link oficial obrigatório (FR-004), sem imagem, sem destaque, sem urgência (FR-022) |
 | Pertinência pobre sem área do conhecimento | Oportunidade "de tecnologia" exige listar cursos um a um | Valores escolhidos entre os registrados (FR-007). Uma classificação por área seria decisão institucional futura, não desta feature |
-| Grafia instável de unidade e curso na fonte | O público deixa de casar em silêncio. A própria demonstração já tem o caso: Ana tem "Tecnologia em Análise e Desenvolvimento de Sistemas" e Maria tem "Análise e Desenvolvimento de Sistemas", ambas na Serra | Igualdade exata, documentada (FR-012). A curadoria lista os valores atuais, e o operador marca as duas grafias. DP-1005 e 001/DP-007 herdadas; código de curso estável é DP-2507. O catálogo fictício (FR-042) exercita esse caso |
+| Grafia instável de unidade e curso na fonte | O público deixa de casar em silêncio. A fonte simulada não tem o caso (uma grafia por curso); a fonte real pode ter | Igualdade exata, documentada (FR-012). A curadoria lista os valores atuais, e o operador marca todas as grafias. DP-1005 e 001/DP-007 herdadas; código de curso estável é DP-2507. Os testes exercitam o caso (FR-043, item 1) |
 | Link oficial malicioso ou quebrado | Phishing ou frustração | Validação mínima da forma do endereço (sem usuário, sem IP, só `https`), classificação site do Ifes × externo, domínio à vista do egresso e do operador (FR-004), registro de quem publicou (FR-033), retirada imediata (FR-031). Lista de domínios ou autorização de parceiros: DP-2504 |
 | "Pesquisa e extensão" confundida com a pesquisa de acompanhamento | O egresso acha que precisa responder algo | Vocabulário do FR-022; observado no Checkpoint 2 (SC-014) |
 | Navegação com cinco itens a 320 px e fonte a 200% | Rolagem horizontal ou quebra ruim. A 375 px, os quatro itens atuais já ocupam a linha inteira | Quebra em linhas sem rolagem, alvos de 44×44 px e síntese do Início acima da dobra (FR-020, SC-008), com medição na validação |
