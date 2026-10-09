@@ -143,6 +143,22 @@ chaves da demonstração da 028: **nenhuma falha**. Primeira tela inalterada: pr
 657,2 px (Ana) e 600 px (Diego) a 1280×720; primeiro fato a 555,4 px a 375×812; destaque
 de Oportunidades com 218,6 px a 375.
 
+## Referências do vídeo e sincronização com a main (2026-10-09)
+
+O CI do PR #53 falhou em `tests/video/test_quadros.py::test_quadros_chave_iguais_as_referencias`
+no caso "pior caso, nomes longos" (SSIM 0,85 e 0,78, limite 0,97). Localmente esses testes
+são pulados sem o renderizador. A causa é a decisão 5 da ADR 0009: a legenda da imagem
+genérica passou a "Ifes · ilustração", e no pior caso a legenda antiga trazia o nome longo
+da unidade, o que deslocava o quadro. As referências da 022 foram regeneradas no Linux do CI
+pelo workflow `referencias-video.yml` (execução 37979349828, `Linux-x86_64`) e substituídas
+nos 28 arquivos versionados.
+
+A branch recebeu a `main` com os protótipos (#52), cujo `medir.py` mudou no code review.
+`verificar_visual.py` foi adaptado a essa versão (largura do conteúdo pelo primeiro
+container do Portal; alvos só em ligações isoladas, botões, `summary`, navegação e rótulo do
+card). A remedição não teve falhas e repetiu os números acima: conteúdo de 1088 px, prévia
+ou ação a 657,2 px (Ana) e 600 px (Diego) a 1280×720, primeiro fato a 555,4 px a 375×812.
+
 ## Limites e próximos passos
 
 As capturas e medições não substituem teste com egressos. O Checkpoint 1 continua

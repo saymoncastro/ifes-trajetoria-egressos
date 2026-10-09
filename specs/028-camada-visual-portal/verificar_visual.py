@@ -52,18 +52,22 @@ def executar(tela=None):
     with tempfile.TemporaryDirectory(prefix="trajetoria-028-") as diretorio:
         m.PASTA = Path(diretorio)
         moldura = trocar(m.MOLDURA, ".demonstracao", ".faixa-demonstracao")
-        moldura = trocar(moldura, "d.querySelector('[data-medida=container]')",
-            "(d.querySelector('.portal-container') || d.querySelector('main > .coluna'))")
+        # Conteúdo: o primeiro container do Portal; a coluna só quando ele não existe (nas
+        # telas com faixa, a coluna externa não tem largura máxima).
+        moldura = trocar(moldura, "[...d.querySelectorAll('main .container')]",
+            "[d.querySelector('main .portal-container') || d.querySelector('main > .coluna')]"
+            ".filter(Boolean)")
         moldura = trocar(moldura, "[data-medida=grade]", ".inicio-acoes-grade")
         moldura = trocar(moldura, "[data-medida=fato]", ".inicio-formacoes li:first-child p")
         moldura = trocar(moldura, "[data-medida=card]", ".inicio-card img")
         moldura = trocar(moldura, "[data-medida=acao]", ".inicio-acoes li a")
         moldura = trocar(moldura, "[data-medida=entrar]", ".portal-hero a")
         moldura = trocar(moldura, ".convite", ".inicio-convite")
-        moldura = trocar(moldura, "a.botao, a.ligacao, nav a')]",
-            "main a, button, summary, nav a, .narrativa-nome-card label')]"
-            ".filter(e => !e.matches('main a') || "
-            "e.parentElement.textContent.trim() === e.textContent.trim())")
+        # Alvos: ligações isoladas do main (a ligação no meio do texto fica de fora, como na
+        # exceção da WCAG 2.5.8), botões, summary, navegação e o rótulo da opção do card.
+        moldura = trocar(moldura, "[...d.querySelectorAll('a')].filter(isolado)",
+            "[...d.querySelectorAll('main a, button, summary, nav a, "
+            ".narrativa-nome-card label')].filter(e => !e.matches('main a') || isolado(e))")
         moldura = trocar(moldura, "e.getBoundingClientRect().height < 44",
                                    "(e.getBoundingClientRect().height < 44 || "
                                    "e.getBoundingClientRect().width < 44)")
