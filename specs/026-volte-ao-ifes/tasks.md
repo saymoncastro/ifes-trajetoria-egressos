@@ -18,79 +18,80 @@ implementação correspondente.
 
 ## Fase 1 — Base
 
-- [ ] **T002** [P] Testes de regras sem banco em `tests/portal/test_contribuicao_regras.py`:
+- [x] **T002** [P] Testes de regras sem banco em `tests/portal/test_contribuicao_regras.py`:
   formas válidas, tamanhos, e-mail inválido, situação derivada (enviada, contato registrado,
   retirada), neutralização de fórmulas no CSV.
-- [ ] **T003** Modelo `Manifestacao` em `trajetoria/portal/models.py` e migração
+- [x] **T003** Modelo `Manifestacao` em `trajetoria/portal/models.py` e migração
   `0002_manifestacao.py` (aditiva), com as restrições do plan (forma, tamanhos, par do
   contato, unicidade parcial).
-- [ ] **T004** [P] `portal/contribuicao/regras.py` (formas, situação, validação, usando
-  `contato/endereco.py`) e `portal/contribuicao/csv.py`, até o T002 passar.
-- [ ] **T005** [P] `portal/contribuicao/governanca.py`: `pode_receber_contribuicoes` e escopo
+- [x] **T004** [P] `portal/contribuicao/regras.py` (formas, situação, validação, usando
+  `contato/endereco.py`) e `portal/contribuicao/planilha.py` (desvio: ver `validacao.md`), até o T002 passar.
+- [x] **T005** [P] `portal/contribuicao/governanca.py`: `pode_receber_contribuicoes` e escopo
   (CPAEG institucional; CSAEG por unidade).
-- [ ] **T006** [P] `portal/contribuicao/mensagens.py`: textos provisórios, formas e
+- [x] **T006** [P] `portal/contribuicao/mensagens.py`: textos provisórios, formas e
   `VERSAO_DA_CIENCIA`, verificados contra o vocabulário vedado.
-- [ ] **T007** Testes de gravação em `tests/portal/test_contribuicao_egresso.py` (parte
+- [x] **T007** Testes de gravação em `tests/portal/test_contribuicao_egresso.py` (parte
   "operações"): Conclusão de outra Pessoa, Formação Declarada fora, unicidade com dois
   envios, versão da ciência, unidade copiada, retirada, contato uma vez e só no escopo.
-- [ ] **T008** `portal/contribuicao/operacoes.py` (registrar, retirar, registrar contato) e
+- [x] **T008** `portal/contribuicao/operacoes.py` (registrar, retirar, registrar contato) e
   `consultas.py`, até o T007 passar.
 
 ## Fase 2 — US1: oferecer uma contribuição
 
-- [ ] **T009** [US1] Testes do fluxo: três telas; formação única pré-selecionada; erro de
+- [x] **T009** [US1] Testes do fluxo: três telas; formação única pré-selecionada; erro de
   e-mail mantém as escolhas; sem Conclusão dá 404; resultado mostra unidade e o que acontece
   depois.
-- [ ] **T010** [US1] `formularios.py`, `views_egresso.py` (`/contribuir/`,
+- [x] **T010** [US1] `formularios.py`, `views_egresso.py` (`/contribuir/`,
   `/contribuir/confirmar/`, `/contribuicoes/<uuid>/`) e templates em
   `portal/templates/portal/contribuicao/`, conforme os protótipos e1 a e4.
-- [ ] **T011** [US1] Rotas em `portal/urls.py`; Portal desligado sem as rotas (teste).
+- [x] **T011** [US1] Rotas em `portal/urls.py`; Portal desligado sem as rotas (teste).
 
 ## Fase 3 — US2: ver e retirar
 
-- [ ] **T012** [US2] Testes: lista da própria Pessoa com situação e data do contato;
+- [x] **T012** [US2] Testes: lista da própria Pessoa com situação e data do contato;
   manifestação de outra Pessoa dá 404; retirada com confirmação; retirada some da lista da
   unidade.
-- [ ] **T013** [US2] `/contribuicoes/` e `/contribuicoes/<uuid>/retirar/`, conforme os
+- [x] **T013** [US2] `/contribuicoes/` e `/contribuicoes/<uuid>/retirar/`, conforme os
   protótipos e5 e e6.
 
 ## Fase 4 — US3: a unidade recebe
 
-- [ ] **T014** [US3] Testes em `tests/portal/test_contribuicao_unidade.py`: escopo CSAEG,
+- [x] **T014** [US3] Testes em `tests/portal/test_contribuicao_unidade.py`: escopo CSAEG,
   CPAEG, recusa sem vínculo, registrar contato (uma vez, só ativa, só no escopo), CSV só das
   ativas e sem CPF nem nascimento.
-- [ ] **T015** [US3] `views_unidade.py`: `/curadoria/contribuicoes/`,
+- [x] **T015** [US3] `views_unidade.py`: `/curadoria/contribuicoes/`,
   `/curadoria/contribuicoes/exportar.csv` e `/curadoria/contribuicoes/<uuid>/contato/`, com a
   escolha de operador da 025, conforme os protótipos u1 e u2.
-- [ ] **T016** [P] [US3] `demonstracao.py`: duas manifestações fictícias pelo sinal
+- [x] **T016** [P] [US3] `demonstracao.py`: duas manifestações fictícias pelo sinal
   `cenario_preparado`.
 
 ## Fase 5 — Início e navegação
 
-- [ ] **T017** Testes revisados em `tests/portal/test_inicio.py` e
+- [x] **T017** Testes revisados em `tests/portal/test_inicio.py` e
   `tests/portal/test_navegacao.py`: bloco depois de Oportunidades e antes do convite; ausente
   sem Conclusão; item "Contribuir" na navegação; convite continua por último.
-- [ ] **T018** Bloco "Contribuir com o Ifes" em `portal/inicio.py` e no template do Início;
+- [x] **T018** Bloco "Contribuir com o Ifes" em `portal/inicio.py` e no template do Início;
   item na navegação em `portal/contexto.py`. Medir o orçamento de 200 px a 375 px e a
   navegação a 320 px com fonte a 200% (plan, R9 e R10).
 
 ## Fase 6 — Fronteira e revisões
 
-- [ ] **T019** Testes em `tests/portal/test_contribuicao_fronteira.py` e revisão de
+- [x] **T019** Testes em `tests/portal/test_contribuicao_fronteira.py` e revisão de
   `tests/portal/test_fronteiras.py`: dois modelos no `portal`, sem FK; migração aditiva;
   núcleo sem menção ao Portal; `ContatoDaPessoa` inalterado ao contribuir; política de
   convites (`contato/politica.py`) ignora o e-mail da contribuição; analítico e exportações
   sem a Manifestação; escritas só nas três operações.
-- [ ] **T020** Notas de "Requisitos revisados" na 024 (FR-016, FR-029, navegação) e na 025,
+- [x] **T020** Notas de "Requisitos revisados" na 024 (FR-016, FR-029, navegação) e na 025,
   sem apagar o histórico.
 
 ## Fase 7 — Entrega
 
-- [ ] **T021** Verificações do CI: `ruff check .`, `manage.py check`,
+- [x] **T021** Verificações do CI: `ruff check .`, `manage.py check`,
   `makemigrations --check --dry-run`, suíte completa.
-- [ ] **T022** Capturas e medidas do percurso real (egresso a 375×812 e 1440×900; unidade a
-  1280×720) comparadas com os protótipos; roteiro de teclado.
-- [ ] **T023** `validacao.md` da 026 com resultados, desvios e decisões pendentes.
+- [x] **T022** Capturas e medidas do percurso real (egresso a 375×812 e 1440×900; unidade a
+  1280×720) comparadas com os protótipos; roteiro de teclado. *(Roteiro manual com teclado
+  pendente; ver `validacao.md`.)*
+- [x] **T023** `validacao.md` da 026 com resultados, desvios e decisões pendentes.
 - [ ] **T024** Sequência com a 029 (plan, "Sequência com a 029"): atualizar a seção "Como
   você participa" do protótipo da 029 e o P-01 do bloco P para incluir "contribuir", em PR
   próprio.

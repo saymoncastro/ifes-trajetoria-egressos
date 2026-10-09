@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ m.RETIRAR_TITULO }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/contribuicao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+{# 026 retirada (protótipo e6; FR-005): confirmação explícita. #}
+<h1>{{ m.RETIRAR_TITULO }}</h1>
+<h2>{{ forma }}</h2>
+<p>{{ linha }}.</p>
+<p>{{ texto }}</p>
+<form method="post">{% csrf_token %}<div class="contribuicao-acoes"><button type="submit">{{ m.RETIRAR }}</button> <a href="/contribuicoes/{{ manifestacao.pk }}/">{{ m.CANCELAR }}</a></div></form>
+{% endblock %}

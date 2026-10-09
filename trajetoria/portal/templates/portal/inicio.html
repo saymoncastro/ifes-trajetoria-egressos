@@ -49,6 +49,13 @@
   <p class="inicio-ver-oportunidades"><a href="/oportunidades/">{{ oportunidades.ver }}</a></p>
 </section>
 {% endif %}
+{% if contribuir %}
+<section class="inicio-contribuir" aria-labelledby="inicio-contribuir">
+  <h2 id="inicio-contribuir">{{ contribuir.titulo }}</h2>
+  <p>{{ contribuir.texto }}</p>
+  <p class="ligacao-isolada"><a href="/contribuir/">{{ contribuir.acao }}</a>{% if contribuir.suas %} · <a href="/contribuicoes/">{{ contribuir.suas }}</a>{% endif %}</p>
+</section>
+{% endif %}
 {% if convite %}
 <section class="inicio-convite" aria-labelledby="inicio-convite">
   <h2 id="inicio-convite">{{ titulo_convite }}</h2>

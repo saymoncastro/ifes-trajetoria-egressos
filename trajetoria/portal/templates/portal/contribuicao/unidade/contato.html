@@ -1,0 +1,8 @@
+{% extends "portal/curadoria/base.html" %}
+{% block conteudo %}
+{# 026 (protótipo u2; FR-005a): confirmação explícita do marco "contato feito". #}
+<h1>{{ titulo }}</h1>
+<h2>{{ subtitulo }}</h2>
+<p>{{ texto }}</p>
+<form method="post">{% csrf_token %}<button type="submit">{{ m.REGISTRAR_CONTATO }}</button> <a href="/curadoria/contribuicoes/">{{ m.CANCELAR }}</a></form>
+{% endblock %}

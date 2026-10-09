@@ -1,13 +1,14 @@
 # Feature Specification: Volte ao Ifes — o egresso se oferece para contribuir
 
-**Feature Branch**: `claude/029-pagina-publica` (documentos); a implementação terá branch própria
+**Feature Branch**: `claude/029-pagina-publica` (documentos); implementação: `claude/026-volte-ao-ifes`
 **Created**: 2026-10-09
 **Status**: Especificação, com as decisões D-2601 a D-2603 tomadas para a demonstração em
 2026-10-09. [Plan](plan.md), [tasks](tasks.md) e [protótipos](prototipo/index.html) prontos.
 **Implementação autorizada em 2026-10-09, só na demonstração** (T001; roadmap, revisão 10),
 em branch e PR próprios. O Checkpoint 1 continua **NÃO APLICADO** e será aplicado depois,
 sobre a experiência implementada. D4 e D5 continuam `DECISÃO PENDENTE` e precisam ser
-resolvidas antes de uso real.
+resolvidas antes de uso real. Implementação na demonstração: branch `claude/026-volte-ao-ifes`;
+resultados em [validacao.md](validacao.md).
 **Input**: Solicitante, 2026-10-09: o Portal é uma relação nos dois sentidos. Hoje só existe o
 sentido Ifes → egresso (oportunidades da 025). Esta feature abre o sentido egresso → Ifes:
 o egresso diz como quer contribuir, sabe quem recebe e o que acontece depois. Corresponde à

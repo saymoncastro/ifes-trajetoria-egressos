@@ -1,0 +1,5 @@
+<section class="contribuicao-ciencia" id="o-que-acontece" aria-labelledby="o-que-acontece-titulo">
+<h2 id="o-que-acontece-titulo">{{ m.CIENCIA_TITULO }}</h2>
+{% if ciencia %}<ul>{% for frase in ciencia %}<li>{{ frase }}</li>{% endfor %}</ul>{% endif %}
+<p class="contribuicao-versao">{{ versao_texto }}</p>
+</section>

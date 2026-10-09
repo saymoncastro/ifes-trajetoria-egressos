@@ -1,0 +1,31 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ m.TITULO }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/contribuicao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+{# 026 tela 1 (protótipo e2): forma, formação e mensagem. Sem JavaScript (FR-012). #}
+<h1>{{ m.TITULO }}</h1>
+{% include "portal/contribuicao/_resumo_erros.html" %}
+<p>{{ m.INTRODUCAO }}</p>
+<form method="post" action="/contribuir/" novalidate>{% csrf_token %}
+<fieldset class="pergunta{% if erros.forma %} com-erro{% endif %}" id="campo-forma"{% if erros.forma %} aria-describedby="forma-erro"{% endif %}>
+  <legend>{{ m.LEGENDA_FORMA }}</legend>
+  {% if erros.forma %}<p class="erro" id="forma-erro">{{ erros.forma }}{% if erros.forma == m.ERROS.duplicada %} <a href="/contribuicoes/">{{ m.LISTA_TITULO }}</a>{% endif %}</p>{% endif %}
+  {% for f in formas %}<div class="opcao"><input type="radio" id="forma-{{ f.valor }}" name="forma" value="{{ f.valor }}"{% if f.marcada %} checked{% endif %}{% if erros.forma and forloop.first %} autofocus{% endif %}><label for="forma-{{ f.valor }}"><strong>{{ f.rotulo }}</strong>. {{ f.descricao }}</label></div>
+  {% endfor %}
+</fieldset>
+<fieldset class="pergunta{% if erros.formacao %} com-erro{% endif %}" id="campo-formacao"{% if erros.formacao %} aria-describedby="formacao-erro"{% endif %}>
+  <legend>{{ m.LEGENDA_FORMACAO }} <span class="nota">{{ m.NOTA_FORMACAO }}</span></legend>
+  {% if erros.formacao %}<p class="erro" id="formacao-erro">{{ erros.formacao }}</p>{% endif %}
+  {% for c in formacoes %}<div class="opcao"><input type="radio" id="formacao-{{ forloop.counter }}" name="formacao" value="{{ c.valor }}"{% if c.marcada %} checked{% endif %}{% if erros.formacao and not erros.forma and forloop.first %} autofocus{% endif %}><label for="formacao-{{ forloop.counter }}">{{ c.rotulo }}</label></div>
+  {% endfor %}
+</fieldset>
+<div class="campo{% if erros.mensagem %} com-erro{% endif %}">
+  <label for="mensagem">{{ m.ROTULO_MENSAGEM }} <span class="opcional">{{ m.OPCIONAL }}</span></label>
+  <p class="dica" id="mensagem-dica">{{ m.DICA_MENSAGEM }}</p>
+  {% if erros.mensagem %}<p class="erro" id="mensagem-erro">{{ erros.mensagem }}</p>{% endif %}
+  <textarea id="mensagem" name="mensagem" maxlength="500" rows="5" aria-describedby="mensagem-dica{% if erros.mensagem %} mensagem-erro{% endif %}"{% if erros.mensagem %} aria-invalid="true"{% if not erros.forma and not erros.formacao %} autofocus{% endif %}{% endif %}>{{ mensagem }}</textarea>
+</div>
+<div class="contribuicao-acoes"><button type="submit">{{ m.CONTINUAR }}</button></div>
+</form>
+<p class="ligacao-isolada"><a href="/inicio/">{{ m.VOLTAR_AO_INICIO }}</a></p>
+{% endblock %}

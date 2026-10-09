@@ -54,7 +54,9 @@ def test_navegacao_nas_telas_fora_das_secoes(client, cenario):
     ana = cenario.pessoa("SIM-P-0001")
     cp.entrar(client, ana)
     # Revisado pela 025 (FR-020): "Oportunidades" entre "Minha trajetória" e "Pesquisa".
-    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/formacoes/", "/meu-email/"]
+    # Revisado pela 026 (FR-011; plan R9): "Contribuir" logo depois de "Oportunidades".
+    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/contribuir/",
+                "/formacoes/", "/meu-email/"]
     for url in esperado:
         nav = _nav(client.get(url).content.decode())
         assert nav and f'aria-label="{mensagens.ROTULO_NAVEGACAO}"' in nav, url

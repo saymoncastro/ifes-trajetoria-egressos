@@ -1203,3 +1203,12 @@ antigas de tokens próprios/grade se delimitam ao instrumento; não impedem essa
 apresentação do Portal. Pertinência, explicação, origem, escopo, catálogo e curadoria
 permanecem. O orçamento móvel de 270 px do destaque permanece verificável, com todos
 os campos presentes.
+
+## Nota de revisão pela Feature 026 (2026-10-09)
+
+A [026](../026-volte-ao-ifes/spec.md) acrescenta, só na demonstração, um segundo modelo à
+camada (`Manifestacao`, sem chave estrangeira para o núcleo) e o item "Contribuir" na
+navegação, depois de "Oportunidades". A curadoria ganha um vizinho, "Contribuições
+recebidas" (`/curadoria/contribuicoes/`), com a mesma escolha de operador (destino
+`contribuicoes`) e a mesma regra de escopo. Pertinência, catálogo, estados e curadoria de
+oportunidades não mudam. As telas de Oportunidades continuam sem gravar.
