@@ -11,8 +11,8 @@ instrumento.
 | 1 | Layout e tokens próprios do Portal (R1, R2, R3) | **Aprovada** | 2026-10-09 |
 | 2 | Leitura da Constituição XXI para o Portal (R4) | **Aprovada** (interpretação, sem emenda) | 2026-10-09 |
 | 3 | D-02: cor de ação | **Aprovada** (tratamento provisório no Portal; D-02 definitiva segue institucional) | 2026-10-09 |
-| 4 | Fonte (R5) | Em discussão | — |
-| 5 | Fotografia institucional (R7) | Pendente | — |
+| 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque) | 2026-10-09 |
+| 5 | Fotografia institucional (R7) | Em discussão | — |
 | 6 | Página pública (R9) | Pendente | — |
 | 7 | Vocabulário e saudação (R8) | Pendente | — |
 | 8 | Pendência no desktop (R10) | Pendente | — |
@@ -89,3 +89,18 @@ CPAEG e não é pré-requisito.
 - **D-02 definitiva:** continua com Proex/CPAEG, TI e ACS (015, "Decisões pendentes").
   Decidida, uma só direção permanece no código (015 FR-013): verde no instrumento também,
   ou o Portal volta ao azul.
+
+## Decisão 4 — Fonte do Portal
+
+**Aprovada pelo solicitante em 2026-10-09.**
+
+- O Portal mantém `system-ui` (015 FR-005). Nenhuma fonte é servida pela aplicação; a
+  015 FR-018 continua sem exceção.
+- A camada de tokens do Portal acrescenta **um** tamanho de destaque, **40 px, peso
+  700**, só para o título principal (h1) das telas do Portal. Os tamanhos da 015 não
+  mudam.
+- A tipografia da marca (Open Sans) aparece no Portal só por meio da imagem do card, que
+  já é gerada com as fontes embutidas (`narrativa/fontes`, OFL).
+- **Reversível:** se os protótipos ou a implementação parecerem genéricos, Open Sans
+  servida pela própria aplicação, sem CDN e só nos títulos do Portal, pode ser reavaliada.
+  Isso exigiria demonstrar a necessidade (015 FR-018).
