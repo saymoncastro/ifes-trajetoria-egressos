@@ -18,8 +18,8 @@ instrumento.
 | 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque) | 2026-10-09 |
 | 5 | Fotografia institucional (R7) | **Aprovada** | 2026-10-09 |
 | 6 | Página pública (R9) | **Aprovada** | 2026-10-09 |
-| 7 | Vocabulário e saudação (R8) | Em discussão | — |
-| 8 | Pendência no desktop (R10) | Pendente | — |
+| 7 | Vocabulário e saudação (R8) | **Aprovada** (mantida e estendida à página pública) | 2026-10-09 |
+| 8 | Pendência no desktop (R10) | Em discussão | — |
 | 9 | Ordem em relação à 025 | Resolvida pelos fatos (a 025 veio antes; auditoria §13) | 2026-10-09 |
 | 10 | Escopo dos protótipos | Pendente | — |
 
@@ -156,3 +156,23 @@ CPAEG e não é pré-requisito.
 8. **Critérios** (auditoria §14): a 1280×720, descontada a faixa de demonstração, a
    proposta e a ação de entrar sem rolar; o formulário não é o h1 de `/`; nenhum link para
    área inexistente (024 FR-021).
+
+## Decisão 7 — Vocabulário e saudação
+
+**Aprovada pelo solicitante em 2026-10-09.**
+
+- **Regra, em forma positiva:** o Início reconhece a pessoa pela formação (curso, unidade,
+  ano e números do ano), e não pelo nome. O nome continua onde já está: discreto na Minha
+  trajetória e no card por escolha (021; DP-2103).
+- **Mantidas sem alteração** as vedações da 024 (FR-019, FR-021; contracts/inicio.md),
+  verificadas em teste: sem nome no Início nem no h1; sem "minuto", "%", "turma",
+  "geração", "conectad", "Olá", "Volte ao Ifes", "comunidade"; "Oportunidade" só no bloco
+  da 025; "pesquisa" só no convite, na navegação e no cabeçalho do produto.
+- **Rejeitadas** as sugestões externas "boas-vindas personalizadas pelo nome" e "Continue
+  conectado": o nome pode faltar (DP-2103) e o Portal não promete área inexistente (024
+  FR-021).
+- **Página pública (decisão 6):** valem as mesmas vedações, com duas exceções:
+  "Oportunidades" e "pesquisa" podem aparecer, porque a página explica o que o Portal
+  oferece. Continuam vedados: contagem de egressos, "%", "turma", "geração", "conectad",
+  "comunidade", "Olá" e "Volte ao Ifes".
+- Na ADR, cada regra entra primeiro em forma positiva e depois como lista verificável.
