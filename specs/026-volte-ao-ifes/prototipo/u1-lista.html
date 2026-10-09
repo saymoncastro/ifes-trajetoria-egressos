@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contribuições recebidas — Portal do Egresso</title>
+<style>/* Trajetória Ifes — folha compartilhada, incluída inline (008 research R13, R14) pela
+   jornada, pelo editor (009), pelo acompanhamento (011) e por 403/404/500. Contraste AA:
+   texto #1b1b1b/#fff ≈ 17:1; botão #fff/#1a4480 ≈ 9.6:1; erro #b50909/#fff ≈ 7:1;
+   faixa #1b1b1b/#fff1d2 ≈ 15.4:1; bordas #565c65/#fff ≈ 6.7:1.
+
+   015 (research R1): aqui ficam só os tokens (:root) e as regras sob .pergunta/.escala/
+   .opcoes ou de classes exclusivas da jornada. Seletores usados também pela administração
+   (a, button, .aviso, .lista-simples, .erro, .resumo-erros…) mantêm valores literais; a
+   identidade da jornada fica em interface/jornada.css, que só a jornada inclui.
+   Identidade definitiva: DP-801; cor de ação: Direção B provisória (D-02). */
+
+/* Tokens (contracts/tokens.md). A Direção A × B troca exclusivamente --cor-acao e
+   --cor-acao-forte; nenhum outro token depende dela. Contraste contra #fff, salvo indicação. */
+:root {
+  --cor-marca: #2f9e41;          /* 3.45:1 — só gráfico (fio); nunca texto nem fundo */
+  --cor-acao: #1351b4;           /* 7.3:1 — Direção B (PDG), provisória; A: verde #195128, 9.3:1 */
+  --cor-acao-forte: #0c326f;     /* 12.3:1 — Direção B; A: #00420c, 11.8:1 */
+  --cor-sucesso: #195128;        /* 9.3:1 — fixo nas duas direções */
+  --cor-institucional: #eef7f0;  /* fundo da voz institucional; #1b1b1b sobre ele ≈ 15.8:1 */
+  --cor-selecao: #f2f4f7;        /* fundo tonal de seleção/hover, complementar; texto ≈ 16:1 */
+  --cor-texto: #1b1b1b;          /* 17.2:1 */
+  --cor-texto-suave: #565c65;    /* 6.7:1 */
+  --cor-fundo: #ffffff;          /* fundo da página */
+  --cor-borda-forte: #565c65;    /* 6.7:1 — campos, células, contornos de controle */
+  --cor-borda-suave: #c6cace;    /* 1.65:1 — só divisores decorativos */
+  --cor-info: #1a4480;           /* 9.6:1 — informação e pendência */
+  --cor-erro: #b50909;           /* 7.0:1 */
+  --cor-foco: #1b1b1b;           /* contorno do foco; 12.8:1 contra o halo */
+  --cor-foco-halo: #ffdd00;      /* halo do foco */
+  --cor-demonstracao: #fff1d2;   /* só a faixa de demonstração; texto ≈ 15.4:1 */
+
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fonte-1: 1.75rem;    /* 28 px */
+  --fonte-2: 1.375rem;   /* 22 px */
+  --fonte-3: 1.125rem;   /* 18 px */
+  --fonte-4: 1rem;       /* 16 px */
+  --fonte-5: 0.9375rem;  /* 15 px */
+  --peso-normal: 400;
+  --peso-medio: 600;
+  --peso-forte: 700;
+  --entrelinha-titulo: 1.25;
+  --entrelinha-enunciado: 1.4;
+  --entrelinha-corpo: 1.5;
+
+  --espaco-1: 0.25rem;  /* 4 px */
+  --espaco-2: 0.5rem;   /* 8 px */
+  --espaco-3: 0.75rem;  /* 12 px */
+  --espaco-4: 1rem;     /* 16 px */
+  --espaco-5: 1.5rem;   /* 24 px */
+  --espaco-6: 2rem;     /* 32 px */
+  --espaco-7: 3rem;     /* 48 px */
+
+  --raio: 4px;
+  --borda-fina: 1px;
+  --borda-controle: 2px;
+  --borda-acento: 4px;
+  --coluna: 40rem;
+  --alvo: 44px;          /* px, não rem: alvo físico (014 R6) */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1b1b1b;
+  background: #ffffff;
+}
+
+.coluna { max-width: 40rem; margin: 0 auto; padding: 0 1rem; }
+
+a { color: #1a4480; text-decoration: underline; }
+
+:focus-visible {
+  outline: 3px solid #1b1b1b;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #ffdd00;
+}
+
+.pular {
+  position: absolute; left: -999em; top: 0;
+  padding: 0.5rem 1rem; background: #ffffff; z-index: 10;
+}
+.pular:focus { left: 0.5rem; top: 0.5rem; }
+
+/* 023 (FR-023): texto só para tecnologia assistiva, como "(obrigatória)" nos enunciados. */
+.visualmente-oculto {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.faixa-demonstracao {
+  background: #fff1d2; border-bottom: 2px solid #565c65; padding: 0.75rem 0;
+}
+.faixa-demonstracao p { margin: 0 auto; }
+
+.cabecalho { border-bottom: 1px solid #565c65; padding: 0.75rem 0; }
+.cabecalho .coluna { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; }
+.cabecalho form { display: inline; margin: 0; }
+.cabecalho .pessoa { margin: 0; font-weight: 600; }
+
+main { padding: 1.5rem 0 2rem; }
+
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
+h2 { font-size: 1.375rem; line-height: 1.3; margin: 2rem 0 0.75rem; }
+h3 { font-size: 1.125rem; margin: 1.5rem 0 0.5rem; }
+
+p, ul, ol, dl { margin: 0 0 1rem; }
+
+.contexto {
+  border-left: 4px solid #1a4480; padding: 0.5rem 1rem; margin: 0 0 1.5rem;
+  background: #f5f7fa;
+}
+.contexto h2 { margin-top: 0; font-size: 1.125rem; }
+.contexto-compacto p { margin: 0; overflow-wrap: anywhere; }
+.contexto dl, .lista-simples dl {
+  display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 1rem;
+}
+.contexto dl { margin: 0; }
+.contexto dt, .lista-simples dt { font-weight: 600; }
+.contexto dd, .lista-simples dd { margin: 0; overflow-wrap: anywhere; }
+
+.aviso {
+  border: 2px solid #565c65; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
+}
+
+.resumo-erros {
+  border: 3px solid #b50909; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
+}
+.resumo-erros h2 { margin-top: 0; font-size: 1.125rem; color: #b50909; }
+/* 014 FR-027: o resumo recebe o foco ao carregar; a rolagem desse foco para antes do título
+   da Seção, que continua visível (não desloca para além do topo do conteúdo). */
+.resumo-erros { scroll-margin-top: 8rem; }
+
+.lista-simples { list-style: none; padding: 0; }
+.lista-simples > li { border-top: 1px solid #565c65; padding: 1rem 0; }
+.lista-simples > li:last-child { border-bottom: 1px solid #565c65; }
+
+/* 015 — Ritmo e tipografia da Pergunta (FR-022, FR-023): 48 px entre Perguntas, 8 px do
+   enunciado à resposta; enunciado 18/600; auxiliares 15 px em texto secundário. Vale para a
+   jornada e para a prévia do editor, que mantém o próprio espaço entre Perguntas (FR-040). */
+.pergunta { margin: 0 0 var(--espaco-7); padding: 0; border: 0; min-width: 0; }
+.pergunta legend, .pergunta > label.enunciado {
+  display: block; font-size: var(--fonte-3); font-weight: var(--peso-medio);
+  line-height: var(--entrelinha-enunciado); margin: 0 0 var(--espaco-2); padding: 0;
+  overflow-wrap: anywhere;
+}
+.pergunta.com-erro {
+  border-left: var(--borda-acento) solid var(--cor-erro); padding-left: var(--espaco-3);
+}
+.opcional, .pergunta legend .nota { font-weight: 400; }
+.explicacao, .descricao-escala { margin: 0 0 0.5rem; color: #1b1b1b; }
+.erro { color: #b50909; font-weight: 600; margin: 0 0 0.5rem; }
+.pergunta .explicacao, .pergunta .descricao-escala, .pergunta .opcional,
+.pergunta legend .nota {
+  font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+
+.opcao { display: flex; align-items: flex-start; gap: 0.5rem; min-height: 2.75rem; padding: 0.25rem 0; }
+.opcao input { margin: 0.25rem 0 0; width: 1.25rem; height: 1.25rem; flex: none; }
+.opcao label { flex: 1; overflow-wrap: anywhere; padding: 0.125rem 0; cursor: pointer; }
+
+/* 014 — Controles: uma única correção (MF-04 + MF-05 + UX-19; FR-018 a FR-022).
+   A linha (rádio, caixa) ou a célula (escala) inteira ativa o controle: o rótulo cobre o
+   contêiner. Restrito a `.pergunta` (jornada e prévia do editor), nunca ao `.opcao` do editor.
+   A escala fica em colunas de pelo menos 44 px CSS (px, não rem: o alvo é físico e não cresce
+   com a fonte), número sob o controle; cabe numa linha quando cabe e, senão, quebra alinhada. */
+.pergunta .opcao { position: relative; padding-left: var(--espaco-3); }
+.pergunta .opcao label::after { content: ""; position: absolute; inset: 0; }
+.escala {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: var(--espaco-1); max-width: 30rem;
+}
+.escala .opcao { flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
+.escala .opcao input { margin: 0; }
+.escala .opcao label { flex: none; text-align: center; padding: 0; }
+
+/* 015 — Estados dos controles (FR-025). Controle marcado na cor de ação; linha ou célula com
+   o controle marcado ganha marca de acento de 4 px (inset: não desloca nada nem muda a área
+   ativável) e fundo tonal complementar. Sem :has(), resta o controle marcado; em cores
+   forçadas, sombra e fundo somem e o controle nativo continua o sinal. A célula da escala é
+   delimitada por contorno forte (6,7:1). */
+.pergunta input { accent-color: var(--cor-acao); }
+/* Raio único dos controles (gate, rodada 1 — FR-008, FR-044): 4 px, escolhido contra 0 px. */
+.pergunta input[type="text"], .pergunta select { border-radius: var(--raio); }
+.pergunta .complemento { margin-left: calc(1.75rem + var(--espaco-3)); }
+.pergunta .opcao:has(input:checked) {
+  background: var(--cor-selecao); box-shadow: inset var(--borda-acento) 0 0 var(--cor-acao);
+}
+@media (hover: hover) {
+  .pergunta .opcao:hover { background: var(--cor-selecao); }
+}
+.pergunta .escala .opcao {
+  border: var(--borda-fina) solid var(--cor-borda-forte); border-radius: var(--raio);
+  padding: var(--espaco-1) 0;
+}
+.pergunta .escala .opcao:has(input:checked) {
+  border-color: var(--cor-acao); box-shadow: inset 0 0 0 var(--borda-fina) var(--cor-acao);
+}
+
+input[type="text"], select {
+  display: block; width: 100%; max-width: 100%;
+  font: inherit; padding: 0.5rem; min-height: 2.75rem;
+  border: 2px solid #565c65; border-radius: 0; background: #ffffff; color: #1b1b1b;
+}
+.com-erro input[type="text"], .com-erro select { border-color: #b50909; }
+
+.complemento { margin: 0.5rem 0 0 1.75rem; }
+.complemento label { display: block; margin-bottom: 0.25rem; }
+
+.remover { margin-top: 0.5rem; }
+
+.acoes { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 2rem 0 1rem; }
+
+button, .botao {
+  font: inherit; font-weight: 600; min-height: 2.75rem; padding: 0.5rem 1.25rem;
+  border: 2px solid #1a4480; cursor: pointer;
+}
+button.primario { background: #1a4480; color: #ffffff; }
+button.secundario { background: #ffffff; color: #1a4480; }
+/* Cabeçalho em duas linhas fixas (nome do produto; controles da demonstração), em vez de uma
+   quebra acidental; "Encerrar demonstração" com peso de ligação, sem competir com a ação
+   principal da tela. */
+.cabecalho .coluna > span { flex-basis: 100%; font-weight: 700; }
+.cabecalho button {
+  background: none; border: 0; padding: 0; color: #1a4480; font-weight: 400;
+  text-decoration: underline;
+}
+
+.nota { font-size: 0.9375rem; }
+
+footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375rem; }
+
+/* 014 — Pendência não é erro (FR-005, FR-006): mesmo resumo e mesma marca por Pergunta,
+   com destaque azul institucional em vez do vermelho de erro; o texto distingue os dois. */
+.resumo-pendencias { border-color: var(--cor-info); }
+.resumo-pendencias h2 { color: var(--cor-info); }
+.pergunta.com-pendencia { border-left-color: var(--cor-info); }
+.com-pendencia input[type="text"], .com-pendencia select { border-color: var(--cor-info); }
+/* Auditoria de identidade visual, IV-03: a frase "Falta responder: …" da Pergunta pendente
+   também deixa o vermelho de erro (#1a4480/#fff ≈ 9.6:1). */
+.com-pendencia .erro { color: var(--cor-info); }
+
+/* 014 — Rodapé da Seção (FR-009, FR-015; research R10). Principal e secundária empilhadas,
+   em largura total até 480 px; terciárias (navegação que não grava) separadas por distância e
+   divisor. Classes próprias: `.acoes` e `button` continuam como no editor e no acompanhamento. */
+.acoes-secao { flex-direction: column; align-items: flex-start; }
+@media (max-width: 30em) {
+  .acoes-secao { align-items: stretch; }
+  .acoes-secao button { width: 100%; }
+}
+.saidas { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #565c65; font-size: 0.9375rem; }
+
+/* 014 — Ligações da tela de conclusão com alvo de toque de 44 px (FR-026; MF-13). */
+.lista-secoes { list-style: none; padding: 0; }
+.lista-secoes a { display: block; min-height: 2.75rem; padding: 0.625rem 0; }
+
+/* 018 — Painel de credenciais fictícias da entrada de acesso (FR-060, FR-071: 320 px). */
+.acesso-painel { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.acesso-painel th, .acesso-painel td {
+  padding: 0.35rem; vertical-align: top; overflow-wrap: anywhere;
+  border-bottom: 1px solid #565c65;
+}
+.acesso-painel button { width: 100%; padding: 0.5rem 0.2rem; overflow-wrap: anywhere; }
+.acesso-painel caption { text-align: left; margin-bottom: 0.75rem; }
+
+/* Formação declarada e consulta ao acervo (019). */
+.campo { margin-block: 1rem; }
+.campo label { display: block; margin-bottom: .25rem; }
+.campo input[type="number"] {
+  width: 100%; max-width: 100%; padding: .5rem; font: inherit;
+  border: 2px solid #565c65; border-radius: .25rem;
+}
+
+.validacao-formacao fieldset > label { display: block; margin-block: .5rem; }
+
+/* 023 FR-024: escolha única de duas Opções curtas lado a lado (jornada e prévia do editor).
+   Em rem, o mínimo cresce com a fonte: quando as duas não cabem, voltam a empilhar. A linha
+   inteira continua tocável (014 FR-019), com pelo menos 44 px de altura. */
+.pergunta .opcoes-lado-a-lado {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: var(--espaco-1); max-width: 30rem;
+}
+.pergunta .opcoes-lado-a-lado .opcao { border: var(--borda-fina) solid var(--cor-borda-forte);
+  border-radius: var(--raio); align-items: center; }
+
+/* Editor do instrumento (009) — acréscimos à folha da 008, sem redesenhá-la (research R15).
+   Mesmas cores e foco; sem larguras fixas acima de 320 px. */
+
+.coluna { max-width: 56rem; }
+
+.trilha ol { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; list-style: none; padding: 0; margin: 0 0 1rem; font-size: 0.9375rem; }
+.trilha li + li::before { content: "›"; margin-right: 0.5rem; }
+
+.estado { display: inline-block; font-weight: 600; border: 2px solid #565c65; padding: 0 0.5rem; }
+.problema { color: #b50909; font-weight: 600; }
+
+.campo { margin: 0 0 1.25rem; padding: 0; border: 0; min-width: 0; }
+.campo > label, .campo legend { display: block; font-weight: 600; margin: 0 0 0.25rem; padding: 0; }
+.campo.com-erro { border-left: 4px solid #b50909; padding-left: 0.75rem; }
+
+textarea, input[type="number"] {
+  display: block; width: 100%; max-width: 100%;
+  font: inherit; padding: 0.5rem; min-height: 2.75rem;
+  border: 2px solid #565c65; border-radius: 0; background: #ffffff; color: #1b1b1b;
+}
+textarea { min-height: 6rem; }
+.com-erro textarea, .com-erro input[type="number"] { border-color: #b50909; }
+
+.estrutura, .itens { padding-left: 1.5rem; }
+.estrutura > li, .itens > li { margin: 0 0 1rem; overflow-wrap: anywhere; }
+.estrutura ol { padding-left: 1.25rem; margin-top: 0.5rem; }
+.estrutura ol > li { margin: 0 0 0.25rem; }
+.detalhe { font-size: 0.9375rem; }
+
+.lista-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; list-style: none; padding: 0; margin: 0.25rem 0 0.75rem; }
+form.em-linha { display: inline; margin: 0; }
+button.compacto { min-height: 2.75rem; min-width: 2.75rem; padding: 0.25rem 0.75rem; }
+
+.previa .pergunta { margin-bottom: 0.5rem; }
+.anotacoes { margin: 0 0 1.75rem; padding-left: 1.25rem; font-size: 0.9375rem; }
+
+/* Acompanhamento da coleta (011) — acréscimos às folhas da 008 e da 009, sem redesenhá-las.
+   Só a tabela rola na horizontal, dentro de uma região rotulada e focável (FR-123). */
+
+.visualmente-oculto {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.dados { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+.dados dt { font-weight: 600; }
+.dados dd { margin: 0; overflow-wrap: anywhere; }
+.definicao { display: block; font-size: 0.9375rem; font-weight: 400; }
+
+.rolagem { overflow-x: auto; max-width: 100%; margin: 0 0 1.5rem; }
+table { border-collapse: collapse; width: 100%; }
+caption { text-align: left; font-weight: 600; padding: 0 0 0.5rem; }
+th, td { border-bottom: 1px solid #565c65; padding: 0.5rem; text-align: left; vertical-align: top; }
+td.numero, th.numero { text-align: right; white-space: nowrap; }
+tfoot th, tfoot td { font-weight: 600; border-top: 2px solid #565c65; }
+
+.recortes ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; list-style: none; padding: 0; }
+.recortes [aria-current="page"] { font-weight: 600; text-decoration: none; }
+
+@media (max-width: 30rem) {
+  .dados { grid-template-columns: 1fr; }
+  .dados dd { margin-bottom: 0.5rem; }
+}
+
+/* Curadoria (025 FR-035): palavras longas e domínios quebram em vez de alargar a página a
+   320 px com fonte a 200% (WCAG 1.4.10). Só as telas da curadoria; as telas de operação do
+   núcleo não mudam. Entra no bloco `estilo` do <head> (portal/curadoria/base.html). */
+#conteudo h1, #conteudo h2, #conteudo > .coluna > p, #conteudo form p, #conteudo label,
+#conteudo legend, #conteudo .oportunidade p { overflow-wrap: anywhere; }
+/* A tabela da lista não quebra palavras: rola dentro da própria região, como na 011. */
+#conteudo .rolagem th, #conteudo .rolagem td { white-space: nowrap; }
+/* Oportunidades (025 FR-023; contracts/oportunidades-egresso.md): tokens da 015, sem token
+   novo, sem grade de cartões, sem imagem. */
+.oportunidade-categoria {
+  margin: 0 0 var(--espaco-1); font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+.oportunidade-titulo { margin: 0 0 var(--espaco-2); font-size: var(--fonte-4); }
+.oportunidade-titulo a { display: inline-block; min-height: var(--alvo); }
+.oportunidade-por-que { margin: 0 0 var(--espaco-1); }
+.oportunidade-origem { margin: 0; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.oportunidades-grupo { margin-top: var(--espaco-5); }
+/* Domínios e palavras longas quebram em vez de alargar a página (320 px, fonte a 200%;
+   FR-023), como na 021. */
+.oportunidade-titulo, .oportunidade-por-que, .oportunidade-origem, .oportunidade p {
+  overflow-wrap: anywhere;
+}
+
+
+/* 026 — protótipo. Só tokens e componentes existentes (015, camada do Portal, 025). */
+.pc-ciencia, .pc-lista > li, textarea, input[type=email] { box-sizing: border-box; min-width: 0; }
+.pc-resumo { margin: 0 0 1.5rem; max-width: 40rem; }
+.pc-resumo dt { font-weight: 700; margin-top: .75rem; }
+.pc-resumo dt:first-child { margin-top: 0; }
+.pc-resumo dd { margin: 0; }
+.pc-ciencia { background: var(--portal-creme, #f6f2e8); border-left: 4px solid var(--cor-marca); padding: 1rem min(1.25rem, 4vw); margin: 0 0 1.5rem; max-width: 40rem; }
+.pc-ciencia h2 { margin-top: 0; font-size: var(--fonte-2); }
+.pc-ciencia ul { margin: 0 0 .5rem; padding-left: 1.25rem; }
+.pc-ciencia li { margin-bottom: .35rem; }
+.pc-versao { font-size: var(--fonte-5); color: var(--cor-texto-suave); margin: 0; }
+.pc-situacao { font-weight: 700; }
+.pc-lista { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 1rem; max-width: 44rem; }
+.pc-lista > li { border: 1px solid var(--cor-borda-suave); border-radius: var(--raio); padding: 1rem min(1.25rem, 4vw); background: #fff; }
+.pc-lista h2 { font-size: var(--fonte-3); margin: 0 0 .25rem; }
+.pc-lista p { margin: 0 0 .25rem; }
+.pc-marco { color: var(--cor-acao); }
+.pc-retirada { color: var(--cor-texto-suave); }
+.inicio-contribuir { margin-block: 0 2rem; }
+.inicio-contribuir h2 { margin-top: 0; }
+textarea { font: inherit; width: 100%; max-width: 36rem; min-height: 7rem; padding: .5rem; border: 2px solid #565c65; border-radius: 0; }
+input[type=email] { font: inherit; width: 100%; max-width: 36rem; min-height: 2.75rem; padding: .5rem; border: 2px solid #565c65; border-radius: 0; }
+.campo { margin-bottom: 1.5rem; }
+.campo label { display: block; font-weight: 700; margin-bottom: .25rem; }
+.dica { color: var(--cor-texto-suave); font-size: var(--fonte-5); margin: 0 0 .5rem; }
+.pc-sub { font-weight: 400; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+#conteudo .rolagem .pc-tabela th, #conteudo .rolagem .pc-tabela td { white-space: normal; vertical-align: top; }
+.pc-tabela td:nth-child(3) { min-width: 16rem; }
+.pc-acoes { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="faixa-demonstracao" role="note">
+  <p class="coluna">Ambiente não produtivo de demonstração: a identificação é simulada por operador fictício, e os vínculos fictícios não representam designação institucional real. Este acompanhamento não está disponível para uso produtivo.</p>
+</div>
+<header class="cabecalho">
+  <div class="coluna"><a href="/acompanhamento/">Trajetória Ifes — Acompanhamento da coleta</a>
+  <p class="atuacao">Atuação: Comissão Própria de Acompanhamento do Egresso (CPAEG) — atuação institucional</p>
+  <a href="/editor/">Editor do instrumento</a>
+  <a href="/demonstracao/operador/?destino=curadoria">Trocar operador fictício</a></div>
+</header>
+<main id="conteudo" tabindex="-1">
+  <div class="coluna">
+<h1>Contribuições recebidas</h1>
+<p>Contribuições ativas das unidades da sua atuação. O contato com o egresso é feito fora do sistema, pelo e-mail informado para a contribuição.</p>
+<p><a href="exemplo.csv">Exportar CSV</a></p>
+<div class="rolagem" role="region" aria-label="Contribuições recebidas" tabindex="0">
+<table class="pc-tabela"><caption>Contribuições recebidas no escopo da sua atuação</caption>
+<thead><tr><th scope="col">Recebida em</th><th scope="col">Egresso e e-mail</th><th scope="col">Contribuição e formação</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
+<tbody><tr><td>09/10/2026</td><th scope=row>Diego Exemplo<br><span class=pc-sub>diego@exemplo.test</span></th><td>Compartilhar experiência<br><span class=pc-sub>Licenciatura em Química · Vila Velha · 2017</span><br><span class=pc-sub>“Trabalho com controle de qualidade em uma indústria química e posso conversar com as turmas…”</span></td><td>Sem contato registrado</td><td><a href="u2-contato.html" aria-label="Registrar contato feito: Diego Exemplo, Compartilhar experiência">Registrar contato feito</a></td></tr><tr><td>09/10/2026</td><th scope=row>Diego Exemplo<br><span class=pc-sub>diego@exemplo.test</span></th><td>Mentoria<br><span class=pc-sub>Mestrado Profissional em Química · Vila Velha · 2020</span></td><td>Contato registrado em 12/10/2026</td><td>—</td></tr></tbody></table></div></div>
+</main>
+<footer>
+  <div class="coluna"><p>Trajetória Ifes — acompanhamento operacional da coleta, ambiente local não produtivo.</p></div>
+</footer>
+</body>
+</html>

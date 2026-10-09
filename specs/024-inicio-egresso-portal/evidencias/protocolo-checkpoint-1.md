@@ -11,6 +11,19 @@ SC-016; roadmap §7.
 > - Os resultados entram em outro PR, depois da aplicação.
 > - A S2 e a S3 não começam antes da leitura dos resultados conforme este protocolo.
 
+> **Revisão de 2026-10-09 (Feature 029).** Os critérios SC-008 a SC-016, o limiar e a
+> leitura do resultado **não mudam**. Mudam três pontos de procedimento:
+> - **Bloco P antes da tarefa 1.** A sessão começa pelo
+>   [bloco da página pública](../../029-pagina-publica-portal/checkpoint-pagina-publica.md),
+>   com critérios próprios (P-01 a P-07) e ficha própria. Duração: 35 a 40 minutos.
+> - **Tarefa 1.** Desde a 028, o endereço raiz mostra a página pública, não o formulário.
+>   A pessoa entra pela chamada da página. O SC-013 e os demais critérios continuam medindo
+>   o que acontece depois da identificação.
+> - **Oportunidades existem no produto** desde a 025, quando há alguma pertinente. O trecho
+>   "Oportunidades e Volte ao Ifes não aparecem no produto" vale agora só para Volte ao
+>   Ifes. Reações a Oportunidades vão para as observações e não contam para SC-008 a
+>   SC-016.
+
 ## O que o teste quer saber
 
 Se o modelo mental mudou:

@@ -41,6 +41,34 @@
   localmente a camada visual da ADR 0009 na demonstração, com evidências e verificações
   registradas na feature. Os números 026/027 permanecem reservados ao roadmap; a escolha
   não libera esses trabalhos. Checkpoint 1 continua **NÃO APLICADO**.
+- **Revisão 8 (2026-10-09).** Depois de um parecer externo sobre a página pública da 028,
+  o solicitante autorizou a [029](../../specs/029-pagina-publica-portal/spec.md) até a
+  spec, os protótipos comparativos e o bloco P do Checkpoint 1 (página pública), **sem**
+  revogar decisões da ADR 0009 e **sem** implementação. Sequência: spec → protótipos →
+  Checkpoint 1 → ajustes → implementação, mediante aprovação. Checkpoint 1 continua **NÃO
+  APLICADO**; 026 e 027 continuam fora.
+- **Revisão 9 (2026-10-09).** O solicitante descreveu o Portal como relação nos dois
+  sentidos (Ifes oferece; egresso participa e contribui) e autorizou:
+  - a **spec da 026** ([Volte ao Ifes](../../specs/026-volte-ao-ifes/spec.md)), com o
+    percurso completo da contribuição, **sem implementação**;
+  - o **reposicionamento da 029**: a página pública abre pela relação, destaca
+    oportunidades e participação, e mostra só o que existe (sem "Em construção");
+  - [alternativas concretas de comunidade](2026-10-09-comunidade-alternativas.md), só para
+    avaliação.
+
+  A ADR 0009 não muda. Checkpoint 1 continua **NÃO APLICADO**; a 027 continua fora.
+- **Revisão 10 (2026-10-09).** Depois de revisar o plan, as tasks e os protótipos da 026, o
+  solicitante autorizou a **implementação da 026, só na demonstração**, em branch e PR
+  próprios, seguindo spec, plan e tasks (T001). Como na 025 (revisão 5), a espera pelo
+  Checkpoint 1 fica retirada para a 026. A sequência passa a ser:
+  1. 026 implementada;
+  2. 029 atualizada com "Contribuir com o Ifes";
+  3. 029 implementada, com **autorização separada, ainda não dada**;
+  4. Checkpoint 1 (024 e bloco P da 029) sobre a experiência implementada, e ajustes;
+  5. Checkpoint 2.
+
+  Checkpoint 1 continua **NÃO APLICADO**; a avaliação por IA não o aprova. D4 e D5 continuam
+  `DECISÃO PENDENTE` e precisam ser resolvidas antes de uso real. A 027 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -633,6 +661,9 @@ escrito antes do teste.
 - **Dependências.** S1 e Checkpoint 1. Independe da S2 e pode correr em paralelo.
 - **Necessária agora?** Sim, preferencialmente depois da S2, pelo princípio de oferecer antes
   de pedir.
+- **Situação (2026-10-09, revisão 10).** [Spec](../../specs/026-volte-ao-ifes/spec.md), plan,
+  tasks e protótipos prontos; implementação autorizada **só na demonstração**, antes do
+  Checkpoint 1, que continua **NÃO APLICADO**. D4 e D5 seguem pendentes para uso real.
 
 ### S4 — Minha trajetória como linha do tempo da relação *(027; P; opcional)*
 
@@ -759,6 +790,8 @@ conclusão.
    (com o teste moderado da jornada; mockup à parte para Oportunidades/Volte ao Ifes)
    [2026-10-08: a S2 (025) foi implementada na demonstração antes deste ponto, por decisão do
     solicitante; o checkpoint continua pendente]
+   [2026-10-09: a S3 (026) também foi autorizada na demonstração antes deste ponto; o
+    checkpoint será aplicado depois da 026 e da 029 implementadas (revisão 10)]
   │
   ├──────────────┐
   ▼              ▼
