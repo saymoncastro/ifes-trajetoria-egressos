@@ -2,9 +2,10 @@
 
 Registro de trabalho das decisões do §15 da
 [auditoria de experiência e direção visual](2026-10-08-portal-ux-direcao-visual.md).
-Um rascunho visual com as decisões 1 a 5 está em
-[`docs/prototipos-rascunho/`](../prototipos-rascunho/inicio-combinacao.html), só para noção
-visual; será substituído pelos protótipos das direções.
+Os protótipos da decisão 10 estão em
+[`docs/prototipos/2026-10-09-portal/`](../prototipos/2026-10-09-portal/index.html) (página de
+comparação, com os critérios medidos). Eles substituíram o rascunho visual feito com as
+decisões 1 a 5.
 
 **Consolidado na [ADR 0009](../adr/0009-camada-visual-do-portal.md) em 2026-10-09.** Este
 registro guarda o texto aprovado de cada decisão. Nenhuma decisão aqui altera spec, código
