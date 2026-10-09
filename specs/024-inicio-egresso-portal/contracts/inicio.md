@@ -64,6 +64,13 @@ Uma única vez, com título de nível 2 "Pesquisa de acompanhamento".
   a Pessoa de teste.
 - Nenhuma Resposta é lida (verificação por consultas, como na 021).
 
+## Revisado pela 025 (2026-10-08)
+
+Entre o bloco de ações e o convite entra o bloco `section.inicio-oportunidades`, com um
+destaque e o link para a página (025 FR-021; `specs/025-oportunidades-curadas-portal/
+contracts/oportunidades-egresso.md`). "Oportunidade" deixa de ser vetada **dentro** desse bloco.
+O convite não muda.
+
 ## Medidas (FR-031, FR-032; SC-004)
 
 - A 375×812, o `h1` e o bloco 3 ficam acima da dobra, com a faixa de demonstração incluída.

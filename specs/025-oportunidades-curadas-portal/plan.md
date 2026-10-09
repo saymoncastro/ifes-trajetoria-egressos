@@ -218,3 +218,28 @@ neutros, que não citam a camada.
   recorte. O quickstart exige banco recriado.
 - **A5.** A largura estável depende do `::after`. A medida em seis telas é obrigatória na
   validação.
+
+## Ajustes registrados na implementação (2026-10-08)
+
+- **`cadastrar(…, id=None)`.** Um `id` opcional permite a carga idempotente do catálogo com
+  `uuid5` fixos (R4). Só a carga da demonstração o usa.
+- **`itens_da_pessoa`** fica em `oportunidades/consultas.py`, e não na view. Página e Início
+  usam a mesma função, e o Início não importa views.
+- **Compactação do destaque.** A medida (T046) exigiu a **variante 3**: explicação e origem
+  num parágrafo, tipo de 15 px e margens de `--espaco-1`. Diego caiu de 290 para 253 px.
+  Nenhuma informação foi removida.
+- **Largura estável da navegação.** O `::after` só reserva largura com o link em coluna
+  (`flex-direction: column`). Em linha, ele somaria a largura do rótulo duas vezes.
+- **Quebra de palavras.** Os textos da oportunidade e as telas da curadoria ganharam
+  `overflow-wrap: anywhere`, para domínios e palavras longas a 320 px com fonte a 200%. A
+  tabela da lista não quebra: rola na própria região, como na 011.
+- **Include de campo da curadoria** (`portal/curadoria/_campo.html`). O `editor/_campo.html`
+  trata caixa de seleção como "Sim" único. Os três grupos do público precisam de
+  `fieldset` e `legend` com uma caixa por valor.
+- **Ações da lista com `aria-label`.** Substituem o `span.visualmente-oculto`, que, posicionado
+  fora da região de rolagem, alargava a página.
+- **Servidor de validação em `127.0.0.1:8025`.** A porta 8000 estava ocupada por outro
+  projeto do solicitante. A exigência da porta 8000 vale só para o envio por Lote (020), que
+  a 025 não usa.
+- **Comentário de template.** `{# … #}` não aceita várias linhas no Django: o texto vazava
+  para a página e foi pego pelo teste de vocabulário do Início. Corrigido para uma linha.

@@ -44,6 +44,7 @@ O provedor é `trajetoria.portal.contexto.navegacao`, registrado em `TEMPLATES[.
 |---|---|---|---|
 | 1 | Início | `/inicio/` | Sempre |
 | 2 | Minha trajetória | `/minha-trajetoria/` | `elegivel(pessoa)` (FR-009) |
+| 2a *(025)* | Oportunidades | `/oportunidades/` | `elegivel(pessoa)` (025 FR-020) |
 | 3 | Pesquisa | `/formacoes/` | Sempre |
 | 4 | Meu e-mail | `/meu-email/` | Sempre |
 
