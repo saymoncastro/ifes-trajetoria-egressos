@@ -3,7 +3,11 @@
 **Feature Branch**: `claude/029-pagina-publica` (documentos); a implementação terá branch própria
 **Created**: 2026-10-09
 **Status**: Especificação, com as decisões D-2601 a D-2603 tomadas para a demonstração em
-2026-10-09. Plan e tasks em preparação. Implementação **não autorizada**.
+2026-10-09. [Plan](plan.md), [tasks](tasks.md) e [protótipos](prototipo/index.html) prontos.
+**Implementação autorizada em 2026-10-09, só na demonstração** (T001; roadmap, revisão 10),
+em branch e PR próprios. O Checkpoint 1 continua **NÃO APLICADO** e será aplicado depois,
+sobre a experiência implementada. D4 e D5 continuam `DECISÃO PENDENTE` e precisam ser
+resolvidas antes de uso real.
 **Input**: Solicitante, 2026-10-09: o Portal é uma relação nos dois sentidos. Hoje só existe o
 sentido Ifes → egresso (oportunidades da 025). Esta feature abre o sentido egresso → Ifes:
 o egresso diz como quer contribuir, sabe quem recebe e o que acontece depois. Corresponde à
@@ -24,7 +28,7 @@ S3 do [roadmap do Portal](../../docs/roadmap/2026-10-07-portal-do-egresso-arquit
 | Consentimento: quando houver termo, relacionar versão, momento e manifestação; regra jurídica não definida não é inferida | Constituição XVII, XVI | Texto de ciência versionado; base legal é `DECISÃO PENDENTE` |
 | O Portal tem hoje um só modelo (`Oportunidade`), sem chave estrangeira para o núcleo, e as telas do egresso não gravam nada | `tests/portal/test_fronteiras.py`; 024 FR-029; 025 | A 026 é a **primeira escrita do egresso** na camada. Revisa essas regras de forma explícita |
 | A camada é desligável; a reversão não pode exigir migração no núcleo | ADR 0008 | O núcleo não passa a depender da Manifestação |
-| A S3 vem depois do Checkpoint 1, que continua **NÃO APLICADO** | Roadmap §8 | Implementação depende de autorização explícita |
+| O roadmap punha a S3 depois do Checkpoint 1, que continua **NÃO APLICADO**. Em 2026-10-09 o solicitante antecipou a 026 na demonstração, como fez com a 025 (revisão 5) | Roadmap §8; revisão 10 | Implementação autorizada só na demonstração; o Checkpoint 1 vem depois, sobre a experiência implementada |
 | O Checkpoint 2 avalia valor e reciprocidade: entender quem recebe, o que acontece depois e que pode retirar | Roadmap §7 | Critérios qualitativos já escritos; esta spec os usa |
 
 ## O percurso completo da contribuição
@@ -300,4 +304,7 @@ contribuição de quem não tem Conclusão.
 - **D-2603 — Decidido (solicitante, 2026-10-09, demonstração):** só Conclusões Acadêmicas da
   Pessoa identificada. Formação Declarada fica para revisão posterior.
 - **DP-801:** redação final das formas e dos textos, com a CPAEG e a ACS.
-- **Checkpoint 1 NÃO APLICADO;** a implementação depende de autorização explícita.
+- **Checkpoint 1 NÃO APLICADO.** A implementação na demonstração foi autorizada em
+  2026-10-09 (T001) antes dele; o checkpoint será aplicado depois da 026 e da 029
+  implementadas. Se mostrar falha de compreensão, o Início e a navegação são corrigidos
+  primeiro, já com a 026 na camada desligável.

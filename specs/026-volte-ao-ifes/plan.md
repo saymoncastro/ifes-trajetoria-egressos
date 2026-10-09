@@ -2,9 +2,11 @@
 
 **Branch**: `claude/029-pagina-publica` (documentos) | **Date**: 2026-10-09 | **Spec**: [spec.md](spec.md)
 
-> **Situação.** Plan, tasks e protótipos autorizados pelo solicitante em 2026-10-09.
-> **A implementação não está autorizada**: depende da revisão desta entrega. O Checkpoint 1
-> continua **NÃO APLICADO**. A tarefa T001 das [tasks](tasks.md) é o portão.
+> **Situação.** Plan, tasks e protótipos revisados pelo solicitante em 2026-10-09.
+> **Implementação autorizada no mesmo dia, só na demonstração**, em branch e PR próprios
+> (T001 das [tasks](tasks.md); roadmap, revisão 10). O Checkpoint 1 continua **NÃO
+> APLICADO** e será aplicado depois da 026 e da 029 implementadas. D4 e D5 continuam
+> pendentes para uso real.
 
 ## Summary
 
@@ -174,12 +176,15 @@ requisitos anteriores estão listadas na spec ("Requisitos revisados").
 
 ## Sequência com a 029
 
-1. **026 implementada e integrada** (com autorização própria).
+1. **026 implementada e integrada** (autorizada em 2026-10-09, só na demonstração).
 2. **029 incorpora "Contribuir com o Ifes"**: a seção "Como você participa" ganha a
    contribuição com o mesmo peso de Oportunidades (029 FR-006); o protótipo é regerado; o
    bloco P passa a aceitar "contribuir" em P-01.
-3. **029 implementada** (com autorização própria), já com a contribuição.
-4. **Checkpoint 1** (024 + bloco P) sobre a experiência implementada.
+3. **029 implementada** (autorização separada, ainda não dada), já com a contribuição.
+4. **Checkpoint 1** (024 + bloco P) sobre a experiência implementada. Isso muda a ordem
+   anterior do roadmap (§8) e da 029 (spec → protótipos → Checkpoint 1 → implementação):
+   a decisão de 2026-10-09 (revisão 10) troca o teste sobre protótipos pelo teste sobre o
+   que existe, como já se fez com a 025.
 5. **Checkpoint 2** (roadmap §7): valor recebido e reciprocidade, com a 025 e a 026.
 
 Se a 029 for implementada antes da 026, ela sai sem a contribuição, e o passo 2 vira uma

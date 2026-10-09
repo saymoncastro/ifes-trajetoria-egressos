@@ -57,6 +57,18 @@
     avaliação.
 
   A ADR 0009 não muda. Checkpoint 1 continua **NÃO APLICADO**; a 027 continua fora.
+- **Revisão 10 (2026-10-09).** Depois de revisar o plan, as tasks e os protótipos da 026, o
+  solicitante autorizou a **implementação da 026, só na demonstração**, em branch e PR
+  próprios, seguindo spec, plan e tasks (T001). Como na 025 (revisão 5), a espera pelo
+  Checkpoint 1 fica retirada para a 026. A sequência passa a ser:
+  1. 026 implementada;
+  2. 029 atualizada com "Contribuir com o Ifes";
+  3. 029 implementada, com **autorização separada, ainda não dada**;
+  4. Checkpoint 1 (024 e bloco P da 029) sobre a experiência implementada, e ajustes;
+  5. Checkpoint 2.
+
+  Checkpoint 1 continua **NÃO APLICADO**; a avaliação por IA não o aprova. D4 e D5 continuam
+  `DECISÃO PENDENTE` e precisam ser resolvidas antes de uso real. A 027 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -649,6 +661,9 @@ escrito antes do teste.
 - **Dependências.** S1 e Checkpoint 1. Independe da S2 e pode correr em paralelo.
 - **Necessária agora?** Sim, preferencialmente depois da S2, pelo princípio de oferecer antes
   de pedir.
+- **Situação (2026-10-09, revisão 10).** [Spec](../../specs/026-volte-ao-ifes/spec.md), plan,
+  tasks e protótipos prontos; implementação autorizada **só na demonstração**, antes do
+  Checkpoint 1, que continua **NÃO APLICADO**. D4 e D5 seguem pendentes para uso real.
 
 ### S4 — Minha trajetória como linha do tempo da relação *(027; P; opcional)*
 
@@ -775,6 +790,8 @@ conclusão.
    (com o teste moderado da jornada; mockup à parte para Oportunidades/Volte ao Ifes)
    [2026-10-08: a S2 (025) foi implementada na demonstração antes deste ponto, por decisão do
     solicitante; o checkpoint continua pendente]
+   [2026-10-09: a S3 (026) também foi autorizada na demonstração antes deste ponto; o
+    checkpoint será aplicado depois da 026 e da 029 implementadas (revisão 10)]
   │
   ├──────────────┐
   ▼              ▼

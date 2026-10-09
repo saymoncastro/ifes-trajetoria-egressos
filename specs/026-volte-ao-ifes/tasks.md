@@ -8,9 +8,13 @@ implementação correspondente.
 
 ## Fase 0 — Portão
 
-- [ ] **T001** Confirmar a autorização de implementação no roadmap (nova revisão) e na spec.
+- [x] **T001** Confirmar a autorização de implementação no roadmap (nova revisão) e na spec.
   **Sem isso, nenhuma tarefa abaixo começa.** Registrar se o Checkpoint 1 continua não
   aplicado e o que a autorização abrange (só demonstração).
+  - **Feito em 2026-10-09.** O solicitante autorizou a implementação **só na demonstração**,
+    em branch e PR próprios, seguindo spec, plan e tasks (roadmap, revisão 10; spec,
+    Status). O Checkpoint 1 continua **NÃO APLICADO** e ocorre depois da implementação.
+    D4 e D5 continuam `DECISÃO PENDENTE`. A implementação da 029 tem autorização separada.
 
 ## Fase 1 — Base
 

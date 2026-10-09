@@ -2,12 +2,15 @@
 
 **Feature Branch**: `claude/029-pagina-publica`
 **Created**: 2026-10-09
-**Status**: Especificação para avaliação. Implementação **não autorizada**: depende da
-aprovação do solicitante, depois dos protótipos comparativos e do Checkpoint 1.
+**Status**: Especificação para avaliação. Implementação **não autorizada**: terá autorização
+separada, depois da 026 integrada e da inclusão de "Contribuir com o Ifes".
 **Input**: Pedido do solicitante em 2026-10-09, depois de um parecer externo sobre a página
 pública da 028. Reformulação visual e comunicacional substantiva da página pública, sem
 capacidade nova e sem revogar decisão da [ADR 0009](../../docs/adr/0009-camada-visual-do-portal.md).
 Sequência autorizada: spec → protótipos → Checkpoint 1 → ajustes → implementação.
+**Revista em 2026-10-09** (roadmap, revisão 10): 026 implementada → 029 atualizada com
+"Contribuir com o Ifes" → 029 implementada, mediante autorização → Checkpoint 1 (024 e
+bloco P) sobre a experiência implementada → ajustes → Checkpoint 2.
 
 **Reposicionamento (2026-10-09, solicitante).** O Portal é uma relação nos dois sentidos: o
 Ifes oferece (oportunidades, formação continuada, eventos) e o egresso participa e contribui.
@@ -277,7 +280,7 @@ SC-008 a SC-016 **da 024** são lidos como no protocolo da 024, sem alteração.
 Slogan; fotografias; histórias de egressos; novas finalidades do e-mail; comunicação sobre
 oportunidades ou atividades; telemetria, métricas de conversão ou rastreamento; teste A/B
 com tráfego real; vídeo na página pública; mudanças no Início ou nas telas internas;
-retenção (questão do produto, roadmap 026/027, não autorizada).
+retenção (questão do produto, roadmap 026 e 027; a 026 é especificada à parte).
 
 ## Decisões Pendentes
 

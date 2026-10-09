@@ -5,6 +5,12 @@ Escrito em 2026-10-09, **antes** de qualquer sessão. Acrescenta um bloco ao
 Os critérios SC-008 a SC-016 da 024, o limiar e a leitura do resultado **não mudam**.
 
 > **Situação: NÃO APLICADO.** Os resultados entram em outro PR, depois da aplicação.
+>
+> **Sequência revista em 2026-10-09** (roadmap, revisão 10): o bloco será aplicado depois da
+> 029 implementada, com "Contribuir com o Ifes". A "versão proposta" passa a ser a página
+> servida em `/`, e a "versão atual" (028) precisa de outra forma de ser mostrada, como uma
+> captura ou um protótipo estático. A seção "Material" é revista antes da aplicação, sem
+> mudar perguntas nem critérios.
 
 ## O que o bloco quer saber
 
