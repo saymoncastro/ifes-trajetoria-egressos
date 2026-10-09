@@ -19,9 +19,9 @@ instrumento.
 | 5 | Fotografia institucional (R7) | **Aprovada** | 2026-10-09 |
 | 6 | Página pública (R9) | **Aprovada** | 2026-10-09 |
 | 7 | Vocabulário e saudação (R8) | **Aprovada** (mantida e estendida à página pública) | 2026-10-09 |
-| 8 | Pendência no desktop (R10) | Em discussão | — |
+| 8 | Pendência no desktop (R10) | **Aprovada** (sem antecipação; revisão após o Checkpoint 1) | 2026-10-09 |
 | 9 | Ordem em relação à 025 | Resolvida pelos fatos (a 025 veio antes; auditoria §13) | 2026-10-09 |
-| 10 | Escopo dos protótipos | Pendente | — |
+| 10 | Escopo dos protótipos | Em discussão | — |
 
 ## Decisão 1 — Layout e tokens próprios do Portal
 
@@ -176,3 +176,21 @@ CPAEG e não é pré-requisito.
   oferece. Continuam vedados: contagem de egressos, "%", "turma", "geração", "conectad",
   "comunidade", "Olá" e "Volte ao Ifes".
 - Na ADR, cada regra entra primeiro em forma positiva e depois como lista verificável.
+
+## Decisão 8 — Pendência no desktop
+
+**Aprovada pelo solicitante em 2026-10-09.**
+
+- A ordem visual é igual à ordem de leitura (024 FR-016, FR-020) em todas as larguras: o
+  convite à pesquisa vem depois do reconhecimento, das ações e de Oportunidades, também
+  no desktop. Nenhuma coluna lateral antecipa a pendência.
+- **Motivos:**
+  - a hipótese do Portal mede se a pesquisa é lida como convite, e não como finalidade
+    (024 SC-014), e se o Início não é lido como painel de pendências (SC-016);
+  - ordem de foco igual à ordem visual (WCAG 2.4.3);
+  - "Pesquisa" continua na navegação, visível no topo de todas as telas (SC-012).
+- **Custo aceito:** a 1280×720 o convite fica abaixo da primeira tela. Taxa de resposta não
+  é critério do Checkpoint 1 (024), e quem chega por convite de Campanha vai direto ao
+  instrumento (D7).
+- **Revisão:** se o Checkpoint 1 mostrar que as pessoas não encontram a pesquisa (SC-012
+  falha), a posição volta à discussão com essa evidência.
