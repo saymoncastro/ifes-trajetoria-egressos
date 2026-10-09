@@ -12,7 +12,7 @@ instrumento.
 | 2 | Leitura da Constituição XXI para o Portal (R4) | **Aprovada** (interpretação, sem emenda) | 2026-10-09 |
 | 3 | D-02: cor de ação | **Aprovada** (tratamento provisório no Portal; D-02 definitiva segue institucional) | 2026-10-09 |
 | 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque) | 2026-10-09 |
-| 5 | Fotografia institucional (R7) | Em discussão | — |
+| 5 | Fotografia institucional (R7) | **Aprovada** | 2026-10-09 |
 | 6 | Página pública (R9) | Pendente | — |
 | 7 | Vocabulário e saudação (R8) | Pendente | — |
 | 8 | Pendência no desktop (R10) | Pendente | — |
@@ -104,3 +104,24 @@ CPAEG e não é pré-requisito.
 - **Reversível:** se os protótipos ou a implementação parecerem genéricos, Open Sans
   servida pela própria aplicação, sem CDN e só nos títulos do Portal, pode ser reavaliada.
   Isso exigiria demonstrar a necessidade (015 FR-018).
+
+## Decisão 5 — Fotografia institucional
+
+**Aprovada pelo solicitante em 2026-10-09**, nas quatro partes abaixo.
+
+1. **Veto à nostalgia mantido.** Continuam fora "memória do campus", fotos do período do
+   egresso e qualquer imagem que afirme retratar a época dele (021 FR-076).
+2. **Correção da legenda.** A unidade só aparece na legenda quando a imagem é daquela
+   unidade (`imagem.unidade == unidade`). A imagem genérica tem sempre a legenda
+   "Ifes · ilustração" (`LEGENDA_SEM_UNIDADE`). Vale para o Início, a Minha trajetória e o
+   card, que usam a mesma função (`trajetoria/narrativa/imagens.py`, `legenda`).
+   - Revisa a leitura da 021 FR-076: a ADR registra a revisão.
+   - Os PNGs de referência do card com unidade mudam e são revistos pelo solicitante.
+   - Entra na primeira etapa de implementação, sem esperar as fotos.
+3. **Pedido de fotografias à ACS** (ação do solicitante ou da CPAEG, não da engenharia):
+   fachadas e ambientes por unidade e algumas gerais do Ifes; pessoas só com autorização
+   de uso de imagem; licença que cubra também o card que o egresso publica nas redes
+   sociais, e não só a tela do sistema.
+4. **Protótipos sem fotos reais.** Nem imagens do site do Ifes nem de bancos de imagem. O
+   espaço da foto aparece marcado como "fotografia institucional — aguarda ACS", para que
+   a dependência da Direção A fique visível.
