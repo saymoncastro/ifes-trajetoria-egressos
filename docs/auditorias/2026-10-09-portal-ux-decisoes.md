@@ -2,6 +2,10 @@
 
 Registro de trabalho das decisões do §15 da
 [auditoria de experiência e direção visual](2026-10-08-portal-ux-direcao-visual.md).
+Um rascunho visual com as decisões 1 a 5 está em
+[`docs/prototipos-rascunho/`](../prototipos-rascunho/inicio-combinacao.html), só para noção
+visual; será substituído pelos protótipos das direções.
+
 Ao fim das nove decisões, este registro será consolidado numa única ADR (prevista como
 0009, "camada visual do Portal"). Até lá, nenhuma decisão aqui altera spec, código ou o
 instrumento.
@@ -13,8 +17,8 @@ instrumento.
 | 3 | D-02: cor de ação | **Aprovada** (tratamento provisório no Portal; D-02 definitiva segue institucional) | 2026-10-09 |
 | 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque) | 2026-10-09 |
 | 5 | Fotografia institucional (R7) | **Aprovada** | 2026-10-09 |
-| 6 | Página pública (R9) | Pendente | — |
-| 7 | Vocabulário e saudação (R8) | Pendente | — |
+| 6 | Página pública (R9) | **Aprovada** | 2026-10-09 |
+| 7 | Vocabulário e saudação (R8) | Em discussão | — |
 | 8 | Pendência no desktop (R10) | Pendente | — |
 | 9 | Ordem em relação à 025 | Resolvida pelos fatos (a 025 veio antes; auditoria §13) | 2026-10-09 |
 | 10 | Escopo dos protótipos | Pendente | — |
@@ -125,3 +129,30 @@ CPAEG e não é pré-requisito.
 4. **Protótipos sem fotos reais.** Nem imagens do site do Ifes nem de bancos de imagem. O
    espaço da foto aparece marcado como "fotografia institucional — aguarda ACS", para que
    a dependência da Direção A fique visível.
+
+## Decisão 6 — Página pública do Portal
+
+**Aprovada pelo solicitante em 2026-10-09**, com estes limites.
+
+1. **Rotas.** `/` sem sessão mostra a página pública em vez de redirecionar; com sessão,
+   continua levando ao Início. `/entrar/` não muda. A 024 FR-005 ("a raiz se comporta como
+   a entrada do Portal") continua atendida: a página é a entrada.
+2. **O convite não passa por ela.** `/acesso/` segue direto para a identificação e o
+   instrumento (D7; 024 SC-002, nenhuma tela a mais no caminho do convite).
+3. **Só conteúdo.** Sem regra de negócio, dado pessoal nem JavaScript. Existe só com o
+   Portal ligado, isto é, só na demonstração (ADR 0008).
+4. **Só o que existe.** Trajetória, card, oportunidades divulgadas pelo Ifes, contato e
+   pesquisa. Oportunidades não aparecem como benefício garantido (só há bloco quando há
+   oportunidade pertinente). Sem contagem de egressos, "comunidade", "conectados" nem área
+   futura.
+5. **Linguagem da 018 FR-061.** Sem "login", "conta" ou "acesso seguro". "Entrar no
+   Portal" e "Confirme seus dados" são admitidos.
+6. **Imagem principal.** Enquanto não houver fotografia (decisão 5), um card de exemplo
+   com dados de persona fictícia e o selo "Exemplo com dados fictícios".
+7. **Textos.** Na demonstração, a equipe escreve textos provisórios, sem slogan ("Sua
+   história com o Ifes continua" não foi aprovado). Para uso real, a ACS aprova com a
+   CPAEG, incluindo o nome definitivo (D2) e a linguagem (DP-801). Isso não bloqueia a
+   demonstração.
+8. **Critérios** (auditoria §14): a 1280×720, descontada a faixa de demonstração, a
+   proposta e a ação de entrar sem rolar; o formulário não é o h1 de `/`; nenhum link para
+   área inexistente (024 FR-021).
