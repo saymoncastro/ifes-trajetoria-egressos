@@ -7,7 +7,7 @@
 <style>
 /* Tokens da 015 (estilo.css), inalterados. */
 :root {
-  --cor-marca: #2f9e41; --cor-sucesso: #195128; --cor-institucional: #eef7f0;
+  --cor-marca: #2f9e41; --cor-institucional: #eef7f0;
   --cor-texto: #1b1b1b; --cor-texto-suave: #565c65; --cor-fundo: #ffffff;
   --cor-borda-suave: #c6cace; --cor-foco: #1b1b1b; --cor-foco-halo: #ffdd00;
   --cor-demonstracao: #fff1d2;
@@ -26,7 +26,6 @@
   --portal-profundo: #0e3b23;     /* do card; branco ≈ 12:1 */
   --portal-profundo-texto: #cfe6d6;
   --portal-creme: #f6f2e8;
-  --portal-ano: #257a33;          /* ano no creme: 4,8:1 (021) */
   --portal-destaque: 2.5rem;      /* decisão 4: 40 px, peso 700, só no h1 */
   --portal-numero: 3rem;
 }
@@ -52,9 +51,9 @@ img { max-width: 100%; height: auto; }
 .prototipo { background: #3d3d3d; color: #fff; font-size: var(--fonte-5); padding: var(--espaco-1) 0; }
 .prototipo strong { color: var(--cor-foco-halo); }
 .demonstracao { background: var(--cor-demonstracao); font-size: var(--fonte-5);
-  padding: var(--espaco-2) 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
+  padding: 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
 .demonstracao .container { display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-5); }
-.demonstracao a { color: var(--cor-texto); }
+.demonstracao a { color: var(--cor-texto); display: inline-flex; align-items: center; min-height: var(--alvo); }
 
 .cabecalho { border-bottom: 1px solid var(--cor-borda-suave); }
 .cabecalho .container { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
@@ -90,6 +89,8 @@ img { max-width: 100%; height: auto; }
 .numero strong { display: block; font-size: var(--portal-numero); line-height: 1.1; color: var(--portal-profundo); }
 .numero p { margin: 0; }
 .oportunidade-titulo { font-weight: 600; font-size: var(--fonte-3); }
+.oportunidade-titulo a { display: inline-flex; align-items: center; min-height: var(--alvo); }
+.empilhado > * + * { margin-top: var(--espaco-6); }
 .convite { border: 2px solid var(--cor-acao); border-radius: var(--raio); padding: var(--espaco-5); }
 .card-previa { display: block; width: 100%; max-width: 270px; border-radius: var(--raio);
   box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
@@ -134,6 +135,7 @@ img { max-width: 100%; height: auto; }
 .formacoes p { margin: 0 0 var(--espaco-1); }
 .formacoes .fato { font-weight: 600; }
 .acoes-a .bloco { margin-bottom: var(--espaco-4); }
+.inicio-a { padding-bottom: var(--espaco-7); }
 .acoes-a .bloco h3 { font-size: var(--fonte-4); }
 @media (min-width: 768px) { .blocos-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) {
@@ -149,7 +151,7 @@ img { max-width: 100%; height: auto; }
 <body>
 <div class="prototipo" data-medida="faixa"><div class="container"><strong>Protótipo</strong> · Direção A — institucional · ADR 0009. Não é o produto.</div></div>
 <div class="demonstracao" data-medida="faixa"><div class="container"><span><strong>Ambiente de demonstração.</strong> Dados fictícios.</span><span><strong>Pessoa fictícia:</strong> Diego Exemplo</span><a href="#">Sair</a></div></div>
-<header class="cabecalho"><div class="container" data-medida="container">
+<header class="cabecalho"><div class="container">
 <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709 284">
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 187.433594 142.28125 L 194.828125 142.28125 L 194.828125 177.097656 L 187.433594 177.097656 L 187.433594 142.28125 "/>
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 234.652344 177.097656 L 225.253906 177.097656 L 210.085938 150.757812 L 209.867188 150.757812 C 210.171875 155.410156 210.324219 158.726562 210.324219 160.714844 L 210.324219 177.097656 L 203.714844 177.097656 L 203.714844 142.28125 L 213.042969 142.28125 L 228.1875 168.351562 L 228.351562 168.351562 C 228.117188 163.832031 227.996094 160.632812 227.996094 158.757812 L 227.996094 142.28125 L 234.652344 142.28125 L 234.652344 177.097656 "/>
@@ -197,7 +199,7 @@ img { max-width: 100%; height: auto; }
 </div></header>
 <nav class="navegacao" aria-label="Portal do Egresso"><div class="container"><ul><li><a href="#" aria-current="page">Início</a></li><li><a href="#">Minha trajetória</a></li><li><a href="#">Oportunidades</a></li><li><a href="#">Pesquisa</a></li><li><a href="#">Meu e-mail</a></li></ul></div></nav>
 <main>
-<div class="container"><div class="abertura-foto foto" aria-hidden="true"><div><strong>Fotografia institucional da unidade</strong>aguarda ACS (ADR 0009, decisão 5)</div></div><div class="titulo-inicio"><h1>Sua história com o Ifes</h1><p>O Ifes registra 3 formações concluídas por você.</p></div><div class="grade" data-medida="grade"><div><ul class="formacoes"><li><p class="fato" data-medida="fato">Em 2012, você concluiu Técnico em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Técnico · Presencial · Integrado</p></li><li><p class="fato">Em 2017, você concluiu Licenciatura em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Graduação · Presencial</p></li><li><p class="fato">Em 2020, você concluiu Mestrado Profissional em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Pós-graduação · Presencial</p></li></ul><p class="suave">Essas informações vêm dos registros acadêmicos do Ifes. Nada aqui foi respondido por você.</p></div><section class="acoes-a" aria-labelledby="acoes"><h2 id="acoes">O que você pode fazer</h2><div class="bloco"><h3>Sua trajetória</h3><p>Os capítulos da sua formação no Ifes, com a linha do tempo.</p><a class="ligacao" href="#" data-medida="acao">Ver minha trajetória no Ifes</a></div><div class="bloco"><h3>Seu card</h3><p>Uma imagem vertical para o story ou o status.</p><a class="ligacao" href="#">Baixar o card da sua trajetória</a></div><div class="bloco"><h3>Seu e-mail</h3><p>O endereço que o Ifes usa para falar com você.</p><a class="ligacao" href="#">Manter seu e-mail com o Ifes</a></div></section></div><section aria-labelledby="oportunidades"><h2 id="oportunidades">Oportunidades</h2><p class="oportunidade-titulo"><a href="#">Programa de estágio em laboratórios parceiros</a></p><p class="suave">Aparece porque você concluiu Técnico em Química na unidade Vila Velha.</p><p class="suave">Oferecida pela unidade Vila Velha · site externo: oportunidades.example</p><p><a class="ligacao" href="#">Ver as 3 oportunidades</a></p></section><div style="height:var(--espaco-6)"></div><section class="convite" aria-labelledby="convite"><h2 id="convite">Pesquisa de acompanhamento</h2><p class="texto">Há pesquisas abertas sobre 2 das suas formações. Respondê-las é como você atualiza sua trajetória com o Ifes.</p><a class="botao" href="#">Escolher a formação</a></section><div style="height:var(--espaco-7)"></div></div>
+<div class="container inicio-a"><div class="abertura-foto foto" aria-hidden="true"><div><strong>Fotografia institucional da unidade</strong>aguarda ACS (ADR 0009, decisão 5)</div></div><div class="titulo-inicio"><h1>Sua história com o Ifes</h1><p>O Ifes registra 3 formações concluídas por você.</p></div><div class="grade" data-medida="grade"><div><ul class="formacoes"><li><p class="fato" data-medida="fato">Em 2012, você concluiu Técnico em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Técnico · Presencial · Integrado</p></li><li><p class="fato">Em 2017, você concluiu Licenciatura em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Graduação · Presencial</p></li><li><p class="fato">Em 2020, você concluiu Mestrado Profissional em Química na unidade Vila Velha.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Vila Velha · Pós-graduação · Presencial</p></li></ul><p class="suave">Essas informações vêm dos registros acadêmicos do Ifes. Nada aqui foi respondido por você.</p></div><section class="acoes-a" aria-labelledby="acoes"><h2 id="acoes">O que você pode fazer</h2><div class="bloco"><h3>Sua trajetória</h3><p>Os capítulos da sua formação no Ifes, com a linha do tempo.</p><a class="ligacao" href="#" data-medida="acao">Ver minha trajetória no Ifes</a></div><div class="bloco"><h3>Seu card</h3><p>Uma imagem vertical para o story ou o status.</p><a class="ligacao" href="#">Baixar o card da sua trajetória</a></div><div class="bloco"><h3>Seu e-mail</h3><p>O endereço que o Ifes usa para falar com você.</p><a class="ligacao" href="#">Manter seu e-mail com o Ifes</a></div></section></div><div class="empilhado"><section aria-labelledby="oportunidades"><h2 id="oportunidades">Oportunidades</h2><p class="oportunidade-titulo"><a href="#">Programa de estágio em laboratórios parceiros</a></p><p class="suave">Aparece porque você concluiu Técnico em Química na unidade Vila Velha.</p><p class="suave">Oferecida pela unidade Vila Velha · site externo: oportunidades.example</p><p><a class="ligacao" href="#">Ver as 3 oportunidades</a></p></section><section class="convite" aria-labelledby="convite"><h2 id="convite">Pesquisa de acompanhamento</h2><p class="texto">Há pesquisas abertas sobre 2 das suas formações. Respondê-las é como você atualiza sua trajetória com o Ifes.</p><a class="botao" href="#">Escolher a formação</a></section></div></div>
 </main>
 <footer class="rodape"><div class="container">
 <p>Instituto Federal do Espírito Santo</p>
