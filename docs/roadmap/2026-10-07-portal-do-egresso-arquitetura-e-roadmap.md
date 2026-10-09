@@ -27,6 +27,9 @@
   e dos ajustes da 024 que ela motivou, o solicitante autorizou antecipar também **o plan e
   as tasks** da 025. A implementação continua vedada. O Checkpoint 1 continua **NÃO
   APLICADO** (seção 6, S2).
+- **Revisão 5 (2026-10-08).** O solicitante autorizou a **implementação** da 025 (código e
+  migrações), só na demonstração. A condição de espera pelo Checkpoint 1 foi retirada para a
+  025. O Checkpoint 1 continua **NÃO APLICADO** e a 026 continua fora (seção 6, S2).
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -501,7 +504,7 @@ escrito antes do teste.
 
 ### S2 — Oportunidades curadas *(025; M; primeiro fato persistente novo)*
 
-**Situação (2026-10-08): spec, plan e tasks antecipados; implementação condicionada.**
+**Situação (2026-10-08): implementação autorizada na demonstração; Checkpoint 1 NÃO APLICADO.**
 
 - **Decisão do solicitante.** Com o Checkpoint 1 ainda não concluído, ele autorizou antecipar
   **exclusivamente a especificação** da 025
@@ -532,6 +535,20 @@ escrito antes do teste.
     - a S1 é corrigida primeiro;
     - o plan e as tasks da 025 são revistos onde dependem do Início e da navegação. O custo
       afundado se limita a documentação.
+- **Revisão 5 (2026-10-08): implementação autorizada (T001 das tasks).**
+  - **Decisão do solicitante.** Avançar com código e migrações da 025, só na demonstração.
+    Não há impedimento técnico. Implementar uma hipótese reversível antes do teste com egressos
+    é uma decisão válida, e a condição de espera virou barreira sem ganho. Ela fica retirada
+    para a 025.
+  - **Continua valendo:**
+    - o Checkpoint 1 continua **NÃO APLICADO** e será aplicado para validar a experiência e
+      orientar correções;
+    - a avaliação por IA não o aprova;
+    - a 026 continua **fora** deste avanço;
+    - as verificações previstas nas tasks são concluídas antes de integrar a implementação.
+  - **Risco assumido.** Se o Checkpoint 1 mostrar falha de compreensão, o Início e a
+    navegação podem precisar de ajuste depois, já com a 025 implementada. O custo é localizado
+    na camada do Portal, que é desligável e reversível.
 
 - **Problema.** O Portal só tem algo a oferecer se houver conteúdo institucional pertinente.
 - **Valor para o egresso.**
@@ -729,7 +746,8 @@ conclusão.
   ▼
  ◆ Checkpoint 1 — modelo mental e navegação
    (com o teste moderado da jornada; mockup à parte para Oportunidades/Volte ao Ifes)
-   [2026-10-08: spec, plan e tasks da S2 antecipados; código e migrações aguardam este ponto]
+   [2026-10-08: a S2 (025) foi implementada na demonstração antes deste ponto, por decisão do
+    solicitante; o checkpoint continua pendente]
   │
   ├──────────────┐
   ▼              ▼
