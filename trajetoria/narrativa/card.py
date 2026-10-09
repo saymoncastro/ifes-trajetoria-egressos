@@ -228,7 +228,7 @@ def _svg_interior(caminho: Path) -> tuple[str, str]:
 
 def _legenda(c: Compartilhavel):
     imagem = imagens.imagem_para(c.unidade_da_imagem)
-    texto = imagens.legenda(imagem, c.unidade_da_imagem)
+    texto = imagens.legenda(imagem)
     return imagem, _quebra(texto, "legenda", LARGURA_UTIL - 2 * PILULA_LEGENDA)
 
 

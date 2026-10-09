@@ -37,11 +37,13 @@ CASOS_E_NOMES = sorted(SVG_ANTES_DAS_ZONAS, key=lambda c: (c[0], c[1] or ""))
 def test_svg_do_card_identico_ao_de_antes_das_zonas(caso, nome, monkeypatch):
     # 028 corrige a legenda e sua geometria. Reproduzir só a legenda histórica mantém
     # a prova do agrupamento em zonas contra os hashes originais, sem regravar fixtures.
-    monkeypatch.setattr(imagens, "legenda", lambda imagem, unidade: (
+    compartilhavel = CASOS[caso]()
+    unidade = compartilhavel.unidade_da_imagem
+    monkeypatch.setattr(imagens, "legenda", lambda imagem: (
         catalogo.LEGENDA.format(unidade=unidade, tipo=imagem.tipo) if unidade
         else catalogo.LEGENDA_SEM_UNIDADE.format(tipo=imagem.tipo)
     ))
-    svg = card.card_svg(CASOS[caso](), nome=nome)
+    svg = card.card_svg(compartilhavel, nome=nome)
     assert hashlib.sha256(svg.encode()).hexdigest() == SVG_ANTES_DAS_ZONAS[(caso, nome)]
 
 

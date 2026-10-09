@@ -50,11 +50,11 @@ def test_inicio_previa_sem_nome_e_agregados_da_narrativa(client, cenario):
     carregar_contexto(ContextoSimulado(), ana)
     cp.entrar(client, ana)
     html = client.get("/inicio/").content.decode()
-    assert 'src="/minha-trajetoria/card.svg"' in html
+    assert re.search(r'src="/minha-trajetoria/card\.(png|svg)"', html)
     assert "Naquele ano no Ifes" in html
     assert "27 conclusões" in html and "812 conclusões" in html
     assert "31/01/2026" in html
-    assert 'src="/minha-trajetoria/card.svg?nome=' not in html
+    assert "card.png?nome=" not in html and "card.svg?nome=" not in html
     card = client.get("/minha-trajetoria/card.svg")
     assert card.status_code == 200
     assert "Ifes · ilustração" in card.content.decode()
@@ -67,13 +67,13 @@ def test_sem_reconhecimento_nao_tem_previa(client, cenario, monkeypatch):
 
     monkeypatch.setattr("trajetoria.portal.inicio.montar", falha)
     html = client.get("/inicio/").content.decode()
-    assert 'src="/minha-trajetoria/card.svg"' not in html
+    assert not re.search(r'src="/minha-trajetoria/card\.(png|svg)"', html)
 
 
 def test_pessoa_sem_conclusao_sem_previa(client, cenario):
     cp.entrar(client, cp.pessoa_sem_conclusao())
     html = client.get("/inicio/").content.decode()
-    assert 'src="/minha-trajetoria/card.svg"' not in html
+    assert not re.search(r'src="/minha-trajetoria/card\.(png|svg)"', html)
     assert "Naquele ano no Ifes" not in html
 
 
@@ -89,3 +89,35 @@ def test_formacoes_horizontais_continuam_em_ordem(client, cenario):
     linha = re.search(r'<ul class="inicio-formacoes.*?</ul>', html, re.S).group(0)
     assert len(re.findall(r"<li>", linha)) == 3
     assert "2012" in linha and "2017" in linha and "2020" in linha
+
+
+def test_previa_do_card_no_formato_da_trajetoria_e_acao_sem_repeticao(client, cenario, monkeypatch):
+    """A prévia usa o mesmo formato da Minha trajetória (PNG com fontes embutidas quando há
+    rasterização) e a ação do card aparece uma vez, junto da prévia (code review da 028)."""
+    from trajetoria.narrativa import rasterizacao
+
+    cp.entrar(client, cenario.pessoa("SIM-P-0001"))
+    for disponivel, formato in ((True, "png"), (False, "svg")):
+        monkeypatch.setattr(rasterizacao, "rasterizacao_disponivel", lambda d=disponivel: d)
+        html = client.get("/inicio/").content.decode()
+        assert f'src="/minha-trajetoria/card.{formato}"' in html
+        assert html.count(f">{mensagens.ACAO_CARD}<") == 1
+
+
+def test_card_publico_gerado_pelo_card_da_021(client, cenario):
+    from trajetoria.portal.exemplo import card_de_exemplo
+
+    html = client.get("/").content.decode()
+    assert str(card_de_exemplo()) in html
+    assert "Ifes · ilustração" in html and "Técnico em Edificações" in html
+
+
+def test_ligacao_no_meio_do_texto_nao_vira_caixa():
+    """Só ligações isoladas ganham o alvo de 44 px como caixa (code review da 028)."""
+    from pathlib import Path
+
+    from trajetoria.portal import inicio as inicio_do_portal
+
+    css = (Path(inicio_do_portal.__file__).with_name("templates") / "portal" / "visual.css"
+           ).read_text("utf-8")
+    assert not re.search(r"(^|[\s,}])main a\s*\{", css, re.M)

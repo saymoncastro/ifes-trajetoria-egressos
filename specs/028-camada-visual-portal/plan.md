@@ -66,10 +66,10 @@ os testes e medidas da implementação são registrados separadamente em `valida
 
 - `entrada()` continua resolvendo Pessoa/declarante, mas renderiza `portal/publico.html`
   quando não há sujeito. Mantém `never_cache` e destinos fixos.
-- Card público: SVG de exemplo versionado em `portal/exemplo.svg`, gerado pelo código da
+- Card público: SVG de exemplo gerado em tempo de execução por `portal/exemplo.py`, com o código da
   021; incluído inline com nome acessível e selo explícito. Nenhum dado de banco.
 - O Início reaproveita uma montagem sem nome para síntese, formações, agregados,
-  apurações e descrição da prévia. O `src` da prévia aponta ao endpoint existente do card,
+  apurações e descrição da prévia. O `src` da prévia aponta ao endpoint existente do card (PNG quando há rasterização, como na Minha trajetória),
   sem parâmetro de nome; não cria endpoint, arquivo pessoal nem cache persistente.
 - Linha do tempo horizontal no desktop com várias formações; grade permite linhas
   adicionais. Agregados ficam ao lado quando presentes. Reconhecimento tem espaçamento
@@ -88,7 +88,7 @@ os testes e medidas da implementação são registrados separadamente em `valida
 
 ## Project Structure
 
-`trajetoria/portal/templates/portal/{base.html,visual.css,publico.html,exemplo.svg,inicio.html}`;
+`trajetoria/portal/templates/portal/{base.html,visual.css,publico.html,inicio.html}` e `trajetoria/portal/exemplo.py`;
 `portal/{contexto.py,views.py,inicio.py}`; extensão neutra nos três templates compartilhados;
 correção de legenda em `narrativa/imagens.py`. Testes nas pastas existentes `portal` e
 `narrativa`; documentação em `specs/028-camada-visual-portal/`.

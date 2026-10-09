@@ -97,7 +97,7 @@ def test_css_nao_esconde_a_informacao_exigida():
     from pathlib import Path
 
     pasta = Path(inicio_do_portal.__file__).with_name("templates") / "portal"
-    css = (pasta / "inicio.css").read_text("utf-8") + (pasta / "oportunidades.css").read_text(
+    css = (pasta / "visual.css").read_text("utf-8") + (pasta / "oportunidades.css").read_text(
         "utf-8")
     for regra in re.findall(r"([^{}]+)\{([^}]*)\}", css):
         seletor, corpo = regra

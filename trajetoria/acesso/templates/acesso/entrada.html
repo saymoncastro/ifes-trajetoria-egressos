@@ -5,7 +5,7 @@
 {% endif %}<h1>{{ titulo }}</h1>
 {% if base_indevida %}<p role="alert">{{ base_indevida }}</p>{% else %}
 <p>Use o CPF e a data de nascimento registrados no Ifes.</p>
-{% if continuar and pessoa_demonstracao and not tentativa_falhou %}<p><a href="{{ continuar.1 }}">{{ continuar.0 }}</a></p>{% endif %}
+{% if continuar and pessoa_demonstracao and not tentativa_falhou %}<p class="ligacao-isolada"><a href="{{ continuar.1 }}">{{ continuar.0 }}</a></p>{% endif %}
 {# 023 FR-001, FR-003, FR-030: aviso de chegada (sessão encerrada, envio guardado, selo vencido). #}
 {% if chegada %}<div class="aviso" role="status">{% for frase in chegada %}<p>{{ frase }}</p>{% endfor %}</div>{% endif %}
 {% if aviso %}<div class="aviso" role="status" tabindex="-1" autofocus><p>{{ aviso }}</p>

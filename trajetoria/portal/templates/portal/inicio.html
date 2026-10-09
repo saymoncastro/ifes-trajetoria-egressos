@@ -31,8 +31,8 @@
     <div class="inicio-acoes-grade">
       {% if reconhecimento %}
       <figure class="inicio-card portal-bloco">
-        <img src="/minha-trajetoria/card.svg" alt="{{ reconhecimento.card_alt }}" width="240" height="427">
-        <figcaption><h3>Seu card</h3><p>Uma imagem vertical da sua trajetória para compartilhar.</p><p><a href="/minha-trajetoria/#card">{{ acoes.1.rotulo }}</a></p></figcaption>
+        <img src="{{ reconhecimento.card_arquivo }}" alt="{{ reconhecimento.card_alt }}" width="240" height="427">
+        <figcaption><h3>Seu card</h3><p>Uma imagem vertical da sua trajetória para compartilhar.</p><p><a href="{{ acao_card.endereco }}">{{ acao_card.rotulo }}</a></p></figcaption>
       </figure>
       {% endif %}
       <ul class="inicio-acoes">

@@ -20,6 +20,14 @@ PASTA = Path(__file__).with_name("evidencias")
 BASE = "http://127.0.0.1:8028"
 
 
+def trocar(texto, antes, depois):
+    """Adapta a moldura do medidor dos protótipos e falha se o trecho não existir: uma troca
+    que não acontece mediria outra coisa em silêncio."""
+    if antes not in texto:
+        raise SystemExit(f"medir.py mudou; trecho não encontrado: {antes!r}")
+    return texto.replace(antes, depois)
+
+
 def navegador():
     return build_opener(HTTPCookieProcessor(CookieJar()))
 
@@ -43,21 +51,23 @@ def executar(tela=None):
     PASTA.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="trajetoria-028-") as diretorio:
         m.PASTA = Path(diretorio)
-        moldura = m.MOLDURA.replace(".demonstracao", ".faixa-demonstracao")
-        moldura = moldura.replace("d.querySelector('[data-medida=container]')",
+        moldura = trocar(m.MOLDURA, ".demonstracao", ".faixa-demonstracao")
+        moldura = trocar(moldura, "d.querySelector('[data-medida=container]')",
             "(d.querySelector('.portal-container') || d.querySelector('main > .coluna'))")
-        moldura = moldura.replace("[data-medida=grade]", ".inicio-acoes-grade")
-        moldura = moldura.replace("[data-medida=fato]", ".inicio-formacoes li:first-child p")
-        moldura = moldura.replace("[data-medida=card]", ".inicio-card img")
-        moldura = moldura.replace("[data-medida=acao]", ".inicio-acoes li a")
-        moldura = moldura.replace("[data-medida=entrar]", ".portal-hero a")
-        moldura = moldura.replace(".convite", ".inicio-convite")
-        moldura = moldura.replace("a.botao, a.ligacao, nav a",
-            "main a, button, summary, nav a, .narrativa-nome-card label")
-        moldura = moldura.replace("e.getBoundingClientRect().height < 44",
+        moldura = trocar(moldura, "[data-medida=grade]", ".inicio-acoes-grade")
+        moldura = trocar(moldura, "[data-medida=fato]", ".inicio-formacoes li:first-child p")
+        moldura = trocar(moldura, "[data-medida=card]", ".inicio-card img")
+        moldura = trocar(moldura, "[data-medida=acao]", ".inicio-acoes li a")
+        moldura = trocar(moldura, "[data-medida=entrar]", ".portal-hero a")
+        moldura = trocar(moldura, ".convite", ".inicio-convite")
+        moldura = trocar(moldura, "a.botao, a.ligacao, nav a')]",
+            "main a, button, summary, nav a, .narrativa-nome-card label')]"
+            ".filter(e => !e.matches('main a') || "
+            "e.parentElement.textContent.trim() === e.textContent.trim())")
+        moldura = trocar(moldura, "e.getBoundingClientRect().height < 44",
                                    "(e.getBoundingClientRect().height < 44 || "
                                    "e.getBoundingClientRect().width < 44)")
-        moldura = moldura.replace("colunas, h1s:",
+        moldura = trocar(moldura, "colunas, h1s:",
             "oportunidade_altura: r('.inicio-oportunidades')?.height ?? null, colunas, h1s:")
         (m.PASTA / "_moldura.html").write_text(moldura)
         ana, diego = navegador(), navegador()
@@ -142,6 +152,9 @@ def executar(tela=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--base", default=BASE, help="servidor da demonstração")
     parser.add_argument("--tela", choices=("publico", "entrar", "inicio-ana", "inicio-diego",
                                          "trajetoria", "email", "oportunidades", "instrumento"))
-    executar(parser.parse_args().tela)
+    argumentos = parser.parse_args()
+    BASE = argumentos.base
+    executar(argumentos.tela)

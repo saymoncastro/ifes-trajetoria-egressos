@@ -14,7 +14,13 @@ h1, h2, .narrativa-capitulo { hyphens: none; }
   padding-inline: min(1rem, 5vw); }
 main p { max-width: 36rem; }
 main form:not(.narrativa-nome-card) { max-width: 36rem; }
-main a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+/* Alvos de 44 px (FR-017) nas ligações isoladas, únicas no seu item ou parágrafo. Ligação no
+   meio de um texto continua em linha, sem virar caixa (ex.: "Conferir os dados" em /entrar/).
+   A classe tem nome neutro porque também está no template de acesso, que é núcleo e não
+   menciona o Portal (test_fronteiras). */
+main li > a, main .ligacao-isolada a, main .inicio-card a, main .inicio-ver-oportunidades a,
+main .oportunidade-titulo a, main .narrativa-voltar a {
+  display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
 main a.botao, .portal-botao { display: inline-flex; align-items: center; min-height: 44px;
   padding: .5rem 1.25rem; background: var(--cor-acao); border: 2px solid var(--cor-acao);
   color: #fff; font-weight: 600; border-radius: var(--raio); text-decoration: none; }
@@ -43,7 +49,8 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 .portal-hero, .inicio-reconhecimento { display: grid; gap: 1.5rem; }
 .portal-hero .proposta, .inicio-sintese { font-size: var(--fonte-3); }
 .portal-exemplo { margin: 0; text-align: center; }
-.portal-exemplo svg { display: block; width: 100%; max-width: 300px; height: auto; margin: auto; }
+.portal-exemplo svg { display: block; width: 100%; max-width: 300px; height: auto; margin: auto;
+  border: 2px solid var(--portal-suave); border-radius: var(--raio); }
 .portal-exemplo figcaption { color: var(--portal-suave); margin-top: .5rem; }
 .portal-selo { display: inline-block; background: #fff1d2; color: #1b1b1b; padding: .25rem .75rem;
   border-radius: var(--raio); margin-bottom: .75rem; font-weight: 700; }

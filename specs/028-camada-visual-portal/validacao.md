@@ -108,6 +108,41 @@ de scripts da aplicação. O compartilhamento opcional da 021 permanece progress
 - Contato público descreve a finalidade existente: convite para pesquisas, opcional.
 - Harmonização das telas que estavam fora dos nove protótipos, sem mudar seus fluxos.
 
+## Correções do code review (2026-10-09)
+
+Revisão da branch contra a ADR 0009: as dez decisões foram atendidas. Seis problemas
+menores foram corrigidos, sem mudar regra nem fluxo:
+
+1. **Ação do card repetida no Início.** "Baixar o card da sua trajetória" aparecia junto
+   da prévia e de novo na lista de ações. Com a prévia, a ação fica só junto dela.
+2. **Proteção da 025 apontava para folha morta.** O teste que impede o CSS de esconder
+   título, explicação e origem das oportunidades lia `portal/inicio.css`, que deixou de ser
+   incluído. Agora lê `visual.css`; `inicio.css` foi removido.
+3. **Prévia do card no formato da Minha trajetória.** O Início usava sempre o SVG, que
+   depende da fonte do aparelho. Agora usa o PNG, com as fontes embutidas, quando há
+   rasterização, como a 021; o SVG fica para quando não há.
+4. **Card de exemplo gerado, não copiado.** `portal/exemplo.svg` era uma cópia de um card
+   gerado. Agora `portal/exemplo.py` gera o exemplo com o código da 021 a partir de
+   formações fictícias, sem banco. O resultado é idêntico, byte a byte, à cópia removida.
+5. **Alvos de 44 px só nas ligações isoladas.** A regra `main a` transformava em caixa
+   também a ligação no meio de um texto ("Conferir os dados" em `/entrar/`). Agora vale
+   para itens de lista e parágrafos de uma ligação só (classe neutra `ligacao-isolada`,
+   porque o template de acesso é núcleo). A verificação visual passou a ignorar ligações
+   em linha, como a exceção da WCAG 2.5.8.
+6. **Menores.** `imagens.legenda()` perdeu o parâmetro `unidade`, sem uso desde a correção
+   da legenda (o teste de zonas reproduz a legenda histórica pela unidade do caso). O card
+   de exemplo ganhou contorno, porque seu pé escuro sumia na faixa da mesma cor.
+
+`verificar_visual.py` agora falha se um trecho que ele adapta no `medir.py` dos
+protótipos não existir, em vez de medir outra coisa em silêncio, e aceita `--base`.
+
+**Verificações:** ruff, check e makemigrations passaram. Suíte completa: **3257 passed,
+40 skipped, 2 deselected**, em **288,92 s**, com `PGDATABASE=trajetoria_revisao_028b`.
+Remedição visual com servidor do código corrigido em `127.0.0.1:8029`, mesmo banco e
+chaves da demonstração da 028: **nenhuma falha**. Primeira tela inalterada: prévia/ação a
+657,2 px (Ana) e 600 px (Diego) a 1280×720; primeiro fato a 555,4 px a 375×812; destaque
+de Oportunidades com 218,6 px a 375.
+
 ## Limites e próximos passos
 
 As capturas e medições não substituem teste com egressos. O Checkpoint 1 continua

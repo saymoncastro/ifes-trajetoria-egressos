@@ -106,7 +106,7 @@ def _abertura(narrativa):
     return {
         # Ativo versionado do catálogo, decorativo: a legenda é o texto.
         "imagem": imagens.svg_decorativo(imagem),
-        "legenda": imagens.legenda(imagem, unidade),
+        "legenda": imagens.legenda(imagem),
         "frases": list(registro.frases) if registro else [],
     }
 

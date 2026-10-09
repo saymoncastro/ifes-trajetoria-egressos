@@ -12,7 +12,7 @@ import logging
 from django.db import DatabaseError
 
 from trajetoria.interface import mensagens as estados
-from trajetoria.narrativa import card
+from trajetoria.narrativa import card, rasterizacao
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
 from trajetoria.narrativa.contrato import DERIVADO, INSTITUCIONAL
 from trajetoria.narrativa.montagem import montar
@@ -76,6 +76,11 @@ def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
         "apuracoes": [f.texto for f in naquele_ano.frases if f.formacao is None]
         if naquele_ano else [],
         "card_alt": card.descricao(narrativa.compartilhavel, None, demonstracao),
+        # O mesmo formato da prévia da Minha trajetória (021): PNG com as fontes embutidas
+        # quando há rasterização; SVG só sem ela.
+        "card_arquivo": (
+            f"/minha-trajetoria/card.{'png' if rasterizacao.rasterizacao_disponivel() else 'svg'}"
+        ),
     }
 
 
@@ -108,13 +113,17 @@ def _convite(situacao) -> dict | None:
     return {"texto": texto, "acao": mensagens.ACAO_RESPONDER}
 
 
-def _acoes(com_trajetoria: bool) -> list[dict]:
+ACAO_CARD = {"rotulo": mensagens.ACAO_CARD, "endereco": "/minha-trajetoria/#card"}
+
+
+def _acoes(com_trajetoria: bool, com_previa: bool = False) -> list[dict]:
+    """Com a prévia do card no Início (028), a ação do card fica junto dela e sai da lista,
+    para não repetir o mesmo link."""
     acoes = []
     if com_trajetoria:
-        acoes += [
-            {"rotulo": mensagens.ACAO_TRAJETORIA, "endereco": "/minha-trajetoria/"},
-            {"rotulo": mensagens.ACAO_CARD, "endereco": "/minha-trajetoria/#card"},
-        ]
+        acoes.append({"rotulo": mensagens.ACAO_TRAJETORIA, "endereco": "/minha-trajetoria/"})
+        if not com_previa:
+            acoes.append(ACAO_CARD)
         if renderizador.disponivel():
             acoes.append({"rotulo": mensagens.ACAO_VIDEO, "endereco": "/minha-trajetoria/#video"})
     acoes.append({"rotulo": mensagens.ACAO_EMAIL, "endereco": "/meu-email/"})
@@ -145,15 +154,17 @@ def _oportunidades(pessoa, hoje) -> dict | None:
 
 def montar_inicio(pessoa, referencia, demonstracao) -> dict:
     com_trajetoria = elegivel(pessoa)
+    reconhecimento = (
+        _reconhecimento(pessoa, referencia, demonstracao) if com_trajetoria else None
+    )
     return {
         "titulo": mensagens.TITULO,
-        "reconhecimento": (
-            _reconhecimento(pessoa, referencia, demonstracao) if com_trajetoria else None
-        ),
+        "reconhecimento": reconhecimento,
         "sem_formacao": None if com_trajetoria else estados.SEM_FORMACAO,
         "proveniencia": mensagens.PROVENIENCIA if com_trajetoria else None,
         "titulo_acoes": mensagens.TITULO_ACOES,
-        "acoes": _acoes(com_trajetoria),
+        "acoes": _acoes(com_trajetoria, com_previa=reconhecimento is not None),
+        "acao_card": ACAO_CARD,
         "oportunidades": _oportunidades(pessoa, referencia) if com_trajetoria else None,
         "titulo_convite": mensagens.TITULO_CONVITE,
         "convite": _convite(situacao_de_entrada(pessoa)),
