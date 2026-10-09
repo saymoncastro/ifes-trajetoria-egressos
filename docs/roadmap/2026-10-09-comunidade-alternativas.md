@@ -44,6 +44,14 @@
 Em todos os casos, "comunidade" volta ao texto do Portal só junto da experiência concreta que
 a sustenta, e cada alternativa entra no Checkpoint 2 (valor e reciprocidade).
 
+## Decisão de 2026-10-09 (solicitante, demonstração)
+
+- **Começar pela A**, encontros e eventos de egressos. A categoria "Eventos" da 025 já existe,
+  mas a experiência ainda precisa de conteúdo e de operação: unidades divulgando encontros de
+  egressos com regularidade. O rótulo usa "egressos", que não é vedado; a palavra
+  "comunidade" continua fora até haver experiência concreta, e a ADR 0009 não muda.
+- **B (histórias de egressos)** é a próxima especificação candidata, depois da 026.
+
 ## Decisões para o solicitante
 
 - Quais alternativas seguem para spec, e em que ordem.
