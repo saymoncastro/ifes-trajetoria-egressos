@@ -1,0 +1,1118 @@
+{
+ "a-publico.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2009,
+   "faixa_prototipo": 53,
+   "faixa_demo": 42.5,
+   "h1": 305,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 481,
+   "convite": null,
+   "conteudo": 343,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1237,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 328.5,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 477.5,
+   "convite": null,
+   "conteudo": 960,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1213,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 328.5,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 477.5,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1213,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 328.5,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 477.5,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  }
+ },
+ "a-inicio-ana.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2344,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 507,
+   "fato": 709,
+   "card": null,
+   "acao": 1059.75,
+   "entrar": null,
+   "convite": 1884.5,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1893,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1555.5,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1893,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1555.5,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1893,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1555.5,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ },
+ "a-inicio-diego.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2499,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 507,
+   "fato": 709,
+   "card": null,
+   "acao": 1284.75,
+   "entrar": null,
+   "convite": 2087,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1871,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1533,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1871,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1533,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1871,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 529,
+   "fato": 680,
+   "card": null,
+   "acao": 776.5,
+   "entrar": null,
+   "convite": 1533,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ },
+ "b-publico.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2255,
+   "faixa_prototipo": 53,
+   "faixa_demo": 42.5,
+   "h1": 305,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 481,
+   "convite": null,
+   "conteudo": 343,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1424,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 466.65625,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 615.65625,
+   "convite": null,
+   "conteudo": 960,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1424,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 466.65625,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 615.65625,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1424,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 466.65625,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 615.65625,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  }
+ },
+ "b-inicio-ana.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 3151,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 351,
+   "fato": 575.390625,
+   "card": 1310.984375,
+   "acao": 1853.140625,
+   "entrar": null,
+   "convite": 2707.140625,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1890,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 443.390625,
+   "card": 828.09375,
+   "acao": 919.59375,
+   "entrar": null,
+   "convite": 1568.75,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1866,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 416.390625,
+   "card": 804.09375,
+   "acao": 895.59375,
+   "entrar": null,
+   "convite": 1544.75,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1866,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 416.390625,
+   "card": 804.09375,
+   "acao": 895.59375,
+   "entrar": null,
+   "convite": 1544.75,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ },
+ "b-inicio-diego.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2885,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 351,
+   "fato": 548.390625,
+   "card": 1116.171875,
+   "acao": 1658.328125,
+   "entrar": null,
+   "convite": 2489.828125,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1767,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 483.390625,
+   "card": 727.390625,
+   "acao": 818.890625,
+   "entrar": null,
+   "convite": 1445.546875,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1767,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 483.390625,
+   "card": 727.390625,
+   "acao": 818.890625,
+   "entrar": null,
+   "convite": 1445.546875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1767,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 273,
+   "fato": 483.390625,
+   "card": 727.390625,
+   "acao": 818.890625,
+   "entrar": null,
+   "convite": 1445.546875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ },
+ "c-publico.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 2384,
+   "faixa_prototipo": 53,
+   "faixa_demo": 42.5,
+   "h1": 305,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 481,
+   "convite": null,
+   "conteudo": 343,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1442,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 431.109375,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 580.109375,
+   "convite": null,
+   "conteudo": 960,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1418,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 431.109375,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 580.109375,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1418,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 431.109375,
+   "fato": null,
+   "card": null,
+   "acao": null,
+   "entrar": 580.109375,
+   "convite": null,
+   "conteudo": 1088,
+   "colunas": null,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  }
+ },
+ "c-inicio-ana.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 3405,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 351,
+   "fato": 539.390625,
+   "card": 1918.484375,
+   "acao": 1565.234375,
+   "entrar": null,
+   "convite": 2945.484375,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1857,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 710.390625,
+   "acao": 1128.6875,
+   "entrar": null,
+   "convite": 1487.6875,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1833,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 710.390625,
+   "acao": 1104.6875,
+   "entrar": null,
+   "convite": 1463.6875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1833,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 710.390625,
+   "acao": 1104.6875,
+   "entrar": null,
+   "convite": 1463.6875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ },
+ "c-inicio-diego.html": {
+  "rolagem": {
+   "320@100%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "320@200%": {
+    "largura": 320,
+    "rolagem": 320
+   },
+   "375@100%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "375@200%": {
+    "largura": 375,
+    "rolagem": 375
+   },
+   "768@100%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "768@200%": {
+    "largura": 768,
+    "rolagem": 768
+   },
+   "1024@100%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1024@200%": {
+    "largura": 1024,
+    "rolagem": 1024
+   },
+   "1280@100%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1280@200%": {
+    "largura": 1280,
+    "rolagem": 1280
+   },
+   "1440@100%": {
+    "largura": 1440,
+    "rolagem": 1440
+   },
+   "1440@200%": {
+    "largura": 1440,
+    "rolagem": 1440
+   }
+  },
+  "375x812": {
+   "largura": 375,
+   "rolagem": 375,
+   "altura_doc": 3093,
+   "faixa_prototipo": 53,
+   "faixa_demo": 69,
+   "h1": 351,
+   "fato": 539.390625,
+   "card": 1676.671875,
+   "acao": 1323.421875,
+   "entrar": null,
+   "convite": 2681.171875,
+   "conteudo": 343,
+   "colunas": 1,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 46
+  },
+  "1024": {
+   "largura": 1024,
+   "rolagem": 1024,
+   "altura_doc": 1750,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 916.171875,
+   "acao": 1011.671875,
+   "entrar": null,
+   "convite": 1348.171875,
+   "conteudo": 960,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 72
+  },
+  "1280x720": {
+   "largura": 1280,
+   "rolagem": 1280,
+   "altura_doc": 1750,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 916.171875,
+   "acao": 1011.671875,
+   "entrar": null,
+   "convite": 1348.171875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  },
+  "1440x900": {
+   "largura": 1440,
+   "rolagem": 1440,
+   "altura_doc": 1750,
+   "faixa_prototipo": 30.5,
+   "faixa_demo": 42.5,
+   "h1": 289,
+   "fato": 426.390625,
+   "card": 916.171875,
+   "acao": 1011.671875,
+   "entrar": null,
+   "convite": 1348.171875,
+   "conteudo": 1088,
+   "colunas": 2,
+   "h1s": 1,
+   "alvos_pequenos": 0,
+   "caracteres_max": 77
+  }
+ }
+}
