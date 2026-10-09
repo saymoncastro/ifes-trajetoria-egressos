@@ -2,8 +2,9 @@
 
 **Feature Branch**: `claude/029-pagina-publica`
 **Created**: 2026-10-09
-**Status**: Especificação para avaliação. Implementação **não autorizada**: terá autorização
-separada, depois da 026 integrada e da inclusão de "Contribuir com o Ifes".
+**Status**: Especificação para avaliação, com "Contribuir com o Ifes" incluído em 2026-10-09
+(026 T024), depois da 026 integrada na demonstração. Implementação **não autorizada**: terá
+autorização separada.
 **Input**: Pedido do solicitante em 2026-10-09, depois de um parecer externo sobre a página
 pública da 028. Reformulação visual e comunicacional substantiva da página pública, sem
 capacidade nova e sem revogar decisão da [ADR 0009](../../docs/adr/0009-camada-visual-do-portal.md).
@@ -17,8 +18,8 @@ Ifes oferece (oportunidades, formação continuada, eventos) e o egresso partici
 A primeira versão desta spec centrava a página na trajetória e no card. Agora a página abre
 pela relação, destaca oportunidades e participação, e apresenta trajetória e card como partes
 da experiência. Continua mostrando **só o que está disponível**: sem "Em construção" e sem
-alterar a ADR 0009. A contribuição do egresso (Volte ao Ifes) entra na página quando a
-[026](../026-volte-ao-ifes/spec.md) existir. O que "comunidade" pode ser está em
+alterar a ADR 0009. A contribuição do egresso (Volte ao Ifes) entra na página porque a
+[026](../026-volte-ao-ifes/spec.md) já existe na demonstração (revisão de 2026-10-09, T024). O que "comunidade" pode ser está em
 [alternativas de comunidade](../../docs/roadmap/2026-10-09-comunidade-alternativas.md).
 
 ## Contexto e dependências
@@ -161,14 +162,21 @@ as informações e que a pesquisa e o e-mail são opcionais, como formas de part
 - **FR-005 [Hipótese]**: O que a página apresenta como disponível DEVE ser só isto:
   1. **Ifes → egresso:** oportunidades que o Ifes divulgar para a formação (cursos,
      eventos, programas, carreira), **quando houver**, com o motivo e a página oficial;
-  2. **egresso → Ifes:** participar da pesquisa de acompanhamento, contando como a
-     trajetória seguiu, e deixar um e-mail para os convites (opcionais);
+  2. **egresso → Ifes:**
+     - oferecer uma contribuição (mentoria, experiência, vaga, pesquisa e extensão,
+       parceria, a própria história) à unidade da formação, acompanhar se o contato foi
+       registrado e retirar quando quiser (026), sem prazo nem resposta garantidos;
+     - participar da pesquisa de acompanhamento, contando como a trajetória seguiu, e
+       deixar um e-mail para os convites (opcionais);
   3. **trajetória:** ver as formações que o Ifes reconhece, com a origem, e guardar ou
      compartilhar o card.
 - **FR-006 [Arquitetura]**: A seção de participação DEVE apresentar a pesquisa e o e-mail
   como opcionais, o e-mail com a finalidade declarada na 020 (convite para pesquisas de
-  acompanhamento). Quando a 026 estiver implementada e ativa, "Contribuir com o Ifes" entra
-  nessa seção, com o mesmo peso de Oportunidades. Antes disso, a página não a menciona.
+  acompanhamento). "Contribuir com o Ifes" (026) abre essa seção, com o mesmo peso de
+  Oportunidades: texto próprio e um exemplo fictício de "Suas contribuições". O texto diz
+  quem recebe, que o contato é pelo e-mail informado na contribuição, que não há prazo
+  garantido e que se pode retirar. *(Revisado em 2026-10-09, T024 da 026: antes, a página
+  não mencionava a contribuição.)*
 - **FR-007 [Arquitetura]**: Os textos DEVEM respeitar as vedações da ADR 0009 (decisão 7),
   da 025 e da 018 FR-061, e NÃO DEVEM usar slogan. São provisórios da equipe, para
   aprovação da ACS com a CPAEG antes de uso real (D2, DP-801).
@@ -237,11 +245,12 @@ Evidência qualitativa com 5 a 8 participantes. A maioria é **referência**, n�
 estatística. Nenhuma resposta é tratada como conversão ou retenção.
 
 - **P-01 — Benefício real em 5 segundos**: depois de ver a primeira tela por 5 s, a pessoa
-  cita ao menos uma coisa real do FR-005 (oportunidades, participação ou trajetória).
+  cita ao menos uma coisa real do FR-005 (oportunidades, contribuir, participação ou
+  trajetória).
   Referência: maioria.
 - **P-02 — Nenhuma função inexistente**: anotado **separadamente** do P-01. A pessoa não
   atribui ao Portal função que não existe (rede, vagas garantidas, serviço, comunidade,
-  mensagens). Referência: nenhum participante. Uma atribuição já pede revisão do texto.
+  mensagens, programa de mentoria, resposta ou contato garantido a quem contribui). Referência: nenhum participante. Uma atribuição já pede revisão do texto.
 - **P-03 — O que espera encontrar**: a descrição livre do que haverá depois de entrar
   corresponde ao que existe.
 - **P-04 — Interesse declarado**: diz se entraria e por quê. É intenção declarada; não

@@ -69,6 +69,10 @@
 
   Checkpoint 1 continua **NÃO APLICADO**; a avaliação por IA não o aprova. D4 e D5 continuam
   `DECISÃO PENDENTE` e precisam ser resolvidas antes de uso real. A 027 continua fora.
+
+  Andamento em 2026-10-09: passo 1 concluído (026 integrada na demonstração, PR #56) e passo 2
+  concluído (029 com "Contribuir com o Ifes" na spec, no protótipo e no bloco P; T024 da 026).
+  O passo 3 aguarda autorização.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.

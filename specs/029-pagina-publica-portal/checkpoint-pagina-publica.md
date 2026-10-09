@@ -85,8 +85,8 @@ literal curta que o sustenta. Só "sim" conta.
 
 | Critério | Etapa | "Sim" quando a pessoa… | Referência |
 |---|---|---|---|
-| P-01: benefício real em 5 s | P1 | cita ao menos um destes: oportunidades divulgadas pelo Ifes para a formação; participar (pesquisa, e-mail); ver as formações reconhecidas pelo Ifes ou o card | maioria, na primeira versão vista |
-| P-02: nenhuma função inexistente | P1, P2 | **não** atribui ao Portal função que não existe (rede de contatos, vagas ou emprego garantidos, serviço, comunidade, mensagens, eventos próprios). Anotar **qual** foi atribuída | nenhum participante |
+| P-01: benefício real em 5 s | P1 | cita ao menos um destes: oportunidades divulgadas pelo Ifes para a formação; contribuir com o Ifes (oferecer-se à unidade); participar (pesquisa, e-mail); ver as formações reconhecidas pelo Ifes ou o card | maioria, na primeira versão vista |
+| P-02: nenhuma função inexistente | P1, P2 | **não** atribui ao Portal função que não existe (rede de contatos, vagas ou emprego garantidos, serviço, comunidade, mensagens, eventos próprios, programa de mentoria, resposta ou contato garantido a quem contribui). Anotar **qual** foi atribuída | nenhum participante |
 | P-03: espera o que existe | P2 | descreve o que haverá depois de entrar de modo compatível com o que existe | maioria |
 | P-04: interesse declarado | P2 | diz que entraria e dá um motivo ligado a um benefício real | registro, sem limiar |
 | P-05: motivo para voltar | P2 | — (só registro, para o roadmap) | sem limiar |

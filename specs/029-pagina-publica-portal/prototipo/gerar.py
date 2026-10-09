@@ -82,7 +82,10 @@ CSS = """
 .pp-ilustra .oportunidade-titulo { font-size: var(--fonte-3); margin: .25rem 0 .5rem; }
 .pp-participar { display: grid; gap: 1.25rem; }
 .pp-participar > div { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
-.pp-participar h3 { margin: 0 0 .5rem; }
+.pp-participar h3, .pp-participar-item h3 { margin: 0 0 .5rem; }
+.pp-participar-item { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
+.pp-contribuir { border-top: 0; padding-block: 0; margin-bottom: 2rem; }
+.pp-marco { color: var(--cor-acao); font-weight: 700; }
 .pp-final { padding-block: 2.5rem; }
 .pp-final h2 { font-size: var(--fonte-1); margin: 0 0 .5rem; }
 /* No celular a cópia decorativa do card sai: a demonstração mostra o card logo abaixo. */
@@ -148,6 +151,15 @@ def oportunidade(categoria, titulo, resumo, por_que, origem, titulo_tag="h4") ->
             + (f'<p class="oportunidade-origem">{e(origem)}</p>' if origem else ""))
 
 
+def contribuicao_exemplo(formacao) -> str:
+    """Uma contribuição como aparece em "Suas contribuições" (026), com a formação fictícia
+    do restante da página."""
+    return ('<p class="oportunidade-categoria">Sua contribuição</p>'
+            '<h4 class="oportunidade-titulo">Compartilhar experiência</h4>'
+            f"<p>{e(formacao.curso)} · Unidade {e(formacao.unidade)} · enviada em 07/10/2026</p>"
+            f'<p class="pp-marco">A unidade {e(formacao.unidade)} registrou contato em 09/10/2026.</p>')
+
+
 def proposta_main(base: str) -> str:
     sintese, linha, card, narrativa = demonstracao()
     primeira, ultima = narrativa.formacoes[0], narrativa.formacoes[-1]
@@ -169,7 +181,7 @@ def proposta_main(base: str) -> str:
     <div>
       <p class="pp-kicker">Portal do Egresso · Ifes</p>
       <h1 id="proposta-portal">Sua história com o Ifes</h1>
-      <p class="pp-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
+      <p class="pp-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, ofereça sua contribuição, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
       <div class="pp-acoes">
         <p><a class="portal-botao" href="{e(entrar)}">Conhecer o Portal</a></p>
         <p><a class="pp-secundaria" href="#oferece">Ver como funciona</a></p>
@@ -207,6 +219,14 @@ def proposta_main(base: str) -> str:
   <div class="portal-container">
     <p class="pp-kicker pp-kicker-verde">Você e o Ifes</p>
     <h2 id="titulo-participar">Como você participa</h2>
+    <div class="pp-linha pp-contribuir">
+      <div class="pp-participar-item">
+        <h3>Contribua com o Ifes</h3>
+        <p>Ofereça-se para conversar com estudantes, ser mentor, divulgar uma vaga da sua área, participar de projetos ou propor uma parceria. A unidade da formação que você escolher recebe e pode entrar em contato pelo e-mail que você informar. Não há prazo garantido.</p>
+        <p>Você acompanha o que enviou, vê quando a unidade registra o contato e pode retirar quando quiser.</p>
+      </div>
+      <div class="pp-ilustra pp-branco">{selo}{contribuicao_exemplo(ultima)}</div>
+    </div>
     <div class="pp-participar">
       <div>
         <h3>Conte como sua trajetória seguiu</h3>

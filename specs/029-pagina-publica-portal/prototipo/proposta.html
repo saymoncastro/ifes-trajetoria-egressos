@@ -619,6 +619,10 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 .inicio-oportunidades.compacto-3 p { margin-block: 0 .25rem; font-size: var(--fonte-5); }
 .inicio-oportunidades.compacto-3 h2 { margin-bottom: .25rem; }
 .inicio-oportunidades .inicio-ver-oportunidades { margin-bottom: 0; }
+/* 026 (plan R10): bloco "Contribuir com o Ifes", entre Oportunidades e o convite. */
+.inicio-contribuir { margin-block: 0 2rem; }
+.inicio-contribuir h2 { margin-top: 0; }
+.inicio-contribuir > :last-child { margin-bottom: 0; }
 .narrativa-abertura { display: grid; gap: .75rem 2rem; align-items: start; }
 .narrativa-figura { margin-bottom: 0; }
 .narrativa-capitulo { max-width: 100%; }
@@ -715,7 +719,10 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 .pp-ilustra .oportunidade-titulo { font-size: var(--fonte-3); margin: .25rem 0 .5rem; }
 .pp-participar { display: grid; gap: 1.25rem; }
 .pp-participar > div { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
-.pp-participar h3 { margin: 0 0 .5rem; }
+.pp-participar h3, .pp-participar-item h3 { margin: 0 0 .5rem; }
+.pp-participar-item { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
+.pp-contribuir { border-top: 0; padding-block: 0; margin-bottom: 2rem; }
+.pp-marco { color: var(--cor-acao); font-weight: 700; }
 .pp-final { padding-block: 2.5rem; }
 .pp-final h2 { font-size: var(--fonte-1); margin: 0 0 .5rem; }
 /* No celular a cópia decorativa do card sai: a demonstração mostra o card logo abaixo. */
@@ -806,7 +813,7 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
     <div>
       <p class="pp-kicker">Portal do Egresso · Ifes</p>
       <h1 id="proposta-portal">Sua história com o Ifes</h1>
-      <p class="pp-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
+      <p class="pp-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, ofereça sua contribuição, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
       <div class="pp-acoes">
         <p><a class="portal-botao" href="http://127.0.0.1:8000/entrar/">Conhecer o Portal</a></p>
         <p><a class="pp-secundaria" href="#oferece">Ver como funciona</a></p>
@@ -844,6 +851,14 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
   <div class="portal-container">
     <p class="pp-kicker pp-kicker-verde">Você e o Ifes</p>
     <h2 id="titulo-participar">Como você participa</h2>
+    <div class="pp-linha pp-contribuir">
+      <div class="pp-participar-item">
+        <h3>Contribua com o Ifes</h3>
+        <p>Ofereça-se para conversar com estudantes, ser mentor, divulgar uma vaga da sua área, participar de projetos ou propor uma parceria. A unidade da formação que você escolher recebe e pode entrar em contato pelo e-mail que você informar. Não há prazo garantido.</p>
+        <p>Você acompanha o que enviou, vê quando a unidade registra o contato e pode retirar quando quiser.</p>
+      </div>
+      <div class="pp-ilustra pp-branco"><span class="portal-selo">Exemplo com dados fictícios</span><p class="oportunidade-categoria">Sua contribuição</p><h4 class="oportunidade-titulo">Compartilhar experiência</h4><p>Bacharelado em Engenharia Civil · Unidade Vitória · enviada em 07/10/2026</p><p class="pp-marco">A unidade Vitória registrou contato em 09/10/2026.</p></div>
+    </div>
     <div class="pp-participar">
       <div>
         <h3>Conte como sua trajetória seguiu</h3>
