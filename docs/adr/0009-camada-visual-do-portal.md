@@ -89,6 +89,9 @@ feature de interface reproduziria o padrão atual.
   FR-018).
 - A camada do Portal acrescenta **um** tamanho de destaque, 40 px e peso 700, só para o h1
   das telas do Portal.
+- **Esclarecimento (2026-10-09, solicitante):** os 40 px valem a partir de 768 px de
+  largura. No celular, o h1 mantém os 28 px da 015, para que título e primeiro fato caibam
+  na primeira tela (critério do celular, decisão 2). É o comportamento da Feature 028.
 - A tipografia da marca (Open Sans) aparece por meio da imagem do card, que já a embute.
 - Reversível: Open Sans servida pela aplicação, só nos títulos, pode ser reavaliada se os
   protótipos ou a implementação parecerem genéricos, demonstrando a necessidade (015

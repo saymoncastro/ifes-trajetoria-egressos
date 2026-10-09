@@ -16,7 +16,7 @@ ou o instrumento: as revisões de requisitos vêm nas specs de implementação.
 | 1 | Layout e tokens próprios do Portal (R1, R2, R3) | **Aprovada** | 2026-10-09 |
 | 2 | Leitura da Constituição XXI para o Portal (R4) | **Aprovada** (interpretação, sem emenda) | 2026-10-09 |
 | 3 | D-02: cor de ação | **Aprovada** (tratamento provisório no Portal; D-02 definitiva segue institucional) | 2026-10-09 |
-| 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque) | 2026-10-09 |
+| 4 | Fonte (R5) | **Aprovada** (`system-ui` + tamanho de destaque; 28 px no celular) | 2026-10-09 |
 | 5 | Fotografia institucional (R7) | **Aprovada** | 2026-10-09 |
 | 6 | Página pública (R9) | **Aprovada** | 2026-10-09 |
 | 7 | Vocabulário e saudação (R8) | **Aprovada** (mantida e estendida à página pública) | 2026-10-09 |
@@ -104,6 +104,9 @@ CPAEG e não é pré-requisito.
 - A camada de tokens do Portal acrescenta **um** tamanho de destaque, **40 px, peso
   700**, só para o título principal (h1) das telas do Portal. Os tamanhos da 015 não
   mudam.
+- **Esclarecimento (2026-10-09, solicitante):** 28 px no celular e 40 px no desktop. Na
+  implementação (028), os 40 px começam em 768 px de largura; abaixo disso vale o
+  tamanho de 28 px da 015, para que título e primeiro fato caibam na primeira tela.
 - A tipografia da marca (Open Sans) aparece no Portal só por meio da imagem do card, que
   já é gerada com as fontes embutidas (`narrativa/fontes`, OFL).
 - **Reversível:** se os protótipos ou a implementação parecerem genéricos, Open Sans
