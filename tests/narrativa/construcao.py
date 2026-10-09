@@ -190,7 +190,7 @@ def caso_quatro():
 
 def caso_sem_imagem_propria():
     """Unidade sem entrada no catálogo de imagens: cai na genérica, com a legenda da
-    unidade da formação."""
+    imagem efetivamente usada."""
     return compartilhavel(
         [formacao_card("Engenharia de Controle e Automação", "Linhares", "Graduação",
                        "Presencial", 2019)],

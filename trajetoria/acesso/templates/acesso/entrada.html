@@ -1,11 +1,11 @@
-{% extends "interface/base.html" %}
+{% extends layout_base|default:"interface/base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
 {% block conteudo %}
 {% if rotulo %}<p class="rotulo-entrada">{{ rotulo }}</p>
 {% endif %}<h1>{{ titulo }}</h1>
 {% if base_indevida %}<p role="alert">{{ base_indevida }}</p>{% else %}
 <p>Use o CPF e a data de nascimento registrados no Ifes.</p>
-{% if continuar and pessoa_demonstracao and not tentativa_falhou %}<p><a href="{{ continuar.1 }}">{{ continuar.0 }}</a></p>{% endif %}
+{% if continuar and pessoa_demonstracao and not tentativa_falhou %}<p class="ligacao-isolada"><a href="{{ continuar.1 }}">{{ continuar.0 }}</a></p>{% endif %}
 {# 023 FR-001, FR-003, FR-030: aviso de chegada (sessão encerrada, envio guardado, selo vencido). #}
 {% if chegada %}<div class="aviso" role="status">{% for frase in chegada %}<p>{{ frase }}</p>{% endfor %}</div>{% endif %}
 {% if aviso %}<div class="aviso" role="status" tabindex="-1" autofocus><p>{{ aviso }}</p>
@@ -23,10 +23,10 @@
 {% for erro in campo.errors %}<p id="erro-{{ campo.name }}" class="erro">{{ erro }}</p>{% endfor %}
 <p id="dica-{{ campo.name }}" class="dica">{% if campo.name == 'cpf' %}Somente números ou no formato 000.000.000-00{% else %}Só os números, por exemplo 05031994, ou DD/MM/AAAA{% endif %}</p></div>{% endfor %}
 <button type="submit">Continuar</button></form>
-<section aria-labelledby="titulo-painel"><h2 id="titulo-painel">Dados fictícios para demonstração</h2>
+{% if painel_recolhido %}<details class="painel-ficticio"><summary>Dados fictícios para demonstração</summary>{% else %}<section aria-labelledby="titulo-painel"><h2 id="titulo-painel">Dados fictícios para demonstração</h2>{% endif %}
 <p>Use apenas os dados fictícios abaixo para conhecer a demonstração.</p>
 <table class="acesso-painel"><caption>Credenciais exclusivamente fictícias</caption><thead><tr><th scope="col">Pessoa</th><th scope="col">CPF</th><th scope="col">Nascimento</th><th scope="col">Caso e ação</th></tr></thead><tbody>
 {% for linha in painel %}<tr><th scope="row">{{ linha.nome }}</th><td>{{ linha.cpf|default:'—' }}</td><td>{{ linha.nascimento|default:'—' }}</td><td><p>{{ linha.nota|default:'Dados disponíveis' }}</p>
 <form method="post" action="{{ acao }}">{% csrf_token %}<input type="hidden" name="cpf" value="{{ linha.cpf }}"><input type="hidden" name="data_nascimento" value="{{ linha.nascimento }}"><button type="submit" aria-label="Usar estes dados de {{ linha.nome }}">Usar estes dados</button></form></td></tr>{% endfor %}</tbody></table>
-</section>{% endif %}
+{% if painel_recolhido %}</details>{% else %}</section>{% endif %}{% endif %}
 {% endblock %}

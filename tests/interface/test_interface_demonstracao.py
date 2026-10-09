@@ -74,7 +74,7 @@ def test_painel_ficticio_nao_depende_do_preparo(client):
 def test_inicio_redireciona_conforme_a_pessoa(client, pessoas):
     # Raiz revisada pela 024 (FR-005): com o Portal ligado, é a entrada do Portal. Com ele
     # desligado, a raiz é a desta feature (tests/portal/test_desabilitado.py).
-    assert client.get("/")["Location"] == "/entrar/"
+    assert client.get("/").status_code == 200
     ci.entrar_como(client, pessoas["SIM-P-0001"])
     assert client.get("/")["Location"] == "/inicio/"
 

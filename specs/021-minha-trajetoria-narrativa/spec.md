@@ -1374,3 +1374,12 @@ Referência: [024 — Início do egresso e shell do Portal](../024-inicio-egress
   - a grade dos destaques usa `minmax(0, 1fr)`.
 - **Inalterados:** textos, dados, contrato da narrativa e card.
 - **Verificação:** com Maria (SIM-P-0003), `scrollWidth` igual à largura a 320 px e a 375 px, com fonte a 100% e a 200%. Teste: `tests/narrativa/test_pagina.py::test_css_cabe_em_320px_com_fonte_a_200`.
+
+## Nota de revisão pela Feature 028 (2026-10-09)
+
+A [028](../028-camada-visual-portal/spec.md) aplica a decisão 5 da ADR 0009 ao FR-076:
+a legenda usa a unidade da imagem efetivamente escolhida. A imagem genérica nunca é
+atribuída à unidade da formação e usa “Ifes · ilustração”. A correção vale para todos
+os consumidores da legenda, inclusive card e vídeo; pode alterar a geometria da
+pílula da legenda. A página recebe a base visual nova só com o Portal ligado; conteúdo,
+elegibilidade, opções do card e vídeo não mudam. DP-2106 continua pendente.

@@ -13,6 +13,7 @@ from trajetoria.acesso.sessao import encerrar, pessoa_em_uso
 from trajetoria.acesso.views import identificar
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
+from trajetoria.portal.exemplo import card_de_exemplo
 from trajetoria.portal.inicio import montar_inicio
 
 _PRODUTO = {"produto": mensagens.PRODUTO, "produto_subtitulo": mensagens.PRODUTO_SUBTITULO}
@@ -34,7 +35,9 @@ def _destino_com_sujeito(request) -> str | None:
 @require_GET
 def entrada(request):
     """A raiz com o Portal ligado (FR-005): acesso espontâneo."""
-    return _ir(_destino_com_sujeito(request) or "/entrar/")
+    if destino := _destino_com_sujeito(request):
+        return _ir(destino)
+    return render(request, "portal/publico.html", {**_PRODUTO, "card_exemplo": card_de_exemplo()})
 
 
 @never_cache
@@ -52,7 +55,7 @@ def entrar(request):
         rotulo=mensagens.ROTULO_ENTRADA,
         continuar=None,
         aviso_de_envio=False,
-        contexto=_PRODUTO,
+        contexto={**_PRODUTO, "layout_base": "portal/base.html", "painel_recolhido": True},
     )
 
 

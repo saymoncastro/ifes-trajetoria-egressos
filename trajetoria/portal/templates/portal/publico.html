@@ -1,0 +1,42 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Veja sua trajetória no Ifes{% endblock %}
+{% block conteudo %}
+<section class="portal-faixa" aria-labelledby="proposta-portal">
+  <div class="portal-container portal-hero">
+    <div>
+      <p class="suave">Portal do Egresso</p>
+      <h1 id="proposta-portal">Veja o que o Ifes registra sobre a sua formação</h1>
+      <p class="proposta">No Portal do Egresso, você encontra as formações que concluiu no Ifes, de onde vêm essas informações e um card da sua trajetória para compartilhar.</p>
+      <p><a class="portal-botao" href="/entrar/">Entrar no Portal</a></p>
+      <p class="suave">Para entrar, confirme seu CPF e sua data de nascimento.</p>
+    </div>
+    <figure class="portal-exemplo">
+      <span class="portal-selo">Exemplo com dados fictícios</span>
+      {{ card_exemplo }}
+      <figcaption>Card de exemplo. As formações e os dados são fictícios.</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="portal-container portal-secao" aria-labelledby="encontrar-portal">
+  <h2 id="encontrar-portal">O que você encontra</h2>
+  <div class="portal-blocos">
+    <div class="portal-bloco"><h3>Sua trajetória</h3><p>As formações que você concluiu no Ifes, com ano, curso e unidade, a partir dos registros acadêmicos.</p></div>
+    <div class="portal-bloco"><h3>Seu card</h3><p>Uma imagem vertical da sua trajetória para o story ou o status das redes sociais.</p></div>
+    <div class="portal-bloco"><h3>Oportunidades</h3><p>Cursos, eventos e programas divulgados pelo Ifes, quando houver algum para a sua formação.</p></div>
+    <div class="portal-bloco"><h3>Seu e-mail</h3><p>O endereço que o Ifes usa para convidar você para pesquisas de acompanhamento. Informar é opcional.</p></div>
+  </div>
+</section>
+<section class="portal-container portal-secao" aria-labelledby="usar-portal">
+  <h2 id="usar-portal">Como usar</h2>
+  <ol class="portal-passos">
+    <li><h3>Confirme seus dados</h3><p>CPF e data de nascimento, para o Ifes localizar suas formações.</p></li>
+    <li><h3>Veja sua trajetória</h3><p>As formações registradas pelo Ifes, com a origem de cada informação.</p></li>
+    <li><h3>Compartilhe, se quiser</h3><p>Baixe o card e publique no story ou no status.</p></li>
+  </ol>
+</section>
+<section class="portal-container portal-secao" aria-labelledby="pesquisa-portal">
+  <h2 id="pesquisa-portal">Pesquisa de acompanhamento</h2>
+  <p>Quando o Ifes abre uma pesquisa de acompanhamento para a sua formação, o Portal mostra o convite. Responder é como você atualiza sua trajetória com o Ifes. Você vê sua trajetória sem precisar responder.</p>
+  <p><a class="portal-botao" href="/entrar/">Entrar no Portal</a></p>
+</section>
+{% endblock %}

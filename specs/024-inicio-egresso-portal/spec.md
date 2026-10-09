@@ -766,3 +766,13 @@ antes de aplicá-lo.
   - Impacto: FR-009.
   - Tratamento provisório: só na demonstração. Os dados são os mesmos que a pessoa já vê
     na escolha de formações.
+
+## Nota de revisão pela Feature 028 (2026-10-09)
+
+A [028](../028-camada-visual-portal/spec.md) aplica a ADR 0009, direção B escolhida
+pelo solicitante. FR-005 passa a apresentar página pública em `/` sem sujeito; Pessoa
+e declarante conservam seus destinos. FR-026 admite base, tokens, grade e hero próprios
+no Portal. O Início incorpora prévia sem nome do card e agregados da narrativa existente,
+sem leitura de Resposta ou contato nem escrita nova. A ordem FR-016/FR-020 e o caminho
+direto do convite permanecem. O painel fictício é recolhido só em `/entrar/`.
+Checkpoint 1 continua **NÃO APLICADO**.

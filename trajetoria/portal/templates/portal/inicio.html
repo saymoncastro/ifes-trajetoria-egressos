@@ -1,36 +1,47 @@
-{% extends "interface/base.html" %}
+{% extends "portal/base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
-{% block estilo %}{% include "narrativa/narrativa.css" %}
-{% include "portal/inicio.css" %}
-{% include "portal/oportunidades.css" %}{% endblock %}
-{% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
+{% block estilo %}{% include "portal/oportunidades.css" %}{{ block.super }}{% endblock %}
 {% block conteudo %}
-{# 024 contracts/inicio.md: reconhecimento → proveniência → ações → Oportunidades (025) → convite. #}
-{% if reconhecimento %}
-<div class="narrativa-abertura inicio-abertura">
-  <figure class="narrativa-figura">
-    {{ reconhecimento.abertura.imagem }}
-    <figcaption>{{ reconhecimento.abertura.legenda }}</figcaption>
-  </figure>
-  <h1>{{ titulo }}</h1>
-  {% for frase in reconhecimento.sintese %}<p class="narrativa-registro">{{ frase }}</p>{% endfor %}
+<div class="portal-faixa">
+  <div class="portal-container inicio-reconhecimento{% if reconhecimento.formacoes|length > 1 %} varias{% endif %}">
+    <div>
+      <h1>{{ titulo }}</h1>
+      {% if reconhecimento %}
+      {% for frase in reconhecimento.sintese %}<p class="inicio-sintese">{{ frase }}</p>{% endfor %}
+      <ul class="inicio-formacoes">
+        {% for formacao in reconhecimento.formacoes %}
+        <li>{% for frase in formacao %}{% if forloop.first and frase.ano %}<span class="inicio-ano" aria-hidden="true">{{ frase.ano }}</span>{% endif %}<p{% if frase.atributos %} class="inicio-atributos"{% endif %}>{{ frase.texto }}{% if frase.origem %} <span class="inicio-origem">{{ frase.origem }}</span>{% endif %}</p>{% endfor %}</li>
+        {% endfor %}
+      </ul>
+      {% elif sem_formacao %}<p>{{ sem_formacao }}</p>{% endif %}
+    </div>
+    {% if reconhecimento.numeros %}
+    <section class="inicio-numeros" aria-labelledby="inicio-naquele-ano">
+      <h2 id="inicio-naquele-ano">Naquele ano no Ifes</h2>
+      {% for item in reconhecimento.numeros %}<div class="inicio-numero"><strong aria-hidden="true">{{ item.numero }}</strong><p>{{ item.texto }}</p></div>{% endfor %}
+      {% for frase in reconhecimento.apuracoes %}<p class="suave">{{ frase }}</p>{% endfor %}
+    </section>
+    {% endif %}
+    {% if proveniencia %}<p class="inicio-proveniencia">{{ proveniencia }}</p>{% endif %}
+  </div>
 </div>
-<ul class="inicio-formacoes">
-  {% for formacao in reconhecimento.formacoes %}
-  <li>{% for frase in formacao %}<p{% if frase.atributos %} class="inicio-atributos"{% endif %}>{{ frase.texto }}{% if frase.origem %} <span class="inicio-origem">{{ frase.origem }}</span>{% endif %}</p>{% endfor %}</li>
-  {% endfor %}
-</ul>
-{% else %}
-<h1>{{ titulo }}</h1>
-{% if sem_formacao %}<p>{{ sem_formacao }}</p>{% endif %}
-{% endif %}
-{% if proveniencia %}<p class="inicio-proveniencia">{{ proveniencia }}</p>{% endif %}
-<section aria-labelledby="inicio-acoes">
-  <h2 id="inicio-acoes">{{ titulo_acoes }}</h2>
-  <ul class="lista-simples inicio-acoes">
-    {% for acao in acoes %}<li><a href="{{ acao.endereco }}">{{ acao.rotulo }}</a></li>{% endfor %}
-  </ul>
+<section class="inicio-area-acoes portal-secao" aria-labelledby="inicio-acoes">
+  <div class="portal-container">
+    <h2 id="inicio-acoes">{{ titulo_acoes }}</h2>
+    <div class="inicio-acoes-grade">
+      {% if reconhecimento %}
+      <figure class="inicio-card portal-bloco">
+        <img src="{{ reconhecimento.card_arquivo }}" alt="{{ reconhecimento.card_alt }}" width="240" height="427">
+        <figcaption><h3>Seu card</h3><p>Uma imagem vertical da sua trajetória para compartilhar.</p><p><a href="{{ acao_card.endereco }}">{{ acao_card.rotulo }}</a></p></figcaption>
+      </figure>
+      {% endif %}
+      <ul class="inicio-acoes">
+        {% for acao in acoes %}<li class="portal-bloco"><a href="{{ acao.endereco }}">{{ acao.rotulo }}</a></li>{% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
+<div class="portal-container portal-secao">
 {% if oportunidades %}
 <section class="inicio-oportunidades{% if oportunidades.compacto %} compacto-{{ oportunidades.compacto }}{% endif %}" aria-labelledby="inicio-oportunidades">
   <h2 id="inicio-oportunidades">{{ oportunidades.titulo }}</h2>
@@ -45,4 +56,5 @@
   {% if convite.acao %}<p><a class="botao" href="/formacoes/">{{ convite.acao }}</a></p>{% endif %}
 </section>
 {% endif %}
+</div>
 {% endblock %}

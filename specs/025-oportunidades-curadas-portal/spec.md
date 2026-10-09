@@ -1194,3 +1194,12 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
     - comparação exata do texto registrado, com as grafias visíveis ao operador;
     - sem correspondência aproximada nem catálogo paralelo;
     - adotar um código exigiria evoluir o contrato da fonte (001) em spec própria.
+
+## Nota de revisão pela Feature 028 (2026-10-09)
+
+A [028](../028-camada-visual-portal/spec.md) absorve o destaque do Início e harmoniza
+a página do egresso com a base visual própria da ADR 0009, direção B. As vedações
+antigas de tokens próprios/grade se delimitam ao instrumento; não impedem essa
+apresentação do Portal. Pertinência, explicação, origem, escopo, catálogo e curadoria
+permanecem. O orçamento móvel de 270 px do destaque permanece verificável, com todos
+os campos presentes.

@@ -156,7 +156,7 @@ def test_dois_destaques_iguais_ao_card():
 
 def test_legenda_sem_imagem_propria_e_sem_unidade():
     sem_imagem = _textos_das_partes({"zonas": [zona(composicao("sem_imagem"), "legenda")]})
-    assert sem_imagem == ["Unidade Linhares · ilustração"]
+    assert sem_imagem == ["Ifes · ilustração"]  # 028: a imagem genérica não é de Linhares.
     sem_unidade = _textos_das_partes({"zonas": [zona(composicao("sem_unidade"), "legenda")]})
     assert sem_unidade == ["Ifes · ilustração"]
     for texto in sem_imagem + sem_unidade:

@@ -40,7 +40,7 @@ def test_abertura_com_imagem_e_legenda_sem_ano(pagina):
     abertura = html.split('<div class="narrativa-abertura">')[1].split("</div>")[0]
     assert '<svg aria-hidden="true"' in abertura and "<text" not in abertura
     legenda = re.search(r"<figcaption>(.*?)</figcaption>", abertura).group(1)
-    assert legenda == "Unidade Serra · ilustração"
+    assert legenda == "Ifes · ilustração"
     assert not re.search(r"\b\d{4}\b", legenda)
 
 

@@ -25,6 +25,9 @@ _CONFIRMACAO = re.compile(r"^/participacoes/[^/]+/concluida/$")
 _TELAS_COM_NAVEGACAO = frozenset(
     {"/inicio/", "/formacoes/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/"}
 )
+_TELAS_COM_LAYOUT = frozenset(
+    {"/inicio/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/"}
+)
 
 
 def _atual(caminho: str, endereco: str) -> bool:
@@ -77,4 +80,6 @@ def navegacao(request) -> dict:
     }
     if _tela_com_navegacao(request.path):
         contexto.update(_shell_do_portal())
+    if request.path in _TELAS_COM_LAYOUT:
+        contexto["layout_base"] = "portal/base.html"
     return contexto

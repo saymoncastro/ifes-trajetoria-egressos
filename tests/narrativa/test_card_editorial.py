@@ -264,8 +264,7 @@ def test_h_legenda_honesta_e_sem_ano(caso):
     legenda = " ".join(t.text for t in _textos(svg) if _classe(t) == "legenda")
     assert re.fullmatch(r"(Unidade .+|Ifes) · (ilustração|fotografia)", legenda), legenda
     assert not re.search(r"\b\d{4}\b", legenda)
-    unidade = c.formacoes[0].unidade
-    assert legenda.startswith(f"Unidade {unidade} ·" if unidade else "Ifes ·")
+    assert legenda == "Ifes · ilustração"  # catálogo atual: só a genérica (028)
 
 
 # --- (i) Catálogo e vedações --------------------------------------------------------------

@@ -11,7 +11,7 @@ from collections import Counter
 import pytest
 
 from tests.video.construcao import CASOS, NOME
-from trajetoria.narrativa import card
+from trajetoria.narrativa import card, catalogo, imagens
 
 SVG_ANTES_DAS_ZONAS = {
     ("maria", None): "5ebfc248e7d575d786599ada3c6b8b5249b29097c06704f3f599b0cb2eb3069f",
@@ -34,8 +34,16 @@ CASOS_E_NOMES = sorted(SVG_ANTES_DAS_ZONAS, key=lambda c: (c[0], c[1] or ""))
 
 
 @pytest.mark.parametrize(("caso", "nome"), CASOS_E_NOMES)
-def test_svg_do_card_identico_ao_de_antes_das_zonas(caso, nome):
-    svg = card.card_svg(CASOS[caso](), nome=nome)
+def test_svg_do_card_identico_ao_de_antes_das_zonas(caso, nome, monkeypatch):
+    # 028 corrige a legenda e sua geometria. Reproduzir só a legenda histórica mantém
+    # a prova do agrupamento em zonas contra os hashes originais, sem regravar fixtures.
+    compartilhavel = CASOS[caso]()
+    unidade = compartilhavel.unidade_da_imagem
+    monkeypatch.setattr(imagens, "legenda", lambda imagem: (
+        catalogo.LEGENDA.format(unidade=unidade, tipo=imagem.tipo) if unidade
+        else catalogo.LEGENDA_SEM_UNIDADE.format(tipo=imagem.tipo)
+    ))
+    svg = card.card_svg(compartilhavel, nome=nome)
     assert hashlib.sha256(svg.encode()).hexdigest() == SVG_ANTES_DAS_ZONAS[(caso, nome)]
 
 

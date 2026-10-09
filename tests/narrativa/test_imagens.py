@@ -40,7 +40,11 @@ def test_escolha_pela_unidade_cai_na_generica():
         imagens.CATALOGO = original
 
 
-def test_legenda_pela_unidade_da_formacao():
+def test_legenda_pela_imagem_efetivamente_usada():
     generica = imagens.imagem_para(None)
-    assert imagens.legenda(generica, "Serra") == "Unidade Serra · ilustração"
-    assert imagens.legenda(generica, None) == "Ifes · ilustração"
+    assert imagens.legenda(generica) == "Ifes · ilustração"
+
+
+def test_legenda_propria_nao_usa_unidade_de_outra_formacao():
+    propria = imagens.ImagemInstitucional("Serra", "x.svg", "fotografia", "ACS", "cedida")
+    assert imagens.legenda(propria) == "Unidade Serra · fotografia"

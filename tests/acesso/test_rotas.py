@@ -28,7 +28,7 @@ def test_entrada_e_confirmacao(preparado, client):
 
 
 def test_metodos_csrf_compatibilidade_e_raiz(preparado, client, settings):
-    assert client.get("/")["Location"] == "/entrar/"  # 024 FR-005: entrada do Portal
+    assert client.get("/").status_code == 200  # 024 FR-005: entrada do Portal
     assert client.get("/formacoes/")["Location"] == "/acesso/"
     assert Client(enforce_csrf_checks=True).post("/acesso/").status_code == 403
     assert client.put("/acesso/").status_code == 405

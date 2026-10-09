@@ -36,6 +36,11 @@
   própria do Portal (layout, tokens, verde provisório, página pública), com o instrumento
   preservado. Próximos passos: protótipos de três direções, escolha e spec da camada
   visual. O Checkpoint 1 continua **NÃO APLICADO** e a 026 continua fora.
+- **Revisão 7 (2026-10-09).** O PR #51 foi integrado e o solicitante escolheu a direção
+  **B — trajetória**. A [028](../../specs/028-camada-visual-portal/spec.md) implementa
+  localmente a camada visual da ADR 0009 na demonstração, com evidências e verificações
+  registradas na feature. Os números 026/027 permanecem reservados ao roadmap; a escolha
+  não libera esses trabalhos. Checkpoint 1 continua **NÃO APLICADO**.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
