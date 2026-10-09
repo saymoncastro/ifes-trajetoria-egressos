@@ -6,9 +6,9 @@ Um rascunho visual com as decisões 1 a 5 está em
 [`docs/prototipos-rascunho/`](../prototipos-rascunho/inicio-combinacao.html), só para noção
 visual; será substituído pelos protótipos das direções.
 
-Ao fim das nove decisões, este registro será consolidado numa única ADR (prevista como
-0009, "camada visual do Portal"). Até lá, nenhuma decisão aqui altera spec, código ou o
-instrumento.
+**Consolidado na [ADR 0009](../adr/0009-camada-visual-do-portal.md) em 2026-10-09.** Este
+registro guarda o texto aprovado de cada decisão. Nenhuma decisão aqui altera spec, código
+ou o instrumento: as revisões de requisitos vêm nas specs de implementação.
 
 | # | Decisão (§15) | Situação | Data |
 |---|---|---|---|
@@ -21,7 +21,7 @@ instrumento.
 | 7 | Vocabulário e saudação (R8) | **Aprovada** (mantida e estendida à página pública) | 2026-10-09 |
 | 8 | Pendência no desktop (R10) | **Aprovada** (sem antecipação; revisão após o Checkpoint 1) | 2026-10-09 |
 | 9 | Ordem em relação à 025 | Resolvida pelos fatos (a 025 veio antes; auditoria §13) | 2026-10-09 |
-| 10 | Escopo dos protótipos | Em discussão | — |
+| 10 | Escopo dos protótipos | **Aprovada** | 2026-10-09 |
 
 ## Decisão 1 — Layout e tokens próprios do Portal
 
@@ -194,3 +194,26 @@ CPAEG e não é pré-requisito.
   instrumento (D7).
 - **Revisão:** se o Checkpoint 1 mostrar que as pessoas não encontram a pesquisa (SC-012
   falha), a posição volta à discussão com essa evidência.
+
+## Decisão 10 — Escopo dos protótipos
+
+**Aprovada pelo solicitante em 2026-10-09.**
+
+1. **Três direções:** A (institucional), B (trajetória) e a combinação, todas dentro das
+   decisões 1 a 8 (verde, `system-ui` com tamanho de destaque, sem nome, convite depois das
+   ações, vocabulário da 024). A B perde a Open Sans (decisão 4); a A tem a foto marcada
+   como "aguarda ACS" (decisão 5).
+2. **Três telas por direção (nove):** página pública; Início da Ana (uma formação, pior caso
+   da B); Início do Diego (três formações).
+3. **Larguras:** 375, 1024 e 1440 px; primeira tela a 1280×720; 320 px com fonte a 200%.
+   Avaliação pelo celular primeiro (decisão 2).
+4. **Prancha da passagem** do Portal para o instrumento: "Responder" verde no Início ao lado
+   da primeira tela da pesquisa em azul (decisão 3).
+5. **Formato:** HTML estático com os tokens reais da 015 e da camada do Portal, sem
+   JavaScript, com textos e números das personas fictícias. Textos da página pública
+   provisórios (decisão 6). O rascunho de `docs/prototipos-rascunho/` é substituído.
+6. **Entrega:** página de comparação lado a lado e tabela com os critérios da ADR medidos
+   (rolagem horizontal, o que aparece sem rolar, largura do conteúdo, colunas). O
+   solicitante escolhe; pode mostrar à ACS e à CPAEG antes.
+7. **Fora:** Minha trajetória, Meu e-mail, Oportunidades e `/entrar/`, que entram na
+   harmonização, na direção escolhida (auditoria §13, passos 4 e 5).

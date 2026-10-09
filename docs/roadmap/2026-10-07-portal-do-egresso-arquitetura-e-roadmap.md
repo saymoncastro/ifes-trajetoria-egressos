@@ -30,6 +30,12 @@
 - **Revisão 5 (2026-10-08).** O solicitante autorizou a **implementação** da 025 (código e
   migrações), só na demonstração. A condição de espera pelo Checkpoint 1 foi retirada para a
   025. O Checkpoint 1 continua **NÃO APLICADO** e a 026 continua fora (seção 6, S2).
+- **Revisão 6 (2026-10-09).** Depois da
+  [auditoria de direção visual](../auditorias/2026-10-08-portal-ux-direcao-visual.md), o
+  solicitante aprovou a [ADR 0009](../adr/0009-camada-visual-do-portal.md): camada visual
+  própria do Portal (layout, tokens, verde provisório, página pública), com o instrumento
+  preservado. Próximos passos: protótipos de três direções, escolha e spec da camada
+  visual. O Checkpoint 1 continua **NÃO APLICADO** e a 026 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
