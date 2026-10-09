@@ -51,6 +51,13 @@ class Formulario(forms.Form):
         for nome in self.fields:
             self._descrever(nome)
 
+    def focar_primeiro_erro(self) -> None:
+        """Foco no primeiro controle com erro, na ordem dos campos (FR-110)."""
+        for nome, campo in self.fields.items():
+            if nome in self.errors:
+                campo.widget.attrs["autofocus"] = True
+                return
+
 
 class PesquisaForm(Formulario):
     nome = _texto("Nome administrativo da Pesquisa")

@@ -206,8 +206,14 @@ button.sair-discreto {
   list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-4);
 }
 .navegacao a {
-  display: inline-flex; align-items: center; min-height: var(--alvo); min-width: var(--alvo);
-  color: var(--cor-acao); font-size: var(--fonte-5);
+  display: inline-flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  min-height: var(--alvo); min-width: var(--alvo); color: var(--cor-acao); font-size: var(--fonte-5);
+}
+/* Largura estável (025 research R10; A5 da avaliação por IA): cada item reserva a largura do
+   próprio rótulo em negrito, então marcar o item atual não muda a quebra da lista. */
+.navegacao a::after {
+  content: attr(data-rotulo); display: block; height: 0; overflow: hidden; visibility: hidden;
+  font-weight: var(--peso-forte);
 }
 .navegacao a[aria-current="page"] {
   color: var(--cor-texto); font-weight: var(--peso-forte); text-decoration: none;

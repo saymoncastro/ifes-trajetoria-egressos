@@ -10,12 +10,13 @@ from trajetoria.contato.models import ContatoDaPessoa
 from trajetoria.declaracao.models import FormacaoDeclarada
 from trajetoria.fonte_academica.simulada import FonteSimulada
 from trajetoria.participacao.models import Participacao, Resposta
+from trajetoria.portal.models import Oportunidade
 from trajetoria.video.models import GeracaoDeVideo
 
 DADOS = {"SIM-P-0003": MARIA, "SIM-P-0004": DIEGO}
 CONTADOS: tuple[type[Model], ...] = (
     Pessoa, ConclusaoAcademica, Participacao, Resposta, ContatoDaPessoa, FormacaoDeclarada,
-    GeracaoDeVideo,
+    GeracaoDeVideo, Oportunidade,
 )
 
 

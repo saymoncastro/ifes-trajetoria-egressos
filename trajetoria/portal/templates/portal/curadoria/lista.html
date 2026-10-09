@@ -1,0 +1,37 @@
+{% extends "portal/curadoria/base.html" %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% if aviso %}<p role="status" class="aviso aviso-sucesso">{{ aviso }}</p>{% endif %}
+<p><a href="/curadoria/oportunidades/nova/">{{ nova }}</a></p>
+{% if linhas %}
+<div class="rolagem" role="region" aria-label="Oportunidades no escopo da sua atuação" tabindex="0">
+<table>
+  <caption>Oportunidades no escopo da sua atuação</caption>
+  <thead>
+    <tr>
+      <th scope="col">Título</th>
+      <th scope="col">Unidade responsável</th>
+      <th scope="col">Categoria</th>
+      <th scope="col">Período</th>
+      <th scope="col">Situação</th>
+      <th scope="col">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for linha in linhas %}
+    <tr>
+      <th scope="row">{{ linha.oportunidade.titulo }}</th>
+      <td>{{ linha.unidade }}</td>
+      <td>{{ linha.categoria }}</td>
+      <td>{{ linha.periodo }}</td>
+      <td>{{ linha.estado }}</td>
+      <td>{% for acao, rotulo in linha.acoes %}<a href="/curadoria/oportunidades/{{ linha.oportunidade.pk }}/{{ acao }}/" aria-label="{{ rotulo }}: {{ linha.oportunidade.titulo }}">{{ rotulo }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p>{{ lista_vazia }}</p>
+{% endif %}
+{% endblock %}

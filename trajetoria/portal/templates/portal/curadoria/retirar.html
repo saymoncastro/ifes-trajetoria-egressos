@@ -1,0 +1,7 @@
+{% extends "portal/curadoria/base.html" %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<h2>{{ oportunidade.titulo }}</h2>
+<p>{{ texto }}</p>
+<form method="post">{% csrf_token %}<button type="submit">{{ acao }}</button> <a href="{{ voltar }}">{{ cancelar }}</a></form>
+{% endblock %}

@@ -292,7 +292,11 @@ O que o preparo cria, só com dados fictícios: Pessoas e Conclusões Acadêmica
 simulada; a baseline do Formulário Egresso Ifes 2024 em rascunho e uma cópia publicada
 localmente; três Campanhas de demonstração; vínculos de governança dos operadores
 fictícios A (CPAEG), B (CSAEG Vitória) e C (sem vínculo); o contexto simulado da Minha
-trajetória; os contatos de e-mail fictícios (`@example.invalid`) da Feature 020.
+trajetória; os contatos de e-mail fictícios (`@example.invalid`) da Feature 020; o
+catálogo fictício de dez oportunidades da Feature 025 (domínio `oportunidades.example`),
+carregado pelo sinal `cenario_preparado`. As datas do catálogo são relativas ao dia do
+preparo: um banco preparado em outro dia mostra outro recorte. Para o recorte do quickstart
+da 025, recrie o banco.
 
 **Recomeçar do zero** é recriar o banco (não existe operação para apagar Participações).
 Pare o `runserver` antes (ele mantém uma conexão aberta):
@@ -336,6 +340,8 @@ substituiu a comunicação simulada da 016) só aceita a URL de entrada
 | `http://127.0.0.1:8000/acesso/` | Entrada do egresso pelo convite: CPF e data de nascimento **fictícios**; leva a `/formacoes/`. A própria página mostra o painel "Dados fictícios para demonstração" |
 | `http://127.0.0.1:8000/formacoes/` | Formações da Pessoa confirmada (exige acesso) |
 | `http://127.0.0.1:8000/minha-trajetoria/` | Minha trajetória, com card e vídeo, para quem tem Conclusão Acadêmica, mesmo sem ter respondido (Features 021 e 024) |
+| `http://127.0.0.1:8000/oportunidades/` | Oportunidades pertinentes às formações da Pessoa, com explicação e link oficial (Feature 025; exige acesso e Portal ligado) |
+| `http://127.0.0.1:8000/curadoria/oportunidades/` | Curadoria de oportunidades: operador A (CPAEG, institucional) ou B (CSAEG Vitória). Sem operador, leva à escolha com o destino `curadoria` (Feature 025; Portal ligado) |
 | `http://127.0.0.1:8000/demonstracao/operador/` | Escolha do operador fictício A, B ou C |
 | `http://127.0.0.1:8000/acompanhamento/` | Acompanhamento da coleta e gestão de Campanha (exige operador) |
 | `http://127.0.0.1:8000/editor/` | Editor do instrumento (exige operador) |

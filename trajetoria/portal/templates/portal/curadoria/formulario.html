@@ -1,0 +1,24 @@
+{% extends "portal/curadoria/base.html" %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% if formulario.errors %}<div tabindex="-1" id="erros">{% include "editor/_erros.html" %}</div>{% endif %}
+<form method="post" novalidate>
+{% csrf_token %}
+{{ formulario.versao }}
+<p class="explicacao">{{ ajuda_conteudo }}</p>
+{% with campo=formulario.titulo %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.resumo %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.categoria %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.unidade_responsavel %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.endereco %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.inicio %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.fim %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+<h2>Público</h2>
+<p class="explicacao">{{ ajuda_publico }}</p>
+{% with campo=formulario.publico_unidades %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.publico_niveis %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+{% with campo=formulario.publico_cursos %}{% include "portal/curadoria/_campo.html" %}{% endwith %}
+<button type="submit">Salvar</button>
+<a href="{{ voltar }}">Cancelar</a>
+</form>
+{% endblock %}

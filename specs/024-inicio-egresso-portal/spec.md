@@ -550,6 +550,16 @@ Ficam para depois:
 - A5 (quebra da navegação), junto com a 025, que acrescenta o quinto item;
 - A8 e A11 (textos da 021 e da 014), depois do teste.
 
+### Revisado pela 025 (2026-10-08)
+
+A [Feature 025](../025-oportunidades-curadas-portal/spec.md), em "Requisitos revisados",
+revisa:
+- FR-016: bloco de Oportunidades entre as ações e o convite;
+- FR-021: "Oportunidade" admitida só nesse bloco;
+- FR-022 e FR-023: página de Oportunidades com navegação; quinto item "Oportunidades";
+- FR-029: a camada passa a ter um fato, a Oportunidade, gravado só pela curadoria. As telas
+  do egresso continuam sem gravar nada.
+
 ### Requisitos revisados
 
 Esta feature revisa requisitos anteriores. A rastreabilidade fica aqui e, na

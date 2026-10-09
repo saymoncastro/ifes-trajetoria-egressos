@@ -1,0 +1,9 @@
+{% comment %}Campo da curadoria (025): grupos de caixas de seleção múltipla do público como
+fieldset/legend, cada opção com seu rótulo. Os demais campos usam o include do editor (017).{% endcomment %}
+{% if campo.field.widget.allow_multiple_selected %}<fieldset class="campo{% if campo.errors %} com-erro{% endif %}" id="campo-{{ campo.name }}">
+  <legend>{{ campo.label }}</legend>
+  {% if campo.errors %}<p class="erro" id="{{ campo.auto_id }}-erro">{% for erro in campo.errors %}<span>Erro: {{ erro }}</span> {% endfor %}</p>{% endif %}
+  {% for opcao in campo %}<div class="opcao">{{ opcao.tag }}<label for="{{ opcao.id_for_label }}">{{ opcao.choice_label }}</label></div>
+  {% empty %}<p class="explicacao">Nenhum valor registrado.</p>
+  {% endfor %}
+</fieldset>{% else %}{% include "editor/_campo.html" %}{% endif %}

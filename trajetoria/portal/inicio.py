@@ -9,6 +9,8 @@ vira texto visível (FR-018).
 import dataclasses
 import logging
 
+from django.db import DatabaseError
+
 from trajetoria.interface import mensagens as estados
 from trajetoria.narrativa import imagens
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
@@ -20,11 +22,18 @@ from trajetoria.participacao.entrada import (
     situacao_de_entrada,
 )
 from trajetoria.portal import mensagens
+from trajetoria.portal.oportunidades import mensagens as m_oportunidades
+from trajetoria.portal.oportunidades.consultas import itens_da_pessoa
 from trajetoria.video import renderizador
 
 logger = logging.getLogger("trajetoria.portal")
 
 _ORIGEM = {INSTITUCIONAL: mensagens.REGISTRO_DO_IFES, DERIVADO: mensagens.DERIVADO}
+
+# Compactação do destaque de Oportunidades (025 research R9; T026, T046): 0 = padrão; 1 a 3
+# aplicam as etapas em ordem. Nenhuma etapa remove título, explicação, unidade responsável,
+# origem do site nem domínio (FR-004, FR-013). Decidida pela medida da T046.
+COMPACTACAO_DO_DESTAQUE = 3  # T046: variante 3 medida (Diego: 290 → 253 px)
 
 
 def _abertura(unidade):
@@ -109,6 +118,28 @@ def _acoes(com_trajetoria: bool) -> list[dict]:
     return acoes
 
 
+def _oportunidades(pessoa, hoje) -> dict | None:
+    """Um destaque e o total (025 FR-021). `None` sem itens: o bloco não existe. Uma falha do
+    banco omite só o bloco, como no reconhecimento; erro de programação não é engolido (code
+    review do PR #49): sem isso, uma regressão na pertinência sumiria com o bloco em silêncio."""
+    try:
+        itens = itens_da_pessoa(pessoa, hoje)
+    except DatabaseError:
+        logger.exception("portal: falha ao montar as oportunidades")
+        return None
+    if not itens:
+        return None
+    total = len(itens)
+    return {
+        "titulo": m_oportunidades.TITULO,
+        "destaque": itens[0],
+        "ver": (
+            m_oportunidades.VER_TODAS.format(n=total) if total > 1 else m_oportunidades.VER_PAGINA
+        ),
+        "compacto": COMPACTACAO_DO_DESTAQUE,
+    }
+
+
 def montar_inicio(pessoa, referencia, demonstracao) -> dict:
     com_trajetoria = elegivel(pessoa)
     return {
@@ -120,6 +151,7 @@ def montar_inicio(pessoa, referencia, demonstracao) -> dict:
         "proveniencia": mensagens.PROVENIENCIA if com_trajetoria else None,
         "titulo_acoes": mensagens.TITULO_ACOES,
         "acoes": _acoes(com_trajetoria),
+        "oportunidades": _oportunidades(pessoa, referencia) if com_trajetoria else None,
         "titulo_convite": mensagens.TITULO_CONVITE,
         "convite": _convite(situacao_de_entrada(pessoa)),
     }
