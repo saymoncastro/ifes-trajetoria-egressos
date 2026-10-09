@@ -41,6 +41,12 @@
   localmente a camada visual da ADR 0009 na demonstração, com evidências e verificações
   registradas na feature. Os números 026/027 permanecem reservados ao roadmap; a escolha
   não libera esses trabalhos. Checkpoint 1 continua **NÃO APLICADO**.
+- **Revisão 8 (2026-10-09).** Depois de um parecer externo sobre a página pública da 028,
+  o solicitante autorizou a [029](../../specs/029-pagina-publica-portal/spec.md) até a
+  spec, os protótipos comparativos e o bloco P do Checkpoint 1 (página pública), **sem**
+  revogar decisões da ADR 0009 e **sem** implementação. Sequência: spec → protótipos →
+  Checkpoint 1 → ajustes → implementação, mediante aprovação. Checkpoint 1 continua **NÃO
+  APLICADO**; 026 e 027 continuam fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
