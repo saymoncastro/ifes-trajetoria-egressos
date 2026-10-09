@@ -61,9 +61,9 @@ def svg_decorativo(imagem: ImagemInstitucional) -> str:
 
 
 def legenda(imagem: ImagemInstitucional, unidade: str | None) -> str:
-    """A unidade da legenda é a da formação, nunca um ano (FR-076)."""
-    if unidade:
-        return catalogo.LEGENDA.format(unidade=unidade, tipo=imagem.tipo)
+    """Identifica a imagem efetivamente usada, nunca atribui a genérica a uma unidade."""
+    if imagem.unidade:
+        return catalogo.LEGENDA.format(unidade=imagem.unidade, tipo=imagem.tipo)
     return catalogo.LEGENDA_SEM_UNIDADE.format(tipo=imagem.tipo)
 
 

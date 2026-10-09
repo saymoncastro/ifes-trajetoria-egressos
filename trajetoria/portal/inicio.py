@@ -12,7 +12,7 @@ import logging
 from django.db import DatabaseError
 
 from trajetoria.interface import mensagens as estados
-from trajetoria.narrativa import imagens
+from trajetoria.narrativa import card
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
 from trajetoria.narrativa.contrato import DERIVADO, INSTITUCIONAL
 from trajetoria.narrativa.montagem import montar
@@ -34,12 +34,6 @@ _ORIGEM = {INSTITUCIONAL: mensagens.REGISTRO_DO_IFES, DERIVADO: mensagens.DERIVA
 # aplicam as etapas em ordem. Nenhuma etapa remove título, explicação, unidade responsável,
 # origem do site nem domínio (FR-004, FR-013). Decidida pela medida da T046.
 COMPACTACAO_DO_DESTAQUE = 3  # T046: variante 3 medida (Diego: 290 → 253 px)
-
-
-def _abertura(unidade):
-    """A ilustração do catálogo da 021, decorativa; a legenda é o texto (021 FR-076)."""
-    imagem = imagens.imagem_para(unidade)
-    return {"imagem": imagens.svg_decorativo(imagem), "legenda": imagens.legenda(imagem, unidade)}
 
 
 def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
@@ -65,14 +59,23 @@ def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
                 "texto": f.texto,
                 "origem": None if f.tipo != "frase" else _ORIGEM.get(f.origem),
                 "atributos": f.tipo != "frase",
+                "ano": narrativa.formacoes[indice].ano_conclusao,
             }
             for f in frases
             if f.formacao == indice
         ])
+    naquele_ano = narrativa.secao("naquele_ano")
+    agregadas = [f for f in naquele_ano.frases if f.formacao is not None] if naquele_ano else []
     return {
-        "abertura": _abertura(narrativa.compartilhavel.unidade_da_imagem),
         "sintese": [f.texto for f in registro.frases] if registro else [],
         "formacoes": formacoes,
+        "numeros": [
+            {"numero": card.numero_formatado(c.valor), "texto": f.texto}
+            for c, f in zip(narrativa.contextos_agregados, agregadas, strict=True)
+        ],
+        "apuracoes": [f.texto for f in naquele_ano.frases if f.formacao is None]
+        if naquele_ano else [],
+        "card_alt": card.descricao(narrativa.compartilhavel, None, demonstracao),
     }
 
 

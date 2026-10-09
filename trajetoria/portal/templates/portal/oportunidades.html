@@ -1,6 +1,6 @@
-{% extends "interface/base.html" %}
+{% extends "portal/base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
-{% block estilo %}{% include "portal/oportunidades.css" %}{% endblock %}
+{% block estilo %}{% include "portal/oportunidades.css" %}{{ block.super }}{% endblock %}
 {% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
 {% block conteudo %}
 {# 025 contracts/oportunidades-egresso.md: h1, introdução, grupos (omitidos quando vazios). #}

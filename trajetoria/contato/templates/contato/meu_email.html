@@ -1,4 +1,4 @@
-{% extends "interface/base.html" %}
+{% extends layout_base|default:"interface/base.html" %}
 {% block titulo %}Seu e-mail para contato do Ifes{% endblock %}
 {% block estilo %}
 /* 020: mesmo tratamento dos campos de texto da jornada (alvo de toque de 44 px), sem
@@ -7,6 +7,7 @@
   min-height: 2.75rem; border: 2px solid #565c65; border-radius: 0; background: #ffffff;
   color: #1b1b1b; }
 .com-erro #email { border-color: #b50909; }
+{{ block.super }}
 {% endblock %}
 {% block navegacao %}{% include "interface/_navegacao.html" %}{% endblock %}
 {% block conteudo %}

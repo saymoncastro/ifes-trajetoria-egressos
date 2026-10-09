@@ -50,6 +50,7 @@ def test_shell_saida_e_retorno_de_hoje(client, cenario):
         assert '<span class="nome">Trajetória Ifes</span>' in html, url
         assert 'action="/acesso/sair/"' in html and 'action="/sair/"' not in html, url
         assert 'href="/inicio/"' not in html, url
+        assert "--portal-profundo:" not in html, url
     assert "Voltar às suas formações" in client.get("/minha-trajetoria/").content.decode()
     assert "Ver suas formações no Ifes" in client.get("/meu-email/").content.decode()
     assert client.post("/sair/").status_code == 404

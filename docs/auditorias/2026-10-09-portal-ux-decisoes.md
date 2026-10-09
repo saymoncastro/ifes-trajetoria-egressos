@@ -218,3 +218,11 @@ CPAEG e não é pré-requisito.
    solicitante escolhe; pode mostrar à ACS e à CPAEG antes.
 7. **Fora:** Minha trajetória, Meu e-mail, Oportunidades e `/entrar/`, que entram na
    harmonização, na direção escolhida (auditoria §13, passos 4 e 5).
+
+## Escolha dos protótipos e desenvolvimento (2026-10-09)
+
+O solicitante escolheu **B — trajetória** depois da comparação das nove telas.
+A [Feature 028](../../specs/028-camada-visual-portal/spec.md) aplica a escolha na
+demonstração: base visual, página pública, Início, entrada e harmonização. O achado
+da primeira tela da Ana é tratado na implementação e medido novamente.
+A escolha não substitui o Checkpoint 1 e não resolve pendências institucionais.

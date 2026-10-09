@@ -24,8 +24,10 @@ def _local(resposta) -> str:
 # --- Caminho B: entrada do Portal (US1) ----------------------------------------------------
 
 
-def test_raiz_sem_sessao_vai_para_a_identificacao_do_portal(client, cenario):
-    assert _local(client.get("/")) == "/entrar/"
+def test_raiz_sem_sessao_mostra_a_pagina_publica(client, cenario):
+    resposta = client.get("/")
+    assert resposta.status_code == 200
+    assert 'href="/entrar/"' in resposta.content.decode()
 
 
 def test_raiz_com_pessoa_vai_ao_inicio(client, cenario):
@@ -85,7 +87,7 @@ def test_parametros_do_cliente_nao_decidem_destino(client, cenario):
     """FR-006: nenhum valor vindo do cliente decide o destino."""
     cp.com_material("SIM-P-0003")
     for consulta in ("?destino=/editor/", "?next=https://exemplo.invalid/", "?proximo=/acesso/"):
-        assert _local(client.get("/" + consulta)) == "/entrar/"
+        assert client.get("/" + consulta).status_code == 200
         dados = {"cpf": MARIA.cpf, "data_nascimento": MARIA.nascimento, "next": "/editor/"}
         assert _local(client.post("/entrar/" + consulta, dados)) == "/inicio/"
         client.post("/acesso/sair/")

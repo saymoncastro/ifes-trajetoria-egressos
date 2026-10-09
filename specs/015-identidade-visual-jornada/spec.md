@@ -702,3 +702,11 @@ indicado):
 
 **Validação posterior registrada (não é decisão institucional)**: revisão perceptiva do
 reconhecimento como produto do Ifes (FR-043).
+
+## Nota de revisão pela Feature 028 (2026-10-09)
+
+A [028](../028-camada-visual-portal/spec.md) aplica a ADR 0009, na direção B escolhida
+pelo solicitante. FR-007 e FR-008 ficam delimitados ao instrumento e a `/acesso/`;
+o Portal admite container, grade, hero e tokens próprios. FR-014 mantém azul no
+instrumento e admite verde provisório só no Portal em demonstração. `interface/base.html`
+e os tokens originais permanecem intactos. D-02, D-03 e DP-801 seguem pendentes.

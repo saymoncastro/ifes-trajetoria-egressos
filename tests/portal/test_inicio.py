@@ -41,7 +41,6 @@ def test_ordem_reconhecimento_proveniencia_acoes_convite(client, cenario):
     resposta = _inicio(client, cenario.pessoa("SIM-P-0003"))
     html = _principal(resposta)
     posicoes = [
-        html.index("<figure"),
         html.index("<h1>"),
         html.index("O Ifes registra 2 formações concluídas por você."),
         html.index("Tecnologia em Análise e Desenvolvimento de Sistemas"),
@@ -152,7 +151,7 @@ def test_pessoa_sem_conclusao(client, cenario):
     principal = _principal(resposta)
     assert estados.SEM_FORMACAO in principal
     assert "inicio-convite" not in principal and "/minha-trajetoria/" not in principal
-    assert re.findall(r'<li><a href="([^"]+)"', principal) == ["/meu-email/"]
+    assert re.findall(r'<li[^>]*><a href="([^"]+)"', principal) == ["/meu-email/"]
 
 
 def test_falha_da_narrativa_omite_o_reconhecimento(client, cenario, monkeypatch, caplog):
