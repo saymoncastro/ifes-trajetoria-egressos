@@ -1,3 +1,4 @@
+# ruff: noqa: E501 — HTML, CSS e JavaScript embutidos em linhas longas (protótipo).
 """Gera os protótipos da camada visual do Portal (ADR 0009, decisão 10).
 
 Três direções (A institucional, B trajetória, C combinação) x três telas (página pública,
@@ -181,7 +182,7 @@ def gerar_cards():
         )
 
     def destaque(metrica, par, n):
-        rotulo = tuple(l.format(unidade="Serra", ano=2022) for l in catalogo.plural(par, n))
+        rotulo = tuple(linha.format(unidade="Serra", ano=2022) for linha in catalogo.plural(par, n))
         return ContextoCompartilhavel(metrica, n, rotulo)
 
     # unidade_da_imagem=None: a imagem é a genérica, legenda "Ifes · ilustração" (decisão 5).

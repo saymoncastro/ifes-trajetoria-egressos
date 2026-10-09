@@ -1,3 +1,4 @@
+# ruff: noqa: E501 — HTML, CSS e JavaScript embutidos em linhas longas (protótipo).
 """Captura e mede os protótipos (ADR 0009, critérios de aceitação da camada visual).
 
 O Chrome headless não abre janela com menos de 500 px. Por isso cada tela é carregada numa
