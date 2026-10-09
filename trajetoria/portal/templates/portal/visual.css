@@ -101,6 +101,10 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 .inicio-oportunidades.compacto-3 p { margin-block: 0 .25rem; font-size: var(--fonte-5); }
 .inicio-oportunidades.compacto-3 h2 { margin-bottom: .25rem; }
 .inicio-oportunidades .inicio-ver-oportunidades { margin-bottom: 0; }
+/* 026 (plan R10): bloco "Contribuir com o Ifes", entre Oportunidades e o convite. */
+.inicio-contribuir { margin-block: 0 2rem; }
+.inicio-contribuir h2 { margin-top: 0; }
+.inicio-contribuir > :last-child { margin-bottom: 0; }
 .narrativa-abertura { display: grid; gap: .75rem 2rem; align-items: start; }
 .narrativa-figura { margin-bottom: 0; }
 .narrativa-capitulo { max-width: 100%; }

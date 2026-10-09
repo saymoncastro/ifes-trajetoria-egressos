@@ -1,0 +1,7 @@
+{% if resumo_erros %}
+{# Resumo com foco ao carregar, sem JavaScript, como na jornada (014 FR-027, FR-028). #}
+<div class="resumo-erros" role="alert" aria-labelledby="titulo-erros" tabindex="-1">
+  <h2 id="titulo-erros">{{ m.RESUMO_DE_ERROS }}</h2>
+  <ul>{% for erro in resumo_erros %}<li><a href="#{{ erro.ancora }}">{{ erro.texto }}</a></li>{% endfor %}</ul>
+</div>
+{% endif %}

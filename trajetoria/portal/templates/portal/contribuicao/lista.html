@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ m.LISTA_TITULO }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/contribuicao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+{# 026 "Suas contribuições" (protótipo e5; FR-013). #}
+{% if aviso %}<p role="status" class="aviso aviso-sucesso">{{ aviso }}</p>{% endif %}
+<h1>{{ m.LISTA_TITULO }}</h1>
+{% if itens %}
+<ul class="contribuicao-lista">
+{% for item in itens %}<li><h2>{{ item.forma }}</h2>
+<p>{{ item.linha }}</p>
+<p class="contribuicao-situacao contribuicao-{{ item.classe }}">{{ item.situacao }}</p>
+<p class="ligacao-isolada"><a href="/contribuicoes/{{ item.manifestacao.pk }}/" aria-label="{{ m.VER_DETALHES }}: {{ item.forma }}, {{ item.linha }}">{{ m.VER_DETALHES }}</a>{% if item.manifestacao.ativa %} · <a href="/contribuicoes/{{ item.manifestacao.pk }}/retirar/" aria-label="{{ m.RETIRAR }}: {{ item.forma }}, {{ item.linha }}">{{ m.RETIRAR }}</a>{% endif %}</p></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>{{ m.LISTA_VAZIA }}</p>
+{% endif %}
+<ul class="lista-simples">
+<li><a href="/contribuir/">{% if itens %}{{ m.CONTRIBUIR_DE_NOVO }}{% else %}{{ m.INICIO_ACAO }}{% endif %}</a></li>
+<li><a href="/inicio/">{{ m.VOLTAR_AO_INICIO }}</a></li>
+</ul>
+{% endblock %}

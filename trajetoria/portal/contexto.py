@@ -20,6 +20,11 @@ from trajetoria.narrativa.consultas import elegivel
 from trajetoria.portal import mensagens
 
 _CONFIRMACAO = re.compile(r"^/participacoes/[^/]+/concluida/$")
+# As telas da contribuição (026 FR-011): a escolha, a confirmação e "Suas contribuições" com o
+# detalhe e a retirada de cada manifestação.
+_CONTRIBUICAO = re.compile(
+    r"^/(contribuir/(confirmar/)?|contribuicoes/([0-9a-f-]{36}/(retirar/)?)?)$"
+)
 # As telas com a navegação do Portal (FR-022; contracts/navegacao.md). Lista fechada: o
 # caminho só decide o cabeçalho e os destinos fixos abaixo, nunca um endereço do cliente.
 _TELAS_COM_NAVEGACAO = frozenset(
@@ -33,15 +38,18 @@ _TELAS_COM_LAYOUT = frozenset(
 def _atual(caminho: str, endereco: str) -> bool:
     if endereco == "/formacoes/":
         return caminho == endereco or bool(_CONFIRMACAO.match(caminho))
+    if endereco == "/contribuir/":
+        return bool(_CONTRIBUICAO.match(caminho))
     return caminho == endereco
 
 
 def _itens(request, pessoa) -> list[dict]:
     itens = [(mensagens.NAVEGACAO_INICIO, "/inicio/")]
-    if elegivel(pessoa):  # uma consulta para os dois itens (025 FR-020)
+    if elegivel(pessoa):  # uma consulta para os três itens (025 FR-020; 026 FR-011)
         itens += [
             (mensagens.NAVEGACAO_TRAJETORIA, "/minha-trajetoria/"),
             (mensagens.NAVEGACAO_OPORTUNIDADES, "/oportunidades/"),
+            (mensagens.NAVEGACAO_CONTRIBUIR, "/contribuir/"),
         ]
     itens += [
         (mensagens.NAVEGACAO_PESQUISA, "/formacoes/"),
@@ -54,7 +62,8 @@ def _itens(request, pessoa) -> list[dict]:
 
 
 def _tela_com_navegacao(caminho: str) -> bool:
-    return caminho in _TELAS_COM_NAVEGACAO or bool(_CONFIRMACAO.match(caminho))
+    return (caminho in _TELAS_COM_NAVEGACAO or bool(_CONFIRMACAO.match(caminho))
+            or bool(_CONTRIBUICAO.match(caminho)))
 
 
 def _shell_do_portal() -> dict:
@@ -80,6 +89,6 @@ def navegacao(request) -> dict:
     }
     if _tela_com_navegacao(request.path):
         contexto.update(_shell_do_portal())
-    if request.path in _TELAS_COM_LAYOUT:
+    if request.path in _TELAS_COM_LAYOUT or _CONTRIBUICAO.match(request.path):
         contexto["layout_base"] = "portal/base.html"
     return contexto

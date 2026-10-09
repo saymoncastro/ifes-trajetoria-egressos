@@ -776,3 +776,17 @@ no Portal. O Início incorpora prévia sem nome do card e agregados da narrativa
 sem leitura de Resposta ou contato nem escrita nova. A ordem FR-016/FR-020 e o caminho
 direto do convite permanecem. O painel fictício é recolhido só em `/entrar/`.
 Checkpoint 1 continua **NÃO APLICADO**.
+
+## Nota de revisão pela Feature 026 (2026-10-09)
+
+A [026](../026-volte-ao-ifes/spec.md), em "Requisitos revisados", revisa, só na
+demonstração:
+- **FR-016:** o Início ganha o bloco "Contribuir com o Ifes" entre Oportunidades e o convite,
+  para quem tem Conclusão. O convite continua por último.
+- **FR-022 e FR-023:** a navegação ganha o item "Contribuir", depois de "Oportunidades", para
+  quem tem Conclusão; as telas da contribuição exibem a navegação do Portal.
+- **FR-029:** a camada passa a ter um segundo fato, a Manifestação. As telas do egresso só
+  gravam ao enviar ou retirar uma contribuição; abrir qualquer tela continua sem gravar.
+  `ContatoDaPessoa` não é lido nem gravado pela contribuição.
+
+Checkpoint 1 continua **NÃO APLICADO**.

@@ -219,7 +219,7 @@ trajetoria/portal/
 │   ├── consultas.py                # da Pessoa; do escopo
 │   ├── governanca.py               # pode_receber_contribuicoes, escopo
 │   ├── formularios.py
-│   ├── csv.py                      # exportação da unidade, com neutralização de fórmulas
+│   ├── planilha.py                 # CSV da unidade, com neutralização de fórmulas (era csv.py)
 │   ├── mensagens.py                # textos e VERSAO_DA_CIENCIA
 │   ├── demonstracao.py             # manifestações fictícias (sinal cenario_preparado)
 │   ├── views_egresso.py

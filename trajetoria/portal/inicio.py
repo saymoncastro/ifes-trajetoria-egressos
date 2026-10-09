@@ -22,6 +22,8 @@ from trajetoria.participacao.entrada import (
     situacao_de_entrada,
 )
 from trajetoria.portal import mensagens
+from trajetoria.portal.contribuicao import mensagens as m_contribuicao
+from trajetoria.portal.contribuicao.consultas import tem_manifestacao
 from trajetoria.portal.oportunidades import mensagens as m_oportunidades
 from trajetoria.portal.oportunidades.consultas import itens_da_pessoa
 from trajetoria.video import renderizador
@@ -152,6 +154,17 @@ def _oportunidades(pessoa, hoje) -> dict | None:
     }
 
 
+def _contribuir(pessoa) -> dict:
+    """Bloco "Contribuir com o Ifes" (026 FR-011; plan R10): depois de Oportunidades e antes
+    do convite. Com alguma manifestação, leva também a "Suas contribuições"."""
+    return {
+        "titulo": m_contribuicao.INICIO_TITULO,
+        "texto": m_contribuicao.INICIO_TEXTO,
+        "acao": m_contribuicao.INICIO_ACAO,
+        "suas": m_contribuicao.INICIO_SUAS if tem_manifestacao(pessoa) else None,
+    }
+
+
 def montar_inicio(pessoa, referencia, demonstracao) -> dict:
     com_trajetoria = elegivel(pessoa)
     reconhecimento = (
@@ -166,6 +179,7 @@ def montar_inicio(pessoa, referencia, demonstracao) -> dict:
         "acoes": _acoes(com_trajetoria, com_previa=reconhecimento is not None),
         "acao_card": ACAO_CARD,
         "oportunidades": _oportunidades(pessoa, referencia) if com_trajetoria else None,
+        "contribuir": _contribuir(pessoa) if com_trajetoria else None,
         "titulo_convite": mensagens.TITULO_CONVITE,
         "convite": _convite(situacao_de_entrada(pessoa)),
     }

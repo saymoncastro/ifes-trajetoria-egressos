@@ -1,0 +1,16 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ m.DETALHE_TITULO }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/contribuicao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+{# 026 tela 3 (protótipo e4): o que enviou, para quem, o que acontece depois e a situação. #}
+{% if aviso %}<p role="status" class="aviso aviso-sucesso">{{ aviso }}</p>{% endif %}
+<h1>{{ m.DETALHE_TITULO }}</h1>
+<p class="contribuicao-situacao contribuicao-{{ classe }}">{{ situacao }}</p>
+{% include "portal/contribuicao/_resumo.html" %}
+{% include "portal/contribuicao/_ciencia.html" %}
+<ul class="lista-simples">
+<li><a href="/contribuicoes/">{{ m.LISTA_TITULO }}</a></li>
+{% if manifestacao.ativa %}<li><a href="/contribuicoes/{{ manifestacao.pk }}/retirar/">{{ m.RETIRAR_ESTA }}</a></li>{% endif %}
+<li><a href="/inicio/">{{ m.VOLTAR_AO_INICIO }}</a></li>
+</ul>
+{% endblock %}

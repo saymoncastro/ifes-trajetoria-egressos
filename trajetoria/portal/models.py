@@ -1,13 +1,14 @@
-"""Oportunidade (Feature 025; data-model.md; research R1).
+"""Fatos da camada de relacionamento (Constituição 2.1.0, "Camada de relacionamento"; ADR
+0008): a Oportunidade (025) e a Manifestação de interesse (026). Nenhum tem chave estrangeira
+para o núcleo: o núcleo não depende da camada, e desligá-la não exige migração nele.
 
-Primeiro fato persistente da camada de relacionamento (Constituição 2.1.0, "Camada de
-relacionamento"; ADR 0008). Não tem chave estrangeira para o núcleo: a ligação com a Pessoa
-só existe na consulta, pela regra de pertinência (FR-012).
+Oportunidade (Feature 025; data-model.md; research R1). A ligação com a Pessoa só existe na
+consulta, pela regra de pertinência (FR-012). Não há coluna de estado: ele é derivado de
+`publicada_em`, `retirada_em` e das datas (`oportunidades.regras.estado`; FR-009). `NULL` nas
+listas de público = critério ausente; `[]` e `""` são inválidos e nunca gravados. Regras que
+dependem de tempo ou escopo ficam em `oportunidades/operacoes.py`, único caminho de escrita.
 
-Não há coluna de estado: ele é derivado de `publicada_em`, `retirada_em` e das datas
-(`oportunidades.regras.estado`; FR-009). `NULL` nas listas de público = critério ausente;
-`[]` e `""` são inválidos e nunca gravados. Regras que dependem de tempo ou escopo ficam em
-`oportunidades/operacoes.py`, único caminho de escrita.
+Manifestação (Feature 026; plan, "Modelo de dados"; R2 a R6): ver a classe.
 """
 
 import uuid
@@ -123,3 +124,97 @@ class Oportunidade(models.Model):
 
     def __str__(self) -> str:
         return f"Oportunidade {self.titulo}"
+
+
+# --- Manifestação de interesse (026) --------------------------------------------------------
+
+MENSAGEM_MAXIMA = 500
+EMAIL_MAXIMO = 254
+
+
+class Forma(models.TextChoices):
+    """Lista fechada e provisória (026 FR-002; DP-801). Só apresentação."""
+
+    MENTORIA = "mentoria", "Mentoria"
+    EXPERIENCIA = "experiencia", "Compartilhar experiência"
+    OPORTUNIDADE = "oportunidade", "Oferecer oportunidade"
+    PESQUISA_EXTENSAO = "pesquisa_extensao", "Pesquisa e extensão"
+    PARCERIA = "parceria", "Parceria"
+    HISTORIA = "historia", "Contar sua história"
+
+
+class Manifestacao(models.Model):
+    """O egresso se oferece para contribuir (026 FR-001). Ato declarado da Pessoa (III, IV).
+
+    Sem chave estrangeira (R2): `pessoa_id` e `conclusao_id` são identificadores, e a posse da
+    Conclusão é verificada em `contribuicao/operacoes.py`, único caminho de escrita. A unidade
+    é copiada da Conclusão no registro e define quem recebe. O e-mail é o da contribuição,
+    com finalidade própria (D-2602), separado do `ContatoDaPessoa` da 020.
+
+    Sem coluna de estado: a situação deriva de `retirada_em` e `contato_registrado_em`
+    (`contribuicao.regras.situacao`). Nada é apagado: retirada e contato só acrescentam o
+    momento (VIII).
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    pessoa_id = models.UUIDField()
+    conclusao_id = models.UUIDField()
+    # "" = Conclusão sem unidade registrada: só a atuação institucional a recebe.
+    unidade = models.TextField(blank=True)
+    forma = models.TextField(choices=Forma.choices)
+    mensagem = models.TextField(default="", blank=True)
+    email = models.TextField()
+    versao_da_ciencia = models.TextField()
+    registrada_em = models.DateTimeField()
+    contato_registrado_em = models.DateTimeField(null=True)
+    contato_registrado_por = models.TextField(null=True)
+    retirada_em = models.DateTimeField(null=True)
+
+    class Meta:
+        ordering = ["-registrada_em", "id"]
+        indexes = [models.Index(fields=["pessoa_id"], name="manifestacao_pessoa")]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(forma__in=Forma.values), name="manifestacao_forma_valida"
+            ),
+            models.CheckConstraint(
+                condition=Q(LessThanOrEqual(Length("mensagem"), MENSAGEM_MAXIMA)),
+                name="manifestacao_mensagem_tamanho",
+            ),
+            models.CheckConstraint(
+                condition=Q(GreaterThanOrEqual(Length("email"), 3))
+                & Q(LessThanOrEqual(Length("email"), EMAIL_MAXIMO)),
+                name="manifestacao_email_tamanho",
+            ),
+            models.CheckConstraint(
+                condition=~Q(versao_da_ciencia=""), name="manifestacao_versao_nao_vazia"
+            ),
+            # Os IS NOT NULL são explícitos, como na Oportunidade.
+            models.CheckConstraint(
+                condition=Q(contato_registrado_em__isnull=True, contato_registrado_por__isnull=True)
+                | Q(contato_registrado_em__isnull=False, contato_registrado_por__isnull=False),
+                name="manifestacao_contato_com_operador",
+            ),
+            models.CheckConstraint(
+                condition=Q(contato_registrado_em__isnull=True)
+                | Q(contato_registrado_em__gte=F("registrada_em")),
+                name="manifestacao_contato_depois_do_registro",
+            ),
+            models.CheckConstraint(
+                condition=Q(retirada_em__isnull=True) | Q(retirada_em__gte=F("registrada_em")),
+                name="manifestacao_retirada_depois_do_registro",
+            ),
+            # FR-006 no banco, inclusive em corrida de dois envios (R6).
+            models.UniqueConstraint(
+                fields=["pessoa_id", "conclusao_id", "forma"],
+                condition=Q(retirada_em__isnull=True),
+                name="manifestacao_uma_ativa_por_forma_e_formacao",
+            ),
+        ]
+
+    @property
+    def ativa(self) -> bool:
+        return self.retirada_em is None
+
+    def __str__(self) -> str:
+        return f"Manifestação {self.forma}"

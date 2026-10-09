@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ m.CONFIRMAR_TITULO }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/contribuicao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+{# 026 tela 2 (protótipo e3): resumo, texto de ciência versionado e e-mail (FR-004, FR-007). #}
+<h1>{{ m.CONFIRMAR_TITULO }}</h1>
+{% include "portal/contribuicao/_resumo_erros.html" %}
+{% include "portal/contribuicao/_resumo.html" %}
+{% include "portal/contribuicao/_ciencia.html" %}
+<form method="post" action="/contribuir/confirmar/" novalidate>{% csrf_token %}
+<input type="hidden" name="forma" value="{{ escolha.forma }}">
+<input type="hidden" name="formacao" value="{{ formacao }}">
+{# textarea: preserva as quebras de linha da mensagem. #}<textarea name="mensagem" hidden>{{ escolha.mensagem }}</textarea>
+<input type="hidden" name="versao" value="{{ versao }}">
+<div class="campo{% if erros.email %} com-erro{% endif %}">
+  <label for="email">{{ m.ROTULO_EMAIL }}</label>
+  <p class="dica" id="email-dica">{{ m.DICA_EMAIL }}</p>
+  {% if erros.email %}<p class="erro" id="email-erro">{{ erros.email }}</p>{% endif %}
+  <input type="email" id="email" name="email" value="{{ email }}" autocomplete="email" inputmode="email" maxlength="254" required aria-describedby="email-dica{% if erros.email %} email-erro{% endif %}"{% if erros.email %} aria-invalid="true" autofocus{% endif %}>
+</div>
+<div class="contribuicao-acoes"><button type="submit">{{ m.ENVIAR }}</button> <button type="submit" class="secundario" formaction="/contribuir/" name="voltar" value="1">{{ m.VOLTAR_E_ALTERAR }}</button></div>
+</form>
+{% endblock %}
