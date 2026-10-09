@@ -7,7 +7,7 @@
 <style>
 /* Tokens da 015 (estilo.css), inalterados. */
 :root {
-  --cor-marca: #2f9e41; --cor-sucesso: #195128; --cor-institucional: #eef7f0;
+  --cor-marca: #2f9e41; --cor-institucional: #eef7f0;
   --cor-texto: #1b1b1b; --cor-texto-suave: #565c65; --cor-fundo: #ffffff;
   --cor-borda-suave: #c6cace; --cor-foco: #1b1b1b; --cor-foco-halo: #ffdd00;
   --cor-demonstracao: #fff1d2;
@@ -26,7 +26,6 @@
   --portal-profundo: #0e3b23;     /* do card; branco ≈ 12:1 */
   --portal-profundo-texto: #cfe6d6;
   --portal-creme: #f6f2e8;
-  --portal-ano: #257a33;          /* ano no creme: 4,8:1 (021) */
   --portal-destaque: 2.5rem;      /* decisão 4: 40 px, peso 700, só no h1 */
   --portal-numero: 3rem;
 }
@@ -52,9 +51,9 @@ img { max-width: 100%; height: auto; }
 .prototipo { background: #3d3d3d; color: #fff; font-size: var(--fonte-5); padding: var(--espaco-1) 0; }
 .prototipo strong { color: var(--cor-foco-halo); }
 .demonstracao { background: var(--cor-demonstracao); font-size: var(--fonte-5);
-  padding: var(--espaco-2) 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
+  padding: 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
 .demonstracao .container { display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-5); }
-.demonstracao a { color: var(--cor-texto); }
+.demonstracao a { color: var(--cor-texto); display: inline-flex; align-items: center; min-height: var(--alvo); }
 
 .cabecalho { border-bottom: 1px solid var(--cor-borda-suave); }
 .cabecalho .container { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
@@ -90,6 +89,8 @@ img { max-width: 100%; height: auto; }
 .numero strong { display: block; font-size: var(--portal-numero); line-height: 1.1; color: var(--portal-profundo); }
 .numero p { margin: 0; }
 .oportunidade-titulo { font-weight: 600; font-size: var(--fonte-3); }
+.oportunidade-titulo a { display: inline-flex; align-items: center; min-height: var(--alvo); }
+.empilhado > * + * { margin-top: var(--espaco-6); }
 .convite { border: 2px solid var(--cor-acao); border-radius: var(--raio); padding: var(--espaco-5); }
 .card-previa { display: block; width: 100%; max-width: 270px; border-radius: var(--raio);
   box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
@@ -168,7 +169,7 @@ img { max-width: 100%; height: auto; }
 <body>
 <div class="prototipo" data-medida="faixa"><div class="container"><strong>Protótipo</strong> · Direção B — trajetória · ADR 0009. Não é o produto.</div></div>
 <div class="demonstracao" data-medida="faixa"><div class="container"><span><strong>Ambiente de demonstração.</strong> Dados fictícios.</span><span><strong>Pessoa fictícia:</strong> Ana Exemplo</span><a href="#">Sair</a></div></div>
-<header class="cabecalho"><div class="container" data-medida="container">
+<header class="cabecalho"><div class="container">
 <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709 284">
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 187.433594 142.28125 L 194.828125 142.28125 L 194.828125 177.097656 L 187.433594 177.097656 L 187.433594 142.28125 "/>
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 234.652344 177.097656 L 225.253906 177.097656 L 210.085938 150.757812 L 209.867188 150.757812 C 210.171875 155.410156 210.324219 158.726562 210.324219 160.714844 L 210.324219 177.097656 L 203.714844 177.097656 L 203.714844 142.28125 L 213.042969 142.28125 L 228.1875 168.351562 L 228.351562 168.351562 C 228.117188 163.832031 227.996094 160.632812 227.996094 158.757812 L 227.996094 142.28125 L 234.652344 142.28125 L 234.652344 177.097656 "/>
@@ -216,7 +217,7 @@ img { max-width: 100%; height: auto; }
 </div></header>
 <nav class="navegacao" aria-label="Portal do Egresso"><div class="container"><ul><li><a href="#" aria-current="page">Início</a></li><li><a href="#">Minha trajetória</a></li><li><a href="#">Oportunidades</a></li><li><a href="#">Pesquisa</a></li><li><a href="#">Meu e-mail</a></li></ul></div></nav>
 <main>
-<div class="faixa faixa-b"><div class="container"><div><h1>Sua história com o Ifes</h1><p class="sintese">O Ifes registra 1 formação concluída por você.</p><ol class="linha"><li><span class="ano">2022</span><p class="curso" data-medida="fato">Em 2022, você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas na unidade Serra.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Serra · Graduação · Presencial</p><p>Há 3 anos desde essa conclusão.&nbsp;<span class="origem">·&nbsp;Calculado a partir dos registros</span></p></li></ol></div><section aria-labelledby="naquele-ano"><h2 id="naquele-ano">Naquele ano no Ifes</h2><div class="numeros" style="grid-template-columns:1fr"><div class="numero"><strong>27</strong><p>Em 2022, 27 conclusões de Tecnologia em Análise e Desenvolvimento de Sistemas foram registradas na unidade Serra, incluindo a sua.</p></div><div class="numero"><strong>812</strong><p>Em 2022, 812 conclusões foram registradas na unidade Serra.</p></div></div><p class="suave">Dados institucionais apurados em 31/01/2026.</p></section><p class="proveniencia suave">Essas informações vêm dos registros acadêmicos do Ifes. Nada aqui foi respondido por você.</p></div></div><div class="creme secao"><div class="container"><section aria-labelledby="acoes"><h2 id="acoes">O que você pode fazer</h2><div class="acoes-b" data-medida="grade"><div class="card-bloco"><img class="card-previa" src="card-ana.png" width="270" height="480" alt="Card vertical Minha trajetória no Ifes: 2022, Tecnologia em Análise e Desenvolvimento de Sistemas, Serra, Graduação, Presencial; 27 conclusões deste curso e 812 conclusões na unidade Serra em 2022; Essa história também é minha. #SouEgressoIfes." data-medida="card"><div><h3>Seu card</h3><p class="suave">Uma imagem vertical da sua trajetória para o story ou o status das redes sociais.</p><p><a class="botao" href="#" data-medida="acao">Baixar o card da sua trajetória</a></p></div></div><div><div class="bloco"><h3>Sua trajetória</h3><p>Os capítulos da sua formação no Ifes, com a linha do tempo.</p><a class="ligacao" href="#" data-medida="acao">Ver minha trajetória no Ifes</a></div><div class="bloco"><h3>Seu e-mail</h3><p>O endereço que o Ifes usa para falar com você.</p><a class="ligacao" href="#">Manter seu e-mail com o Ifes</a></div></div></div></section></div></div><div class="secao"><div class="container"><section aria-labelledby="oportunidades"><h2 id="oportunidades">Oportunidades</h2><p class="oportunidade-titulo"><a href="#">Especialização em Segurança da Informação</a></p><p class="suave">Aparece porque você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas na unidade Serra.</p><p class="suave">Oferecida pela unidade Serra · site externo: oportunidades.example</p><p><a class="ligacao" href="#">Ver as 2 oportunidades</a></p></section><div style="height:var(--espaco-6)"></div><section class="convite" aria-labelledby="convite"><h2 id="convite">Pesquisa de acompanhamento</h2><p class="texto">Há uma pesquisa aberta sobre Tecnologia em Análise e Desenvolvimento de Sistemas. Respondê-la é como você atualiza sua trajetória com o Ifes.</p><a class="botao" href="#">Responder</a></section></div></div>
+<div class="faixa faixa-b"><div class="container"><div><h1>Sua história com o Ifes</h1><p class="sintese">O Ifes registra 1 formação concluída por você.</p><ol class="linha"><li><span class="ano">2022</span><p class="curso" data-medida="fato">Em 2022, você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas na unidade Serra.&nbsp;<span class="origem">·&nbsp;Registro do Ifes</span></p><p class="suave">Serra · Graduação · Presencial</p><p>Há 3 anos desde essa conclusão.&nbsp;<span class="origem">·&nbsp;Calculado a partir dos registros</span></p></li></ol></div><section aria-labelledby="naquele-ano"><h2 id="naquele-ano">Naquele ano no Ifes</h2><div class="numeros" style="grid-template-columns:1fr"><div class="numero"><strong>27</strong><p>Em 2022, 27 conclusões de Tecnologia em Análise e Desenvolvimento de Sistemas foram registradas na unidade Serra, incluindo a sua.</p></div><div class="numero"><strong>812</strong><p>Em 2022, 812 conclusões foram registradas na unidade Serra.</p></div></div><p class="suave">Dados institucionais apurados em 31/01/2026.</p></section><p class="proveniencia suave">Essas informações vêm dos registros acadêmicos do Ifes. Nada aqui foi respondido por você.</p></div></div><div class="creme secao"><div class="container"><section aria-labelledby="acoes"><h2 id="acoes">O que você pode fazer</h2><div class="acoes-b" data-medida="grade"><div class="card-bloco"><img class="card-previa" src="card-ana.png" width="270" height="480" alt="Card vertical Minha trajetória no Ifes: 2022, Tecnologia em Análise e Desenvolvimento de Sistemas, Serra, Graduação, Presencial; 27 conclusões deste curso e 812 conclusões na unidade Serra em 2022; Essa história também é minha. #SouEgressoIfes." data-medida="card"><div><h3>Seu card</h3><p class="suave">Uma imagem vertical da sua trajetória para o story ou o status das redes sociais.</p><p><a class="botao" href="#" data-medida="acao">Baixar o card da sua trajetória</a></p></div></div><div><div class="bloco"><h3>Sua trajetória</h3><p>Os capítulos da sua formação no Ifes, com a linha do tempo.</p><a class="ligacao" href="#">Ver minha trajetória no Ifes</a></div><div class="bloco"><h3>Seu e-mail</h3><p>O endereço que o Ifes usa para falar com você.</p><a class="ligacao" href="#">Manter seu e-mail com o Ifes</a></div></div></div></section></div></div><div class="secao"><div class="container empilhado"><section aria-labelledby="oportunidades"><h2 id="oportunidades">Oportunidades</h2><p class="oportunidade-titulo"><a href="#">Especialização em Segurança da Informação</a></p><p class="suave">Aparece porque você concluiu Tecnologia em Análise e Desenvolvimento de Sistemas na unidade Serra.</p><p class="suave">Oferecida pela unidade Serra · site externo: oportunidades.example</p><p><a class="ligacao" href="#">Ver as 2 oportunidades</a></p></section><section class="convite" aria-labelledby="convite"><h2 id="convite">Pesquisa de acompanhamento</h2><p class="texto">Há uma pesquisa aberta sobre Tecnologia em Análise e Desenvolvimento de Sistemas. Respondê-la é como você atualiza sua trajetória com o Ifes.</p><a class="botao" href="#">Responder</a></section></div></div>
 </main>
 <footer class="rodape"><div class="container">
 <p>Instituto Federal do Espírito Santo</p>

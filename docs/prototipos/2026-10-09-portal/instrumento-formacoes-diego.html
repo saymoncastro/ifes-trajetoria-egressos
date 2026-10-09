@@ -1,176 +1,545 @@
 <!doctype html>
+<!-- Retrato de /formacoes/ (primeira tela da pesquisa) para o Diego Exemplo, renderizado em 2026-10-09 pelo cliente de teste do Django sobre a main 07b9cf9 (depois da 025), com dados fictícios da demonstração. Usado só na prancha da passagem (medir.py). -->
+
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portal do Egresso — Direção B — trajetória (protótipo)</title>
-<style>
-/* Tokens da 015 (estilo.css), inalterados. */
+<title>Suas formações no Ifes — Portal do Egresso (demonstração)</title>
+<style>/* Trajetória Ifes — folha compartilhada, incluída inline (008 research R13, R14) pela
+   jornada, pelo editor (009), pelo acompanhamento (011) e por 403/404/500. Contraste AA:
+   texto #1b1b1b/#fff ≈ 17:1; botão #fff/#1a4480 ≈ 9.6:1; erro #b50909/#fff ≈ 7:1;
+   faixa #1b1b1b/#fff1d2 ≈ 15.4:1; bordas #565c65/#fff ≈ 6.7:1.
+
+   015 (research R1): aqui ficam só os tokens (:root) e as regras sob .pergunta/.escala/
+   .opcoes ou de classes exclusivas da jornada. Seletores usados também pela administração
+   (a, button, .aviso, .lista-simples, .erro, .resumo-erros…) mantêm valores literais; a
+   identidade da jornada fica em interface/jornada.css, que só a jornada inclui.
+   Identidade definitiva: DP-801; cor de ação: Direção B provisória (D-02). */
+
+/* Tokens (contracts/tokens.md). A Direção A × B troca exclusivamente --cor-acao e
+   --cor-acao-forte; nenhum outro token depende dela. Contraste contra #fff, salvo indicação. */
 :root {
-  --cor-marca: #2f9e41; --cor-institucional: #eef7f0;
-  --cor-texto: #1b1b1b; --cor-texto-suave: #565c65; --cor-fundo: #ffffff;
-  --cor-borda-suave: #c6cace; --cor-foco: #1b1b1b; --cor-foco-halo: #ffdd00;
-  --cor-demonstracao: #fff1d2;
+  --cor-marca: #2f9e41;          /* 3.45:1 — só gráfico (fio); nunca texto nem fundo */
+  --cor-acao: #1351b4;           /* 7.3:1 — Direção B (PDG), provisória; A: verde #195128, 9.3:1 */
+  --cor-acao-forte: #0c326f;     /* 12.3:1 — Direção B; A: #00420c, 11.8:1 */
+  --cor-sucesso: #195128;        /* 9.3:1 — fixo nas duas direções */
+  --cor-institucional: #eef7f0;  /* fundo da voz institucional; #1b1b1b sobre ele ≈ 15.8:1 */
+  --cor-selecao: #f2f4f7;        /* fundo tonal de seleção/hover, complementar; texto ≈ 16:1 */
+  --cor-texto: #1b1b1b;          /* 17.2:1 */
+  --cor-texto-suave: #565c65;    /* 6.7:1 */
+  --cor-fundo: #ffffff;          /* fundo da página */
+  --cor-borda-forte: #565c65;    /* 6.7:1 — campos, células, contornos de controle */
+  --cor-borda-suave: #c6cace;    /* 1.65:1 — só divisores decorativos */
+  --cor-info: #1a4480;           /* 9.6:1 — informação e pendência */
+  --cor-erro: #b50909;           /* 7.0:1 */
+  --cor-foco: #1b1b1b;           /* contorno do foco; 12.8:1 contra o halo */
+  --cor-foco-halo: #ffdd00;      /* halo do foco */
+  --cor-demonstracao: #fff1d2;   /* só a faixa de demonstração; texto ≈ 15.4:1 */
+
   --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --fonte-1: 1.75rem; --fonte-2: 1.375rem; --fonte-3: 1.125rem; --fonte-4: 1rem;
-  --fonte-5: 0.9375rem;
-  --espaco-1: .25rem; --espaco-2: .5rem; --espaco-3: .75rem; --espaco-4: 1rem;
-  --espaco-5: 1.5rem; --espaco-6: 2rem; --espaco-7: 3rem;
-  --raio: 4px; --borda-acento: 4px; --alvo: 2.75rem;
+  --fonte-1: 1.75rem;    /* 28 px */
+  --fonte-2: 1.375rem;   /* 22 px */
+  --fonte-3: 1.125rem;   /* 18 px */
+  --fonte-4: 1rem;       /* 16 px */
+  --fonte-5: 0.9375rem;  /* 15 px */
+  --peso-normal: 400;
+  --peso-medio: 600;
+  --peso-forte: 700;
+  --entrelinha-titulo: 1.25;
+  --entrelinha-enunciado: 1.4;
+  --entrelinha-corpo: 1.5;
+
+  --espaco-1: 0.25rem;  /* 4 px */
+  --espaco-2: 0.5rem;   /* 8 px */
+  --espaco-3: 0.75rem;  /* 12 px */
+  --espaco-4: 1rem;     /* 16 px */
+  --espaco-5: 1.5rem;   /* 24 px */
+  --espaco-6: 2rem;     /* 32 px */
+  --espaco-7: 3rem;     /* 48 px */
+
+  --raio: 4px;
+  --borda-fina: 1px;
+  --borda-controle: 2px;
+  --borda-acento: 4px;
+  --coluna: 40rem;
+  --alvo: 44px;          /* px, não rem: alvo físico (014 R6) */
 }
-/* Camada do Portal (ADR 0009): incluída depois, sem alterar os tokens acima. */
-:root {
-  --cor-acao: #195128;            /* decisão 3: 9,3:1 no branco */
-  --cor-acao-forte: #00420c;      /* 11,8:1 */
-  --portal-container: 72rem;      /* decisão 1 */
-  --portal-profundo: #0e3b23;     /* do card; branco ≈ 12:1 */
-  --portal-profundo-texto: #cfe6d6;
-  --portal-creme: #f6f2e8;
-  --portal-destaque: 2.5rem;      /* decisão 4: 40 px, peso 700, só no h1 */
-  --portal-numero: 3rem;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1b1b1b;
+  background: #ffffff;
 }
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; font-family: var(--fonte); font-size: var(--fonte-4); line-height: 1.5;
-  color: var(--cor-texto); background: var(--cor-fundo); overflow-wrap: anywhere; }
-a { color: var(--cor-acao); text-underline-offset: 3px; }
+
+.coluna { max-width: 40rem; margin: 0 auto; padding: 0 1rem; }
+
+a { color: #1a4480; text-decoration: underline; }
+
+:focus-visible {
+  outline: 3px solid #1b1b1b;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #ffdd00;
+}
+
+.pular {
+  position: absolute; left: -999em; top: 0;
+  padding: 0.5rem 1rem; background: #ffffff; z-index: 10;
+}
+.pular:focus { left: 0.5rem; top: 0.5rem; }
+
+/* 023 (FR-023): texto só para tecnologia assistiva, como "(obrigatória)" nos enunciados. */
+.visualmente-oculto {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.faixa-demonstracao {
+  background: #fff1d2; border-bottom: 2px solid #565c65; padding: 0.75rem 0;
+}
+.faixa-demonstracao p { margin: 0 auto; }
+
+.cabecalho { border-bottom: 1px solid #565c65; padding: 0.75rem 0; }
+.cabecalho .coluna { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; }
+.cabecalho form { display: inline; margin: 0; }
+.cabecalho .pessoa { margin: 0; font-weight: 600; }
+
+main { padding: 1.5rem 0 2rem; }
+
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
+h2 { font-size: 1.375rem; line-height: 1.3; margin: 2rem 0 0.75rem; }
+h3 { font-size: 1.125rem; margin: 1.5rem 0 0.5rem; }
+
+p, ul, ol, dl { margin: 0 0 1rem; }
+
+.contexto {
+  border-left: 4px solid #1a4480; padding: 0.5rem 1rem; margin: 0 0 1.5rem;
+  background: #f5f7fa;
+}
+.contexto h2 { margin-top: 0; font-size: 1.125rem; }
+.contexto-compacto p { margin: 0; overflow-wrap: anywhere; }
+.contexto dl, .lista-simples dl {
+  display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 1rem;
+}
+.contexto dl { margin: 0; }
+.contexto dt, .lista-simples dt { font-weight: 600; }
+.contexto dd, .lista-simples dd { margin: 0; overflow-wrap: anywhere; }
+
+.aviso {
+  border: 2px solid #565c65; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
+}
+
+.resumo-erros {
+  border: 3px solid #b50909; padding: 0.75rem 1rem; margin: 0 0 1.5rem;
+}
+.resumo-erros h2 { margin-top: 0; font-size: 1.125rem; color: #b50909; }
+/* 014 FR-027: o resumo recebe o foco ao carregar; a rolagem desse foco para antes do título
+   da Seção, que continua visível (não desloca para além do topo do conteúdo). */
+.resumo-erros { scroll-margin-top: 8rem; }
+
+.lista-simples { list-style: none; padding: 0; }
+.lista-simples > li { border-top: 1px solid #565c65; padding: 1rem 0; }
+.lista-simples > li:last-child { border-bottom: 1px solid #565c65; }
+
+/* 015 — Ritmo e tipografia da Pergunta (FR-022, FR-023): 48 px entre Perguntas, 8 px do
+   enunciado à resposta; enunciado 18/600; auxiliares 15 px em texto secundário. Vale para a
+   jornada e para a prévia do editor, que mantém o próprio espaço entre Perguntas (FR-040). */
+.pergunta { margin: 0 0 var(--espaco-7); padding: 0; border: 0; min-width: 0; }
+.pergunta legend, .pergunta > label.enunciado {
+  display: block; font-size: var(--fonte-3); font-weight: var(--peso-medio);
+  line-height: var(--entrelinha-enunciado); margin: 0 0 var(--espaco-2); padding: 0;
+  overflow-wrap: anywhere;
+}
+.pergunta.com-erro {
+  border-left: var(--borda-acento) solid var(--cor-erro); padding-left: var(--espaco-3);
+}
+.opcional, .pergunta legend .nota { font-weight: 400; }
+.explicacao, .descricao-escala { margin: 0 0 0.5rem; color: #1b1b1b; }
+.erro { color: #b50909; font-weight: 600; margin: 0 0 0.5rem; }
+.pergunta .explicacao, .pergunta .descricao-escala, .pergunta .opcional,
+.pergunta legend .nota {
+  font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+
+.opcao { display: flex; align-items: flex-start; gap: 0.5rem; min-height: 2.75rem; padding: 0.25rem 0; }
+.opcao input { margin: 0.25rem 0 0; width: 1.25rem; height: 1.25rem; flex: none; }
+.opcao label { flex: 1; overflow-wrap: anywhere; padding: 0.125rem 0; cursor: pointer; }
+
+/* 014 — Controles: uma única correção (MF-04 + MF-05 + UX-19; FR-018 a FR-022).
+   A linha (rádio, caixa) ou a célula (escala) inteira ativa o controle: o rótulo cobre o
+   contêiner. Restrito a `.pergunta` (jornada e prévia do editor), nunca ao `.opcao` do editor.
+   A escala fica em colunas de pelo menos 44 px CSS (px, não rem: o alvo é físico e não cresce
+   com a fonte), número sob o controle; cabe numa linha quando cabe e, senão, quebra alinhada. */
+.pergunta .opcao { position: relative; padding-left: var(--espaco-3); }
+.pergunta .opcao label::after { content: ""; position: absolute; inset: 0; }
+.escala {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: var(--espaco-1); max-width: 30rem;
+}
+.escala .opcao { flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
+.escala .opcao input { margin: 0; }
+.escala .opcao label { flex: none; text-align: center; padding: 0; }
+
+/* 015 — Estados dos controles (FR-025). Controle marcado na cor de ação; linha ou célula com
+   o controle marcado ganha marca de acento de 4 px (inset: não desloca nada nem muda a área
+   ativável) e fundo tonal complementar. Sem :has(), resta o controle marcado; em cores
+   forçadas, sombra e fundo somem e o controle nativo continua o sinal. A célula da escala é
+   delimitada por contorno forte (6,7:1). */
+.pergunta input { accent-color: var(--cor-acao); }
+/* Raio único dos controles (gate, rodada 1 — FR-008, FR-044): 4 px, escolhido contra 0 px. */
+.pergunta input[type="text"], .pergunta select { border-radius: var(--raio); }
+.pergunta .complemento { margin-left: calc(1.75rem + var(--espaco-3)); }
+.pergunta .opcao:has(input:checked) {
+  background: var(--cor-selecao); box-shadow: inset var(--borda-acento) 0 0 var(--cor-acao);
+}
+@media (hover: hover) {
+  .pergunta .opcao:hover { background: var(--cor-selecao); }
+}
+.pergunta .escala .opcao {
+  border: var(--borda-fina) solid var(--cor-borda-forte); border-radius: var(--raio);
+  padding: var(--espaco-1) 0;
+}
+.pergunta .escala .opcao:has(input:checked) {
+  border-color: var(--cor-acao); box-shadow: inset 0 0 0 var(--borda-fina) var(--cor-acao);
+}
+
+input[type="text"], select {
+  display: block; width: 100%; max-width: 100%;
+  font: inherit; padding: 0.5rem; min-height: 2.75rem;
+  border: 2px solid #565c65; border-radius: 0; background: #ffffff; color: #1b1b1b;
+}
+.com-erro input[type="text"], .com-erro select { border-color: #b50909; }
+
+.complemento { margin: 0.5rem 0 0 1.75rem; }
+.complemento label { display: block; margin-bottom: 0.25rem; }
+
+.remover { margin-top: 0.5rem; }
+
+.acoes { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 2rem 0 1rem; }
+
+button, .botao {
+  font: inherit; font-weight: 600; min-height: 2.75rem; padding: 0.5rem 1.25rem;
+  border: 2px solid #1a4480; cursor: pointer;
+}
+button.primario { background: #1a4480; color: #ffffff; }
+button.secundario { background: #ffffff; color: #1a4480; }
+/* Cabeçalho em duas linhas fixas (nome do produto; controles da demonstração), em vez de uma
+   quebra acidental; "Encerrar demonstração" com peso de ligação, sem competir com a ação
+   principal da tela. */
+.cabecalho .coluna > span { flex-basis: 100%; font-weight: 700; }
+.cabecalho button {
+  background: none; border: 0; padding: 0; color: #1a4480; font-weight: 400;
+  text-decoration: underline;
+}
+
+.nota { font-size: 0.9375rem; }
+
+footer { border-top: 1px solid #565c65; padding: 1rem 0 2rem; font-size: 0.9375rem; }
+
+/* 014 — Pendência não é erro (FR-005, FR-006): mesmo resumo e mesma marca por Pergunta,
+   com destaque azul institucional em vez do vermelho de erro; o texto distingue os dois. */
+.resumo-pendencias { border-color: var(--cor-info); }
+.resumo-pendencias h2 { color: var(--cor-info); }
+.pergunta.com-pendencia { border-left-color: var(--cor-info); }
+.com-pendencia input[type="text"], .com-pendencia select { border-color: var(--cor-info); }
+/* Auditoria de identidade visual, IV-03: a frase "Falta responder: …" da Pergunta pendente
+   também deixa o vermelho de erro (#1a4480/#fff ≈ 9.6:1). */
+.com-pendencia .erro { color: var(--cor-info); }
+
+/* 014 — Rodapé da Seção (FR-009, FR-015; research R10). Principal e secundária empilhadas,
+   em largura total até 480 px; terciárias (navegação que não grava) separadas por distância e
+   divisor. Classes próprias: `.acoes` e `button` continuam como no editor e no acompanhamento. */
+.acoes-secao { flex-direction: column; align-items: flex-start; }
+@media (max-width: 30em) {
+  .acoes-secao { align-items: stretch; }
+  .acoes-secao button { width: 100%; }
+}
+.saidas { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #565c65; font-size: 0.9375rem; }
+
+/* 014 — Ligações da tela de conclusão com alvo de toque de 44 px (FR-026; MF-13). */
+.lista-secoes { list-style: none; padding: 0; }
+.lista-secoes a { display: block; min-height: 2.75rem; padding: 0.625rem 0; }
+
+/* 018 — Painel de credenciais fictícias da entrada de acesso (FR-060, FR-071: 320 px). */
+.acesso-painel { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.acesso-painel th, .acesso-painel td {
+  padding: 0.35rem; vertical-align: top; overflow-wrap: anywhere;
+  border-bottom: 1px solid #565c65;
+}
+.acesso-painel button { width: 100%; padding: 0.5rem 0.2rem; overflow-wrap: anywhere; }
+.acesso-painel caption { text-align: left; margin-bottom: 0.75rem; }
+
+/* Formação declarada e consulta ao acervo (019). */
+.campo { margin-block: 1rem; }
+.campo label { display: block; margin-bottom: .25rem; }
+.campo input[type="number"] {
+  width: 100%; max-width: 100%; padding: .5rem; font: inherit;
+  border: 2px solid #565c65; border-radius: .25rem;
+}
+
+.validacao-formacao fieldset > label { display: block; margin-block: .5rem; }
+
+/* 023 FR-024: escolha única de duas Opções curtas lado a lado (jornada e prévia do editor).
+   Em rem, o mínimo cresce com a fonte: quando as duas não cabem, voltam a empilhar. A linha
+   inteira continua tocável (014 FR-019), com pelo menos 44 px de altura. */
+.pergunta .opcoes-lado-a-lado {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: var(--espaco-1); max-width: 30rem;
+}
+.pergunta .opcoes-lado-a-lado .opcao { border: var(--borda-fina) solid var(--cor-borda-forte);
+  border-radius: var(--raio); align-items: center; }
+
+/* Trajetória Ifes — Camada da jornada do egresso (015). Incluída inline, depois de
+   estilo.css, SÓ por interface/base.html (jornada e telas da demonstração que a estendem);
+   nunca pelo editor, pelo acompanhamento nem por 403/404/500 (research R1, R5). Usa só os
+   tokens de estilo.css; refina aqui, para a jornada, seletores que a administração também
+   usa. Identidade definitiva: DP-801. */
+
+/* Feedback (FR-026 a FR-029). Fio de acento de 4 px na cor do papel, sempre com o texto
+   atual: sucesso só para "salvo" e para a confirmação; informação para os demais avisos e
+   para a pendência; erro para o erro de forma. A forma é a mesma; título e prefixo distinguem
+   pendência de erro sem depender de cor. */
+.aviso {
+  border: var(--borda-fina) solid var(--cor-borda-suave);
+  border-left: var(--borda-acento) solid var(--cor-borda-forte);
+  padding: var(--espaco-3) var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.aviso-sucesso { border-left: var(--borda-acento) solid var(--cor-sucesso); }
+.aviso-informacao { border-left: var(--borda-acento) solid var(--cor-info); }
+
+.resumo-erros {
+  border: var(--borda-fina) solid var(--cor-erro);
+  border-left: var(--borda-acento) solid var(--cor-erro);
+}
+.resumo-erros h2 { color: var(--cor-erro); }
+.resumo-pendencias {
+  border: var(--borda-fina) solid var(--cor-info);
+  border-left: var(--borda-acento) solid var(--cor-info);
+}
+.resumo-pendencias h2 { color: var(--cor-info); }
+/* O foco programático (autofocus, 014 FR-027) não ativa :focus-visible: o resumo mostra o
+   mesmo foco de todos os elementos (FR-028). */
+.resumo-erros:focus {
+  outline: 3px solid var(--cor-foco); outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--cor-foco-halo);
+}
+
+.confirmacao {
+  border-left: var(--borda-acento) solid var(--cor-sucesso);
+  padding-left: var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.confirmacao p:last-child { margin-bottom: 0; }
+/* Gate, rodada 3: com a ficha logo abaixo, o fio de sucesso e o da marca pareciam uma linha
+   só. Só o bloco de sucesso se afasta; a ficha não muda. */
+.confirmacao:has(+ .contexto) { margin-bottom: var(--espaco-7); }
+
+/* Trajetória, contexto e divisores (FR-031 a FR-035). Identificação → metadado → situação
+   → ação; espaço simétrico no item; divisores suaves (nenhum significado depende deles). A
+   voz institucional (contexto e ficha da formação) usa o fio da marca e o fundo verde claro,
+   iguais nas duas direções. */
+.lista-simples > li { border-top: var(--borda-fina) solid var(--cor-borda-suave); padding: var(--espaco-4) 0; }
+.lista-simples > li:last-child { border-bottom: var(--borda-fina) solid var(--cor-borda-suave); }
+.lista-simples > li > :last-child { margin-bottom: 0; }
+.formacao strong { font-weight: var(--peso-medio); }
+.formacao .nota { font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.situacao { font-weight: var(--peso-normal); }
+
+.contexto {
+  border-left: var(--borda-acento) solid var(--cor-marca);
+  background: var(--cor-institucional);
+  padding: var(--espaco-2) var(--espaco-4); margin: 0 0 var(--espaco-5);
+}
+.saidas { border-top: var(--borda-fina) solid var(--cor-borda-suave); }
+
+@media (max-width: 30em) {
+  .contexto dl { grid-template-columns: 1fr; gap: 0; }
+  .contexto dd { margin-bottom: var(--espaco-2); }
+  main form button.primario { width: 100%; }
+}
+
+/* Shell da jornada (FR-015 a FR-021; contracts/shell.md). Faixa de demonstração com os
+   controles de demonstração, sem marca nem ação; cabeçalho branco com fio de marca e o nome
+   do produto em texto (a assinatura oficial entra antes dele — D-03); rodapé mínimo. */
+.faixa-demonstracao .coluna {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--espaco-4);
+}
+.faixa-demonstracao p { margin: 0; }
+.faixa-demonstracao .coluna > p:first-child { flex-basis: 100%; }
+.faixa-demonstracao .pessoa { font-weight: var(--peso-medio); }
+.faixa-demonstracao form { display: inline; margin: 0; }
+.faixa-demonstracao a, .faixa-demonstracao a:hover, .faixa-demonstracao button {
+  color: var(--cor-texto); text-decoration: underline;
+}
+.faixa-demonstracao button {
+  background: none; border: 0; padding: 0; font-weight: var(--peso-normal);
+  /* Alvo mínimo da 014 também no "Sair" (avaliação por IA de 2026-10-08, A6). */
+  min-width: var(--alvo); min-height: var(--alvo);
+}
+
+.produto {
+  background: var(--cor-fundo);
+  border-top: var(--borda-acento) solid var(--cor-marca);
+  border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
+}
+.produto .coluna {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--espaco-4);
+}
+/* Assinatura: altura fixa em px (não cresce nem encolhe com a fonte). 54 px → símbolo de
+   31 px (mínimo do Manual: 30 px); as margens do próprio ativo (≥ 7,8 px) são a área de
+   proteção de 1 módulo (6,7 px) — por isso o cabeçalho não tem respiro vertical próprio e
+   nada é posto dentro dessa margem. Gate, rodada 3: a 31 px o texto da assinatura ficava
+   pequeno demais; onde cabe ao lado do nome (≥ 22em), 63 px → símbolo de 36 px e cabeçalho
+   de 68 px. Abaixo disso, com 63 px, o nome passaria para baixo da assinatura. */
+.assinatura { display: block; flex: none; line-height: 0; }
+.assinatura svg { display: block; height: 54px; width: auto; }
+@media (min-width: 22em) {
+  .assinatura svg { height: 63px; }
+}
+.produto-nome {
+  margin: 0; padding: var(--espaco-2) 0; display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 0 var(--espaco-3);
+}
+/* O separador só existe entre a assinatura e o nome (sem a assinatura, não aparece). */
+.assinatura + .produto-nome {
+  border-left: var(--borda-fina) solid var(--cor-borda-suave); padding-left: var(--espaco-4);
+}
+.produto .nome {
+  font-size: var(--fonte-3); font-weight: var(--peso-forte); line-height: var(--entrelinha-titulo);
+}
+.produto .subtitulo { display: none; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+@media (min-width: 30em) {
+  .produto .subtitulo { display: inline; }
+}
+
+footer {
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  padding: var(--espaco-4) 0 var(--espaco-6);
+  font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+footer p { margin: 0 0 var(--espaco-1); }
+
+/* Ações da jornada (a Direção A × B troca só --cor-acao e --cor-acao-forte). */
+a { color: var(--cor-acao); }
 a:hover { color: var(--cor-acao-forte); text-decoration-thickness: 2px; }
-:focus-visible { outline: 3px solid var(--cor-foco); box-shadow: 0 0 0 6px var(--cor-foco-halo); }
-h1, h2, h3 { line-height: 1.25; margin: 0 0 var(--espaco-3); }
-h1 { font-size: var(--fonte-1); font-weight: 700; }
-h2 { font-size: var(--fonte-2); }
-h3 { font-size: var(--fonte-3); }
-p { margin: 0 0 var(--espaco-3); }
-main p { max-width: 36rem; }  /* ≈ 70 caracteres (ADR 0009) */
-img { max-width: 100%; height: auto; }
-.container { max-width: var(--portal-container); margin: 0 auto; padding: 0 var(--espaco-4); }
-.texto { max-width: 36rem; }
-.visualmente-oculto { position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap; }
-
-.prototipo { background: #3d3d3d; color: #fff; font-size: var(--fonte-5); padding: var(--espaco-1) 0; }
-.prototipo strong { color: var(--cor-foco-halo); }
-.demonstracao { background: var(--cor-demonstracao); font-size: var(--fonte-5);
-  padding: 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
-.demonstracao .container { display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-5); }
-.demonstracao a { color: var(--cor-texto); display: inline-flex; align-items: center; min-height: var(--alvo); }
-
-.cabecalho { border-bottom: 1px solid var(--cor-borda-suave); }
-.cabecalho .container { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
-  min-height: 4.5rem; padding-top: var(--espaco-2); padding-bottom: var(--espaco-2); }
-.assinatura svg { display: block; height: 2.75rem; width: auto; }
-.produto { margin: 0; border-left: 1px solid var(--cor-borda-suave); padding-left: var(--espaco-4);
-  font-weight: 700; font-size: var(--fonte-3); line-height: 1.25; }
-.produto span { display: block; font-weight: 400; font-size: var(--fonte-5); color: var(--cor-texto-suave); }
-.cabecalho .entrar-topo { margin-left: auto; }
-.navegacao { border-bottom: 1px solid var(--cor-borda-suave); }
-.navegacao ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-5); }
-.navegacao a { display: inline-flex; align-items: center; min-height: var(--alvo); color: var(--cor-texto);
-  text-decoration: none; border-bottom: var(--borda-acento) solid transparent; }
-.navegacao a:hover { border-bottom-color: var(--cor-borda-suave); }
-.navegacao a[aria-current] { font-weight: 700; border-bottom-color: var(--cor-acao); }
-
-.botao { display: inline-flex; align-items: center; justify-content: center; min-height: var(--alvo);
-  padding: 0 var(--espaco-5); background: var(--cor-acao); color: #fff; font-weight: 700;
-  border-radius: var(--raio); text-decoration: none; }
-.botao:hover { background: var(--cor-acao-forte); color: #fff; }
-.botao-claro { background: #fff; color: var(--portal-profundo); }
-.botao-claro:hover { background: var(--cor-institucional); color: var(--portal-profundo); }
-.ligacao { display: inline-flex; align-items: center; min-height: var(--alvo); font-weight: 600; }
-.origem { color: var(--cor-texto-suave); font-size: var(--fonte-5); font-weight: 400; }
-.suave { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
-.blocos { display: grid; gap: var(--espaco-4); }
-.bloco { border: 1px solid var(--cor-borda-suave); border-radius: var(--raio); padding: min(var(--espaco-5), 5vw);
-  display: flex; flex-direction: column; background: #fff; }
-.bloco p { color: var(--cor-texto-suave); flex: 1; }
-.numeros { display: grid; gap: var(--espaco-4); margin-bottom: var(--espaco-3); }
-.numero { background: var(--cor-institucional); border-left: var(--borda-acento) solid var(--cor-marca);
-  padding: var(--espaco-4) var(--espaco-5); border-radius: 0 var(--raio) var(--raio) 0; }
-.numero strong { display: block; font-size: var(--portal-numero); line-height: 1.1; color: var(--portal-profundo); }
-.numero p { margin: 0; }
-.oportunidade-titulo { font-weight: 600; font-size: var(--fonte-3); }
-.oportunidade-titulo a { display: inline-flex; align-items: center; min-height: var(--alvo); }
-.empilhado > * + * { margin-top: var(--espaco-6); }
-.convite { border: 2px solid var(--cor-acao); border-radius: var(--raio); padding: var(--espaco-5); }
-.card-previa { display: block; width: 100%; max-width: 270px; border-radius: var(--raio);
-  box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
-.selo { display: inline-block; background: var(--cor-demonstracao); color: var(--cor-texto);
-  font-size: var(--fonte-5); font-weight: 700; padding: var(--espaco-1) var(--espaco-3);
-  border-radius: 999px; margin-bottom: var(--espaco-3); }
-.foto { border: 2px dashed var(--cor-texto-suave); border-radius: var(--raio); display: flex;
-  align-items: center; justify-content: center; text-align: center; padding: var(--espaco-5);
-  color: var(--cor-texto-suave); background: var(--cor-institucional); min-height: 10rem; }
-.foto strong { display: block; color: var(--cor-texto); }
-.secao { padding: var(--espaco-6) 0; }
-.secao + .secao { padding-top: 0; }
-.rodape { border-top: 1px solid var(--cor-borda-suave); padding: var(--espaco-5) 0;
-  font-size: var(--fonte-5); color: var(--cor-texto-suave); }
-.rodape p { margin: 0; }
-
-@media (min-width: 768px) {
-  .container { padding: 0 var(--espaco-6); }
-  h1 { font-size: var(--portal-destaque); }
-  .numeros, .blocos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+button.primario {
+  background: var(--cor-acao); border-color: var(--cor-acao); color: var(--cor-fundo);
+  border-radius: var(--raio);
 }
-@media (max-width: 767px) {
-  .produto span { display: none; }
-  .cabecalho .entrar-topo { display: none; }
+button.primario:hover, button.primario:active {
+  background: var(--cor-acao-forte); border-color: var(--cor-acao-forte);
+}
+button.secundario {
+  border-color: var(--cor-acao); color: var(--cor-acao); border-radius: var(--raio);
+}
+button.secundario:hover, button.secundario:active {
+  border-color: var(--cor-acao-forte); color: var(--cor-acao-forte);
 }
 
-.faixa { background: var(--portal-profundo); color: #fff; padding: var(--espaco-6) 0; }
-.faixa h1, .faixa h2, .faixa h3 { color: #fff; }
-.faixa .proposta, .faixa .sintese { font-size: var(--fonte-3); }
-.faixa .suave, .faixa .origem { color: var(--portal-profundo-texto); }
-.faixa a:not(.botao) { color: #fff; }
-.hero-b .container { display: grid; gap: var(--espaco-6); align-items: center; }
-.hero-b .card-previa { margin: 0 auto; max-width: 300px; }
-.hero-b figure { margin: 0; text-align: center; }
-.hero-b figcaption { margin-top: var(--espaco-2); color: var(--portal-profundo-texto); font-size: var(--fonte-5); }
-.passos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espaco-4); counter-reset: passo; }
-.passos li { background: var(--portal-creme); border-radius: var(--raio); padding: var(--espaco-5);
-  counter-increment: passo; }
-.passos li::before { content: counter(passo); display: inline-flex; align-items: center; justify-content: center;
-  width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--portal-profundo); color: #fff;
-  font-weight: 700; margin-bottom: var(--espaco-3); }
-.passos p { margin: 0; color: var(--cor-texto-suave); }
-.linha { list-style: none; margin: var(--espaco-5) 0; padding: 0; display: grid; gap: var(--espaco-5); }
-.linha li { position: relative; padding-left: 2.5rem; }
-.linha li::before { content: ""; position: absolute; left: 0; top: .15rem; width: 1.5rem; height: 1.5rem;
-  border: .4rem solid var(--cor-marca); border-radius: 50%; background: var(--portal-profundo); }
-.linha .ano { display: block; font-size: var(--fonte-2); font-weight: 700; line-height: 1.2; }
-.linha p { margin: 0 0 var(--espaco-1); }
-.linha .curso { font-weight: 600; font-size: var(--fonte-3); }
-.faixa .numeros .numero { background: rgba(255,255,255,.08); border-left-color: var(--cor-marca); }
-.faixa .numero strong { color: #fff; }
-.faixa .proveniencia { border-top: 1px solid rgba(255,255,255,.25); padding-top: var(--espaco-4); margin: 0; }
-.creme { background: var(--portal-creme); }
-.acoes-b { display: grid; gap: var(--espaco-5); }
-.acoes-b .card-bloco { background: #fff; border-radius: var(--raio); padding: var(--espaco-5);
-  display: grid; gap: var(--espaco-5); }
-.acoes-b .card-bloco .card-previa { max-width: 240px; }
-.acoes-b .bloco { margin-bottom: var(--espaco-4); }
-@media (min-width: 1024px) {
-  .hero-b { padding: var(--espaco-7) 0; }
-  .hero-b .container { grid-template-columns: 7fr 5fr; }
-  .passos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .linha.horizontal { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--espaco-5); }
-  .linha.horizontal li { padding-left: 0; padding-top: 2.5rem; }
-  .linha.horizontal li::after { content: ""; position: absolute; left: 1.5rem; right: calc(-1 * var(--espaco-5));
-    top: calc(.75rem - 2px); height: 4px; background: var(--cor-marca); }
-  .linha.horizontal li:last-child::after { display: none; }
-  .faixa-b .container { display: grid; grid-template-columns: 7fr 5fr; column-gap: var(--espaco-7); }
-  .faixa-b .container.sem-numeros { grid-template-columns: 1fr; }
-  .faixa-b .proveniencia { grid-column: 1 / -1; }
-  .acoes-b { grid-template-columns: 2fr 1fr; column-gap: var(--espaco-7); }
-  .acoes-b .card-bloco { grid-template-columns: auto 1fr; align-items: start; }
+/* Gate, rodada 1 (SC-005): título com palavra longa ("Informações") não cabia a 320 px com
+   fonte a 200% e gerava rolagem horizontal; quebra a palavra só quando ela não cabe. */
+h1, h2 { overflow-wrap: break-word; hyphens: auto; }
+
+/* 023 — Jornada com menos esforço. Só CSS: sem JavaScript, nada muda onde não há suporte. */
+
+/* FR-018 a FR-020: o complemento aparece só com a Opção que o admite marcada; com texto (erro
+   ou restauração), nunca some. Sem :has(), o @supports falha e o campo fica sempre visível.
+   Fica aqui, e não em estilo.css, para a prévia do editor continuar mostrando tudo. */
+@supports selector(:has(*)) {
+  .pergunta .complemento:not(.sempre-visivel) { display: none; }
+  .pergunta:has(.opcao-com-complemento input:checked) .complemento,
+  .pergunta:has(option.opcao-com-complemento:checked) .complemento { display: block; }
 }
+
+/* FR-013: parte e máximo restante, discretos, acima do título. */
+.parte { margin: 0 0 var(--espaco-1); font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+.parte-salva { color: var(--cor-sucesso); font-weight: var(--peso-medio); }
+.onde-parou { font-size: var(--fonte-5); color: var(--cor-texto-suave); }
+
+/* FR-011: a próxima formação, separada das ligações que vêm depois. */
+.proxima-formacao { margin: var(--espaco-5) 0; }
+.proxima-formacao form { margin: var(--espaco-2) 0 var(--espaco-4); }
+
+/* FR-025: o convite da Versão recolhido; o resumo é um alvo de toque de 44 px. */
+details.abertura { margin: 0 0 var(--espaco-4); }
+details.abertura summary {
+  min-height: 2.75rem; display: flex; align-items: center; cursor: pointer;
+  color: var(--cor-acao); font-weight: var(--peso-medio);
+}
+
+/* FR-010: ponto seguro de salvamento no meio das Seções longas. */
+.ponto-do-meio {
+  margin: 0 0 var(--espaco-6); padding: var(--espaco-2) 0;
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
+}
+.ponto-do-meio p { margin: 0 0 var(--espaco-2); font-size: var(--fonte-5); }
+@media (max-width: 30em) {
+  .ponto-do-meio button { width: 100%; }
+}
+
+/* FR-021: os dois passos da não confirmação. */
+.passos { margin: var(--espaco-2) 0 0; padding-left: 1.25rem; }
+.passos li { margin-bottom: var(--espaco-2); }
+
+/* FR-031, FR-032: nível em botões de opção na declaração; "Sair" com menor ênfase. */
+.campo-opcoes { border: 0; padding: 0; }
+.campo-opcoes legend { margin-bottom: var(--espaco-1); }
+button.sair-discreto {
+  background: none; border: 0; padding: 0; color: var(--cor-acao); font-weight: 400;
+  text-decoration: underline;
+}
+
+/* 024 (contracts/navegacao.md; research R10): navegação, só quando o contexto a fornece. Lista
+   de links que quebra linha, sem menu escondido e sem JavaScript; alvos de 44 px (014). O
+   item atual é marcado por texto em negrito e fio, não só por cor. */
+.navegacao { border-bottom: var(--borda-fina) solid var(--cor-borda-suave); }
+.navegacao ul {
+  list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-4);
+}
+.navegacao a {
+  display: inline-flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  min-height: var(--alvo); min-width: var(--alvo); color: var(--cor-acao); font-size: var(--fonte-5);
+}
+/* Largura estável (025 research R10; A5 da avaliação por IA): cada item reserva a largura do
+   próprio rótulo em negrito, então marcar o item atual não muda a quebra da lista. */
+.navegacao a::after {
+  content: attr(data-rotulo); display: block; height: 0; overflow: hidden; visibility: hidden;
+  font-weight: var(--peso-forte);
+}
+.navegacao a[aria-current="page"] {
+  color: var(--cor-texto); font-weight: var(--peso-forte); text-decoration: none;
+  box-shadow: inset 0 calc(-1 * var(--borda-acento)) 0 var(--cor-acao);
+}
+
 </style>
 </head>
 <body>
-<div class="prototipo" data-medida="faixa"><div class="container"><strong>Protótipo</strong> · Direção B — trajetória · ADR 0009. Não é o produto.</div></div>
-<div class="demonstracao" data-medida="faixa"><div class="container"><span><strong>Ambiente de demonstração.</strong> Dados fictícios.</span></div></div>
-<header class="cabecalho"><div class="container">
-<span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709 284">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="faixa-demonstracao" role="note">
+  <div class="coluna">
+    <p><strong>Ambiente de demonstração.</strong> Todos os dados são fictícios. A confirmação usa CPF e data de nascimento fictícios e não é autenticação forte.</p>
+    
+    <p class="pessoa">Pessoa fictícia: Diego Exemplo</p>
+    
+    
+    <form method="post" action="/sair/"><input type="hidden" name="csrfmiddlewaretoken" value=""><button type="submit">Sair</button></form>
+    
+  </div>
+</div>
+
+<header class="produto">
+  <div class="coluna">
+    <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="709pt" height="284pt" viewBox="0 0 709 284">
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 187.433594 142.28125 L 194.828125 142.28125 L 194.828125 177.097656 L 187.433594 177.097656 L 187.433594 142.28125 "/>
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 234.652344 177.097656 L 225.253906 177.097656 L 210.085938 150.757812 L 209.867188 150.757812 C 210.171875 155.410156 210.324219 158.726562 210.324219 160.714844 L 210.324219 177.097656 L 203.714844 177.097656 L 203.714844 142.28125 L 213.042969 142.28125 L 228.1875 168.351562 L 228.351562 168.351562 C 228.117188 163.832031 227.996094 160.632812 227.996094 158.757812 L 227.996094 142.28125 L 234.652344 142.28125 L 234.652344 177.097656 "/>
 <path fill-rule="nonzero" fill="rgb(13.729858%, 12.159729%, 12.548828%)" fill-opacity="1" d="M 264.011719 167.425781 C 264.011719 170.574219 262.882812 173.046875 260.613281 174.851562 C 258.34375 176.667969 255.195312 177.574219 251.15625 177.574219 C 247.433594 177.574219 244.140625 176.871094 241.285156 175.476562 L 241.285156 168.617188 C 243.632812 169.664062 245.625 170.402344 247.253906 170.828125 C 248.882812 171.257812 250.378906 171.476562 251.730469 171.476562 C 253.355469 171.476562 254.597656 171.160156 255.464844 170.550781 C 256.328125 169.925781 256.765625 169.003906 256.765625 167.78125 C 256.765625 167.105469 256.570312 166.492188 256.191406 165.960938 C 255.808594 165.429688 255.246094 164.917969 254.507812 164.425781 C 253.769531 163.933594 252.265625 163.144531 249.988281 162.070312 C 247.859375 161.070312 246.257812 160.105469 245.191406 159.1875 C 244.125 158.265625 243.277344 157.195312 242.644531 155.976562 C 242.003906 154.75 241.6875 153.320312 241.6875 151.691406 C 241.6875 148.605469 242.730469 146.183594 244.824219 144.421875 C 246.914062 142.664062 249.800781 141.777344 253.496094 141.777344 C 255.304688 141.777344 257.039062 141.996094 258.679688 142.421875 C 260.328125 142.851562 262.050781 143.457031 263.847656 144.234375 L 261.464844 149.96875 C 259.601562 149.210938 258.0625 148.679688 256.84375 148.378906 C 255.628906 148.078125 254.429688 147.925781 253.253906 147.925781 C 251.851562 147.925781 250.78125 148.246094 250.035156 148.902344 C 249.285156 149.554688 248.910156 150.402344 248.910156 151.449219 C 248.910156 152.097656 249.0625 152.667969 249.367188 153.15625 C 249.667969 153.628906 250.148438 154.105469 250.8125 154.554688 C 251.472656 155.007812 253.03125 155.820312 255.496094 156.992188 C 258.757812 158.554688 260.988281 160.113281 262.199219 161.675781 C 263.40625 163.238281 264.011719 165.160156 264.011719 167.425781 "/>
@@ -211,17 +580,56 @@ img { max-width: 100%; height: auto; }
 <path fill-rule="nonzero" fill="rgb(21.662903%, 62.895203%, 19.999695%)" fill-opacity="1" d="M 120.921875 215.730469 C 120.921875 217.640625 119.328125 219.234375 117.417969 219.234375 L 89.367188 219.234375 C 87.460938 219.234375 85.867188 217.640625 85.867188 215.730469 L 85.867188 187.679688 C 85.867188 185.769531 87.460938 184.179688 89.367188 184.179688 L 117.417969 184.179688 C 119.328125 184.179688 120.921875 185.769531 120.921875 187.679688 L 120.921875 215.730469 "/>
 <path fill-rule="nonzero" fill="rgb(81.007385%, 9.333801%, 12.002563%)" fill-opacity="1" d="M 80.765625 75.5 C 80.765625 86.019531 72.15625 94.621094 61.640625 94.621094 C 51.121094 94.621094 42.519531 86.019531 42.519531 75.5 C 42.519531 64.984375 51.121094 56.375 61.640625 56.375 C 72.15625 56.375 80.765625 64.984375 80.765625 75.5 "/>
 </svg>
-</span>
-<p class="produto">Portal do Egresso <span>Instituto Federal do Espírito Santo</span></p>
-<a class="ligacao entrar-topo" href="#">Entrar no Portal</a>
-</div></header>
 
-<main>
-<div class="faixa hero-b"><div class="container"><div><p class="rotulo suave">Portal do Egresso</p><h1>Veja o que o Ifes registra sobre a sua formação</h1><p class="proposta texto">No Portal do Egresso, você encontra as formações que concluiu no Ifes, de onde vêm essas informações e um card da sua trajetória para compartilhar.</p><p><a class="botao botao-claro" href="#" data-medida="entrar">Entrar no Portal</a></p><p class="suave">Para entrar, confirme seu CPF e sua data de nascimento.</p></div><figure class=""><span class="selo">Exemplo com dados fictícios</span><img class="card-previa" src="card-exemplo.png" width="270" height="480" alt="Exemplo de card com dados fictícios: 2014, Técnico em Edificações; 2020, Bacharelado em Engenharia Civil; unidade Vitória. Essa história também é minha. #SouEgressoIfes."><figcaption class="suave">O card que você baixa no Portal.</figcaption></figure></div></div><section class="secao" aria-labelledby="como-funciona"><div class="container"><h2 id="como-funciona">Como funciona</h2><ol class="passos"><li><h3>Confirme seus dados</h3><p>CPF e data de nascimento, para o Ifes localizar suas formações.</p></li><li><h3>Veja sua trajetória</h3><p>As formações registradas pelo Ifes, com a origem de cada informação.</p></li><li><h3>Compartilhe, se quiser</h3><p>Baixe o card e publique no story ou no status.</p></li></ol></div></section><section class="secao" aria-labelledby="voz"><div class="container"><div class=""><h2 id="voz">Pesquisa de acompanhamento</h2><p class="texto">Quando o Ifes abre uma pesquisa de acompanhamento para a sua formação, o Portal mostra o convite. Responder é como você atualiza sua trajetória com o Ifes. Você vê sua trajetória sem precisar responder.</p><a class="botao" href="#">Entrar no Portal</a></div></div></section>
+    </span>
+    <p class="produto-nome"><span class="nome">Portal do Egresso</span> <span class="subtitulo">Instituto Federal do Espírito Santo</span></p>
+  </div>
+</header><nav class="navegacao" aria-label="Portal do Egresso"><div class="coluna"><ul><li><a href="/inicio/" data-rotulo="Início">Início</a></li><li><a href="/minha-trajetoria/" data-rotulo="Minha trajetória">Minha trajetória</a></li><li><a href="/oportunidades/" data-rotulo="Oportunidades">Oportunidades</a></li><li><a href="/formacoes/" data-rotulo="Pesquisa" aria-current="page">Pesquisa</a></li><li><a href="/meu-email/" data-rotulo="Meu e-mail">Meu e-mail</a></li></ul></div></nav>
+
+
+<main id="conteudo" tabindex="-1">
+  <div class="coluna">
+
+
+<h1>Suas formações no Ifes</h1>
+<p><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></p>
+
+  <p>Você concluiu <strong>Mestrado Profissional em Química · Vila Velha · 2020.</strong> O Ifes quer saber como sua trajetória seguiu depois disso.</p>
+  <p>Você responde uma seção de cada vez. Pode salvar a qualquer momento, mesmo sem terminar a seção, e continuar depois.</p>
+  
+  <p class="onde-parou">Você parou em «Informações Pessoais» · faltam no máximo 7 partes.</p>
+  <form method="post" action="/formacoes/entrar/"><input type="hidden" name="csrfmiddlewaretoken" value="">
+    <button type="submit" class="primario">Continuar a pesquisa</button>
+  </form>
+
+
+  <h2>Suas outras formações</h2>
+  <ul class="lista-simples">
+    
+    <li>
+      
+<p class="formacao"><strong>Técnico em Química · Vila Velha · 2012</strong><br><span class="nota">Técnico · Presencial · Integrado</span></p>
+
+      
+    </li>
+    
+    <li>
+      
+<p class="formacao"><strong>Licenciatura em Química · Vila Velha · 2017</strong><br><span class="nota">Graduação · Presencial</span></p>
+
+      
+    </li>
+    
+  </ul>
+
+
+  </div>
 </main>
-<footer class="rodape"><div class="container">
-<p>Instituto Federal do Espírito Santo</p>
-<p>Portal do Egresso — demonstração local com dados fictícios.</p>
-</div></footer>
+<footer class="rodape">
+  <div class="coluna">
+    <p>Instituto Federal do Espírito Santo</p>
+    <p class="ambiente">Portal do Egresso — demonstração local com dados fictícios.</p>
+  </div>
+</footer>
 </body>
 </html>

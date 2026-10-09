@@ -35,11 +35,16 @@ f.onload = () => {
   if (q.get('fonte') === '200') d.documentElement.style.fontSize = '200%';
   const r = s => { const e = d.querySelector(s); return e ? e.getBoundingClientRect() : null; };
   const soma = s => [...d.querySelectorAll(s)].reduce((t, e) => t + e.getBoundingClientRect().height, 0);
-  const c = d.querySelector('[data-medida=container]'), cs = c && w.getComputedStyle(c);
+  const conteudo = Math.max(0, ...[...d.querySelectorAll('main .container')].map(c => {
+    const cs = w.getComputedStyle(c);
+    return c.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  }));
   const grade = d.querySelector('[data-medida=grade]');
   const colunas = grade ? new Set([...grade.children].filter(e => e.offsetHeight > 0)
     .map(e => Math.round(e.getBoundingClientRect().left))).size : null;
-  const alvos = [...d.querySelectorAll('a.botao, a.ligacao, nav a')]
+  const isolado = a => a.matches('.botao, .ligacao, nav a, .demonstracao a')
+    || a.parentElement.textContent.trim() === a.textContent.trim();
+  const alvos = [...d.querySelectorAll('a')].filter(isolado)
     .filter(e => e.offsetParent !== null && e.getBoundingClientRect().height < 44).length;
   const caracteres = Math.max(...[...d.querySelectorAll('main p')].map(p => {
     const fs = parseFloat(w.getComputedStyle(p).fontSize);
@@ -55,7 +60,7 @@ f.onload = () => {
     acao: r('[data-medida=acao]') && r('[data-medida=acao]').top,
     entrar: r('[data-medida=entrar]') && r('[data-medida=entrar]').bottom,
     convite: r('.convite') && r('.convite').top,
-    conteudo: c ? c.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) : null,
+    conteudo,
     colunas, h1s: d.querySelectorAll('h1').length, alvos_pequenos: alvos, caracteres_max: caracteres,
   };
   f.height = res.altura_doc;
@@ -176,7 +181,18 @@ def avaliar(tela, m):
 
 def main():
     CAPTURAS.mkdir(exist_ok=True)
-    (PASTA / "_moldura.html").write_text(MOLDURA, "utf-8")
+    moldura = PASTA / "_moldura.html"
+    moldura.write_text(MOLDURA, "utf-8")
+    try:
+        medidas, avaliacoes = medir_tudo()
+        passagem(medidas)
+    finally:
+        moldura.unlink(missing_ok=True)
+    (PASTA / "medidas.json").write_text(json.dumps(medidas, indent=1, ensure_ascii=False), "utf-8")
+    (PASTA / "index.html").write_text(comparacao(avaliacoes), "utf-8")
+
+
+def medir_tudo():
     medidas, avaliacoes = {}, {}
     for d in DIRECOES:
         for t in TELAS:
@@ -193,28 +209,22 @@ def main():
             m["1440x900"] = medir(pagina, 1440, 900)
             medidas[pagina] = m
             avaliacoes[pagina] = avaliar(t, m)
-            for largura in (375, 1024, 1440):
-                altura = m["375x812"]["altura_doc"] if largura == 375 else medir(
-                    pagina, largura)["altura_doc"]
-                capturar(pagina, largura, altura, CAPTURAS / f"{d}-{t}-{largura}.png")
+            for largura, chave in ((375, "375x812"), (1024, "1024"), (1440, "1440x900")):
+                capturar(pagina, largura, m[chave]["altura_doc"],
+                         CAPTURAS / f"{d}-{t}-{largura}.png")
             capturar(pagina, 1280, 720, CAPTURAS / f"{d}-{t}-1280x720.png")
             capturar(pagina, 375, 812, CAPTURAS / f"{d}-{t}-375x812.png")
             print(pagina, "ok")
-    passagem()
-    (PASTA / "medidas.json").write_text(json.dumps(medidas, indent=1, ensure_ascii=False), "utf-8")
-    (PASTA / "index.html").write_text(comparacao(avaliacoes), "utf-8")
-    (PASTA / "_moldura.html").unlink()
+    return medidas, avaliacoes
 
 
-def passagem():
-    """Recorte do convite (combinação, Ana, 375 px) e a tela atual da pesquisa (main)."""
-    import shutil
-
-    topo = int(medir("c-inicio-ana.html", 375, 812)["convite"])
-    capturar("c-inicio-ana.html", 375, 700, CAPTURAS / "passagem-portal.png",
+def passagem(medidas):
+    """Recorte do convite (combinação, Diego, 375 px) e a primeira tela da pesquisa, a partir do
+    retrato de /formacoes/ da main depois da 025 (`instrumento-formacoes-diego.html`)."""
+    topo = int(medidas["c-inicio-diego.html"]["375x812"]["convite"])
+    capturar("c-inicio-diego.html", 375, 700, CAPTURAS / "passagem-portal.png",
              topo=max(0, topo - 380))
-    shutil.copy(PASTA.parents[1] / "auditorias/evidencias-2026-10-08-ux-portal/"
-                "08-instrumento-formacoes-ana-375.png", CAPTURAS / "passagem-instrumento.png")
+    capturar("instrumento-formacoes-diego.html", 375, 812, CAPTURAS / "passagem-instrumento.png")
 
 
 def comparacao(avaliacoes) -> str:
@@ -285,12 +295,14 @@ demonstração também é descontada, como manda a ADR.</p>
 <section id="contraste"><h2>Contraste dos tokens novos (AA: 4,5:1)</h2>
 <table><thead><tr><th>Par</th><th>Cores</th><th>Razão</th></tr></thead><tbody>{contrastes}</tbody></table></section>
 <section id="passagem"><h2>Passagem do Portal para o instrumento (decisão 3)</h2>
-<p>À esquerda, o convite no Início (combinação) com a ação em verde. À direita, a primeira
-tela da pesquisa como está hoje na <code>main</code>, com a ação em azul (Direção B da 015,
-mantida no instrumento até a D-02).</p>
+<p>À esquerda, o convite no Início do Diego (combinação) com a ação em verde. À direita, a primeira
+tela da pesquisa (<code>/formacoes/</code>) na <code>main</code> <code>07b9cf9</code>, depois da 025,
+renderizada para o Diego com dados fictícios (na base da 025 ele tem pesquisa em andamento, por isso
+"Continuar a pesquisa"), com a ação em azul (Direção B da 015, mantida no
+instrumento até a D-02).</p>
 <div class="linha" style="grid-template-columns:1fr 1fr">
 <figure><figcaption>Início, convite (375 px)</figcaption><img src="capturas/passagem-portal.png" alt="Convite no Início com botão verde"></figure>
-<figure><figcaption>Pesquisa, escolha de formações (375 px)</figcaption><img src="capturas/passagem-instrumento.png" alt="Primeira tela da pesquisa com botão azul"></figure>
+<figure><figcaption>Pesquisa, escolha de formações (375×812, primeira tela)</figcaption><img src="capturas/passagem-instrumento.png" alt="Primeira tela da pesquisa com botão azul"></figure>
 </div></section>
 </main></body></html>"""
 

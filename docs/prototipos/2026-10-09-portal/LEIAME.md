@@ -7,6 +7,8 @@ largura, com os critérios da ADR 0009 medidos e o contraste dos tokens novos.
 - `*-publico`, `*-inicio-ana`, `*-inicio-diego`: página pública e Início das personas
   fictícias (uma e três formações).
 - `card-*.png`: cards gerados pelo código da 021, com a legenda da decisão 5.
+- `instrumento-formacoes-diego.html`: retrato de `/formacoes/` na `main` `07b9cf9` (depois
+  da 025), para a prancha da passagem do Portal para o instrumento.
 - `capturas/`: 375, 1024 e 1440 px (página inteira) e primeiras telas a 375×812 e
   1280×720.
 

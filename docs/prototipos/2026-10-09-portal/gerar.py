@@ -167,11 +167,12 @@ def gerar_cards():
     django.setup()
     from trajetoria.narrativa import card, catalogo, rasterizacao
     from trajetoria.narrativa.contrato import (
+        METRICA_CURSO_UNIDADE_ANO,
+        METRICA_UNIDADE_ANO,
         Compartilhavel,
         ContextoCompartilhavel,
         FormacaoCompartilhavel,
     )
-    from trajetoria.narrativa.montagem import METRICA_CURSO_UNIDADE_ANO
 
     def formacao(curso, unidade, nivel, modalidade, ano):
         return FormacaoCompartilhavel(
@@ -190,7 +191,7 @@ def gerar_cards():
         "card-ana.png": Compartilhavel(
             (formacao(TADS, "Serra", "Graduação", "Presencial", 2022),), 0, 1,
             (destaque(METRICA_CURSO_UNIDADE_ANO, catalogo.DESTAQUE_CURSO, 27),
-             destaque("conclusoes_unidade_ano", catalogo.DESTAQUE_UNIDADE, 812)),
+             destaque(METRICA_UNIDADE_ANO, catalogo.DESTAQUE_UNIDADE, 812)),
             True, catalogo.CARD_APURACAO.format(apuracao="31/01/2026"),
         ),
         "card-diego.png": Compartilhavel(
@@ -216,7 +217,7 @@ def gerar_cards():
 BASE_CSS = """
 /* Tokens da 015 (estilo.css), inalterados. */
 :root {
-  --cor-marca: #2f9e41; --cor-sucesso: #195128; --cor-institucional: #eef7f0;
+  --cor-marca: #2f9e41; --cor-institucional: #eef7f0;
   --cor-texto: #1b1b1b; --cor-texto-suave: #565c65; --cor-fundo: #ffffff;
   --cor-borda-suave: #c6cace; --cor-foco: #1b1b1b; --cor-foco-halo: #ffdd00;
   --cor-demonstracao: #fff1d2;
@@ -235,7 +236,6 @@ BASE_CSS = """
   --portal-profundo: #0e3b23;     /* do card; branco ≈ 12:1 */
   --portal-profundo-texto: #cfe6d6;
   --portal-creme: #f6f2e8;
-  --portal-ano: #257a33;          /* ano no creme: 4,8:1 (021) */
   --portal-destaque: 2.5rem;      /* decisão 4: 40 px, peso 700, só no h1 */
   --portal-numero: 3rem;
 }
@@ -261,9 +261,9 @@ img { max-width: 100%; height: auto; }
 .prototipo { background: #3d3d3d; color: #fff; font-size: var(--fonte-5); padding: var(--espaco-1) 0; }
 .prototipo strong { color: var(--cor-foco-halo); }
 .demonstracao { background: var(--cor-demonstracao); font-size: var(--fonte-5);
-  padding: var(--espaco-2) 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
+  padding: 0; border-bottom: var(--borda-acento) solid var(--cor-marca); }
 .demonstracao .container { display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-5); }
-.demonstracao a { color: var(--cor-texto); }
+.demonstracao a { color: var(--cor-texto); display: inline-flex; align-items: center; min-height: var(--alvo); }
 
 .cabecalho { border-bottom: 1px solid var(--cor-borda-suave); }
 .cabecalho .container { display: flex; flex-wrap: wrap; align-items: center; gap: var(--espaco-2) var(--espaco-4);
@@ -299,6 +299,8 @@ img { max-width: 100%; height: auto; }
 .numero strong { display: block; font-size: var(--portal-numero); line-height: 1.1; color: var(--portal-profundo); }
 .numero p { margin: 0; }
 .oportunidade-titulo { font-weight: 600; font-size: var(--fonte-3); }
+.oportunidade-titulo a { display: inline-flex; align-items: center; min-height: var(--alvo); }
+.empilhado > * + * { margin-top: var(--espaco-6); }
 .convite { border: 2px solid var(--cor-acao); border-radius: var(--raio); padding: var(--espaco-5); }
 .card-previa { display: block; width: 100%; max-width: 270px; border-radius: var(--raio);
   box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
@@ -347,6 +349,7 @@ CSS = {
 .formacoes p { margin: 0 0 var(--espaco-1); }
 .formacoes .fato { font-weight: 600; }
 .acoes-a .bloco { margin-bottom: var(--espaco-4); }
+.inicio-a { padding-bottom: var(--espaco-7); }
 .acoes-a .bloco h3 { font-size: var(--fonte-4); }
 @media (min-width: 768px) { .blocos-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) {
@@ -505,7 +508,7 @@ def pagina(direcao: str, titulo: str, corpo: str, pessoa: str | None, navegacao:
 <body>
 <div class="prototipo" data-medida="faixa"><div class="container"><strong>Protótipo</strong> · {e(DIRECOES[direcao])} · ADR 0009. Não é o produto.</div></div>
 <div class="demonstracao" data-medida="faixa"><div class="container"><span><strong>Ambiente de demonstração.</strong> Dados fictícios.</span>{demo}</div></div>
-<header class="cabecalho"><div class="container" data-medida="container">
+<header class="cabecalho"><div class="container">
 <span class="assinatura" role="img" aria-label="Instituto Federal do Espírito Santo">{ASSINATURA}</span>
 <p class="produto">Portal do Egresso <span>Instituto Federal do Espírito Santo</span></p>
 {entrar_topo}
@@ -567,7 +570,9 @@ def chamada(classe_botao="botao") -> str:
     )
 
 
-def acoes_blocos(p, com_card=True) -> list[str]:
+def acoes_blocos(p, com_card=True, marcar=True) -> list[str]:
+    """Blocos de ação. `marcar` põe o marcador de ação principal no primeiro bloco; fica
+    desligado quando a ação principal é o botão do card (B e combinação)."""
     blocos = [
         ("Sua trajetória", "Os capítulos da sua formação no Ifes, com a linha do tempo.",
          "Ver minha trajetória no Ifes"),
@@ -579,7 +584,7 @@ def acoes_blocos(p, com_card=True) -> list[str]:
                    "Manter seu e-mail com o Ifes"))
     return [
         f'<div class="bloco"><h3>{e(t)}</h3><p>{e(d)}</p><a class="ligacao" href="#"'
-        f'{" data-medida=\"acao\"" if i == 0 else ""}>{e(a)}</a></div>'
+        f'{" data-medida=\"acao\"" if marcar and i == 0 else ""}>{e(a)}</a></div>'
         for i, (t, d, a) in enumerate(blocos)
     ]
 
@@ -677,7 +682,7 @@ def inicio(d: str, p: dict) -> str:
             for i, f in enumerate(p["formacoes"])
         )
         corpo = (
-            f'<div class="container"><div class="abertura-foto foto" aria-hidden="true"><div>'
+            f'<div class="container inicio-a"><div class="abertura-foto foto" aria-hidden="true"><div>'
             "<strong>Fotografia institucional da unidade</strong>aguarda ACS (ADR 0009, "
             f'decisão 5)</div></div><div class="titulo-inicio">{h1}'
             f'<p>{e(p["sintese"])}</p></div>'
@@ -685,8 +690,7 @@ def inicio(d: str, p: dict) -> str:
             f'<ul class="formacoes">{formacoes}</ul><p class="suave">{e(PROVENIENCIA)}</p></div>'
             '<section class="acoes-a" aria-labelledby="acoes"><h2 id="acoes">O que você pode '
             f'fazer</h2>{"".join(acoes_blocos(p))}</section></div>'
-            f'{oportunidades(p)}<div style="height:var(--espaco-6)"></div>{convite(p)}'
-            '<div style="height:var(--espaco-7)"></div></div>'
+            f'<div class="empilhado">{oportunidades(p)}{convite(p)}</div></div>'
         )
     elif d == "b":
         horizontal = "linha horizontal" if len(p["formacoes"]) > 1 else "linha"
@@ -702,7 +706,7 @@ def inicio(d: str, p: dict) -> str:
                 f'<p class="suave">{e(p["apuracao"])}</p></section>'
             )
         classe = "container" if p["numeros"] else "container sem-numeros"
-        blocos = acoes_blocos(p, com_card=False)
+        blocos = acoes_blocos(p, com_card=False, marcar=False)
         corpo = (
             f'<div class="faixa faixa-b"><div class="{classe}"><div>{h1}'
             f'<p class="sintese">{e(p["sintese"])}</p>{linha_do_tempo(p, horizontal)}</div>'
@@ -714,8 +718,8 @@ def inicio(d: str, p: dict) -> str:
             'o story ou o status das redes sociais.</p><p><a class="botao" href="#" '
             'data-medida="acao">Baixar o card da sua trajetória</a></p></div></div>'
             f'<div>{"".join(blocos)}</div></div></section></div></div>'
-            f'<div class="secao"><div class="container">{oportunidades(p)}'
-            f'<div style="height:var(--espaco-6)"></div>{convite(p)}</div></div>'
+            f'<div class="secao"><div class="container empilhado">{oportunidades(p)}'
+            f'{convite(p)}</div></div>'
         )
     else:
         corpo = (
@@ -725,7 +729,7 @@ def inicio(d: str, p: dict) -> str:
             f'{foto("Fotografia institucional da unidade")}</div></div>'
             f'<div class="container grade" data-medida="grade">{numeros(p)}'
             '<section aria-labelledby="acoes"><h2 id="acoes">O que você pode fazer</h2>'
-            f'<div class="blocos">{"".join(acoes_blocos(p, com_card=False))}</div></section>'
+            f'<div class="blocos">{"".join(acoes_blocos(p, com_card=False, marcar=False))}</div></section>'
             '<section class="card-lateral" aria-labelledby="seu-card"><h2 id="seu-card">Seu '
             f'card</h2>{card_previa(p)}<p class="suave">Uma imagem vertical para o story ou o '
             'status das redes sociais.</p><a class="botao" href="#" data-medida="acao">'
