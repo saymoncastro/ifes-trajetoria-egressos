@@ -47,8 +47,8 @@ def satisfaz(oportunidade, conclusao) -> bool:
 
 
 def _juntar(partes: list[str]) -> str:
-    if len(partes) == 1:
-        return partes[0]
+    if len(partes) <= 1:
+        return "".join(partes)
     return ", ".join(partes[:-1]) + " e " + partes[-1]
 
 
@@ -81,13 +81,16 @@ def oferecida(oportunidade) -> str:
     return mensagens.OFERECIDA_PELA_UNIDADE.format(unidade=oportunidade.unidade_responsavel)
 
 
-def _item(oportunidade, grupo: str, formacoes: tuple) -> Item:
+def item(oportunidade, grupo: str, formacoes: tuple, *,
+         explicacao_fixa: str | None = None) -> Item:
+    """O item como o egresso o vê. `explicacao_fixa` serve à prévia da curadoria, que não
+    tem a formação de um egresso para explicar."""
     do_ifes, dominio = origem_do_site(oportunidade.endereco)
     return Item(
         oportunidade=oportunidade,
         grupo=grupo,
         formacoes=formacoes,
-        explicacao=explicacao(oportunidade, formacoes),
+        explicacao=explicacao_fixa or explicacao(oportunidade, formacoes),
         categoria=Categoria(oportunidade.categoria).label,
         oferecida=oferecida(oportunidade),
         do_ifes=do_ifes,
@@ -105,11 +108,11 @@ def pertinentes(oportunidades, conclusoes) -> list[Item]:
     itens = []
     for oportunidade in oportunidades:
         if not oportunidade.tem_publico:
-            itens.append(_item(oportunidade, TODOS, ()))
+            itens.append(item(oportunidade, TODOS, ()))
             continue
         formacoes = tuple(c for c in conclusoes if satisfaz(oportunidade, c))
         if formacoes:
-            itens.append(_item(oportunidade, FORMACAO, formacoes))
+            itens.append(item(oportunidade, FORMACAO, formacoes))
     return sorted(
         itens,
         key=lambda i: (

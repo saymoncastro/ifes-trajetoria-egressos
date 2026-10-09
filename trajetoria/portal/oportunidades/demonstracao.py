@@ -14,9 +14,11 @@ from datetime import date, datetime, time, timedelta
 from django.utils import timezone
 
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
+from trajetoria.demonstracao.sinais import CargaRecusada
 from trajetoria.governanca.regras import EscopoDeAcompanhamento
 from trajetoria.portal.models import Categoria, Oportunidade
 from trajetoria.portal.oportunidades import operacoes
+from trajetoria.portal.oportunidades.regras import OportunidadeRejeitada
 
 _NAMESPACE = uuid.UUID("0a1b2c3d-0250-4025-8025-000000000025")
 _DOMINIO = "https://oportunidades.example/"
@@ -86,7 +88,15 @@ def _momento(dia: date) -> datetime:
 
 
 def carregar_catalogo(sender, data: date, **kwargs) -> None:
-    """Receptor de `cenario_preparado` (research R4)."""
+    """Receptor de `cenario_preparado` (research R4). Uma recusa vira `CargaRecusada`: o
+    preparo desfaz tudo e orienta, em vez de terminar com um traceback."""
+    try:
+        _carregar(data)
+    except OportunidadeRejeitada as erro:
+        raise CargaRecusada(f"catálogo de oportunidades: {erro}") from erro
+
+
+def _carregar(data: date) -> None:
     for item in CATALOGO:
         pk = identificador(item.chave)
         if Oportunidade.objects.filter(pk=pk).exists():

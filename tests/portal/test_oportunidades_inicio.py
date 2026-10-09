@@ -7,6 +7,7 @@ do site e domínio (FR-004, FR-013). A variante adotada é a medida na T046.
 import re
 
 import pytest
+from django.db import DatabaseError
 
 from tests.portal import construcao as cp
 from tests.portal import construcao_oportunidades as co
@@ -108,3 +109,22 @@ def test_css_nao_esconde_a_informacao_exigida():
 def test_variante_adotada_esta_registrada():
     """T046: a variante em uso é a medida e registrada em validacao.md."""
     assert inicio_do_portal.COMPACTACAO_DO_DESTAQUE == 3
+
+
+def test_falha_do_banco_omite_so_o_bloco(client, cenario, catalogo, monkeypatch, caplog):
+    def falha(pessoa, hoje):
+        raise DatabaseError("falha simulada")
+
+    monkeypatch.setattr(inicio_do_portal, "itens_da_pessoa", falha)
+    principal = _principal(client, cenario.pessoa("SIM-P-0001"))
+    assert _bloco(principal) is None and m_portal.TITULO_ACOES in principal
+    assert "portal: falha ao montar as oportunidades" in caplog.text
+
+
+def test_erro_de_programacao_nao_e_engolido(client, cenario, catalogo, monkeypatch):
+    def defeito(pessoa, hoje):
+        raise AttributeError("regressão simulada")
+
+    monkeypatch.setattr(inicio_do_portal, "itens_da_pessoa", defeito)
+    with pytest.raises(AttributeError):
+        _principal(client, cenario.pessoa("SIM-P-0001"))

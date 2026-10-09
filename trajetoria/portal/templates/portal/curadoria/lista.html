@@ -1,7 +1,5 @@
-{% extends "acompanhamento/base.html" %}
-{% block titulo %}{{ titulo }}{% endblock %}
+{% extends "portal/curadoria/base.html" %}
 {% block conteudo %}
-{% include "portal/curadoria/_estilo.html" %}
 <h1>{{ titulo }}</h1>
 {% if aviso %}<p role="status" class="aviso aviso-sucesso">{{ aviso }}</p>{% endif %}
 <p><a href="/curadoria/oportunidades/nova/">{{ nova }}</a></p>

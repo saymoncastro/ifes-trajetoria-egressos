@@ -27,11 +27,8 @@ _IMPEDIMENTOS = {Motivo.VERSAO_NAO_PUBLICADA, Motivo.PERIODO_NAO_DEFINIDO, Motiv
 
 def _pagina(request, template, *, status=200, **contexto):
     formulario = contexto.get("formulario")
-    if formulario is not None and formulario.errors:
-        for nome, campo in formulario.fields.items():
-            if nome in formulario.errors:
-                campo.widget.attrs["autofocus"] = True
-                break
+    if formulario is not None and formulario.is_bound:
+        formulario.focar_primeiro_erro()
     titulo = contexto.get(
         "titulo",
         {

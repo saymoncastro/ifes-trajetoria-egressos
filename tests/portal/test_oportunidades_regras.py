@@ -53,6 +53,8 @@ def test_retirada_prevalece_sobre_tudo():
         "https://www.ifes.edu.br/x",
         "https://oportunidades.example/a?b=1",
         "https://cursos.ifes.edu.br/especializacao#inscricao",
+        "https://1password.example/",  # rótulo numérico só no início não é IP
+        "https://www.123.com.br/",
     ],
 )
 def test_endereco_aceito(endereco):
@@ -76,6 +78,13 @@ def test_endereco_aceito(endereco):
         "https://localhost/",
         "ftp://host.example/",
         "//host.example/",
+        # IPv4 abreviado, octal ou hexadecimal: o navegador os lê como IP (code review #49).
+        "https://127.1/",
+        "https://10.1/",
+        "https://0177.0.0.1/",
+        "https://0x0a.0.0.1/",
+        "https://192.168.0.1./",
+        "https://2130706433/",
     ],
 )
 def test_endereco_recusado(endereco):

@@ -28,7 +28,7 @@ from trajetoria.portal.oportunidades.governanca import (
     escopo_de_curadoria,
     pode_curar_oportunidades,
 )
-from trajetoria.portal.oportunidades.pertinencia import Item, oferecida
+from trajetoria.portal.oportunidades.pertinencia import Item, item
 from trajetoria.portal.oportunidades.regras import (
     EDITAVEIS,
     RETIRAVEIS,
@@ -36,11 +36,11 @@ from trajetoria.portal.oportunidades.regras import (
     Motivo,
     OportunidadeRejeitada,
     estado,
-    origem_do_site,
 )
 
 LISTA = "/curadoria/oportunidades/"
-ESCOLHA_DE_OPERADOR = "/demonstracao/operador/?destino=curadoria"
+DESTINO = "curadoria"  # destino registrado da escolha de operador (portal/apps.py)
+ESCOLHA_DE_OPERADOR = f"/demonstracao/operador/?destino={DESTINO}"
 
 _ERROS = {
     Motivo.TITULO: ("titulo", m.ERROS["titulo"]),
@@ -66,7 +66,7 @@ def curadoria(view):
         if vinculos is None:
             return redirect(ESCOLHA_DE_OPERADOR)
         if not pode_curar_oportunidades(vinculos):
-            return recusa(request, m.RECUSA)
+            return recusa(request, m.RECUSA, destino_operador=DESTINO)
         request.escopo = escopo_de_curadoria(vinculos)
         request.atuacao = Atuacao(tuple(v.rotulo_de_atuacao for v in vinculos), False)
         return view(request, *args, **kwargs)
@@ -76,21 +76,17 @@ def curadoria(view):
 
 def _pagina(request, template, *, titulo, status=200, **contexto):
     formulario = contexto.get("formulario")
-    if formulario is not None and formulario.errors:
-        for nome, campo in formulario.fields.items():
-            if nome in formulario.errors:
-                campo.widget.attrs["autofocus"] = True
-                break
-    trilha = [(m.CURADORIA_TRILHA, LISTA)]
-    if template != "lista":
-        trilha.append((titulo, None))
-    else:
+    if formulario is not None and formulario.is_bound:
+        formulario.focar_primeiro_erro()
+    if template == "lista":
         trilha = [(m.CURADORIA_TRILHA, None)]
+    else:
+        trilha = [(m.CURADORIA_TRILHA, LISTA), (titulo, None)]
     return render(
         request,
         f"portal/curadoria/{template}.html",
         {"banner": ap.BANNER, "atuacao": request.atuacao, "trilha": trilha, "titulo": titulo,
-         **contexto},
+         "destino_operador": DESTINO, **contexto},
         status=status,
     )
 
@@ -127,13 +123,7 @@ def _publico(o) -> str:
 
 def _previa(o) -> Item:
     """O item como o egresso o verá; a explicação real depende da formação de cada egresso."""
-    do_ifes, dominio = origem_do_site(o.endereco)
-    return Item(
-        oportunidade=o, grupo="", formacoes=(),
-        explicacao=m.ABERTA_A_TODOS if not o.tem_publico else m.PREVIA_EXPLICACAO,
-        categoria=Categoria(o.categoria).label, oferecida=oferecida(o), do_ifes=do_ifes,
-        dominio=dominio,
-    )
+    return item(o, "", (), explicacao_fixa=None if not o.tem_publico else m.PREVIA_EXPLICACAO)
 
 
 def _erros(formulario, erro: OportunidadeRejeitada) -> None:
@@ -179,11 +169,12 @@ def _formulario(request, *, titulo, instancia=None):
         inicial = None
         if instancia is not None:
             inicial = {campo: getattr(instancia, campo) for campo in operacoes.CAMPOS_DE_CONTEUDO}
-        formulario = OportunidadeForm(escopo, initial=inicial)
+            inicial["versao"] = operacoes.assinatura(instancia)
+        formulario = OportunidadeForm(escopo, initial=inicial, instancia=instancia)
         return _pagina(request, "formulario", titulo=titulo, formulario=formulario,
                        ajuda_conteudo=m.AJUDA_CONTEUDO, ajuda_publico=m.AJUDA_PUBLICO,
                        voltar=LISTA)
-    formulario = OportunidadeForm(escopo, request.POST)
+    formulario = OportunidadeForm(escopo, request.POST, instancia=instancia)
     if formulario.is_valid():
         operador = operador_em_uso(request)
         try:
@@ -192,7 +183,7 @@ def _formulario(request, *, titulo, instancia=None):
                                     hoje=_hoje())
                 return redirect(f"{LISTA}?aviso=cadastrada")
             operacoes.editar(instancia.pk, formulario.dados(), operador=operador, escopo=escopo,
-                             hoje=_hoje())
+                             hoje=_hoje(), versao=formulario.versao_lida())
             return redirect(f"{LISTA}?aviso=editada")
         except OportunidadeRejeitada as erro:
             if Motivo.ESTADO in erro.motivos:

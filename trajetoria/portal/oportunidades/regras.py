@@ -5,6 +5,7 @@ Sem banco e sem relógio: quem chama passa `hoje`. Vocabulário de rejeição no
 """
 
 import ipaddress
+import re
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
@@ -12,6 +13,10 @@ from urllib.parse import urlsplit
 
 ENDERECO_MAXIMO = 500
 _DOMINIO_DO_IFES = "ifes.edu.br"
+# Rótulo que um navegador lê como parte de endereço IPv4: decimal, octal (0…) ou hexadecimal
+# (0x…). Um último rótulo assim faz `127.1`, `10.1` ou `0177.0.0.1` virarem IP no navegador,
+# embora `ipaddress` não os reconheça (code review do PR #49).
+_ROTULO_NUMERICO = re.compile(r"(0x[0-9a-f]*|[0-9]+)")
 
 
 class Estado(Enum):
@@ -97,7 +102,7 @@ def _nome_de_maquina(texto: str) -> str | None:
         return None
     except ValueError:
         pass
-    if "." not in nome:
+    if "." not in nome or _ROTULO_NUMERICO.fullmatch(nome.rstrip(".").rsplit(".", 1)[-1]):
         return None
     return nome.lower()
 

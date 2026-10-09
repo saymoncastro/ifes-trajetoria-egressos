@@ -9,6 +9,8 @@ vira texto visível (FR-018).
 import dataclasses
 import logging
 
+from django.db import DatabaseError
+
 from trajetoria.interface import mensagens as estados
 from trajetoria.narrativa import imagens
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
@@ -117,11 +119,12 @@ def _acoes(com_trajetoria: bool) -> list[dict]:
 
 
 def _oportunidades(pessoa, hoje) -> dict | None:
-    """Um destaque e o total (025 FR-021). `None` sem itens: o bloco não existe. Uma falha
-    omite só o bloco, como no reconhecimento."""
+    """Um destaque e o total (025 FR-021). `None` sem itens: o bloco não existe. Uma falha do
+    banco omite só o bloco, como no reconhecimento; erro de programação não é engolido (code
+    review do PR #49): sem isso, uma regressão na pertinência sumiria com o bloco em silêncio."""
     try:
         itens = itens_da_pessoa(pessoa, hoje)
-    except Exception:
+    except DatabaseError:
         logger.exception("portal: falha ao montar as oportunidades")
         return None
     if not itens:

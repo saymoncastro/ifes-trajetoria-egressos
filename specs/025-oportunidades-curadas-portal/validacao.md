@@ -129,3 +129,20 @@ Banco recém-preparado, catálogo carregado pelo sinal, servidor em `127.0.0.1:8
 - **Formulário da curadoria.** `fieldset` e `legend` na categoria e nos três grupos do
   público; erros com `aria-describedby` e `aria-invalid`; foco no primeiro erro (testes).
 - **Leitor de tela.** **Não executado** (P4 da 024 continua pendente).
+
+## Code review do PR #49
+
+Dez achados, todos corrigidos no mesmo PR. Nenhum muda regra institucional nem a spec.
+
+| # | Achado | Correção | Teste |
+|---|--------|----------|-------|
+| 1 | Edição apagava valor de público ou unidade que saiu das Conclusões (DP-1005), alargando o público em silêncio | Na edição, o valor gravado continua opção, marcado e identificado como fora do registro | `test_valores_fora_do_registro_continuam_na_edicao` |
+| 2 | Endereço com IPv4 abreviado, octal ou hexadecimal (`127.1`, `0177.0.0.1`, `0x0a.0.0.1`) passava pela regra "sem número IP" | Recusa nome cujo último rótulo é numérico | `test_oportunidades_regras.py` |
+| 3 | Duas edições simultâneas: a segunda desfazia a primeira | Assinatura do conteúdo lido no formulário; divergência vira conflito (409, FR-034) | `test_edicao_concorrente_vira_conflito` |
+| 4 | Recusa no catálogo fictício escapava do preparo como traceback | Receptor converte em `CargaRecusada` (neutra, do núcleo); o preparo desfaz tudo e orienta | `test_catalogo_recusado_desfaz_o_preparo_e_orienta` |
+| 5 | `<style>` da curadoria dentro do `<main>` | Bloco neutro `estilo` no `<head>` de `acompanhamento/base.html` | `test_troca_de_operador_volta_a_curadoria_e_estilo_no_head` |
+| 6 | "Trocar operador fictício" na curadoria levava ao acompanhamento | Destino da troca vem do contexto (`destino_operador`), padrão `acompanhamento` | idem; `test_operador_sem_vinculo_e_recusado` |
+| 7 | Prévia da publicação reimplementava o item do egresso | `pertinencia.item` com explicação fixa opcional; `_juntar([])` não falha | suíte da curadoria |
+| 8 | Foco no primeiro erro copiado da gestão de Campanha | `Formulario.focar_primeiro_erro()` usado pelas duas telas | suítes da gestão e da curadoria |
+| 9 | Quatro varreduras `DISTINCT` das Conclusões por formulário | Uma consulta, repartida em memória | suíte da curadoria |
+| 10 | `except Exception` no bloco do Início escondia erro de programação | Só falha do banco omite o bloco (como a T024 pede para a falha isolada); o resto aparece | `test_falha_do_banco_omite_so_o_bloco`, `test_erro_de_programacao_nao_e_engolido` |

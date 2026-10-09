@@ -5,6 +5,6 @@
 <p>{{ texto }}</p>
 <ul class="lista-acoes">
   {% if atuacao %}<li><a href="/acompanhamento/">Voltar ao acompanhamento</a></li>{% endif %}
-  <li><a href="/demonstracao/operador/?destino=acompanhamento">Trocar operador fictício</a></li>
+  <li><a href="/demonstracao/operador/?destino={{ destino_operador|default:"acompanhamento" }}">Trocar operador fictício</a></li>
 </ul>
 {% endblock %}

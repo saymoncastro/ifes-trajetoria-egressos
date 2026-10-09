@@ -26,26 +26,28 @@ def da_curadoria(escopo):
     return Oportunidade.objects.filter(unidade_responsavel__in=sorted(escopo.unidades))
 
 
-def _distintos(campo: str) -> list[str]:
-    return sorted(
-        ConclusaoAcademica.objects.exclude(**{f"{campo}__isnull": True})
-        .values_list(campo, flat=True)
-        .distinct()
-    )
-
-
 def opcoes_de_publico() -> dict[str, list[str]]:
     """Valores registrados nas Conclusões, como escritos: grafias diferentes são opções
-    diferentes (FR-007; DP-1005; DP-2507). Não usa a abrangência das Campanhas (ADR 0004)."""
+    diferentes (FR-007; DP-1005; DP-2507). Não usa a abrangência das Campanhas (ADR 0004).
+
+    Uma só consulta (combinações distintas), repartida em Python: o formulário a usa para o
+    público e para as unidades responsáveis."""
+    cursos, niveis, unidades = set(), set(), set()
+    for curso, nivel, unidade in (
+        ConclusaoAcademica.objects.values_list("curso", "nivel", "unidade").distinct()
+    ):
+        cursos.add(curso)
+        niveis.add(nivel)
+        unidades.add(unidade)
     return {
-        "publico_unidades": _distintos("unidade"),
-        "publico_niveis": _distintos("nivel"),
-        "publico_cursos": _distintos("curso"),
+        "publico_unidades": sorted(unidades - {None}),
+        "publico_niveis": sorted(niveis - {None}),
+        "publico_cursos": sorted(cursos - {None}),
     }
 
 
-def unidades_responsaveis(escopo) -> list[str]:
+def unidades_responsaveis(escopo, unidades_registradas: list[str]) -> list[str]:
     """CPAEG: "" (Ifes) e as unidades registradas. CSAEG: as unidades do escopo."""
     if escopo.institucional:
-        return ["", *_distintos("unidade")]
+        return ["", *unidades_registradas]
     return sorted(escopo.unidades)

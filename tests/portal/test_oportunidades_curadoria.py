@@ -14,6 +14,7 @@ from trajetoria.governanca.operacoes import registrar_vinculo
 from trajetoria.portal.models import Oportunidade
 from trajetoria.portal.oportunidades import mensagens as m
 from trajetoria.portal.oportunidades import operacoes
+from trajetoria.portal.oportunidades.formularios import FORA_DO_REGISTRO
 from trajetoria.portal.oportunidades.regras import Estado, estado
 
 pytestmark = pytest.mark.django_db
@@ -67,7 +68,20 @@ def test_sem_operador_vai_para_a_escolha_e_volta(client, vinculos):
 def test_operador_sem_vinculo_e_recusado(client, vinculos):
     atuar_como(client, OPERADOR_C)
     resposta = client.get(LISTA)
-    assert resposta.status_code == 403 and m.RECUSA in resposta.content.decode()
+    html = resposta.content.decode()
+    assert resposta.status_code == 403 and m.RECUSA in html
+    assert "/demonstracao/operador/?destino=curadoria" in html
+    assert "?destino=acompanhamento" not in html
+
+
+def test_troca_de_operador_volta_a_curadoria_e_estilo_no_head(operador_b):
+    """Code review do PR #49: a troca de operador volta à curadoria, não ao acompanhamento;
+    o CSS da curadoria fica no <head>, não no meio do conteúdo."""
+    html = operador_b.get(LISTA).content.decode()
+    assert "/demonstracao/operador/?destino=curadoria" in html
+    assert "?destino=acompanhamento" not in html
+    cabeca, corpo = html.split("</head>", 1)
+    assert "overflow-wrap: anywhere" in cabeca and "<style" not in corpo
 
 
 def test_csaeg_ve_so_a_propria_unidade(operador_b):
@@ -264,6 +278,42 @@ def test_conflito_nada_gravado(vinculos):
     resposta = outro.post(f"{LISTA}{o.pk}/editar/", _formulario(titulo="Outro título"))
     assert resposta.status_code == 409 and m.CONFLITO in resposta.content.decode()
     assert _linha(o) == antes
+
+
+def test_edicao_concorrente_vira_conflito(vinculos):
+    """FR-034: duas abas abrem a edição; a segunda a salvar não desfaz a primeira."""
+    o = co.rascunho(escopo=co.ESCOPO_B, operador=co.OPERADOR_B, unidade_responsavel="Vitória")
+    um, outro = atuar_como(Client(), co.OPERADOR_A), atuar_como(Client(), co.OPERADOR_B)
+    versoes = [re.search(r'name="versao" value="([0-9a-f]+)"',
+                         c.get(f"{LISTA}{o.pk}/editar/").content.decode()).group(1)
+               for c in (um, outro)]
+    assert um.post(f"{LISTA}{o.pk}/editar/",
+                   _formulario(resumo="Do primeiro.", versao=versoes[0])).status_code == 302
+    antes = _linha(o)
+    resposta = outro.post(f"{LISTA}{o.pk}/editar/",
+                          _formulario(titulo="Do segundo", versao=versoes[1]))
+    assert resposta.status_code == 409 and m.CONFLITO in resposta.content.decode()
+    assert _linha(o) == antes
+
+
+def test_valores_fora_do_registro_continuam_na_edicao(operador_a):
+    """DP-1005: valor gravado que deixou de existir nas Conclusões aparece marcado e
+    identificado; editar outro campo não o apaga nem alarga o público."""
+    o = co.rascunho(unidade_responsavel="Unidade extinta", publico_cursos=["Curso extinto"])
+    html = operador_a.get(f"{LISTA}{o.pk}/editar/").content.decode()
+    assert m.IFES_INSTITUCIONAL in html
+    assert re.search(r'value="Unidade extinta"[^>]*selected', html)
+    rotulo = FORA_DO_REGISTRO.format(valor="Curso extinto")
+    assert rotulo in html and re.search(r'value="Curso extinto"[^>]*checked', html)
+    resposta = operador_a.post(f"{LISTA}{o.pk}/editar/", _formulario(
+        titulo="Novo título", unidade_responsavel="Unidade extinta",
+        publico_cursos=["Curso extinto"]))
+    assert resposta.status_code == 302
+    o.refresh_from_db()
+    assert (o.titulo, o.unidade_responsavel, o.publico_cursos) == (
+        "Novo título", "Unidade extinta", ["Curso extinto"])
+    nova = operador_a.post(f"{LISTA}nova/", _formulario(publico_cursos=["Curso extinto"]))
+    assert nova.status_code == 422  # fora da edição, só valores registrados
 
 
 @pytest.mark.parametrize("acao", ["editar", "publicar", "retirar"])

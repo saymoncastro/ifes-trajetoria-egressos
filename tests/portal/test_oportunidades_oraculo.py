@@ -125,3 +125,17 @@ def test_preparo_idempotente(demonstracao):
     antes = Oportunidade.objects.count()
     call_command("preparar_demonstracao", stdout=StringIO())
     assert antes == 10 and Oportunidade.objects.count() == 10
+
+
+def test_catalogo_recusado_desfaz_o_preparo_e_orienta(monkeypatch):
+    """Recusa de uma operação do catálogo: o comando termina com a mensagem orientada do
+    preparo (não com traceback) e nada fica gravado (code review do PR #49)."""
+    from django.core.management.base import CommandError
+
+    from trajetoria.portal.models import Oportunidade
+    from trajetoria.portal.oportunidades import demonstracao as catalogo
+
+    monkeypatch.setattr(catalogo, "_DOMINIO", "http://oportunidades.example/")
+    with pytest.raises(CommandError, match="catálogo de oportunidades.*Recrie o banco local"):
+        call_command("preparar_demonstracao", stdout=StringIO())
+    assert not Oportunidade.objects.exists() and not Pessoa.objects.exists()

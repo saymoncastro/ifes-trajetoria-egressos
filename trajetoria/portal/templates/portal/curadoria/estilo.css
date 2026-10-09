@@ -1,9 +1,8 @@
-{% comment %}Curadoria (025 FR-035): palavras longas e domínios quebram em vez de alargar a página
-a 320 px com fonte a 200% (WCAG 1.4.10). Só as telas da curadoria; as telas de operação do
-núcleo não mudam.{% endcomment %}<style>
+/* Curadoria (025 FR-035): palavras longas e domínios quebram em vez de alargar a página a
+   320 px com fonte a 200% (WCAG 1.4.10). Só as telas da curadoria; as telas de operação do
+   núcleo não mudam. Entra no bloco `estilo` do <head> (portal/curadoria/base.html). */
 #conteudo h1, #conteudo h2, #conteudo > .coluna > p, #conteudo form p, #conteudo label,
 #conteudo legend, #conteudo .oportunidade p { overflow-wrap: anywhere; }
 /* A tabela da lista não quebra palavras: rola dentro da própria região, como na 011. */
 #conteudo .rolagem th, #conteudo .rolagem td { white-space: nowrap; }
 {% include "portal/oportunidades.css" %}
-</style>

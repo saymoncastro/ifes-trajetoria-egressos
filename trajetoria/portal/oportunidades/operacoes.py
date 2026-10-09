@@ -6,6 +6,7 @@ entre a exibição e a confirmação vira `Motivo.ESTADO`, que a view mostra com
 (FR-034). Nada além da Oportunidade é gravado (FR-037).
 """
 
+import hashlib
 from datetime import date, datetime
 from typing import NoReturn
 
@@ -31,12 +32,21 @@ from trajetoria.portal.oportunidades.regras import (
     estado,
 )
 
-__all__ = ["cadastrar", "editar", "publicar", "retirar"]
+__all__ = ["assinatura", "cadastrar", "editar", "publicar", "retirar"]
 
 CAMPOS_DE_CONTEUDO = (
     "titulo", "resumo", "categoria", "unidade_responsavel", "endereco", "inicio", "fim",
     *CRITERIOS_DE_PUBLICO,
 )
+
+
+def assinatura(oportunidade) -> str:
+    """Resumo do conteúdo e dos momentos gravados. A edição o leva do formulário à gravação:
+    se outro operador mudou a oportunidade nesse meio-tempo, a gravação vira conflito, em
+    vez de desfazer em silêncio a mudança dele (FR-034; code review do PR #49)."""
+    campos = (*CAMPOS_DE_CONTEUDO, "publicada_em", "retirada_em")
+    texto = repr(tuple(getattr(oportunidade, campo) for campo in campos))
+    return hashlib.sha256(texto.encode()).hexdigest()
 
 
 def _rejeitar(motivo: Motivo, campo: str | None = None, detalhe: str = "") -> NoReturn:
@@ -110,13 +120,17 @@ def cadastrar(dados: dict, *, operador: str, escopo, hoje: date, id=None) -> Opo
 
 
 @transaction.atomic
-def editar(oportunidade_id, dados: dict, *, operador: str, escopo, hoje: date) -> Oportunidade:
+def editar(oportunidade_id, dados: dict, *, operador: str, escopo, hoje: date,
+           versao: str | None = None) -> Oportunidade:
     """Rascunho, Agendada ou Em divulgação (FR-029). Publicada continua publicada; o fim
-    nunca fica antes de hoje (encerrar antes do prazo é retirar)."""
+    nunca fica antes de hoje (encerrar antes do prazo é retirar). Com `versao`, recusa se o
+    conteúdo mudou desde a leitura (conflito)."""
     _exigir_operador(operador)
     oportunidade = _bloquear(oportunidade_id, escopo)
     if estado(oportunidade, hoje) not in EDITAVEIS:
         _rejeitar(Motivo.ESTADO)
+    if versao is not None and versao != assinatura(oportunidade):
+        _rejeitar(Motivo.ESTADO, None, "conteúdo alterado por outro operador")
     publicada = oportunidade.publicada_em is not None
     for campo, valor in _conteudo(dados, escopo, publicada=publicada, hoje=hoje).items():
         setattr(oportunidade, campo, valor)

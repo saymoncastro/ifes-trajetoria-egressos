@@ -1,7 +1,5 @@
-{% extends "acompanhamento/base.html" %}
-{% block titulo %}{{ titulo }}{% endblock %}
+{% extends "portal/curadoria/base.html" %}
 {% block conteudo %}
-{% include "portal/curadoria/_estilo.html" %}
 <h1>{{ titulo }}</h1>
 {% if erro %}<p role="alert" class="erro">{{ erro }}</p>{% endif %}
 <section aria-labelledby="previa" class="previa-oportunidade">

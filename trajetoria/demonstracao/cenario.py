@@ -46,7 +46,7 @@ from trajetoria.contato.carga import carregar_contatos
 from trajetoria.contexto_trajetoria.carga import carregar_contexto
 from trajetoria.demonstracao.base import base_somente_simulada
 from trajetoria.demonstracao.operador import OPERADORES_FICTICIOS
-from trajetoria.demonstracao.sinais import cenario_preparado
+from trajetoria.demonstracao.sinais import CargaRecusada, cenario_preparado
 from trajetoria.fonte_academica import cenarios
 from trajetoria.fonte_academica.contatos_simulados import ContatosSimulados
 from trajetoria.fonte_academica.contexto_simulado import ContextoSimulado
@@ -149,6 +149,7 @@ def preparar(fonte_de_contexto=None, fonte_de_contatos=None) -> Resumo:
         OperacaoRejeitada,
         CampanhaRejeitada,
         op_governanca.VinculoRejeitado,
+        CargaRecusada,
     ) as erro:
         # Recusa de uma operação de domínio: a transação foi desfeita; nada ficou gravado.
         raise PreparoRecusado(

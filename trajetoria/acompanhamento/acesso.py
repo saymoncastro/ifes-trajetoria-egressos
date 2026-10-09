@@ -48,8 +48,9 @@ class Atuacao:
     consultar_lotes: bool = False  # 020: link para os Lotes de mobilização
 
 
-def recusa(request, texto: str):
-    """Página 403 em linguagem operacional, sem nenhum dado de Campanha."""
+def recusa(request, texto: str, *, destino_operador: str | None = None):
+    """Página 403 em linguagem operacional, sem nenhum dado de Campanha. `destino_operador`
+    é o destino registrado da troca de operador (padrão: acompanhamento)."""
     return render(
         request,
         "acompanhamento/recusa.html",
@@ -58,6 +59,7 @@ def recusa(request, texto: str):
             "atuacao": getattr(request, "atuacao", None),
             "titulo": ap.RECUSA_TITULO,
             "texto": texto,
+            "destino_operador": destino_operador,
         },
         status=403,
     )
