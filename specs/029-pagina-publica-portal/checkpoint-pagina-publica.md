@@ -9,7 +9,8 @@ Os critérios SC-008 a SC-016 da 024, o limiar e a leitura do resultado **não m
 ## O que o bloco quer saber
 
 Se a página pública faz um egresso que nunca usou o Portal entender, em poucos segundos,
-por que vale entrar, **sem** acreditar que o Portal oferece algo que não oferece.
+que ali existe uma relação com o Ifes (o que o Ifes oferece e como ele participa) e por que
+vale entrar, **sem** acreditar que o Portal oferece algo que não oferece.
 
 São observações qualitativas, com 5 a 8 pessoas. A maioria é referência, não validação
 estatística. **Não são** medidas de conversão nem de retenção:
@@ -78,7 +79,7 @@ literal curta que o sustenta. Só "sim" conta.
 
 | Critério | Etapa | "Sim" quando a pessoa… | Referência |
 |---|---|---|---|
-| P-01: benefício real em 5 s | P1 | cita ao menos um destes: ver as formações reconhecidas pelo Ifes; o card para guardar ou compartilhar; oportunidades divulgadas para a formação | maioria, na primeira versão vista |
+| P-01: benefício real em 5 s | P1 | cita ao menos um destes: oportunidades divulgadas pelo Ifes para a formação; participar (pesquisa, e-mail); ver as formações reconhecidas pelo Ifes ou o card | maioria, na primeira versão vista |
 | P-02: nenhuma função inexistente | P1, P2 | **não** atribui ao Portal função que não existe (rede de contatos, vagas ou emprego garantidos, serviço, comunidade, mensagens, eventos próprios). Anotar **qual** foi atribuída | nenhum participante |
 | P-03: espera o que existe | P2 | descreve o que haverá depois de entrar de modo compatível com o que existe | maioria |
 | P-04: interesse declarado | P2 | diz que entraria e dá um motivo ligado a um benefício real | registro, sem limiar |

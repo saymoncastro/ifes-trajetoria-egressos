@@ -9,6 +9,15 @@ pública da 028. Reformulação visual e comunicacional substantiva da página p
 capacidade nova e sem revogar decisão da [ADR 0009](../../docs/adr/0009-camada-visual-do-portal.md).
 Sequência autorizada: spec → protótipos → Checkpoint 1 → ajustes → implementação.
 
+**Reposicionamento (2026-10-09, solicitante).** O Portal é uma relação nos dois sentidos: o
+Ifes oferece (oportunidades, formação continuada, eventos) e o egresso participa e contribui.
+A primeira versão desta spec centrava a página na trajetória e no card. Agora a página abre
+pela relação, destaca oportunidades e participação, e apresenta trajetória e card como partes
+da experiência. Continua mostrando **só o que está disponível**: sem "Em construção" e sem
+alterar a ADR 0009. A contribuição do egresso (Volte ao Ifes) entra na página quando a
+[026](../026-volte-ao-ifes/spec.md) existir. O que "comunidade" pode ser está em
+[alternativas de comunidade](../../docs/roadmap/2026-10-09-comunidade-alternativas.md).
+
 ## Contexto e dependências
 
 A 028 implementou a página pública prevista na ADR 0009 (decisão 6). Ela é correta e
@@ -29,7 +38,7 @@ Portal oferece.
 | Só capacidades existentes: trajetória, card, oportunidades (quando houver), contato, pesquisa; sem área inexistente | ADR 0009 dec. 6; 024 FR-021; 028 FR-007 | O vídeo fica fora, porque depende do renderizador (`renderizador.disponivel()`) |
 | Vocabulário da página pública: sem contagem de egressos, "%", "turma", "geração", "conectad", "comunidade", "Olá", "Volte ao Ifes"; "Oportunidades" e "pesquisa" admitidos | ADR 0009 dec. 7; 028 FR-013 | Mantido e verificado em teste |
 | Textos de oportunidade sem urgência ("últimas vagas", "não perca"), sem "recomendado" nem "selecionado para você" | 025 (vocabulário dos textos do sistema) | Vale para o exemplo de oportunidade da demonstração |
-| A entrada não é apresentada como login, conta nem "acesso seguro" | 018 FR-061 | As chamadas usam "Conhecer minha trajetória" e "Confirme seus dados" |
+| A entrada não é apresentada como login, conta nem "acesso seguro" | 018 FR-061 | As chamadas usam "Conhecer o Portal" e "Confirme seus dados" |
 | O e-mail tem uma finalidade declarada: contato do Ifes sobre pesquisas | 020 FR-012 | A página diz exatamente isso, como forma de participação, não como benefício |
 | Textos provisórios da equipe, sem slogan; nome e linguagem definitivos com a ACS | ADR 0009 dec. 6; D2; DP-801 | "Sua história com o Ifes continua" segue fora |
 | Fotografia só com licença da ACS; veto à nostalgia | ADR 0009 dec. 5; DP-2106 | Composição sem fotografia; nenhum espaço "aguarda ACS" no produto (028 FR-003) |
@@ -71,15 +80,15 @@ tela a 375×812, 1280×720 e 1440×900.
 1. **Dado** um visitante sem sessão a 375×812, **quando** a página carrega, **então** vê o
    título, a frase de valor e a chamada principal sem rolar.
 2. **Dado** o mesmo visitante a 1280×720, **quando** a página carrega, **então** vê também
-   uma demonstração visual do que existe (card ou linha do tempo de exemplo).
+   a composição visual da relação (oportunidade e trajetória de exemplo).
 3. **Dado** qualquer texto da página, **quando** comparado com o que o Portal oferece,
    **então** nenhum descreve serviço, rede, benefício ou comunicação que não exista.
 
 ### US2 — Ver como funciona antes de informar dados (P1)
 
 O visitante quer saber o que encontra antes de digitar CPF e data de nascimento. Uma ação
-secundária leva a uma demonstração na própria página: a trajetória reconhecida, o card e um
-exemplo de oportunidade, tudo com dados fictícios e identificado como exemplo.
+secundária leva a exemplos na própria página: oportunidades, a trajetória reconhecida e o
+card, tudo com dados fictícios e identificado como exemplo.
 
 **Why this priority**: pedir CPF antes de mostrar valor é a maior fricção do primeiro
 acesso. Mostrar a experiência com dados fictícios reduz a incerteza sem coletar nada.
@@ -90,7 +99,7 @@ selos de exemplo e que nenhum dado vem do banco.
 1. **Dado** um visitante, **quando** aciona "Ver como funciona", **então** chega à
    demonstração na mesma página, por âncora, sem JavaScript.
 2. **Dado** a demonstração, **quando** exibida, **então** cada peça traz o selo de exemplo e
-   usa os componentes reais da 021 e da 025 (linha do tempo, card, item de oportunidade).
+   usa os componentes reais da 025 e da 021 (item de oportunidade, linha do tempo, card).
 3. **Dado** o exemplo de oportunidade, **quando** exibido, **então** não tem link para um
    site real, não usa vocabulário vedado pela 025 e diz que oportunidades só aparecem
    quando o Ifes divulga alguma para a formação.
@@ -103,7 +112,7 @@ as informações e que a pesquisa e o e-mail são opcionais, como formas de part
 **Independent Test**: percorrer a página com teclado; entrar pela chamada e chegar a
 `/entrar/`; conferir os textos de participação contra 020 FR-012.
 
-1. **Dado** um visitante, **quando** aciona "Conhecer minha trajetória" no topo ou no fim,
+1. **Dado** um visitante, **quando** aciona "Conhecer o Portal" no topo ou no fim,
    **então** chega a `/entrar/`, que não muda.
 2. **Dado** a seção de participação, **quando** lida, **então** apresenta a pesquisa e o
    e-mail como opcionais e com a finalidade declarada, sem listá-los como benefícios.
@@ -142,41 +151,46 @@ as informações e que a pesquisa e o e-mail são opcionais, como formas de part
 
 **Comunicação de valor**
 
-- **FR-004 [Hipótese]**: A página DEVE ser organizada pela perspectiva do egresso:
-  reconhecimento → demonstração → participação → chamada final. O título comunica o
-  sentido do lugar; a frase de apoio, os benefícios concretos disponíveis hoje.
-- **FR-005 [Hipótese]**: Os benefícios apresentados DEVEM ser só estes, com o
-  condicionante quando houver:
-  1. ver as formações que o Ifes reconhece, com a origem de cada informação;
-  2. guardar e compartilhar um card da trajetória;
-  3. ver oportunidades que o Ifes divulgar para a sua formação, **quando houver**.
-- **FR-006 [Arquitetura]**: Pesquisa e e-mail DEVEM aparecer numa seção de participação,
-  como opcionais. O e-mail com a finalidade declarada na 020 (convite para pesquisas de
-  acompanhamento). Nenhum dos dois aparece como benefício.
+- **FR-004 [Hipótese]**: A página DEVE apresentar o Portal como **relação nos dois
+  sentidos**, nesta ordem: a relação (abertura) → o que o Ifes oferece (Oportunidades) →
+  como o egresso participa → a trajetória com o Ifes (formações reconhecidas e card) →
+  chamada final. O título comunica o sentido do lugar; a frase de apoio, o que existe hoje.
+- **FR-005 [Hipótese]**: O que a página apresenta como disponível DEVE ser só isto:
+  1. **Ifes → egresso:** oportunidades que o Ifes divulgar para a formação (cursos,
+     eventos, programas, carreira), **quando houver**, com o motivo e a página oficial;
+  2. **egresso → Ifes:** participar da pesquisa de acompanhamento, contando como a
+     trajetória seguiu, e deixar um e-mail para os convites (opcionais);
+  3. **trajetória:** ver as formações que o Ifes reconhece, com a origem, e guardar ou
+     compartilhar o card.
+- **FR-006 [Arquitetura]**: A seção de participação DEVE apresentar a pesquisa e o e-mail
+  como opcionais, o e-mail com a finalidade declarada na 020 (convite para pesquisas de
+  acompanhamento). Quando a 026 estiver implementada e ativa, "Contribuir com o Ifes" entra
+  nessa seção, com o mesmo peso de Oportunidades. Antes disso, a página não a menciona.
 - **FR-007 [Arquitetura]**: Os textos DEVEM respeitar as vedações da ADR 0009 (decisão 7),
   da 025 e da 018 FR-061, e NÃO DEVEM usar slogan. São provisórios da equipe, para
   aprovação da ACS com a CPAEG antes de uso real (D2, DP-801).
-- **FR-008 [Hipótese]**: Chamada principal "Conhecer minha trajetória", para `/entrar/`,
+- **FR-008 [Hipótese]**: Chamada principal "Conhecer o Portal", para `/entrar/`,
   no topo e no fim. Chamada secundária "Ver como funciona", para a demonstração, por
   âncora. Perto da chamada principal, uma linha diz o que será pedido (CPF e data de
   nascimento).
 
 **Demonstração**
 
-- **FR-009 [Hipótese]**: A página DEVE ter uma demonstração com três peças, cada uma com o
-  selo "Exemplo com dados fictícios":
-  1. linha do tempo de formações com a origem "Registro do Ifes", no formato do Início;
-  2. o card de exemplo gerado pela 021 (`portal/exemplo.py`);
-  3. um item de oportunidade no formato da 025, com explicação de pertinência, sem link
-     para site real.
+- **FR-009 [Hipótese]**: A página DEVE mostrar exemplos, cada um com o selo "Exemplo com
+  dados fictícios", na ordem do FR-004:
+  1. itens de oportunidade no formato da 025 (por exemplo, um curso e um encontro de
+     egressos), com explicação de pertinência, sem link para site real;
+  2. linha do tempo de formações com a origem "Registro do Ifes", no formato do Início;
+  3. o card de exemplo gerado pela 021 (`portal/exemplo.py`), ao lado da linha do tempo.
 - **FR-010 [Arquitetura]**: Os dados da demonstração DEVEM ser os mesmos do card de
   exemplo (formações fictícias de `portal/exemplo.py`), para que as peças contem uma só
   história. O exemplo de oportunidade é fictício e fixo no código.
 
 **Experiência visual**
 
-- **FR-011 [Hipótese]**: A composição DEVE ser reformulada, não só reordenada. No desktop:
-  título e demonstração visual dividem a primeira tela; seções alternam composições
+- **FR-011 [Hipótese]**: A composição DEVE ser reformulada, não só reordenada. O card não é
+  a peça central da abertura. No desktop: título e uma composição visual da relação
+  (oportunidade e trajetória de exemplo) dividem a primeira tela; seções alternam composições
   (não uma grade de cartões iguais); a demonstração usa os componentes reais em escala
   legível. No celular: uma coluna na ordem de leitura, com a chamada principal na
   primeira tela.
@@ -201,7 +215,7 @@ as informações e que a pesquisa e o e-mail são opcionais, como formas de part
 
 - **SC-001**: A 375×812, sem rolar: h1, frase de valor e chamada principal.
 - **SC-002**: A 1280×720 e 1440×900, descontada a faixa de demonstração: h1, frase de
-  valor, chamada principal e uma peça visual da demonstração (card ou linha do tempo).
+  valor, chamada principal e a composição visual da abertura.
 - **SC-003**: Sem rolagem horizontal de 320 a 1440 px, com fonte a 100% e 200%.
 - **SC-004**: Conteúdo de pelo menos 1000 px entre 1280 e 1440 px; a demonstração usa duas
   colunas ou mais a partir de 1024 px e uma abaixo de 768 px.
@@ -220,7 +234,8 @@ Evidência qualitativa com 5 a 8 participantes. A maioria é **referência**, n�
 estatística. Nenhuma resposta é tratada como conversão ou retenção.
 
 - **P-01 — Benefício real em 5 segundos**: depois de ver a primeira tela por 5 s, a pessoa
-  cita ao menos um benefício real (FR-005). Referência: maioria.
+  cita ao menos uma coisa real do FR-005 (oportunidades, participação ou trajetória).
+  Referência: maioria.
 - **P-02 — Nenhuma função inexistente**: anotado **separadamente** do P-01. A pessoa não
   atribui ao Portal função que não existe (rede, vagas garantidas, serviço, comunidade,
   mensagens). Referência: nenhum participante. Uma atribuição já pede revisão do texto.

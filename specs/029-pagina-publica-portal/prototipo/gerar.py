@@ -38,7 +38,7 @@ CSS = """
    do Portal (ADR 0009): system-ui, h1 40/28 px, verde de ação, verde profundo e creme. */
 .pp-kicker { font-size: var(--fonte-5); font-weight: 700; letter-spacing: .06em;
   text-transform: uppercase; margin: 0 0 .75rem; color: var(--portal-suave); }
-.pp-claro .pp-kicker { color: #257a33; }
+.pp-secao .pp-kicker { color: #257a33; }
 .pp-hero { display: grid; gap: 2rem; padding-block: 2rem 2.5rem; }
 .pp-hero h1 { margin: 0 0 1rem; }
 .pp-lead { font-size: var(--fonte-3); }
@@ -55,12 +55,18 @@ CSS = """
 .pp-confianca li::before { content: ""; position: absolute; left: .1rem; top: .35rem; width: .85rem;
   height: .45rem; border-left: 3px solid var(--cor-marca); border-bottom: 3px solid var(--cor-marca);
   transform: rotate(-45deg); }
-.pp-visual { position: relative; display: grid; justify-items: center; align-content: center; }
+.pp-visual { position: relative; }
+.pp-cartao { border-radius: var(--raio); padding: 1.25rem 1.5rem; color: var(--cor-texto); }
+.pp-cartao p { margin: 0 0 .25rem; }
+.pp-cartao-oportunidade { background: #fff; }
+.pp-cartao-oportunidade .oportunidade-titulo { font-size: var(--fonte-3); font-weight: 700; margin: .25rem 0 .5rem; }
+.pp-cartao-trajetoria { background: var(--portal-creme); }
+.pp-cartao .pp-ano { font-size: var(--fonte-2); font-weight: 700; color: #257a33; }
+.pp-cartao .pp-origem { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
 .pp-card { margin: 0; text-align: center; }
-.pp-card svg { display: block; width: 100%; height: auto; border: 2px solid var(--portal-suave);
+.pp-card svg { display: block; width: 100%; height: auto; border: 2px solid var(--cor-borda-suave);
   border-radius: var(--raio); }
-.pp-visual .pp-card { width: min(100%, 13rem); }
-.pp-painel { display: none; }
+.pp-grade-oportunidades { display: grid; gap: 1.25rem; margin-top: 1.5rem; }
 .pp-secao { padding-block: 2.5rem; }
 .pp-claro { background: var(--portal-creme); }
 .pp-secao > .portal-container > h2 { font-size: var(--fonte-1); margin: 0 0 .5rem; }
@@ -83,20 +89,18 @@ CSS = """
 @media (max-width: 767px) { .pp-visual { display: none; } }
 @media (min-width: 768px) {
   .pp-card .portal-selo { white-space: nowrap; }
+  .pp-grade-oportunidades { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pp-participar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; }
   .pp-secao > .portal-container > h2, .pp-final h2 { font-size: 2rem; }
 }
 @media (min-width: 1024px) {
   .pp-hero { grid-template-columns: 6fr 5fr; align-items: center; gap: 3rem; padding-block: 2.5rem; }
   .pp-visual { min-height: 26rem; }
-  .pp-visual .pp-card { width: 16rem; justify-self: end; margin-right: 1rem; }
-  .pp-painel { display: block; position: absolute; left: 0; top: 7rem; width: 15rem;
-    background: var(--portal-creme); color: var(--cor-texto); border-radius: var(--raio);
-    padding: 1rem 1.25rem; box-shadow: 0 .75rem 2rem rgba(0,0,0,.35); }
-  .pp-painel p { margin: 0 0 .25rem; font-size: var(--fonte-5); }
-  .pp-painel .pp-ano { font-size: var(--fonte-2); font-weight: 700; color: #257a33; margin: 0; }
-  .pp-painel .pp-origem { color: var(--cor-texto-suave); }
-  .pp-linha { grid-template-columns: 5fr 7fr; gap: 3rem; align-items: center; }
+  .pp-visual { min-height: 30rem; }
+  .pp-cartao { box-shadow: 0 .75rem 2rem rgba(0,0,0,.35); }
+  .pp-cartao-oportunidade { position: relative; z-index: 1; width: min(26rem, 100%); margin-left: auto; }
+  .pp-cartao-trajetoria { position: absolute; left: 0; bottom: 0; width: min(18rem, 80%); z-index: 2; }
+  .pp-linha { grid-template-columns: 7fr 4fr; gap: 3rem; align-items: center; }
 }
 """
 
@@ -135,104 +139,102 @@ def demonstracao():
     return sintese, "".join(itens), str(card_de_exemplo()), narrativa
 
 
-def decorativo(svg: str) -> str:
-    """Cópia do card para a composição do topo: escondida da tecnologia assistiva e sem os
-    IDs do título e da descrição, que ficam só na cópia acessível da demonstração."""
-    svg = svg.replace('role="img" aria-labelledby="card-titulo card-descricao"',
-                      'aria-hidden="true" focusable="false"', 1)
-    return re.sub(r'<(title|desc) id="card-[a-z]+">.*?</\1>', "", svg, count=2, flags=re.S)
+def oportunidade(categoria, titulo, resumo, por_que, origem, titulo_tag="h4") -> str:
+    """Item no formato da 025 (portal/_oportunidade.html), fictício e sem link real."""
+    return (f'<p class="oportunidade-categoria">{e(categoria)}</p>'
+            f'<{titulo_tag} class="oportunidade-titulo">{e(titulo)}</{titulo_tag}>'
+            f"<p>{e(resumo)}</p>"
+            f'<p class="oportunidade-por-que">{e(por_que)}</p>'
+            + (f'<p class="oportunidade-origem">{e(origem)}</p>' if origem else ""))
 
 
 def proposta_main(base: str) -> str:
     sintese, linha, card, narrativa = demonstracao()
-    primeira = narrativa.formacoes[0]
+    primeira, ultima = narrativa.formacoes[0], narrativa.formacoes[-1]
     selo = '<span class="portal-selo">Exemplo com dados fictícios</span>'
     entrar = f"{base}/entrar/"
+    curso = oportunidade(
+        "Cursos", "Especialização em Gestão de Obras",
+        "Pós-graduação presencial na unidade Vitória, com aulas no período noturno.",
+        f"Aparece porque você concluiu {ultima.curso} na unidade {ultima.unidade}.",
+        "Oferecida pela unidade Vitória · página oficial (exemplo)")
+    encontro = oportunidade(
+        "Eventos", "Encontro de egressos das engenharias e edificações",
+        "Tarde de conversa com egressos e professores, no campus.",
+        f"Aparece porque você concluiu {primeira.curso} na unidade {primeira.unidade}.",
+        "Oferecida pela unidade Vitória · página oficial (exemplo)")
     return f"""
 <section class="portal-faixa" aria-labelledby="proposta-portal">
   <div class="portal-container pp-hero">
     <div>
       <p class="pp-kicker">Portal do Egresso · Ifes</p>
       <h1 id="proposta-portal">Sua história com o Ifes</h1>
-      <p class="pp-lead">Veja as formações que o Ifes reconhece em você, guarde um card da sua trajetória e encontre oportunidades que o Ifes divulgar para a sua formação.</p>
+      <p class="pp-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
       <div class="pp-acoes">
-        <p><a class="portal-botao" href="{e(entrar)}">Conhecer minha trajetória</a></p>
-        <p><a class="pp-secundaria" href="#como-funciona">Ver como funciona</a></p>
+        <p><a class="portal-botao" href="{e(entrar)}">Conhecer o Portal</a></p>
+        <p><a class="pp-secundaria" href="#oferece">Ver como funciona</a></p>
       </div>
       <p class="pp-nota">Para entrar, você confirma seu CPF e sua data de nascimento.</p>
       <ul class="pp-confianca">
-        <li>As informações vêm dos registros acadêmicos do Ifes.</li>
-        <li>Você vê sua trajetória sem responder nenhuma pesquisa.</li>
-        <li>O card só sai do Portal se você baixar e compartilhar.</li>
+        <li>Oportunidades divulgadas pelo próprio Ifes, com o link oficial.</li>
+        <li>Suas formações vêm dos registros acadêmicos do Ifes.</li>
+        <li>Participar é opcional: você vê tudo sem responder nenhuma pesquisa.</li>
       </ul>
     </div>
-    <div class="pp-visual">
-      <figure class="pp-card" aria-hidden="true">{selo}{decorativo(card)}</figure>
-      <div class="pp-painel" aria-hidden="true">
-        <p class="pp-ano">{primeira.ano_conclusao}</p>
+    <div class="pp-visual" aria-hidden="true">
+      <div class="pp-cartao pp-cartao-oportunidade">{selo}{oportunidade("Eventos", "Encontro de egressos das engenharias e edificações", "Tarde de conversa com egressos e professores, no campus.", f"Aparece porque você concluiu {primeira.curso}.", "", "p")}</div>
+      <div class="pp-cartao pp-cartao-trajetoria">
+        <p class="pp-ano">{primeira.ano_conclusao} · {ultima.ano_conclusao}</p>
         <p><strong>{e(primeira.curso)}</strong></p>
+        <p><strong>{e(ultima.curso)}</strong></p>
         <p class="pp-origem">{e(primeira.unidade)} · Registro do Ifes</p>
       </div>
     </div>
   </div>
 </section>
-<section class="pp-secao pp-claro" id="como-funciona" aria-labelledby="titulo-como-funciona">
+<section class="pp-secao pp-claro" id="oferece" aria-labelledby="titulo-oferece">
   <div class="portal-container">
-    <p class="pp-kicker">Antes de entrar</p>
-    <h2 id="titulo-como-funciona">Veja como funciona, com um exemplo</h2>
-    <p>Tudo nesta parte usa dados fictícios. Depois de entrar, você vê os seus.</p>
-    <div class="pp-linha">
-      <div>
-        <p class="pp-kicker">Reconhecimento</p>
-        <h3>O Ifes reconhece suas formações</h3>
-        <p>Cada formação aparece com curso, unidade e ano, e com a origem da informação. Nada disso é preenchido por você.</p>
-      </div>
-      <div class="pp-ilustra pp-escuro">{selo}{sintese}<ul class="inicio-formacoes">{linha}</ul></div>
-    </div>
-    <div class="pp-linha">
-      <div>
-        <p class="pp-kicker">Seu card</p>
-        <h3>Sua trajetória em uma imagem</h3>
-        <p>Um card vertical, no formato de story, para guardar ou compartilhar quando você quiser. Seu nome só aparece no card se você escolher.</p>
-      </div>
-      <div class="pp-ilustra pp-branco"><figure class="pp-card">{selo}{card}</figure></div>
-    </div>
-    <div class="pp-linha">
-      <div>
-        <p class="pp-kicker">Oportunidades</p>
-        <h3>Oportunidades para a sua formação</h3>
-        <p>Quando o Ifes divulga um curso, um evento ou um programa para quem concluiu a sua formação, ele aparece no Portal, com o motivo e o caminho para a página oficial. Quando não há nenhum, nada aparece.</p>
-      </div>
-      <div class="pp-ilustra pp-branco">{selo}
-        <p class="oportunidade-categoria">Cursos</p>
-        <h4 class="oportunidade-titulo">Especialização em Gestão de Obras</h4>
-        <p>Pós-graduação presencial na unidade Vitória, com aulas no período noturno.</p>
-        <p class="oportunidade-por-que">Aparece porque você concluiu Bacharelado em Engenharia Civil na unidade Vitória.</p>
-        <p class="oportunidade-origem">Oferecida pela unidade Vitória · página oficial (exemplo)</p>
-      </div>
+    <p class="pp-kicker">O Ifes para você</p>
+    <h2 id="titulo-oferece">Oportunidades para a sua formação</h2>
+    <p>Cursos, eventos, programas e iniciativas de carreira que o Ifes divulga para quem concluiu a sua formação. Cada uma vem com o motivo de aparecer para você e o caminho para a página oficial. Quando não há nenhuma, nada aparece.</p>
+    <div class="pp-grade-oportunidades">
+      <div class="pp-ilustra pp-branco">{selo}{curso}</div>
+      <div class="pp-ilustra pp-branco">{selo}{encontro}</div>
     </div>
   </div>
 </section>
 <section class="pp-secao" aria-labelledby="titulo-participar">
   <div class="portal-container">
-    <h2 id="titulo-participar">Participar, se quiser</h2>
+    <p class="pp-kicker pp-kicker-verde">Você e o Ifes</p>
+    <h2 id="titulo-participar">Como você participa</h2>
     <div class="pp-participar">
       <div>
-        <h3>Pesquisa de acompanhamento</h3>
-        <p>Quando o Ifes abre uma pesquisa para a sua formação, o convite aparece no Portal. Responder é como você atualiza sua trajetória com o Ifes. Tudo o que está acima você vê sem responder.</p>
+        <h3>Conte como sua trajetória seguiu</h3>
+        <p>Quando o Ifes abre uma pesquisa de acompanhamento para a sua formação, o convite aparece no Portal. Responder é como você atualiza sua trajetória com o Ifes. É opcional.</p>
       </div>
       <div>
-        <h3>Seu e-mail</h3>
-        <p>Você pode deixar um e-mail para o Ifes convidar você para as próximas pesquisas de acompanhamento. É opcional.</p>
+        <h3>Mantenha um canal com o Ifes</h3>
+        <p>Você pode deixar um e-mail para o Ifes convidar você para as próximas pesquisas de acompanhamento. Também é opcional.</p>
       </div>
+    </div>
+  </div>
+</section>
+<section class="pp-secao pp-claro" aria-labelledby="titulo-trajetoria">
+  <div class="portal-container">
+    <p class="pp-kicker">Sua formação</p>
+    <h2 id="titulo-trajetoria">Sua trajetória com o Ifes</h2>
+    <p>Suas formações aparecem com curso, unidade e ano, e com a origem de cada informação. Nada disso é preenchido por você. Se quiser, guarde um card da sua trajetória para compartilhar.</p>
+    <div class="pp-linha">
+      <div class="pp-ilustra pp-escuro">{selo}{sintese}<ul class="inicio-formacoes">{linha}</ul></div>
+      <div class="pp-ilustra pp-branco"><figure class="pp-card">{selo}{card}</figure></div>
     </div>
   </div>
 </section>
 <section class="portal-faixa pp-final" aria-labelledby="titulo-final">
   <div class="portal-container">
     <h2 id="titulo-final">Sua formação faz parte da história do Ifes</h2>
-    <p>Veja como ela aparece no Portal do Egresso.</p>
-    <p><a class="portal-botao" href="{e(entrar)}">Conhecer minha trajetória</a></p>
+    <p>Entre para ver o que o Ifes tem para você e como participar.</p>
+    <p><a class="portal-botao" href="{e(entrar)}">Conhecer o Portal</a></p>
   </div>
 </section>
 """

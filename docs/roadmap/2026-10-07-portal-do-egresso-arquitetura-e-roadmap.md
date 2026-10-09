@@ -47,6 +47,16 @@
   revogar decisões da ADR 0009 e **sem** implementação. Sequência: spec → protótipos →
   Checkpoint 1 → ajustes → implementação, mediante aprovação. Checkpoint 1 continua **NÃO
   APLICADO**; 026 e 027 continuam fora.
+- **Revisão 9 (2026-10-09).** O solicitante descreveu o Portal como relação nos dois
+  sentidos (Ifes oferece; egresso participa e contribui) e autorizou:
+  - a **spec da 026** ([Volte ao Ifes](../../specs/026-volte-ao-ifes/spec.md)), com o
+    percurso completo da contribuição, **sem implementação**;
+  - o **reposicionamento da 029**: a página pública abre pela relação, destaca
+    oportunidades e participação, e mostra só o que existe (sem "Em construção");
+  - [alternativas concretas de comunidade](2026-10-09-comunidade-alternativas.md), só para
+    avaliação.
+
+  A ADR 0009 não muda. Checkpoint 1 continua **NÃO APLICADO**; a 027 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
