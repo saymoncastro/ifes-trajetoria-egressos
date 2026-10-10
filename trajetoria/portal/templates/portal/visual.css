@@ -46,26 +46,16 @@ main button:not(.secundario):hover { background: var(--cor-acao-forte); }
 .portal-faixa .portal-botao:hover { background: var(--cor-institucional); color: var(--portal-profundo); }
 main:has(.portal-faixa) { padding: 0; }
 main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
-.portal-hero, .inicio-reconhecimento { display: grid; gap: 1.5rem; }
-.portal-hero .proposta, .inicio-sintese { font-size: var(--fonte-3); }
-.portal-exemplo { margin: 0; text-align: center; }
-.portal-exemplo svg { display: block; width: 100%; max-width: 300px; height: auto; margin: auto;
-  border: 2px solid var(--portal-suave); border-radius: var(--raio); }
-.portal-exemplo figcaption { color: var(--portal-suave); margin-top: .5rem; }
+.inicio-reconhecimento { display: grid; gap: 1.5rem; }
+.inicio-sintese { font-size: var(--fonte-3); }
 .portal-selo { display: inline-block; background: #fff1d2; color: #1b1b1b; padding: .25rem .75rem;
   border-radius: var(--raio); margin-bottom: .75rem; font-weight: 700; }
 .portal-secao { padding-block: 2rem; }
 .portal-secao h2 { margin-top: 0; }
-.portal-blocos, .portal-passos { display: grid; gap: 1rem; list-style: none; padding: 0; }
 .portal-bloco { border: 1px solid var(--cor-borda-suave); border-radius: var(--raio);
   background: #fff; padding: min(1.5rem, 5vw); }
 .portal-bloco h3 { margin-top: 0; }
 .portal-bloco > :last-child { margin-bottom: 0; }
-.portal-passos { counter-reset: passo; }
-.portal-passos li { background: var(--portal-creme); padding: 1.5rem; counter-increment: passo; }
-.portal-passos li::before { content: counter(passo); display: inline-flex; align-items: center;
-  justify-content: center; width: 2.25rem; height: 2.25rem; background: var(--portal-profundo);
-  color: #fff; border-radius: 50%; font-weight: 700; margin-bottom: .75rem; }
 .inicio-formacoes { list-style: none; padding: 0; margin: 1.25rem 0 0;
   display: grid; gap: 1.25rem; }
 .inicio-formacoes li { position: relative; padding-left: 2.5rem; min-width: 0; }
@@ -113,7 +103,6 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 @media (min-width: 768px) {
   .coluna, .portal-container { padding-inline: 2rem; }
   h1 { font-size: var(--portal-destaque); font-weight: 700; }
-  .portal-blocos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1024px) {
   .portal-faixa:has(.inicio-reconhecimento) { padding-block: 1rem; }
@@ -121,8 +110,6 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
   .inicio-numero { padding-block: .5rem; margin-bottom: .5rem; }
   .inicio-numero strong { line-height: 1; }
   .inicio-area-acoes { padding-top: 1rem; }
-  .portal-hero { grid-template-columns: 7fr 5fr; align-items: center; gap: 3rem; }
-  .portal-passos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .inicio-reconhecimento:has(.inicio-numeros) { grid-template-columns: 7fr 5fr; gap: 1.25rem 3rem; }
   .inicio-reconhecimento.varias .inicio-formacoes {
     grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }

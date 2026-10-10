@@ -263,7 +263,9 @@ def proposta_main(base: str) -> str:
 # --- Geração ------------------------------------------------------------------------------
 
 def servido() -> str:
-    """O HTML que a demonstração serve hoje em `/` sem sessão (a página da 028)."""
+    """O HTML que a demonstração serve em `/` sem sessão. Era a página da 028; depois da
+    implementação da 029, é a própria 029. Não regerar `atual.html`: a cópia guardada é a única
+    versão da 028 para o bloco P (`checkpoint-pagina-publica.md`, "Material")."""
     from django.test import Client
 
     resposta = Client(HTTP_HOST="127.0.0.1").get("/")

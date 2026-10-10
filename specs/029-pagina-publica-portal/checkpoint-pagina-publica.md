@@ -27,11 +27,13 @@ estatística. **Não são** medidas de conversão nem de retenção:
 
 ## Material
 
-- **Versão atual:** a página pública da 028, em `/` da demonstração, sem sessão.
-- **Versão proposta:** o protótipo da 029 ([proposta](prototipo/proposta.html)), aberto no
-  computador do moderador. A chamada principal leva à `/entrar/` da demonstração; se o
-  servidor não estiver em `127.0.0.1:8000`, gerar de novo com
-  `prototipo/gerar.py --base http://127.0.0.1:PORTA`.
+*(Revisto em 2026-10-10, com a 029 implementada. Perguntas e critérios não mudam.)*
+
+- **Versão atual:** a página pública da 028, que não é mais servida. Usa-se a cópia estática
+  [`prototipo/atual.html`](prototipo/atual.html), aberta no computador do moderador. Ela
+  serve só para olhar: as chamadas não levam a lugar nenhum fora da demonstração.
+- **Versão proposta:** a página da 029 implementada, em `/` da demonstração, sem sessão. A
+  chamada principal leva à `/entrar/`.
 - Mesmo ambiente do protocolo da 024 (computador do moderador, banco recém-preparado).
   O teste de 5 segundos usa 375×812, a referência de qualidade (ADR 0009, decisão 2). A
   comparação final usa também a largura de desktop (1440×900).
@@ -101,10 +103,10 @@ ao mesmo tempo, atribuir uma função inexistente.
 | Resultado | Decisão |
 |---|---|
 | P-02 falha (alguém atribui função inexistente) | Corrigir o texto ou a demonstração que gerou a leitura, antes de implementar |
-| P-01 atinge a referência na proposta e não na atual | A proposta segue para implementação, com os ajustes observados |
-| P-01 não atinge a referência na proposta | Revisar a primeira tela da proposta antes de implementar |
+| P-01 atinge a referência na proposta e não na atual | A página implementada fica, com os ajustes observados |
+| P-01 não atinge a referência na proposta | Revisar a primeira tela da página implementada |
 | P-06 não atinge a referência | Rever identidade e explicação dos dados; registrar se a dúvida é sobre a identificação (018), que esta feature não muda |
-| P-07 favorece a atual com justificativa de conteúdo | Rever a proposta antes de implementar |
+| P-07 favorece a atual com justificativa de conteúdo | Rever a página implementada |
 
 Qualquer decisão de implementar depende da aprovação do solicitante (spec da 029).
 

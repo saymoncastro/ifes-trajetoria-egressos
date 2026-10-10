@@ -73,6 +73,11 @@
   Andamento em 2026-10-09: passo 1 concluído (026 integrada na demonstração, PR #56) e passo 2
   concluído (029 com "Contribuir com o Ifes" na spec, no protótipo e no bloco P; T024 da 026).
   O passo 3 aguarda autorização.
+- **Revisão 11 (2026-10-10).** O solicitante autorizou a **implementação da 029** (página
+  pública), na demonstração. Com ela, o passo 3 da revisão 10 fica concluído quando o PR for
+  integrado. O próximo passo é o **Checkpoint 1** (024 e bloco P), sobre a experiência
+  implementada, com o material do bloco P revisto: a 028 é mostrada pela cópia estática do
+  protótipo. Checkpoint 1 continua **NÃO APLICADO**; D4 e D5 continuam pendentes.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.

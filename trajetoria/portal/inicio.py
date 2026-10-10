@@ -38,6 +38,28 @@ _ORIGEM = {INSTITUCIONAL: mensagens.REGISTRO_DO_IFES, DERIVADO: mensagens.DERIVA
 COMPACTACAO_DO_DESTAQUE = 3  # T046: variante 3 medida (Diego: 290 → 253 px)
 
 
+def formacoes_com_origem(narrativa) -> list[list[dict]]:
+    """As frases de cada formação, com a origem visível (FR-018). Também serve à
+    demonstração da página pública (029 FR-009), no mesmo formato do Início."""
+    trajetoria = narrativa.secao("trajetoria_academica")
+    frases = trajetoria.frases if trajetoria else ()
+    return [
+        [
+            # A linha de atributos ("Graduação · Presencial") detalha o fato anterior e herda
+            # a sua origem: não repete o selo.
+            {
+                "texto": f.texto,
+                "origem": None if f.tipo != "frase" else _ORIGEM.get(f.origem),
+                "atributos": f.tipo != "frase",
+                "ano": narrativa.formacoes[indice].ano_conclusao,
+            }
+            for f in frases
+            if f.formacao == indice
+        ]
+        for indice in sorted({f.formacao for f in frases if f.formacao is not None})
+    ]
+
+
 def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
     """Síntese e formações, cada frase com a sua origem. `None` se a montagem falhar: o
     Início omite o bloco e segue (spec, Edge Cases)."""
@@ -50,22 +72,7 @@ def _reconhecimento(pessoa, referencia, demonstracao) -> dict | None:
         logger.exception("portal: falha ao montar o reconhecimento")  # só o fato técnico
         return None
     registro = narrativa.secao("o_que_o_ifes_registra")
-    trajetoria = narrativa.secao("trajetoria_academica")
-    frases = trajetoria.frases if trajetoria else ()
-    formacoes = []
-    for indice in sorted({f.formacao for f in frases if f.formacao is not None}):
-        formacoes.append([
-            # A linha de atributos ("Graduação · Presencial") detalha o fato anterior e herda
-            # a sua origem: não repete o selo.
-            {
-                "texto": f.texto,
-                "origem": None if f.tipo != "frase" else _ORIGEM.get(f.origem),
-                "atributos": f.tipo != "frase",
-                "ano": narrativa.formacoes[indice].ano_conclusao,
-            }
-            for f in frases
-            if f.formacao == indice
-        ])
+    formacoes = formacoes_com_origem(narrativa)
     naquele_ano = narrativa.secao("naquele_ano")
     agregadas = [f for f in naquele_ano.frases if f.formacao is not None] if naquele_ano else []
     return {
