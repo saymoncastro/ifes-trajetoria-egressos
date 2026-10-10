@@ -1,0 +1,7 @@
+{% comment %}Oportunidade de exemplo da página pública (029 FR-009): o formato do item da 025
+(_oportunidade.html), sem link para site real. Fictícia e fixa no código (portal/exemplo.py).{% endcomment %}
+<p class="oportunidade-categoria">{{ o.categoria }}</p>
+<{{ titulo|default:"h3" }} class="oportunidade-titulo">{{ o.titulo }}</{{ titulo|default:"h3" }}>
+{% if not curta %}<p>{{ o.resumo }}</p>{% endif %}
+<p class="oportunidade-por-que">{{ o.explicacao }}</p>
+{% if not curta %}<p class="oportunidade-origem">{{ o.oferecida }} · página oficial (exemplo)</p>{% endif %}

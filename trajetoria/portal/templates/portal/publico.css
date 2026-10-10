@@ -1,0 +1,71 @@
+/* Página pública (029; protótipo aprovado para implementação). Só tokens da 015 e da camada
+   do Portal (ADR 0009): system-ui, h1 40/28 px, verde de ação, verde profundo e creme.
+   Composição e textos são hipótese até o Checkpoint 1 (bloco P). */
+.publico-kicker { font-size: var(--fonte-5); font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; margin: 0 0 .75rem; color: var(--portal-suave); }
+.publico-secao .publico-kicker { color: #257a33; }
+.publico-hero { display: grid; gap: 2rem; padding-block: 2rem 2.5rem; }
+.publico-hero h1 { margin: 0 0 1rem; }
+.publico-lead { font-size: var(--fonte-3); }
+.publico-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1rem; margin: 1.5rem 0 .75rem; }
+.publico-acoes p { margin: 0; }
+.portal-faixa a.publico-secundaria { display: inline-flex; align-items: center; min-height: 44px;
+  padding: .5rem 1.25rem; border: 2px solid var(--portal-suave); border-radius: var(--raio);
+  color: #fff; font-weight: 600; text-decoration: none; }
+.portal-faixa a.publico-secundaria:hover { background: rgba(255,255,255,.1); }
+.publico-nota { font-size: var(--fonte-5); color: var(--portal-suave); }
+.publico-confianca { list-style: none; margin: 1.5rem 0 0; padding: 1rem 0 0; display: grid; gap: .5rem;
+  border-top: 1px solid rgba(255,255,255,.25); }
+.publico-confianca li { position: relative; padding-left: 1.75rem; }
+.publico-confianca li::before { content: ""; position: absolute; left: .1rem; top: .35rem; width: .85rem;
+  height: .45rem; border-left: 3px solid var(--cor-marca); border-bottom: 3px solid var(--cor-marca);
+  transform: rotate(-45deg); }
+.publico-visual { position: relative; }
+.publico-cartao { border-radius: var(--raio); padding: 1.25rem 1.5rem; color: var(--cor-texto); }
+.publico-cartao p { margin: 0 0 .25rem; }
+.publico-cartao-oportunidade { background: #fff; }
+.publico-cartao-oportunidade .oportunidade-titulo { font-size: var(--fonte-3); font-weight: 700; margin: .25rem 0 .5rem; }
+.publico-cartao-trajetoria { background: var(--portal-creme); }
+.publico-cartao .publico-ano { font-size: var(--fonte-2); font-weight: 700; color: #257a33; }
+.publico-cartao .publico-origem { color: var(--cor-texto-suave); font-size: var(--fonte-5); }
+.publico-card { margin: 0; text-align: center; }
+.publico-card svg { display: block; width: 100%; height: auto; border: 2px solid var(--cor-borda-suave);
+  border-radius: var(--raio); }
+.publico-grade-oportunidades { display: grid; gap: 1.25rem; margin-top: 1.5rem; }
+.publico-secao { padding-block: 2.5rem; }
+.publico-claro { background: var(--portal-creme); }
+.publico-secao > .portal-container > h2 { font-size: var(--fonte-1); margin: 0 0 .5rem; }
+.publico-linha { display: grid; gap: 1.25rem; padding-block: 2rem; border-top: 1px solid #ddd5c3; }
+.publico-linha:first-of-type { border-top: 0; }
+.publico-linha h3 { font-size: var(--fonte-2); margin: 0 0 .5rem; }
+.publico-ilustra { border-radius: var(--raio); padding: min(1.5rem, 5vw); }
+.publico-ilustra .portal-selo { margin-bottom: 1rem; }
+.publico-escuro { background: var(--portal-profundo); color: #fff; }
+.publico-escuro .inicio-formacoes { margin-top: .75rem; }
+.publico-branco { background: #fff; border: 1px solid var(--cor-borda-suave); }
+.publico-ilustra .publico-card { width: min(100%, 15rem); margin-inline: auto; }
+.publico-ilustra .oportunidade-titulo { font-size: var(--fonte-3); margin: .25rem 0 .5rem; }
+.publico-participar { display: grid; gap: 1.25rem; }
+.publico-participar > div { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
+.publico-participar h3, .publico-participar-item h3 { margin: 0 0 .5rem; }
+.publico-participar-item { border-left: 4px solid var(--cor-marca); padding: .25rem 0 .25rem 1.25rem; }
+.publico-contribuir { border-top: 0; padding-block: 0; margin-bottom: 2rem; }
+.publico-marco { color: var(--cor-acao); font-weight: 700; }
+.publico-final { padding-block: 2.5rem; }
+.publico-final h2 { font-size: var(--fonte-1); margin: 0 0 .5rem; }
+/* No celular a cópia decorativa do card sai: a demonstração mostra o card logo abaixo. */
+@media (max-width: 767px) { .publico-visual { display: none; } }
+@media (min-width: 768px) {
+  .publico-card .portal-selo { white-space: nowrap; }
+  .publico-grade-oportunidades { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .publico-participar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; }
+  .publico-secao > .portal-container > h2, .publico-final h2 { font-size: 2rem; }
+}
+@media (min-width: 1024px) {
+  .publico-hero { grid-template-columns: 6fr 5fr; align-items: center; gap: 3rem; padding-block: 2.5rem; }
+  .publico-visual { min-height: 30rem; }
+  .publico-cartao { box-shadow: 0 .75rem 2rem rgba(0,0,0,.35); }
+  .publico-cartao-oportunidade { position: relative; z-index: 1; width: min(26rem, 100%); margin-left: auto; }
+  .publico-cartao-trajetoria { position: absolute; left: 0; bottom: 0; width: min(18rem, 80%); z-index: 2; }
+  .publico-linha { grid-template-columns: 7fr 4fr; gap: 3rem; align-items: center; }
+}

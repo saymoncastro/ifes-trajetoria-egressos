@@ -3,8 +3,9 @@
 **Feature Branch**: `claude/029-pagina-publica`
 **Created**: 2026-10-09
 **Status**: Especificação para avaliação, com "Contribuir com o Ifes" incluído em 2026-10-09
-(026 T024), depois da 026 integrada na demonstração. Implementação **não autorizada**: terá
-autorização separada.
+(026 T024), depois da 026 integrada na demonstração. **Implementação autorizada pelo
+solicitante em 2026-10-10, na demonstração** (roadmap, revisão 11); resultados em
+[validacao.md](validacao.md). Checkpoint 1 **NÃO APLICADO**: vem depois desta implementação.
 **Input**: Pedido do solicitante em 2026-10-09, depois de um parecer externo sobre a página
 pública da 028. Reformulação visual e comunicacional substantiva da página pública, sem
 capacidade nova e sem revogar decisão da [ADR 0009](../../docs/adr/0009-camada-visual-do-portal.md).
