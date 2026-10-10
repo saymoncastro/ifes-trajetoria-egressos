@@ -92,7 +92,7 @@ implementação correspondente.
   1280×720) comparadas com os protótipos; roteiro de teclado. *(Roteiro manual com teclado
   pendente; ver `validacao.md`.)*
 - [x] **T023** `validacao.md` da 026 com resultados, desvios e decisões pendentes.
-- [ ] **T024** Sequência com a 029 (plan, "Sequência com a 029"): atualizar a seção "Como
+- [x] **T024** Sequência com a 029 (plan, "Sequência com a 029"): atualizar a seção "Como
   você participa" do protótipo da 029 e o P-01 do bloco P para incluir "contribuir", em PR
   próprio.
 
