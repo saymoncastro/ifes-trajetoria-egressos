@@ -13,8 +13,6 @@ NAVEGACAO_INICIO = "Início"
 NAVEGACAO_TRAJETORIA = "Minha trajetória"
 NAVEGACAO_OPORTUNIDADES = "Oportunidades"
 NAVEGACAO_PARTICIPACAO = "Participação"  # 032 FR-011: contribuir, pesquisa e e-mail
-NAVEGACAO_PESQUISA = "Pesquisa"
-NAVEGACAO_EMAIL = "Meu e-mail"
 VOLTAR_AO_INICIO = "Voltar ao Início"
 
 TITULO = "Sua história com o Ifes"

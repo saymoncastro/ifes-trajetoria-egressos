@@ -93,7 +93,9 @@ def test_so_o_encontro_sem_secao_de_oportunidades(client, cenario):
     cp.entrar(client, cenario.pessoa("SIM-P-0001"))
     principal = _principal(client)
     assert "inicio-encontros" in principal and 'class="inicio-oportunidades' not in principal
-    assert m.HOJE_UMA in _li(principal, "inicio-linha-hoje")
+    # Code review: sem a seção, o "Hoje" leva à página de Oportunidades, não a uma âncora vazia.
+    assert f'<a href="/oportunidades/">{m.HOJE_UMA}</a>' in _li(principal, "inicio-linha-hoje")
+    assert 'href="#oportunidades"' not in principal
 
 
 def test_ponte_diz_por_que_ou_para_quem(client, cenario):
@@ -138,6 +140,8 @@ def test_participacao_sem_conclusao_so_canal(client, cenario):
     cp.entrar(client, cp.pessoa_sem_conclusao())
     principal = _principal(client, "/participacao/")
     assert "inicio-contribuir" not in principal and 'href="/meu-email/"' in principal
+    # Code review: sem o item "Pesquisa" na navegação, a escolha de formações continua aqui.
+    assert f'href="/formacoes/">{m.VER_FORMACOES}<' in principal
 
 
 def test_participacao_sem_sessao_e_declarante(client, cenario):
@@ -154,6 +158,20 @@ def test_sem_o_portal_participacao_nao_existe(client, cenario, settings):
 
 
 # --- Ações do card -------------------------------------------------------------------------------
+
+def test_uma_leitura_das_manifestacoes_no_inicio(client, cenario):
+    """Code review: existência, contagem e a mais recente saem de uma consulta só."""
+    from django.db import connection
+    from django.test.utils import CaptureQueriesContext
+
+    ana = cenario.pessoa("SIM-P-0001")
+    cc.registrar(ana)
+    cp.entrar(client, ana)
+    with CaptureQueriesContext(connection) as consultas:
+        assert client.get("/inicio/").status_code == 200
+    leituras = [q for q in consultas.captured_queries if "portal_manifestacao" in q["sql"]]
+    assert len(leituras) == 1
+
 
 def test_baixar_meu_card_baixa_o_arquivo(client, cenario):
     cp.entrar(client, cenario.pessoa("SIM-P-0001"))

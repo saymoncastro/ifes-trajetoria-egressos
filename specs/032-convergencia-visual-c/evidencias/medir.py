@@ -47,6 +47,7 @@ def telas(quais) -> dict[str, str]:
     paginas = {}
     if "publica" in quais:
         paginas["publica"] = Client(HTTP_HOST="127.0.0.1").get("/").content.decode()
+        paginas["entrar"] = Client(HTTP_HOST="127.0.0.1").get("/entrar/").content.decode()
     for nome, (cpf, nascimento) in PESSOAS.items():
         if not {"inicio", "outras"} & quais:
             break

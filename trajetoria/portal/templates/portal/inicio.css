@@ -104,7 +104,6 @@ main:has(.inicio) > .coluna { max-width: none; padding: 0; }
 .participacao-acoes .portal-botao:hover { background: var(--cor-acao); }
 .inicio-botao-contorno { padding: 0 1.25rem; border: 2px solid var(--portal-profundo); border-radius: 6px;
   text-decoration: none; }
-.inicio-convite { border: 0; padding: 0; }
 
 @media (min-width: 768px) {
   .inicio h1 { font-size: clamp(3.25rem, 7vw, 4.25rem); }

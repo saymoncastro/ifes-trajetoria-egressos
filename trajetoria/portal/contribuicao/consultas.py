@@ -23,22 +23,28 @@ def tem_manifestacao(pessoa) -> bool:
     return da_pessoa(pessoa).exists()
 
 
-def enviadas(pessoa) -> int:
-    """Ativas (não retiradas): o "Adiante" do Início (032 FR-009)."""
-    return da_pessoa(pessoa).filter(retirada_em__isnull=True).count()
+@dataclass(frozen=True)
+class ResumoDaPessoa:
+    """Uma leitura só das manifestações da Pessoa, para o Início e a Participação (032 FR-008,
+    FR-009): se existe alguma, quantas estão ativas e a ativa mais recente."""
+
+    existe: bool
+    enviadas: int
+    ultima: dict | None
 
 
-def ultima_ativa(pessoa) -> dict | None:
-    """A manifestação ativa mais recente, para a participação (032 FR-008): forma, quem
-    recebe e os marcos registrados, com a data. `None` sem nenhuma ativa."""
+def resumo_da_pessoa(pessoa) -> ResumoDaPessoa:
+    manifestacoes = list(da_pessoa(pessoa))  # mais recente primeiro (Meta.ordering)
+    ativas = [m for m in manifestacoes if m.retirada_em is None]
+    return ResumoDaPessoa(bool(manifestacoes), len(ativas), _ultima(ativas[0]) if ativas else None)
+
+
+def _ultima(manifestacao) -> dict:
+    """Forma, quem recebe e os marcos registrados, com a data."""
     from django.utils import timezone
 
     from trajetoria.portal.contribuicao import mensagens as m
     from trajetoria.portal.models import Forma
-
-    manifestacao = da_pessoa(pessoa).filter(retirada_em__isnull=True).first()
-    if manifestacao is None:
-        return None
 
     def data(momento):
         return timezone.localtime(momento).strftime("%d/%m/%Y")

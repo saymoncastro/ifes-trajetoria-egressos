@@ -27,6 +27,11 @@ from trajetoria.video import renderizador as renderizador_de_video
 ARQUIVO = "minha-trajetoria-ifes"
 
 
+def nome_do_card(png: bool) -> str:
+    """Nome do arquivo baixado do card, o mesmo em toda tela que oferece o download."""
+    return f"{ARQUIVO}.{'png' if png else 'svg'}"
+
+
 class Redirecionar(Exception):
     def __init__(self, destino):
         self.destino = destino
@@ -173,7 +178,7 @@ def minha_trajetoria(request, pessoa, narrativa):
             "card": {
                 "png": png,
                 "arquivo": f"/minha-trajetoria/card.{'png' if png else 'svg'}{sufixo}",
-                "nome_do_arquivo": f"{ARQUIVO}.{'png' if png else 'svg'}",
+                "nome_do_arquivo": nome_do_card(png),
                 "formato": "PNG" if png else "SVG",
                 # Fallback sem PNG: o SVG gerado pelo nosso template (texto escapado nele).
                 "svg": None if png else mark_safe(_svg(request, pessoa, narrativa)),

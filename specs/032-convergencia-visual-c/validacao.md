@@ -162,3 +162,21 @@ compartilhado com o instrumento (ADR 0009, decisão 1).
 
 - DP-3201 e DP-3202 (ACS); D2 e DP-801 (textos).
 - Checkpoint 1: NÃO APLICADO. Recomenda-se aplicá-lo sobre esta versão.
+
+## Code review dos PRs #60 e #61 (2026-10-11)
+
+| Achado | Correção |
+|---|---|
+| "Hoje" apontava para `#oportunidades` quando só havia o encontro e a seção não existia | Sem a seção, o link vai a `/oportunidades/` (teste) |
+| A escala nova do h1 também valia em `/entrar/`, que não tinha sido medido | Medido: sem rolagem horizontal; a 375×812, título, campos e "Continuar" na primeira tela. Sem mudança; a tela entrou nas medidas |
+| Pessoa sem Conclusão ficava sem caminho para `/formacoes/` | `/participacao/` mostra "Ver suas formações no Ifes" quando não há convite (teste) |
+| Três consultas às manifestações por Início | Uma só (`resumo_da_pessoa`), verificada em teste |
+| Fonte lida do disco a cada pedido | Lida uma vez por processo |
+| O redirecionamento "sem Pessoa" estava copiado em quatro views | `portal/destinos.sem_pessoa` |
+| O nome do download do card era refeito no Portal | `narrativa.views.nome_do_card`, usado pela 021 e pelo Início |
+| Constantes e regra de CSS sem uso | Removidas |
+| Parâmetro com o mesmo nome de uma função importada | Renomeado |
+
+Depois das correções:
+- **Suíte completa:** 3366 testes aprovados, 40 ignorados e 2 desmarcados.
+- **Telas medidas novamente:** pública, `/entrar/`, os três Inícios, Participação e as quatro telas internas. Todas sem rolagem horizontal, com um h1 e sem alvo abaixo de 44 px.
