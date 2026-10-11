@@ -13,7 +13,7 @@ from trajetoria.acesso.sessao import encerrar, pessoa_em_uso
 from trajetoria.acesso.views import identificar
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
-from trajetoria.portal.exemplo import card_de_exemplo
+from trajetoria.portal.exemplo import demonstracao_publica
 from trajetoria.portal.inicio import montar_inicio
 
 _PRODUTO = {"produto": mensagens.PRODUTO, "produto_subtitulo": mensagens.PRODUTO_SUBTITULO}
@@ -37,7 +37,8 @@ def entrada(request):
     """A raiz com o Portal ligado (FR-005): acesso espontâneo."""
     if destino := _destino_com_sujeito(request):
         return _ir(destino)
-    return render(request, "portal/publico.html", {**_PRODUTO, "card_exemplo": card_de_exemplo()})
+    # 029: só dados fictícios fixos no código; nada é consultado (FR-003).
+    return render(request, "portal/publico.html", {**_PRODUTO, "demo": demonstracao_publica()})
 
 
 @never_cache
