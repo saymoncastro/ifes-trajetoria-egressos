@@ -790,3 +790,23 @@ demonstração:
   `ContatoDaPessoa` não é lido nem gravado pela contribuição.
 
 Checkpoint 1 continua **NÃO APLICADO**.
+
+## Nota de revisão pela Feature 032 (2026-10-11)
+
+A [032](../032-convergencia-visual-c/spec.md), em "Requisitos revisados", revisa, só na
+demonstração:
+- **FR-016:** a ordem do Início passa a ser reconhecimento → linha das formações com "Hoje"
+  e "Adiante" → encontros (só com evento pertinente) → oportunidades → participação, com o
+  convite da pesquisa por último (032 FR-008).
+- **FR-021:** "Oportunidade" também é admitida no "Hoje" (032 FR-010).
+- **FR-022 e FR-023:** a navegação é Início, Minha trajetória, Oportunidades e
+  **Participação** (032 FR-011). Os itens "Pesquisa", "Meu e-mail" e "Contribuir" saem; a
+  pesquisa, o e-mail e a contribuição ficam em `/participacao/`, que é o item atual também
+  em `/formacoes/`, `/meu-email/`, nas telas da contribuição e na confirmação. Nenhuma rota
+  muda.
+
+Consequência para o Checkpoint 1: SC-012 continua igual ("sabe onde atualizar"), mas a
+observação aponta "Participação", e não mais "Pesquisa"
+([protocolo](evidencias/protocolo-checkpoint-1.md), revisão de 2026-10-11). O trecho
+"Volte ao Ifes não aparecem no produto" dos critérios qualitativos é anterior à 025 e à 026.
+Checkpoint 1 continua **NÃO APLICADO**.

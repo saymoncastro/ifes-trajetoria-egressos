@@ -318,6 +318,15 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
    esforço. A preferência é pela 031. A 030 vem antes se houver impedimento relevante à 031.
 6. E1 no horizonte, com as condições acima.
 
+> **Revista em 2026-10-11** ([roadmap, revisão 13, §13.3](2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md#133-sequência)).
+> A 032 (convergência C) entrou depois do passo 1. A sequência vigente é: consolidação da
+> C → acessibilidade → Checkpoint 1 → ajustes → protótipo estático da Comunidade →
+> Checkpoint 2 → decisão entre 031 e 030. O bloco Comunidade está no
+> [protocolo do Checkpoint 2](../validacao/checkpoint-2/protocolo.md), e a recomendação da
+> próxima spec, com o escopo mínimo da 031 e os motivos que poderiam pôr a 030 antes, está
+> no [roadmap, §13.5](2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md#135-próxima-spec-recomendação).
+> A lista acima fica como histórico.
+
 ### O que muda em relação a 2026-10-09
 
 - **"B é a próxima especificação candidata"** foi substituída. A ordem entre 030 e 031 sai do

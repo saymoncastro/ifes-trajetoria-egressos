@@ -94,3 +94,11 @@ Nenhum achado. Capturas do foco: [`teclado-foco-1280.png`](evidencias/capturas/t
 - **D2 e DP-801:** textos provisórios. **DP-2106:** fotografias.
 - **Roteiro manual com teclado:** executado em 2026-10-11, sem achados (ver acima). Leitor
   de tela real não foi testado; a árvore de acessibilidade é verificada pelos testes.
+
+## Nota de 2026-10-11 (Feature 032)
+
+A página medida e percorrida aqui (commit `950aea6`) foi substituída pela página C da
+[032](../032-convergencia-visual-c/validacao.md). As medidas e o roteiro com teclado acima
+**não valem para a página C**, que ainda não tem roteiro de teclado (roadmap, revisão 13,
+§13.2). O bloco P passa a avaliar a página C ([bloco P](checkpoint-pagina-publica.md),
+revisão de 2026-10-11).

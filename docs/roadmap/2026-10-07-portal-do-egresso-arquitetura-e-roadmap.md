@@ -95,6 +95,23 @@
   Sequência: 029 integrada (PR #58) → Checkpoint 1 → protótipo da Comunidade → Checkpoint 2 →
   decisão entre 030 e 031. Constituição, ADR 0008 e ADR 0009 não mudam. Checkpoint 1 continua
   **NÃO APLICADO**; a 027 continua fora.
+- **Revisão 13 (2026-10-11).** Depois da convergência visual C
+  ([032](../../specs/032-convergencia-visual-c/spec.md), PRs #60 e #61), só documentação:
+  - **estado consolidado** das entregas e das evidências técnicas, separado da validação com
+    egressos, que **ainda não existe** (§13.1 e §13.2);
+  - **sequência**, que substitui a da revisão 12: consolidação da C → acessibilidade →
+    Checkpoint 1 → ajustes → protótipo estático da Comunidade → Checkpoint 2 → decisão entre
+    031 e 030 (§13.3). A revisão 12 punha o Checkpoint 1 logo depois da 029; a 032 entrou
+    antes dele;
+  - **kit do Checkpoint 1** atualizado para a versão C, com o bloco P da página pública;
+    **protocolo e fichas do Checkpoint 2**, escritos antes de qualquer sessão
+    ([`docs/validacao/checkpoint-2/`](../validacao/checkpoint-2/protocolo.md)) (§13.4);
+  - **recomendação da próxima spec:** a 031, condicionada à leitura dos dois checkpoints
+    (§13.5). Nenhuma spec é aberta; 030 e 031 continuam reservadas.
+
+  Constituição e ADR 0008 não mudam. A ADR 0009 recebe só uma nota de conciliação: a
+  navegação usa "Participação", e não mais "Pesquisa" (decisão 8). Checkpoint 1 continua
+  **NÃO APLICADO**; a 027 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -484,6 +501,10 @@ relacionamento" da Constituição.
 [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md)
 escrito antes do teste.
 
+**Situação (2026-10-11, revisão 13).** Integrada (PRs #41, #42 e #47). Início e navegação
+foram recompostos pela 028 e pela 032. O Checkpoint 1 continua **NÃO APLICADO** e será
+aplicado sobre a versão C, depois da etapa de acessibilidade (§13.3).
+
 - **Problema.** Depois do login, o egresso cai numa lista de pesquisas. Nada reconhece a
   história dele antes de pedir algo.
 - **Valor para o egresso.** Um lugar que mostra, nesta ordem:
@@ -510,7 +531,10 @@ escrito antes do teste.
   - Os tokens da 015.
 - **Novos conceitos.**
   - O shell com navegação só para áreas que existem: Início, Minha trajetória, Atualizar
-    (= pesquisa) e Meu e-mail.
+    (= pesquisa) e Meu e-mail. *(Histórico. A 024 implementou "Pesquisa"; a 025 acrescentou
+    "Oportunidades" e a 026, "Contribuir". Desde a 032 (FR-011), a navegação é Início, Minha
+    trajetória, Oportunidades e Participação; a pesquisa, o e-mail e a contribuição ficam em
+    Participação. Ver §13.1.)*
   - A rota do Início e sua entrada neutra.
   - O nome provisório "Portal do Egresso".
 - **Dois caminhos de acesso, a mesma coleta (ADR 0008).**
@@ -570,6 +594,11 @@ escrito antes do teste.
 ### S2 — Oportunidades curadas *(025; M; primeiro fato persistente novo)*
 
 **Situação (2026-10-08): implementação autorizada na demonstração; Checkpoint 1 NÃO APLICADO.**
+
+**Situação (2026-10-11, revisão 13): implementada e integrada na demonstração** (PR #49), com
+a apresentação revista pela 028 e pela 032. O texto abaixo é o histórico das autorizações. O
+Checkpoint 1 continua **NÃO APLICADO**, e a parte de Oportunidades do Checkpoint 2 está no
+[protocolo do Checkpoint 2](../validacao/checkpoint-2/protocolo.md).
 
 - **Decisão do solicitante.** Com o Checkpoint 1 ainda não concluído, ele autorizou antecipar
   **exclusivamente a especificação** da 025
@@ -690,6 +719,10 @@ escrito antes do teste.
 - **Situação (2026-10-09, revisão 10).** [Spec](../../specs/026-volte-ao-ifes/spec.md), plan,
   tasks e protótipos prontos; implementação autorizada **só na demonstração**, antes do
   Checkpoint 1, que continua **NÃO APLICADO**. D4 e D5 seguem pendentes para uso real.
+- **Situação (2026-10-11, revisão 13).** Implementada e integrada na demonstração (PR #56),
+  com o item de navegação "Contribuir" substituído por "Participação" na 032. O roteiro
+  manual com teclado da 026 **não foi executado** (validação da 026). D4 e D5 continuam
+  pendentes.
 
 ### S4 — Minha trajetória como linha do tempo da relação *(027; P; opcional)*
 
@@ -776,6 +809,12 @@ conclusão.
     mesma sessão, identificado como protótipo.
 - **Economia.** Pode correr na mesma sessão do teste moderado da jornada de pesquisa que a
   reauditoria já recomendou: mesmas personas, dois objetivos.
+- **Revisão 13.** O "Como" acima é de 2026-10-07. Desde então, Oportunidades (025) e a
+  contribuição (026) existem no produto, a página pública (029, depois 032) abre a sessão
+  com o bloco P, e a navegação usa "Participação". Os critérios abaixo não mudam. O
+  procedimento vigente está no
+  [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md),
+  "Revisão de 2026-10-11".
 
 **Critérios de compreensão (modelo mental).** A pessoa:
 
@@ -816,6 +855,10 @@ conclusão.
   3. não confunde Volte ao Ifes com a pesquisa.
 - **Como ler o resultado.** O Checkpoint 2 decide se a S4 vale a pena e informa as decisões D4
   e D5 com evidência.
+- **Protocolo (revisão 13).** [`docs/validacao/checkpoint-2/`](../validacao/checkpoint-2/protocolo.md),
+  escrito antes de qualquer sessão. Ele liga estes critérios aos da 025 (SC-011 a SC-016) e
+  da 026 (qualitativos) e acrescenta, como proposta a aprovar, a leitura da finalidade dos
+  dois e-mails. Limiar, amostra e procedimento de participação continuam pendentes.
 
 #### Bloco Comunidade *(revisão 12)*
 
@@ -835,6 +878,8 @@ conclusão.
   4. se uma história de outro egresso lhe diz algo, e por quê.
 - **Como ler o resultado.** Informa a escolha entre 030 e 031 e as condições do E1. Não é taxa
   de adesão nem métrica de engajamento (seção 7).
+- **Identificadores (revisão 13).** No protocolo do Checkpoint 2, os critérios acima são
+  CM-C1 a CM-C4 e CM-U1 a CM-U4, na mesma ordem.
 
 ---
 
@@ -855,6 +900,8 @@ conclusão.
     solicitante; o checkpoint continua pendente]
    [2026-10-09: a S3 (026) também foi autorizada na demonstração antes deste ponto; o
     checkpoint será aplicado depois da 026 e da 029 implementadas (revisão 10)]
+   [2026-10-11: a 032 (convergência C) também entrou antes; o checkpoint é aplicado sobre a
+    versão C, depois da etapa de acessibilidade (revisão 13, §13.3)]
   │
   ├──────────────┐
   ▼              ▼
@@ -981,3 +1028,171 @@ A sequência foi montada para testar a hipótese em duas etapas e pelo menor cus
 **Se a premissa falhar, o custo afundado será só a S1**: uma camada de apresentação removível e
 uma regra de acesso, com o núcleo intacto. Esse é o critério de "não construir demais antes da
 hora".
+
+---
+
+## 13. Estado depois da 032 e próxima etapa *(revisão 13, 2026-10-11)*
+
+- **Base.** `main` em `63b9447` (PR #61, convergência C integrada).
+- **Natureza.** Consolidação documental. Nenhum código, banco, dependência ou instrumento
+  muda. Nenhuma spec é aberta.
+
+### 13.1 Entregas na demonstração
+
+Tudo abaixo existe **só na demonstração**, com dados fictícios e o Portal desligável
+(`TRAJETORIA_PORTAL=0`). A coleta continua independente do Portal: o convite segue
+`/acesso/` → `/formacoes/` (D7).
+
+| Etapa | Feature | PRs | O que existe hoje |
+|---|---|---|---|
+| S0 | ADR 0008, Constituição 2.1.0 | #40 | Fronteira da camada, coleta independente, nome provisório |
+| S1 | [024](../../specs/024-inicio-egresso-portal/spec.md) | #41, #42, #47 | `/entrar/`, Início, shell com navegação; trajetória, card e vídeo antes de qualquer pesquisa (D3) |
+| S2 | [025](../../specs/025-oportunidades-curadas-portal/spec.md) | #45, #48, #49 | Oportunidades pertinentes com explicação; curadoria por escopo; catálogo fictício; expiração pelo período |
+| S3 | [026](../../specs/026-volte-ao-ifes/spec.md) | #55, #56 | Contribuição em seis formas, ciência versionada, Suas contribuições, retirada; lista e CSV da unidade; marco "contato feito" |
+| Camada visual | [028](../../specs/028-camada-visual-portal/spec.md) | #51 a #54 | ADR 0009, direção B. A forma visual foi substituída pela C |
+| Página pública | [029](../../specs/029-pagina-publica-portal/spec.md) | #55, #57, #58 | Página pública como relação nos dois sentidos. Substituída em `/` pela C; o protótipo que ela reproduz continua em [`prototipo/proposta.html`](../../specs/029-pagina-publica-portal/prototipo/proposta.html) |
+| Convergência C | [032](../../specs/032-convergencia-visual-c/spec.md) | #60, #61 | Fontes locais, página pública C, Início C (linha com "Hoje" e "Adiante", encontros, oportunidades, participação), navegação **Início, Minha trajetória, Oportunidades, Participação** e a página `/participacao/` |
+
+**Navegação vigente (032 FR-011).** Não há mais os itens "Pesquisa", "Meu e-mail" nem
+"Contribuir". A pesquisa (`/formacoes/`), o e-mail (`/meu-email/`) e a contribuição ficam em
+"Participação", que é o item atual também nessas telas. Nenhuma rota mudou. Documentos
+anteriores que citam "Pesquisa" na navegação descrevem a versão da época.
+
+**Encontros.** O que a demonstração mostra como encontro é a alternativa **A**: um item da
+categoria "Eventos" da 025, divulgado pela unidade, com link oficial. Encontros propostos por
+egressos (**F**, 031), Histórias (**B**, 030) e Encontre colegas (**E1**) **não existem**.
+
+### 13.2 Evidências: técnicas × validação com egressos
+
+**Validação com egressos: nenhuma.** Nenhuma sessão foi feita. O Checkpoint 1 e o
+Checkpoint 2 estão **NÃO APLICADOS**. Nenhum critério de compreensão ou comportamento
+(SC-008 a SC-016 da 024, P-01 a P-07 da 029, critérios do Checkpoint 2) tem resultado.
+
+**Evidências técnicas existentes** (não substituem a validação):
+
+| Evidência | Situação | Vale para a versão C? |
+|---|---|---|
+| Suíte automatizada (CI) | 3366 testes aprovados depois do code review da 032 | Sim |
+| Medidas e capturas reais (320 a 1440 px, fonte a 100% e 200%) | [Validação da 032](../../specs/032-convergencia-visual-c/validacao.md) | Sim |
+| Contraste AA dos pares novos | Medido na 032 | Sim |
+| Passada de teclado e árvore de acessibilidade da 024 | 2026-10-08, 375×812, persona Maria ([validação](../../specs/024-inicio-egresso-portal/validacao.md)) | **Não**: navegação e Início da época, com "Pesquisa" e "Meu e-mail" no menu |
+| Ordem de foco em `/oportunidades/` (025, T049) | [Validação da 025](../../specs/025-oportunidades-curadas-portal/validacao.md) | **Não**: navegação de cinco itens da época |
+| Roteiro manual com teclado da 026 | **Não executado** ([validação](../../specs/026-volte-ao-ifes/validacao.md)) | — |
+| Roteiro manual com teclado da 029 | 2026-10-11, sem achados, sobre a página da 029 (`950aea6`) | **Não**: a página foi substituída pela C |
+| Roteiro manual com teclado da 032 | **Não executado** ("Pendente" na validação da 032) | — |
+| Leitor de tela (VoiceOver ou NVDA) | **Nunca executado** (P4 da preparação do Checkpoint 1) | — |
+| [Avaliação por IA](../auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md) | 2026-10-08, anterior à 025 implementada | Não; e não substitui checkpoint |
+| Fidelidade aos mockups "C · Convergência" | Auditoria na validação da 032 | Os mockups C **não estão versionados** no repositório. A conferência só é reproduzível pelas capturas reais |
+
+### 13.3 Sequência
+
+| # | Etapa | O que entra | Condição para seguir |
+|---|---|---|---|
+| 1 | **Consolidação da C** | Esta revisão: documentos reconciliados, kit do Checkpoint 1 na versão C, protocolo do Checkpoint 2 | PR documental integrado |
+| 2 | **Acessibilidade** | Roteiro manual com teclado, num navegador real, sobre as telas que as tarefas dos dois checkpoints percorrem: página pública, `/entrar/`, Início (Ana, Bruno, Diego), Minha trajetória, Oportunidades, Participação, a contribuição do início à retirada e Meu e-mail. Teste com leitor de tela (P4). Registro na validação da 032 e, para a contribuição, na da 026 | Nenhum obstáculo que impeça uma tarefa dos checkpoints. Correções de código, se houver, precisam de autorização própria |
+| 3 | **Checkpoint 1** | 024 e bloco P, sobre a versão C ([protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md)) | P1 a P6 da [preparação](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md) resolvidas antes da primeira sessão |
+| 4 | **Ajustes** | Leitura do Checkpoint 1 conforme o protocolo; ajustes do Início, da navegação ou da página pública | Ajustes integrados, ou registro de que não foram necessários |
+| 5 | **Protótipo estático da Comunidade** | Histórias, Encontros e Encontre colegas, com o conceitual marcado (revisão 12; requisitos do material no [protocolo do Checkpoint 2](../validacao/checkpoint-2/protocolo.md#material-do-bloco-comunidade)) | Protótipo revisado pelo solicitante. Feito depois do passo 4, para não prototipar sobre uma navegação que o Checkpoint 1 reprove |
+| 6 | **Checkpoint 2** | Produto (Oportunidades, contribuição, Participação) e bloco Comunidade, sobre o protótipo | Pendências Q1 a Q7 do protocolo resolvidas |
+| 7 | **Decisão entre 031 e 030** | Solicitante, com a leitura dos dois checkpoints (§13.5) | — |
+
+- As decisões institucionais (D4, D5, D8, D9, D10, identidade e operadores reais) **não**
+  bloqueiam os passos 1 a 7. Bloqueiam o uso real (§13.5).
+- Os passos 3 e 6 não aprovam nada sozinhos: os resultados entram em PR próprio, com as
+  fichas e a síntese, e a leitura segue a regra escrita antes do teste.
+- A S4 (027) continua fora. O Checkpoint 2 informa se ela vale a pena (§7).
+
+### 13.4 Kits de validação
+
+| Kit | Arquivos | Situação |
+|---|---|---|
+| Checkpoint 1 (024 + bloco P) | [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md), [preparação](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md), [ficha](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/ficha-participante.md), [bloco P](../../specs/029-pagina-publica-portal/checkpoint-pagina-publica.md), [ficha do bloco P](../../specs/029-pagina-publica-portal/checkpoint/ficha-bloco-p.md) | Atualizado para a versão C. Critérios e limiar proposto não mudam. P1 a P5 continuam pendentes; P6 (comparação histórica) é nova |
+| Checkpoint 2 (025, 026 + bloco Comunidade) | [protocolo](../validacao/checkpoint-2/protocolo.md), [preparação](../validacao/checkpoint-2/preparacao-sessao.md), [ficha](../validacao/checkpoint-2/ficha-participante.md), [ficha do bloco Comunidade](../validacao/checkpoint-2/ficha-bloco-comunidade.md) | Escrito antes de qualquer sessão. Q1 a Q7 pendentes. O bloco Comunidade depende de um protótipo que ainda não existe |
+
+O Checkpoint 2 fica em `docs/validacao/` porque cobre duas features (025 e 026) e uma
+capacidade sem spec (Comunidade). O Checkpoint 1 continua junto da 024.
+
+### 13.5 Próxima spec: recomendação
+
+**Candidata preferencial: 031, Encontros da comunidade** (alternativa F), condicionada à
+leitura do Checkpoint 1 e do Checkpoint 2, com o bloco Comunidade.
+
+**Por que a 031.**
+- É a primeira capacidade em que egressos produzem valor para outros egressos, que é o
+  critério da revisão 12 para a palavra "comunidade" nas telas servidas.
+- Tem a base mais direta na PAEG para a relação entre egressos: eventos e troca de
+  experiência (Art. 12; Art. 8, II), sem que a PAEG a exija.
+- É a preferência funcional registrada pelo solicitante (revisão 12).
+
+**Escopo mínimo** (direção da revisão 12; insumo da spec, não requisito aprovado):
+- um egresso identificado, com ao menos uma Conclusão Acadêmica, propõe um encontro
+  **virtual**: título, descrição, data, horário, público e link externo de videoconferência;
+- moderação institucional **antes** da publicação, com recusa e retirada motivadas e canal
+  de denúncia. Na demonstração, quem modera é uma hipótese registrada na spec (D8);
+- página do encontro com a distinção visível entre "Evento do Ifes" (A) e "Encontro
+  proposto por egresso" (F);
+- "Vou participar", que não comprova presença; cancelamento pelo organizador e pelo
+  participante;
+- o link da reunião só para quem confirmou e está com sessão; contagem só para o organizador
+  e a moderação; sem lista nominal nem contato exposto;
+- `.ics` que aponta para a página, com o aviso de que mudanças não atualizam o calendário já
+  baixado;
+- termos do organizador e da participação versionados (XVII), sem tratá-los como base legal
+  (D9);
+- confirmações como dado operacional: fora de snapshot, exportação e indicador (ADR 0008);
+- fatos novos prováveis, a justificar pela spec (XXII): Encontro e Confirmação.
+
+**Fica fora do mínimo:** encontros presenciais (seguem pela A), chat, comentários, curtidas,
+contador público, notificações automáticas e integração com videoconferência.
+
+**A spec da 031 também terá de:**
+- revisar de forma explícita a decisão 7 da ADR 0009 e as vedações de vocabulário da 024,
+  da 028, da 029 e da 032 (o menu público usa "Encontros", e não "Comunidade");
+- responder às cinco perguntas do Princípio VI, com as outras soluções institucionais como
+  ponto de atenção (D10).
+
+**Motivos que poderiam justificar a 030 (Histórias) primeiro.** Cada um precisa aparecer na
+leitura dos checkpoints ou numa análise registrada, e não ser presumido:
+- no bloco Comunidade, os participantes não distinguem encontro proposto por egresso de
+  evento do Ifes, ou não entendem quem vê a confirmação e o link (CM-C1 e CM-C2), e o
+  protótipo não resolve isso;
+- pouco interesse em propor ou participar de encontros (CM-U1, CM-U2), e interesse claro por
+  histórias (CM-U4);
+- moderação antes da publicação sem hipótese viável nem para a demonstração, ou a garantia
+  de identidade do organizador vista como condição até para uma demonstração crível;
+- custo menor: a 030 parte da forma "Contar sua história" da 026, que já existe, com um
+  fato novo provável (História) e sem agenda nem confirmação;
+- o protótipo mostrar que, sem histórias, um encontro não tem contexto suficiente para
+  atrair participantes.
+
+**Pré-requisitos de demonstração × bloqueios de uso real.**
+
+| Para especificar e implementar a 031 na demonstração | Bloqueia só o uso real |
+|---|---|
+| Checkpoint 1 aplicado e lido; ajustes integrados | **D4**: quem cura oportunidades e quem recebe as contribuições (uso real da 025 e da 026) |
+| Protótipo da Comunidade e Checkpoint 2, com o bloco Comunidade, lidos | **D5**: base legal e ciência da contribuição e do uso do contexto acadêmico |
+| Decisão do solicitante entre 031 e 030 | **D8**: quem modera cada recorte de público, critérios de recusa e retirada, quem recebe denúncias |
+| Hipótese de moderação registrada na spec (D8 na demonstração) | **D9**: base legal de cada tratamento (encontro, confirmação, história, diretório) e retenção |
+| Termos e textos provisórios, versionados (XVII) | **D10**: complementaridade com outras soluções institucionais (aplicativo da DIREC, associações e grupos de ex-alunos) |
+| Revisão explícita da decisão 7 da ADR 0009 | **Identidade**: DP-1808 e o Portão A; Gov.br não é presumido. A moderação não substitui a identidade |
+| Dados fictícios, Portal desligável, testes de fronteira | **Operadores reais**: DP-1001 |
+| Confirmações fora do dado analítico (ADR 0008) | Também: D1 (produção), D2 e DP-801 (nome e textos), DP-3201 e DP-3202 (ACS) |
+
+A E1 (reencontro voluntário) continua no horizonte, com as condições da revisão 12:
+DP-1808, D8, D9 e uma ADR própria antes de uso real.
+
+### 13.6 Antes da primeira sessão do Checkpoint 1
+
+Decidir:
+- **P1:** amostra e limiar (5 participantes; 4 de 5 em cada critério). Com o bloco P, que
+  admite 5 a 8, dizer como o limiar se aplica.
+- **P2:** moderador e recrutamento.
+- **P3:** procedimento de participação e, se houver, de gravação. Sem P3, não há sessão.
+- **P5:** com ou sem vídeo.
+- **P6:** se o bloco P mantém a comparação histórica, e com qual versão.
+
+Executar:
+- roteiro manual com teclado sobre a versão C (passo 2);
+- **P4:** teste com leitor de tela;
+- preparar o ambiente na `main` com a 032 (`63b9447` ou posterior) e registrar o commit em
+  cada ficha.

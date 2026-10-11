@@ -7,6 +7,12 @@
 **Status**: Draft. **Só especificação.** A implementação está condicionada à leitura dos
 resultados do Checkpoint 1 da 024 (ver "Dependências").
 
+**Situação em 2026-10-11:** **implementada e integrada na demonstração** (PR #49), por
+autorização do solicitante que retirou a espera pelo Checkpoint 1 (roadmap, revisões 4 e 5).
+Apresentação revista pela 028 e pela 032; navegação revista pela 026 e pela 032 (notas no
+fim). O status acima e as menções a "só especificação" ficam como histórico. Checkpoint 1
+**NÃO APLICADO**.
+
 **Input**: User description: "Feature 025 — Oportunidades curadas do Portal do Egresso
 (roadmap S2). Área de Oportunidades integrada ao Portal (024): o egresso encontra
 possibilidades institucionais (formação continuada, cursos, eventos, pesquisa e extensão,
@@ -1022,14 +1028,14 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
 | Dependência | Tipo | Situação |
 |---|---|---|
 | 024 — Início, shell e navegação do Portal | Código | Integrada à `main` |
-| **Checkpoint 1 da 024** | Validação | **Não aplicado.** A implementação da 025 só começa depois da leitura dos resultados, conforme o [protocolo](../024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md). Se um critério de compreensão falhar, a S1 é corrigida antes, e esta spec é revista se a correção mudar o Início ou a navegação |
+| **Checkpoint 1 da 024** | Validação | **Não aplicado.** *(Histórico: a espera foi retirada pela revisão 5 do roadmap, e a 025 foi implementada.)* A implementação da 025 só começa depois da leitura dos resultados, conforme o [protocolo](../024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md). Se um critério de compreensão falhar, a S1 é corrigida antes, e esta spec é revista se a correção mudar o Início ou a navegação |
 | 010 — governança, papéis e escopos | Código | Existente |
 | 017 — padrão de telas de gestão | Código | Existente |
 | 001 — Conclusão Acadêmica e fonte simulada | Código | Existente |
 | D4 / DP-2501 e DP-2502 — quem cura e com que alcance | Decisão institucional | Pendente. Bloqueia só o uso real |
 | DP-2507 — identificador estável de curso na fonte real | Decisão institucional (Portão A) | Pendente. Sem ela, vale a comparação exata do texto |
 | D5 / DP-2503 — finalidade de usar o contexto acadêmico | Decisão institucional | Pendente. Bloqueia só o uso real |
-| Protocolo do Checkpoint 2 | Validação | A escrever depois da 025 e da 026, antes do teste |
+| Protocolo do Checkpoint 2 | Validação | Escrito em 2026-10-11, antes do teste: [protocolo](../../docs/validacao/checkpoint-2/protocolo.md). Não aplicado |
 
 ## Riscos
 
@@ -1043,7 +1049,7 @@ escrito antes da aplicação. Taxa de clique, engajamento e conversão **não** 
 | "Pesquisa e extensão" confundida com a pesquisa de acompanhamento | O egresso acha que precisa responder algo | Vocabulário do FR-022; observado no Checkpoint 2 (SC-014) |
 | Navegação com cinco itens a 320 px e fonte a 200% | Rolagem horizontal ou quebra ruim. A 375 px, os quatro itens atuais já ocupam a linha inteira | Quebra em linhas sem rolagem, alvos de 44×44 px e síntese do Início acima da dobra (FR-020, SC-008), com medição na validação |
 | O Início afastar a pesquisa | Quem chega pelo Portal demora a achar a pesquisa | Uma oportunidade só no Início, convite único e inalterado e no máximo 270 px mais abaixo, item "Pesquisa" no topo de toda página (FR-020, FR-021, SC-008). O caminho do convite não passa pelo Início (SC-010) |
-| Construir antes da hora | Tabela e telas sem a premissa do Checkpoint 1 validada | Só a spec foi antecipada; a implementação aguarda o Checkpoint 1 (Decisão S1) |
+| Construir antes da hora | Tabela e telas sem a premissa do Checkpoint 1 validada | Só a spec foi antecipada; a implementação aguarda o Checkpoint 1 (Decisão S1). *(Histórico: risco assumido pelo solicitante na revisão 5; custo localizado na camada desligável)* |
 
 ## Invariantes Constitucionais Afetados *(mandatory)*
 
@@ -1212,3 +1218,19 @@ navegação, depois de "Oportunidades". A curadoria ganha um vizinho, "Contribui
 recebidas" (`/curadoria/contribuicoes/`), com a mesma escolha de operador (destino
 `contribuicoes`) e a mesma regra de escopo. Pertinência, catálogo, estados e curadoria de
 oportunidades não mudam. As telas de Oportunidades continuam sem gravar.
+
+## Nota de revisão pela Feature 032 (2026-10-11)
+
+A [032](../032-convergencia-visual-c/spec.md) revisa, só na demonstração, a apresentação de
+Oportunidades no Início e a navegação:
+- o Início mostra "Hoje" com a contagem das oportunidades da formação, a seção "Para a sua
+  formação, agora" com a formação que justifica o destaque e, em seção própria ("Ninguém se
+  forma sozinho"), um item pertinente da categoria "Eventos", que deixa de ser o destaque;
+- a navegação passa a ser Início, Minha trajetória, Oportunidades e Participação. O item
+  "Pesquisa" exigido aqui (FR-020 e a seção "Início e acesso à pesquisa") sai; a escolha de
+  formações fica no bloco da pesquisa, em Participação e no fim do Início (032 FR-011).
+  Nenhuma rota muda.
+
+Pertinência, explicação, catálogo, estados e curadoria não mudam. A parte de Oportunidades
+do Checkpoint 2 (SC-011 a SC-016) está no
+[protocolo do Checkpoint 2](../../docs/validacao/checkpoint-2/protocolo.md).

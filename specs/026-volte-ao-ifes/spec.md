@@ -309,3 +309,17 @@ contribuição de quem não tem Conclusão.
   2026-10-09 (T001) antes dele; o checkpoint será aplicado depois da 026 e da 029
   implementadas. Se mostrar falha de compreensão, o Início e a navegação são corrigidos
   primeiro, já com a 026 na camada desligável.
+
+## Nota de revisão pela Feature 032 (2026-10-11)
+
+A [032](../032-convergencia-visual-c/spec.md) revisa o FR-011, só na demonstração:
+- o item de navegação "Contribuir" sai; a contribuição fica em "Participação"
+  (`/participacao/`), que é o item atual nas telas da contribuição;
+- no Início, a contribuição aparece no bloco de participação, com os marcos, e a linha das
+  formações termina em "Adiante": "N contribuições enviadas", contando só as ativas, ou o
+  convite para contribuir. Nunca "em andamento" (D-2601).
+
+Rotas, modelo, ciência, retirada e lista da unidade não mudam. Os qualitativos acima estão
+no [protocolo do Checkpoint 2](../../docs/validacao/checkpoint-2/protocolo.md) (CP2-C3,
+CP2-C4, CP2-B2, CP2-B3 e o proposto CP2-E1). O roteiro manual com teclado continua não
+executado (validação).

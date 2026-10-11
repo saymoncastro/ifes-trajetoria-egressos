@@ -303,3 +303,15 @@ retenção (questão do produto, roadmap 026 e 027; a 026 é especificada à par
 - **Fidelidade no teste — Hipótese:** a proposta é avaliada como protótipo estático
   servido localmente, com a chamada levando à `/entrar/` da demonstração. A página atual é
   a da 028, servida pela demonstração.
+
+## Nota de revisão pela Feature 032 (2026-10-11)
+
+A [032](../032-convergencia-visual-c/spec.md) substitui, só na demonstração, a composição
+desta página pela convergência C e revisa FR-004 (ordem), FR-008 (chamadas) e FR-011
+(composição) (032 FR-005, FR-006). Continuam valendo FR-001 a FR-003, FR-006, FR-007,
+FR-009, FR-010 e FR-013 (032 FR-007). A página desta feature deixou de ser servida; o
+protótipo que ela reproduz continua em [`prototipo/proposta.html`](prototipo/proposta.html).
+
+O bloco P do Checkpoint 1 passa a avaliar a página C, com a comparação histórica
+dependente de P6 ([bloco P](checkpoint-pagina-publica.md), revisão de 2026-10-11).
+Checkpoint 1 continua **NÃO APLICADO**.

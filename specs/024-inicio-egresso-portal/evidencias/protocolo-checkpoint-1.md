@@ -24,6 +24,42 @@ SC-016; roadmap §7.
 >   Ifes. Reações a Oportunidades vão para as observações e não contam para SC-008 a
 >   SC-016.
 
+> **Revisão de 2026-10-11 (versão C, Feature 032; roadmap, revisão 13).** Os critérios
+> SC-008 a SC-016, o limiar proposto (P1) e a regra de leitura (que falha leva a que
+> correção) **não mudam**. Mudam o objeto, o procedimento e o passo seguinte:
+> - **Versão avaliada:** a convergência visual C, servida pela `main` com a 032 integrada
+>   (`63b9447` ou posterior, com os ajustes da etapa de acessibilidade, se houver). O commit
+>   usado é anotado em cada ficha. Nenhuma versão anterior é avaliada por estes critérios.
+> - **Navegação:** Início, Minha trajetória, Oportunidades e **Participação** (032 FR-011).
+>   Não há mais os itens "Pesquisa", "Meu e-mail" nem "Contribuir". A pesquisa, o e-mail e
+>   a contribuição ficam em Participação e no fim do Início. Por isso, o "sim" do SC-012
+>   cita o bloco da pesquisa em Participação no lugar do item "Pesquisa"; o critério ("sabe
+>   onde atualizar") é o mesmo. Como "Participação" reúne três coisas, apontar só esse item,
+>   sem chegar à pesquisa, conta como **parcial**: o que se mede continua sendo saber onde
+>   fica a pesquisa. Texto anterior: *aponta "Pesquisa" na navegação, o convite do Início ou
+>   a escolha de formações*.
+> - **Oportunidades e contribuição existem no produto** (025 e 026). O trecho
+>   "Oportunidades e Volte ao Ifes não aparecem no produto" fica como histórico. Reações a
+>   Oportunidades, à contribuição e à seção de encontros ("Ninguém se forma sozinho", que
+>   aparece só com um evento pertinente) vão para as observações e não contam para SC-008
+>   a SC-016. Elas são o objeto do
+>   [Checkpoint 2](../../../docs/validacao/checkpoint-2/protocolo.md).
+> - **Mockup conceitual.** Não é mostrado neste ciclo: as capacidades que ele ilustrava
+>   (Oportunidades, contribuição) agora existem, e o `portal_egresso.html` não está no
+>   repositório. Se o solicitante quiser mostrá-lo, vale a regra original: ao final,
+>   identificado como protótipo, sem contar para os critérios.
+> - **Bloco P:** sobre a página pública C, com a comparação histórica dependente de P6
+>   ([bloco P](../../029-pagina-publica-portal/checkpoint-pagina-publica.md), "Revisão de
+>   2026-10-11").
+> - **Leitura com a 025 e a 026 implementadas.** As linhas "seguir para a S2 e a S3" e
+>   "antes da S2 e da S3" da tabela de leitura são de 2026-10-07: as duas já foram
+>   implementadas na demonstração (roadmap, revisões 5 e 10). Hoje, o passo seguinte ao
+>   Checkpoint 1 é o de ajustes, antes do protótipo da Comunidade (roadmap, §13.3). Se a
+>   compreensão falhar, o Início e a navegação são corrigidos antes do protótipo e do
+>   Checkpoint 2.
+> - **Dados do participante.** A pessoa usa só as personas fictícias. Ela não digita CPF,
+>   data de nascimento, e-mail ou mensagem reais em nenhuma tela.
+
 ## O que o teste quer saber
 
 Se o modelo mental mudou:
@@ -59,7 +95,9 @@ Não são critérios de sucesso:
   jornada da pesquisa. Ele pode ocorrer **depois** das tarefas abaixo, na mesma sessão.
 - **Oportunidades e Volte ao Ifes não aparecem no produto.** Se o moderador quiser explorar
   essas hipóteses, mostra o mockup conceitual (`portal_egresso.html`) **ao final**, dizendo
-  que é um protótipo. As reações a ele não contam para os critérios abaixo.
+  que é um protótipo. As reações a ele não contam para os critérios abaixo. *(Histórico:
+  as duas existem no produto desde a 025 e a 026; ver as revisões de 2026-10-09 e
+  2026-10-11.)*
 
 ## Roteiro
 
@@ -94,7 +132,7 @@ participantes, **em cada critério**. Cada critério é anotado por participante
 | SC-009: o que o Ifes sabe | 3 | cita ao menos uma formação (curso ou unidade e ano) sem ajuda |
 | SC-010: registro × resposta | 3, 7 | diz que as formações vêm do Ifes e que a pesquisa é onde ela mesma conta |
 | SC-011: valor antes de responder | 4, 7 | diz que pode ver a trajetória, o card ou o vídeo sem responder nada |
-| SC-012: onde atualizar | 7 | aponta "Pesquisa" na navegação, o convite do Início ou a escolha de formações |
+| SC-012: onde atualizar | 7 | aponta a pesquisa: o bloco da pesquisa em "Participação", o convite do Início ou a escolha de formações. Apontar só o item "Participação", sem chegar à pesquisa, é **parcial** *(até 2026-10-11: "Pesquisa" na navegação; ver revisão)* |
 | SC-013: acha a trajetória | 5 | chega à página Minha trajetória sem ajuda |
 | SC-014: pesquisa como convite | 2, 7 | trata a pesquisa como uma opção, não como a finalidade do lugar |
 | SC-015: acha retrato, vídeo e e-mail | 6 | chega ao card (ou vídeo) e a Meu e-mail sem ajuda |

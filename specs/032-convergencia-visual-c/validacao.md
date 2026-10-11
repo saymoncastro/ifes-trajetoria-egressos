@@ -156,7 +156,8 @@ compartilhado com o instrumento (ADR 0009, decisão 1).
 - contraste AA medido nos pares novos.
 
 **Pendente:** o roteiro manual com teclado num navegador real, como o que foi feito para a
-029.
+029. *(2026-10-11: é o passo 2 da sequência do roadmap, revisão 13, §13.3, antes do
+Checkpoint 1, junto com o teste com leitor de tela, P4.)*
 
 ### Pendências
 

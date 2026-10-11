@@ -1,5 +1,11 @@
 # Quickstart — Feature 024: Início do egresso e shell do Portal
 
+> **Histórico (2026-10-07).** Este roteiro descreve a 024 como foi entregue. Depois dela:
+> `/` sem sessão mostra a página pública (028, 029 e 032), e não `/entrar/`; a navegação é
+> Início, Minha trajetória, Oportunidades e **Participação** (032), sem o item "Pesquisa".
+> Para chegar a `/formacoes/`, use Participação ou o convite do Início. Para subir o
+> ambiente, siga [docs/desenvolvimento/ambiente-local.md](../../docs/desenvolvimento/ambiente-local.md).
+
 Pré-requisito: o ambiente local de
 [docs/desenvolvimento/ambiente-local.md](../../docs/desenvolvimento/ambiente-local.md), com o
 banco preparado (`preparar_demonstracao`) e o servidor no ar com `source .env &&`. O Portal
