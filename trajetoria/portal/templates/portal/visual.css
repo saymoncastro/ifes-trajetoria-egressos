@@ -1,4 +1,12 @@
-/* 028, ADR 0009: direção B, só nas telas do Portal. Tokens da 015 preservados. */
+/* 028, ADR 0009: direção B, só nas telas do Portal. Tokens da 015 preservados.
+   032 (ADR 0009, revisão de 2026-10-11): fontes servidas pela aplicação, só aqui; Bricolage
+   Grotesque provisória (DP-3201). Sem a fonte, o texto aparece em system-ui (swap). */
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("/fontes/atkinson-hyperlegible-regular.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700;
+  font-display: swap; src: url("/fontes/atkinson-hyperlegible-bold.woff2") format("woff2"); }
+@font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 600 700;
+  font-display: swap; src: url("/fontes/bricolage-grotesque-600-700.woff2") format("woff2"); }
 :root {
   --cor-acao: #195128;
   --cor-acao-forte: #00420c;
@@ -7,8 +15,18 @@
   --portal-suave: #cfe6d6;
   --portal-creme: #f6f2e8;
   --portal-destaque: 2.5rem;
+  /* 032: só estes quatro são novos (ADR 0009, revisão de 2026-10-11). */
+  --portal-verde-claro: #cdebd2;   /* fundo; texto profundo sobre ele: 9,8:1 */
+  --portal-verde-medio: #9fd3a8;   /* texto sobre o profundo: 7,4:1 */
+  --portal-verde-rotulo: #1f7a3a;  /* rótulos; 4,8:1 no creme, 5,4:1 no branco; nunca no verde-claro */
+  --portal-vermelho: #c8191e;      /* só o marcador do "Hoje", sempre com rótulo */
+  --portal-fonte-texto: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --portal-fonte-titulo: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
 }
-body { overflow-wrap: anywhere; }
+body { overflow-wrap: anywhere; font-family: var(--portal-fonte-texto); }
+h1, h2, h3, .produto-nome .nome, .portal-titulo { font-family: var(--portal-fonte-titulo);
+  letter-spacing: -0.02em; }
+h1, h2 { line-height: 1.05; }
 h1, h2, .narrativa-capitulo { hyphens: none; }
 .coluna, .portal-container { max-width: var(--portal-container); margin-inline: auto;
   padding-inline: min(1rem, 5vw); }

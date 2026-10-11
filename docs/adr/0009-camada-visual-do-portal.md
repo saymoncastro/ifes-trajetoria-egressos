@@ -226,3 +226,36 @@ com o protótipo aprovado.
   resultado dele para ser revista.
 - **Reversão.** A camada visual vive no base e nos tokens do Portal. Removê-la devolve o
   Portal ao shell da 015, sem tocar o instrumento nem o núcleo.
+
+## Revisão de 2026-10-11 — convergência visual C (Feature 032)
+
+Decidida pelo solicitante em 2026-10-11, depois da convergência das direções visuais
+(referência: [spec da 032](../../specs/032-convergencia-visual-c/spec.md)). Vale só para a
+camada do Portal. O instrumento, `/acesso/` e o shell sem o Portal não mudam.
+
+- **Decisão 4 revista, fontes.** O Portal passa a servir duas famílias, hospedadas pela
+  própria aplicação, sem CDN nem requisição a terceiros:
+  - **Atkinson Hyperlegible** (Braille Institute, SIL OFL 1.1) no texto;
+  - **Bricolage Grotesque** (SIL OFL 1.1) nos títulos, **provisória**: depende da avaliação
+    da ACS (DP-3201). Se não for aprovada, a alternativa é Open Sans, a fonte da marca.
+  - Arquivos woff2 com só os caracteres latinos (cerca de 61 KB no total), servidos pela
+    rota do Portal `/fontes/`, com cache longo, e as licenças guardadas ao lado.
+  - Reversível: retirar o `@font-face` devolve o Portal ao `system-ui`.
+- **Decisão 4 revista, escala.** O h1 do Portal pode passar dos 40 px no desktop, até cerca
+  de 7,5 rem na página pública e 5 rem no Início. No celular, o h1 fica em até 2,75 rem, para
+  que título, frase e chamada caibam na primeira tela (critério do celular, decisão 2).
+- **Decisão 1, tokens.** Os tokens atuais continuam (`--portal-profundo`, `--portal-creme`,
+  `--cor-acao`, `--cor-marca`). Entram só quatro: verde-claro de fundo (`#cdebd2`),
+  verde-médio sobre o escuro (`#9fd3a8`), verde de rótulo (`#1f7a3a`) e o vermelho do Ifes
+  (`#c8191e`), este só como marcador do "Hoje" na linha da trajetória, sempre com o rótulo
+  ao lado.
+- **Mantidas, pendentes com a ACS:**
+  - o slogan "Sua história com o Ifes continua" (decisão 6; D2): o título segue "Sua
+    história com o Ifes";
+  - padrões decorativos que reproduzam a marca Ifes (quadrados com círculo vermelho):
+    ficam fora (DP-3202);
+  - as vedações da decisão 7, inclusive "turma", "conectad", "comunidade" e saudação.
+- **Decisão 8 mantida.** No Início, o convite à pesquisa continua depois das ações e de
+  Oportunidades.
+- **Critério acrescentado:** a fonte servida pelo Portal não pode alargar a página: sem
+  rolagem horizontal de 320 a 1440 px com fonte de 100% a 200%, como antes.
