@@ -23,8 +23,10 @@ leitura do resultado. Este arquivo é a lista prática do moderador.
 
 1. Integrar a consolidação documental da revisão 13 (kit na versão C).
 2. **Acessibilidade:** roteiro manual com teclado sobre a versão C, num navegador real, nas
-   telas que o roteiro percorre (roadmap, §13.3, passo 2). Hoje **não executado**.
-3. Teste com leitor de tela antes das sessões (P4). Hoje **não executado**.
+   telas que o roteiro percorre (roadmap, §13.3, passo 2). **Executado em 2026-10-11**, sem
+   impedimento às tarefas ([validação da 032](../../../032-convergencia-visual-c/validacao.md#roteiro-manual-com-teclado-e-árvore-de-acessibilidade-2026-10-11)).
+3. Teste com leitor de tela antes das sessões (P4). Hoje **não executado**; o
+   [roteiro](../../../032-convergencia-visual-c/evidencias/roteiro-leitor-de-tela.md) está pronto.
 4. Resolver P1, P2, P3, P5 e P6 (abaixo).
 5. Aplicar, registrar e consolidar em outro PR. A leitura segue o protocolo. Se a
    compreensão falhar, o Início e a navegação são corrigidos antes do protótipo da
@@ -114,6 +116,6 @@ source .env && uv run python manage.py runserver 127.0.0.1:8000
 | P1 | Confirmar o tamanho da amostra e o limiar propostos no protocolo: **5 participantes** e "maioria" = **4 de 5 em cada critério**. A compreensão passa só se **cada um** de SC-008 a SC-012 atingir o limiar; "parcial" não conta. O bloco P admite 5 a 8 pessoas: com mais de 5, dizer como o limiar se aplica | Solicitante |
 | P2 | Moderador e recrutamento: quem modera, quem convida, por qual canal e com qual perfil. O protocolo pede ao menos 1 pessoa com mais de uma formação, ao menos 1 formada há mais de 5 anos e ninguém da equipe | Solicitante, com CSAEG/CPAEG se usar contatos institucionais |
 | P3 | Procedimento de **participação** (termo, informação ao participante) e, se houver, de **gravação** (guarda, prazo de retenção). O repositório não registra esse procedimento. Dispensar a gravação não resolve sozinho o procedimento de participação | Encarregado de dados, com CPAEG (`DECISÃO PENDENTE`) |
-| P4 | Teste com leitor de tela (VoiceOver ou NVDA) **antes** das sessões, para achar obstáculos que impeçam as tarefas. **Ainda não realizado.** A passada de teclado e da árvore de acessibilidade já foi feita e é só evidência técnica (ver validação). *(2026-10-11: aquela passada é da versão de 2026-10-08; a versão C ainda não tem roteiro de teclado, que entra no passo 2 da sequência revista.)* | Solicitante (quem executa) |
+| P4 | Teste com leitor de tela (VoiceOver ou NVDA) **antes** das sessões, para achar obstáculos que impeçam as tarefas. **Ainda não realizado.** A passada de teclado e da árvore de acessibilidade já foi feita e é só evidência técnica (ver validação). *(2026-10-11: aquela passada é da versão de 2026-10-08. O roteiro de teclado da versão C foi executado em 2026-10-11, e o [roteiro com leitor de tela](../../../032-convergencia-visual-c/evidencias/roteiro-leitor-de-tela.md) está pronto para quem executar.)* | Solicitante (quem executa) |
 | P5 | Vídeo nas sessões. SC-011 e SC-015 mencionam o vídeo; o protocolo aceita "card (ou vídeo)". Decidir entre instalar o renderizador no computador do moderador ou aplicar sem vídeo, registrando a escolha nas fichas. Origem: [avaliação técnica de 2026-10-08](../../../../docs/auditorias/2026-10-08-portal-avaliacao-tecnica.md) | Solicitante |
 | P6 | *(Nova, 2026-10-11.)* Comparação histórica no bloco P. A página avaliada é a C. Decidir: (a) manter as etapas P3 e P4 do roteiro do bloco P (que não são as pendências P3 e P4 desta tabela), comparando a C com a página da 029 ([`proposta.html`](../../../029-pagina-publica-portal/prototipo/proposta.html), que a implementação da 029 reproduz); (b) comparar com a da 028 ([`atual.html`](../../../029-pagina-publica-portal/prototipo/atual.html)); ou (c) não comparar, e o P-07 não é anotado. Em (a) e (b), decidir também a ordem: alternar a primeira versão vista, como no bloco P original, ou mostrar sempre a C primeiro, para que P-01 e P-02 da C tenham todos os participantes. Ver o [bloco P](../../../029-pagina-publica-portal/checkpoint-pagina-publica.md), "Revisão de 2026-10-11" | Solicitante |

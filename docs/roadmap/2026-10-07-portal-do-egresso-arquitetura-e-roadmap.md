@@ -1077,10 +1077,10 @@ Checkpoint 2 estão **NÃO APLICADOS**. Nenhum critério de compreensão ou comp
 | Contraste AA dos pares novos | Medido na 032 | Sim |
 | Passada de teclado e árvore de acessibilidade da 024 | 2026-10-08, 375×812, persona Maria ([validação](../../specs/024-inicio-egresso-portal/validacao.md)) | **Não**: navegação e Início da época, com "Pesquisa" e "Meu e-mail" no menu |
 | Ordem de foco em `/oportunidades/` (025, T049) | [Validação da 025](../../specs/025-oportunidades-curadas-portal/validacao.md) | **Não**: navegação de cinco itens da época |
-| Roteiro manual com teclado da 026 | **Não executado** ([validação](../../specs/026-volte-ao-ifes/validacao.md)) | — |
+| Roteiro manual com teclado da 026 | Não executado na 026. A contribuição, do formulário à retirada, entrou no roteiro da versão C (linha abaixo) | Sim, pelo roteiro da C |
 | Roteiro manual com teclado da 029 | 2026-10-11, sem achados, sobre a página da 029 (`950aea6`) | **Não**: a página foi substituída pela C |
-| Roteiro manual com teclado da 032 | **Não executado** ("Pendente" na validação da 032) | — |
-| Leitor de tela (VoiceOver ou NVDA) | **Nunca executado** (P4 da preparação do Checkpoint 1) | — |
+| Roteiro manual com teclado da 032 | **Executado em 2026-10-11** sobre `63b9447`, no Chromium 152 embutido no app Claude, a 375×812 e 1280×800 ([validação da 032](../../specs/032-convergencia-visual-c/validacao.md#roteiro-manual-com-teclado-e-árvore-de-acessibilidade-2026-10-11)). Nenhum impedimento às tarefas; quatro achados (A-01 a A-04), nenhum corrigido | Sim |
+| Leitor de tela (VoiceOver ou NVDA) | **Nunca executado** (P4 da preparação do Checkpoint 1). [Roteiro](../../specs/032-convergencia-visual-c/evidencias/roteiro-leitor-de-tela.md) pronto, sem resultados | — |
 | [Avaliação por IA](../auditorias/2026-10-08-portal-checkpoints-avaliacao-ia.md) | 2026-10-08, anterior à 025 implementada | Não; e não substitui checkpoint |
 | Fidelidade aos mockups "C · Convergência" | Auditoria na validação da 032 | Os mockups C **não estão versionados** no repositório. A conferência só é reproduzível pelas capturas reais |
 
