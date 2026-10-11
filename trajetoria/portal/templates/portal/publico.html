@@ -1,100 +1,129 @@
 {% extends "portal/base.html" %}
 {% block titulo %}Sua história com o Ifes{% endblock %}
 {% block estilo %}{{ block.super }}{% include "portal/oportunidades.css" %}{% include "portal/publico.css" %}{% endblock %}
+{% block navegacao %}
+{# 032 FR-006: menu da própria página, por âncoras; "Entrar" leva à identificação da 018. #}
+<nav class="publico-menu" aria-label="Nesta página"><div class="portal-container"><ul>
+  <li><a href="#encontros">Encontros</a></li>
+  <li><a href="#oportunidades">Oportunidades</a></li>
+  <li><a href="#contribuir">Contribuir</a></li>
+  <li><a class="publico-menu-entrar" href="/entrar/">Entrar</a></li>
+</ul></div></nav>
+{% endblock %}
 {% block conteudo %}
-{# 029: a relação (abertura) → o que o Ifes oferece → como o egresso participa → a trajetória → chamada final (FR-004). Textos provisórios (D2, DP-801). Nada aqui consulta o banco (FR-003). #}
-<section class="portal-faixa" aria-labelledby="titulo-publico">
-  <div class="portal-container publico-hero">
+{# 032 (convergência C): reconhecimento → como funciona → encontros → oportunidades → contribuição e participação → o card e a chamada final (FR-005). Textos provisórios (D2, DP-801). Nada aqui consulta o banco (029 FR-003). #}
+<div class="publico">
+<section class="publico-abertura" aria-labelledby="titulo-publico">
+  <div class="portal-container">
+    <h1 id="titulo-publico" class="publico-titulo">Sua história com o Ifes</h1>
+    <p class="publico-lead">O curso terminou; a relação com o Ifes pode continuar. Veja suas formações reconhecidas pelo Ifes, encontre oportunidades para a sua formação e ofereça sua contribuição.</p>
+    <div class="publico-acoes">
+      <a class="portal-botao publico-botao" href="/entrar/">Conhecer o Portal</a>
+      <a class="publico-botao-contorno" href="#como">Ver como funciona</a>
+    </div>
+    <p class="publico-nota">Para entrar, você confirma seu CPF e sua data de nascimento.</p>
+    {# A conclusão é um marco, não o fim (R6): ordem de leitura igual à visual; "Hoje" com rótulo, não só cor. #}
+    <ol class="publico-linha" aria-label="A trajetória com o Ifes">
+      <li><span class="publico-linha-rotulo">Ingresso</span><span class="publico-linha-texto">O primeiro dia no campus</span></li>
+      <li><span class="publico-linha-rotulo">Formação</span><span class="publico-linha-texto">Aulas, laboratórios, estágio</span></li>
+      <li class="publico-linha-marco"><span class="publico-linha-rotulo">Conclusão</span><span class="publico-linha-texto">Um marco, não o ponto final</span></li>
+      <li class="publico-linha-hoje"><span class="publico-linha-rotulo">Hoje</span><span class="publico-linha-texto">Oportunidades para a sua formação</span></li>
+      <li class="publico-linha-adiante"><span class="publico-linha-rotulo">Adiante</span><span class="publico-linha-texto">O que você constrói com o Ifes</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="publico-passos" id="como" aria-labelledby="titulo-como">
+  <div class="portal-container">
+    <h2 id="titulo-como" class="visualmente-oculto">Como funciona</h2>
+    <ol>
+      <li><span class="publico-passo-numero" aria-hidden="true">1</span><span>Entre com CPF e data de nascimento.</span></li>
+      <li><span class="publico-passo-numero" aria-hidden="true">2</span><span>Veja as formações que o Ifes registra para você.</span></li>
+      <li><span class="publico-passo-numero" aria-hidden="true">3</span><span>Descubra oportunidades e formas de participar. Nenhuma pesquisa é obrigatória.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="publico-encontros portal-faixa" id="encontros" aria-labelledby="titulo-encontros">
+  <div class="portal-container publico-duas">
+    <div class="publico-encontros-texto">
+      <h2 id="titulo-encontros" class="publico-titulo-secao">Ninguém se forma sozinho.</h2>
+      <p class="publico-encontros-lead">Quase tudo o que você lembra da sua formação tem outras pessoas. Essa história é coletiva.</p>
+      <p class="publico-encontros-nota">Quando a sua unidade promove encontros de egressos, eles aparecem no Portal, com o link oficial.</p>
+      {% with o=demo.oportunidades.1 %}
+      <div class="publico-exemplo-claro"><span class="portal-selo">Exemplo com dados fictícios</span>
+        <p class="publico-sobretitulo">{{ o.categoria }}</p>
+        <h3 class="publico-exemplo-titulo">{{ o.titulo }}</h3>
+        <p>{{ o.resumo }}</p>
+        <p class="oportunidade-por-que">{{ o.explicacao }}</p>
+        <p class="oportunidade-origem">{{ o.oferecida }} · página oficial (exemplo)</p>
+      </div>
+      {% endwith %}
+    </div>
+    <p class="publico-memorias" aria-hidden="true"><span class="m1">O laboratório.</span> <span class="m2">O professor que fez diferença.</span> <span class="m3">Os corredores.</span> <span class="m1">O estágio.</span> <span class="m2">O intervalo.</span> <span class="m3">A apresentação final.</span> <span class="m2">O primeiro projeto.</span> <span class="m1">O campus.</span></p>
+  </div>
+</section>
+
+<section class="publico-oportunidades" id="oportunidades" aria-labelledby="titulo-oportunidades">
+  <div class="portal-container">
+    <div class="publico-cabecalho-secao">
+      <h2 id="titulo-oportunidades" class="publico-titulo-secao">O Ifes continua fazendo parte da sua trajetória.</h2>
+      <p>Cursos, eventos e iniciativas de carreira divulgados pelo Ifes. Cada um diz por que aparece para você. Quando não há nenhum, nada aparece.</p>
+    </div>
+    <span class="portal-selo">Exemplo com dados fictícios</span>
+    {% with o=demo.oportunidades.0 %}
+    <div class="publico-ponte">
+      <div class="publico-ponte-origem">
+        <p class="publico-sobretitulo">Você concluiu</p>
+        <p class="publico-ponte-curso">{{ demo.ultima.curso }}</p>
+        <p class="publico-ponte-fonte">Unidade {{ demo.ultima.unidade }} · registro acadêmico do Ifes</p>
+      </div>
+      <div class="publico-ponte-seta" aria-hidden="true"></div>
+      <div class="publico-ponte-destino">
+        <p class="publico-sobretitulo">Aparece para você · {{ o.categoria }}</p>
+        <h3 class="publico-ponte-titulo">{{ o.titulo }}</h3>
+        <p>{{ o.resumo }}</p>
+        <p class="publico-ponte-motivo">{{ o.explicacao }}</p>
+        <p class="publico-ponte-motivo">{{ o.oferecida }} · página oficial (exemplo)</p>
+      </div>
+    </div>
+    {% endwith %}
+  </div>
+</section>
+
+<section class="publico-contribuir" id="contribuir" aria-labelledby="titulo-contribuir">
+  <div class="portal-container publico-duas">
     <div>
-      <p class="publico-kicker">Portal do Egresso · Ifes</p>
-      <h1 id="titulo-publico">Sua história com o Ifes</h1>
-      <p class="publico-lead">Encontre oportunidades que o Ifes divulgar para a sua formação, ofereça sua contribuição, participe contando como sua trajetória seguiu e veja suas formações reconhecidas pelo Ifes.</p>
+      <h2 id="titulo-contribuir" class="publico-titulo-secao">O que você aprendeu também pode transformar outras trajetórias.</h2>
+      <p>Você oferece. A unidade da formação que você escolher recebe e pode entrar em contato pelo e-mail que você informar. Não há prazo garantido. Você acompanha o que enviou e pode retirar quando quiser.</p>
+      <p><a class="portal-botao publico-botao" href="/entrar/">Entrar para oferecer</a></p>
+      <p class="publico-participar">Também é possível responder às pesquisas de acompanhamento, contando como sua trajetória seguiu, e deixar um e-mail para o Ifes convidar você para as próximas. As duas coisas são opcionais.</p>
+    </div>
+    <ol class="publico-formas" aria-label="Formas de contribuir">
+      <li><span aria-hidden="true">01</span>Conversar com estudantes</li>
+      <li><span aria-hidden="true">02</span>Ser mentor ou mentora</li>
+      <li><span aria-hidden="true">03</span>Divulgar uma vaga da sua área</li>
+      <li><span aria-hidden="true">04</span>Participar de projetos ou propor parceria</li>
+    </ol>
+  </div>
+</section>
+
+<section class="publico-final" aria-labelledby="titulo-final">
+  <div class="portal-container publico-duas">
+    <figure class="publico-card">
+      {{ demo.card }}
+      <figcaption><span class="portal-selo">Exemplo do card, com dados fictícios</span></figcaption>
+    </figure>
+    <div>
+      <h2 id="titulo-final" class="publico-titulo-secao">Sua formação faz parte da história do Ifes.</h2>
+      <p>Ao entrar, você vê as formações que o Ifes registra para você, com a origem de cada informação, e pode baixar o seu card para compartilhar, se quiser.</p>
       <div class="publico-acoes">
-        <p><a class="portal-botao" href="/entrar/">Conhecer o Portal</a></p>
-        <p><a class="publico-secundaria" href="#oferece">Ver como funciona</a></p>
+        <a class="portal-botao publico-botao" href="/entrar/">Conhecer o Portal</a>
+        <span class="publico-nota">CPF e data de nascimento</span>
       </div>
-      <p class="publico-nota">Para entrar, você confirma seu CPF e sua data de nascimento.</p>
-      <ul class="publico-confianca">
-        <li>Oportunidades divulgadas pelo próprio Ifes, com o link oficial.</li>
-        <li>Suas formações vêm dos registros acadêmicos do Ifes.</li>
-        <li>Participar é opcional: você vê tudo sem responder nenhuma pesquisa.</li>
-      </ul>
-    </div>
-    {# Composição decorativa da relação (FR-011): repete peças da demonstração abaixo; fora da árvore de acessibilidade. #}
-    <div class="publico-visual" aria-hidden="true">
-      <div class="publico-cartao publico-cartao-oportunidade"><span class="portal-selo">Exemplo com dados fictícios</span>{% include "portal/_oportunidade_exemplo.html" with o=demo.oportunidades.1 titulo="p" curta=True %}</div>
-      <div class="publico-cartao publico-cartao-trajetoria">
-        <p class="publico-ano">{{ demo.primeira.ano_conclusao }} · {{ demo.ultima.ano_conclusao }}</p>
-        <p><strong>{{ demo.primeira.curso }}</strong></p>
-        <p><strong>{{ demo.ultima.curso }}</strong></p>
-        <p class="publico-origem">{{ demo.primeira.unidade }} · Registro do Ifes</p>
-      </div>
+      <div class="publico-fio" aria-hidden="true"><span></span><span class="publico-fio-hoje"></span><span class="publico-fio-adiante"></span></div>
     </div>
   </div>
 </section>
-<section class="publico-secao publico-claro" id="oferece" aria-labelledby="titulo-oferece">
-  <div class="portal-container">
-    <p class="publico-kicker">O Ifes para você</p>
-    <h2 id="titulo-oferece">Oportunidades para a sua formação</h2>
-    <p>Cursos, eventos, programas e iniciativas de carreira que o Ifes divulga para quem concluiu a sua formação. Cada uma vem com o motivo de aparecer para você e o caminho para a página oficial. Quando não há nenhuma, nada aparece.</p>
-    <div class="publico-grade-oportunidades">
-      {% for o in demo.oportunidades %}<div class="publico-ilustra publico-branco"><span class="portal-selo">Exemplo com dados fictícios</span>{% include "portal/_oportunidade_exemplo.html" %}</div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-<section class="publico-secao" aria-labelledby="titulo-participar">
-  <div class="portal-container">
-    <p class="publico-kicker publico-kicker-verde">Você e o Ifes</p>
-    <h2 id="titulo-participar">Como você participa</h2>
-    <div class="publico-linha publico-contribuir">
-      <div class="publico-participar-item">
-        <h3>Contribua com o Ifes</h3>
-        <p>Ofereça-se para conversar com estudantes, ser mentor, divulgar uma vaga da sua área, participar de projetos ou propor uma parceria. A unidade da formação que você escolher recebe e pode entrar em contato pelo e-mail que você informar. Não há prazo garantido.</p>
-        <p>Você acompanha o que enviou, vê quando a unidade registra o contato e pode retirar quando quiser.</p>
-      </div>
-      <div class="publico-ilustra publico-branco"><span class="portal-selo">Exemplo com dados fictícios</span>
-        <p class="oportunidade-categoria">Sua contribuição</p>
-        <h3 class="oportunidade-titulo">{{ demo.contribuicao.forma }}</h3>
-        <p>{{ demo.contribuicao.linha }}</p>
-        <p class="publico-marco">{{ demo.contribuicao.situacao }}</p>
-      </div>
-    </div>
-    <div class="publico-participar">
-      <div>
-        <h3>Conte como sua trajetória seguiu</h3>
-        <p>Quando o Ifes abre uma pesquisa de acompanhamento para a sua formação, o convite aparece no Portal. Responder é como você atualiza sua trajetória com o Ifes. É opcional.</p>
-      </div>
-      <div>
-        <h3>Mantenha um canal com o Ifes</h3>
-        <p>Você pode deixar um e-mail para o Ifes convidar você para as próximas pesquisas de acompanhamento. Também é opcional.</p>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="publico-secao publico-claro" aria-labelledby="titulo-trajetoria">
-  <div class="portal-container">
-    <p class="publico-kicker">Sua formação</p>
-    <h2 id="titulo-trajetoria">Sua trajetória com o Ifes</h2>
-    <p>Suas formações aparecem com curso, unidade e ano, e com a origem de cada informação. Nada disso é preenchido por você. Se quiser, guarde um card da sua trajetória para compartilhar.</p>
-    <div class="publico-linha">
-      <div class="publico-ilustra publico-escuro"><span class="portal-selo">Exemplo com dados fictícios</span>
-        {% for frase in demo.sintese %}<p class="inicio-sintese">{{ frase }}</p>{% endfor %}
-        <ul class="inicio-formacoes">
-          {% for formacao in demo.formacoes %}
-          <li>{% for frase in formacao %}{% if forloop.first and frase.ano %}<span class="inicio-ano" aria-hidden="true">{{ frase.ano }}</span>{% endif %}<p{% if frase.atributos %} class="inicio-atributos"{% endif %}>{{ frase.texto }}{% if frase.origem %} <span class="inicio-origem">{{ frase.origem }}</span>{% endif %}</p>{% endfor %}</li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="publico-ilustra publico-branco"><figure class="publico-card"><span class="portal-selo">Exemplo com dados fictícios</span>{{ demo.card }}<figcaption class="visualmente-oculto">Card de exemplo. As formações e os dados são fictícios.</figcaption></figure></div>
-    </div>
-  </div>
-</section>
-<section class="portal-faixa publico-final" aria-labelledby="titulo-final">
-  <div class="portal-container">
-    <h2 id="titulo-final">Sua formação faz parte da história do Ifes</h2>
-    <p>Entre para ver o que o Ifes tem para você e como participar.</p>
-    <p><a class="portal-botao" href="/entrar/">Conhecer o Portal</a></p>
-  </div>
-</section>
+</div>
 {% endblock %}

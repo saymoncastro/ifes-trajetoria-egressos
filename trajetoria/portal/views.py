@@ -2,8 +2,10 @@
 cliente decide para onde a pessoa vai (FR-006). Nada aqui grava, salvo a sessão que a
 identificação da 018 estabelece (FR-029)."""
 
+from pathlib import Path
+
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -82,3 +84,23 @@ def sair(request):
     018 e volta à entrada do Portal. Destino fixo; as Seções continuam saindo por `/acesso/`."""
     encerrar(request)
     return _ir("/entrar/")
+
+
+_FONTES = Path(__file__).resolve().parent / "fontes"
+# Lista fechada (032 FR-001): nenhum nome vindo do cliente vira caminho de arquivo.
+FONTES = frozenset({
+    "atkinson-hyperlegible-regular.woff2",
+    "atkinson-hyperlegible-bold.woff2",
+    "bricolage-grotesque-600-700.woff2",
+})
+
+
+@require_GET
+def fonte(request, nome):
+    """Fontes do Portal servidas pela própria aplicação (032 FR-001; ADR 0009, revisão de
+    2026-10-11): sem CDN nem requisição a terceiros. O conteúdo não muda sem mudar o nome."""
+    if nome not in FONTES:
+        raise Http404
+    return HttpResponse((_FONTES / nome).read_bytes(), content_type="font/woff2", headers={
+        "Cache-Control": "public, max-age=31536000, immutable",
+    })

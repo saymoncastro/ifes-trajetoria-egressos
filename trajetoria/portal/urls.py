@@ -13,6 +13,7 @@ urlpatterns = [
     path("entrar/", views.entrar),
     path("inicio/", views.inicio),
     path("sair/", views.sair),
+    path("fontes/<str:nome>", views.fonte),
     path("oportunidades/", views_egresso.oportunidades),
     path("curadoria/oportunidades/", views_curadoria.lista),
     path("curadoria/oportunidades/nova/", views_curadoria.nova),
