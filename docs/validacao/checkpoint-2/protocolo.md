@@ -7,7 +7,8 @@ qualitativos da 026.
 
 > **Situação: NÃO APLICADO.**
 > - Nenhuma sessão com egressos foi feita.
-> - O bloco Comunidade depende de um **protótipo estático que ainda não existe**.
+> - O bloco Comunidade depende de um **protótipo estático**. Só a parte de Encontros existe
+>   (031, revisão 14); Histórias e Encontre colegas ainda não.
 > - O Checkpoint 2 vem depois do Checkpoint 1, dos ajustes e do protótipo da Comunidade
 >   (roadmap, §13.3).
 > - As pendências Q1 a Q7 ([preparação](preparacao-sessao.md)) são decididas antes da
@@ -210,7 +211,16 @@ autorização do solicitante.
 
 ## Material do bloco Comunidade
 
-O protótipo ainda não existe. Requisitos, da revisão 12 e deste protocolo:
+> **Revisão 14 do roadmap (2026-10-11).** A parte de **Encontros** já existe: o
+> [protótipo da 031](../../../specs/031-encontros-propostos-egressos/prototipo/index.html)
+> mostra a organizadora, a participante e a moderação. Ele atende aos requisitos de Encontros
+> abaixo e serve às tarefas F1 a F4. **Histórias** e **Encontre colegas** ainda não têm
+> protótipo. Sem eles, as tarefas H1, H2, D1 e D2 e os critérios CM-C3, CM-U3 e CM-U4 não
+> podem ser aplicados. A [spec da 031](../../../specs/031-encontros-propostos-egressos/spec.md)
+> acrescenta cinco observações exploratórias (CM-F1 a CM-F5), sem limiar (Q8, decidida em
+> 2026-10-11). Ver "Observações exploratórias da 031".
+
+Requisitos, da revisão 12 e deste protocolo:
 
 - **Forma.** HTML estático, sem JavaScript, fora da aplicação, como os
   [protótipos da camada visual](../../prototipos/2026-10-09-portal/LEIAME.md). Dados
@@ -229,6 +239,28 @@ O protótipo ainda não existe. Requisitos, da revisão 12 e deste protocolo:
 - A palavra "comunidade" pode aparecer no protótipo (revisão 12). Continuam vedados
   "turma", "geração", "conectad", contagens de egressos e comparação social.
 - O solicitante revisa o protótipo antes da primeira sessão (Q7).
+
+### Observações exploratórias da 031 *(Q8, decidida em 2026-10-11)*
+
+Anotadas como **sim**, **parcial** ou **não**, com a frase literal, na
+[ficha do bloco Comunidade](ficha-bloco-comunidade.md). **Não têm limiar** e não aprovam nem
+reprovam nada nesta rodada: a primeira pergunta é se as pessoas entendem os encontros, se
+proporiam e se participariam.
+
+| Observação | Pergunta sugerida | Tela do protótipo da 031 | Anotar se a pessoa… |
+|---|---|---|---|
+| CM-F1: por que aparece | "Por que este encontro aparece para você?" | p2, Encontros | explica pela formação que concluiu, ou diz que é aberto a todos |
+| CM-F2: análise antes de publicar | Como organizadora: "Depois de enviar, quem vê este encontro? E se o Ifes não aceitar?" | o3, Confira e envie; o4, Em análise | diz que ninguém o vê antes da análise e que a recusa vem com motivo |
+| CM-F3: o calendário não se atualiza | "Se a data mudar depois que você baixou o calendário, o que acontece?" | p4, Confirmado | diz que o arquivo não muda e que é preciso conferir a página |
+| CM-F4: cancelar | "Se você não puder ir, o que faz? E se quem propôs desistir?" | p4; p9, Cancelado | diz que pode cancelar a própria confirmação e que a página mostra o cancelamento |
+| CM-F5: público é descoberta | "Você poderia participar deste encontro? Por quê?" | p7, Fora do público | diz que ele foi pensado para certas formações, mas que quem recebe o endereço também pode participar |
+
+Leitura: sem limiar. As observações indicam o que a spec e o protótipo da 031 precisam rever
+antes de qualquer implementação. Não são taxa de adesão.
+
+**Seleção de telas para a sessão.** As 33 telas do protótipo cobrem a spec. A sessão usa um
+percurso curto, a escolher quando o material do bloco Comunidade estiver completo (roadmap,
+§13.3, passo 5).
 
 ## Registro
 

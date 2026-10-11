@@ -3,15 +3,19 @@
 Complementa o [protocolo](protocolo.md), que define critérios, roteiro e leitura do
 resultado. Este arquivo é a lista prática do moderador.
 
-> **Situação: NÃO APLICADO.** Nenhuma sessão foi feita. O protótipo do bloco Comunidade
-> ainda não existe. As pendências Q1 a Q7 estão abertas.
+> **Situação: NÃO APLICADO.** Nenhuma sessão foi feita. Do protótipo do bloco Comunidade,
+> só a parte de Encontros existe (031, revisão 14 do roadmap); Histórias e Encontre colegas
+> ainda não. As pendências Q1 a Q7 estão abertas; Q8 foi decidida.
 
 ## Sequência até os resultados
 
 1. Checkpoint 1 aplicado, lido e com os ajustes integrados (roadmap, §13.3, passos 3 e 4).
 2. Protótipo estático da Comunidade produzido e revisado pelo solicitante (passo 5; Q7).
 3. Roteiro com teclado e leitor de tela cobrindo a contribuição, do início à retirada (passo
-   2 do roadmap). Hoje **não executado** para a 026 nem para a versão C.
+   2 do roadmap). O roteiro com teclado foi **executado** na versão C em 2026-10-11, com a
+   contribuição incluída e os achados A-01 a A-04 não corrigidos
+   ([validação da 032](../../../specs/032-convergencia-visual-c/validacao.md)). O teste com
+   leitor de tela continua **não executado**.
 4. Resolver Q1 a Q7.
 5. Aplicar, registrar e consolidar em outro PR, com a leitura do protocolo.
 
@@ -94,3 +98,4 @@ persona: "Sair", depois "Usar estes dados" da outra.
 | Q5 | Manter ou não a tarefa V1 (estado vazio), que exige o moderador retirar O1 durante a sessão | Solicitante |
 | Q6 | Aprovar a leitura do resultado e o critério proposto CP2-E1 (finalidade dos dois e-mails) | Solicitante |
 | Q7 | Protótipo da Comunidade: aprovação do material antes das sessões; partes 1 e 2 na mesma sessão (cerca de 40 minutos) ou em sessões separadas | Solicitante |
+| Q8 | **Decidida (solicitante, 2026-10-11):** CM-F1 a CM-F5, da [spec da 031](../../../specs/031-encontros-propostos-egressos/spec.md#critérios-que-o-checkpoint-2-deve-avaliar), entram como observações exploratórias, sem limiar de aprovação nesta rodada | Solicitante |
