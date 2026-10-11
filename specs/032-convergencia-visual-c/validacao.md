@@ -156,8 +156,8 @@ compartilhado com o instrumento (ADR 0009, decisão 1).
 - contraste AA medido nos pares novos.
 
 **Pendente:** o roteiro manual com teclado num navegador real, como o que foi feito para a
-029. *(2026-10-11: é o passo 2 da sequência do roadmap, revisão 13, §13.3, antes do
-Checkpoint 1, junto com o teste com leitor de tela, P4.)*
+029. *(2026-10-11: executado; ver "Roteiro manual com teclado e árvore de acessibilidade"
+abaixo. O leitor de tela, P4, continua pendente.)*
 
 ### Pendências
 
@@ -181,3 +181,83 @@ Checkpoint 1, junto com o teste com leitor de tela, P4.)*
 Depois das correções:
 - **Suíte completa:** 3366 testes aprovados, 40 ignorados e 2 desmarcados.
 - **Telas medidas novamente:** pública, `/entrar/`, os três Inícios, Participação e as quatro telas internas. Todas sem rolagem horizontal, com um h1 e sem alvo abaixo de 44 px.
+
+## Roteiro manual com teclado e árvore de acessibilidade (2026-10-11)
+
+Passo 2 da sequência do roadmap (revisão 13, §13.3), antes do Checkpoint 1.
+
+- **Navegador:** navegador embutido do aplicativo Claude 2.26454.2, Chromium 152.0.7977.130,
+  em macOS.
+- **Código servido:** `63b9447`, a `main` com a 032. O commit `371ec65` acima dele só muda
+  documentos.
+- **Ambiente:** banco próprio, recém-preparado com `preparar_demonstracao`, servidor em
+  `127.0.0.1:8025` (a 8000 estava ocupada por outro processo).
+- **Larguras:** 375×812 (persona Ana) e 1280×800 (persona Bruno, a única com a seção de
+  encontros).
+- **Teclas reais:** Tab, Shift+Tab, Enter, Espaço e setas. A cada passo, o foco foi
+  conferido pelo elemento ativo e pelo estilo calculado (contorno de 3 px e halo amarelo da
+  015).
+- **Escritas na demonstração:** uma contribuição fictícia da Ana, com
+  `verificacao-teclado@example.invalid`, enviada e depois retirada. Nos dois erros de e-mail
+  testados, nada foi gravado.
+
+**Não executado:** leitor de tela (P4). O
+[roteiro para VoiceOver ou NVDA](evidencias/roteiro-leitor-de-tela.md) está pronto, sem
+resultados. A árvore de acessibilidade abaixo é evidência técnica, não substitui o teste com
+leitor de tela.
+
+### Resultados por tela
+
+| Tela | Ordem de foco (resumo) | Resultado |
+|---|---|---|
+| Página pública, 1280×800 | Pular → Encontros → Oportunidades → Contribuir → Entrar → Conhecer o Portal → Ver como funciona → Entrar para oferecer → Conhecer o Portal (fim) | Ordem igual à visual; foco visível em todos. "Pular" leva o foco a `main#conteudo`. Enter em "Encontros" leva a seção ao topo, e o Tab seguinte vai ao próximo elemento focável depois dela ("Entrar para oferecer"). 0 `script`, 0 formulário, 1 h1 |
+| Página pública, 375×812 | Pular → Entrar → Conhecer o Portal → Ver como funciona → Entrar para oferecer → Conhecer o Portal | O menu de âncoras some abaixo de 480 px e não recebe foco. Shift+Tab volta corretamente. Sem rolagem horizontal |
+| `/entrar/`, 375×812 | Pular → CPF → Data de nascimento → Continuar → "Dados fictícios para demonstração" | O painel recolhido (`details`) abre com Enter; cada botão tem nome próprio ("Usar estes dados de Ana Exemplo"). Entrada pelo teclado |
+| Início, Ana, 375×812 | Pular → Sair → Início (atual) → Minha trajetória → Oportunidades → Participação → Baixar meu card → Ver minha trajetória no Ifes → "Hoje" → "Adiante" → oportunidade em destaque → Ver as 2 oportunidades → Quero contribuir → Informar e-mail → Responder | Ordem igual à visual; `aria-current="page"` em Início. O link do "Hoje" leva a `#oportunidades`, e o Tab seguinte vai ao destaque. Alvos de 44 px ou mais, exceto "Pular" (40 px, da 015) |
+| Início, Bruno, 1280×800 | Pular → Sair → navegação → ações do card (coluna direita) → "Hoje" → "Adiante" → encontro → destaque → Ver as 2 oportunidades → contribuição → e-mail → pesquisa | Segue a leitura: de cima para baixo e, na participação em três colunas, da esquerda para a direita. O convite da pesquisa é o último (ADR 0009, decisão 8). Foco visível no link do encontro sobre a faixa escura |
+| Participação, 375×812 | Pular → Sair → navegação (Participação atual) → Quero contribuir → Informar e-mail → Responder | Um h1; h2 para contribuição, canal e pesquisa |
+| Contribuir, 375×812 | Navegação → forma (rádios) → formação (rádio marcado) → Mensagem → Continuar → Voltar ao Início | `fieldset` e `legend` nos dois grupos; as setas mudam a forma; a dica está ligada à mensagem. Sem forma: resumo com `role="alert"`, foco no primeiro rádio, `aria-describedby` no grupo. Opções de 343×60 px, com rótulo de 52 px de altura |
+| Confira e envie, 375×812 | Navegação → E-mail para a resposta → Enviar contribuição → Voltar e alterar | E-mail inválido: resumo com `role="alert"`, foco no campo, `aria-invalid` e erro em `aria-describedby`, valor preservado. Envio pelo teclado |
+| Sua contribuição | Navegação → Suas contribuições → Retirar esta contribuição → Voltar ao Início | Aviso "Contribuição enviada." em `role="status"` (ver A-02) |
+| Retirar e Suas contribuições | Navegação → Retirar → Cancelar | Retirada pelo teclado; "Ver detalhes" tem nome acessível com a forma, a formação e a data |
+| Minha trajetória, 375×812 | Navegação (Minha trajetória atual) → Incluir meu nome no card → Atualizar prévia → Baixar imagem (PNG) → Voltar ao Início | Espaço marca a caixa e Enter atualiza a prévia. Texto alternativo do card completo. A caixa nativa tem 13×13 px; o rótulo clicável, 181×44 px. O bloco de vídeo não aparece, porque o renderizador não está instalado: **vídeo não testado** |
+| Oportunidades, 375×812 | Navegação (Oportunidades atual) → as duas oportunidades | Nome do link com "— site externo: oportunidades.example". h2 "Pela sua formação" e "Para todos os egressos" |
+| Meu e-mail, 375×812 | Navegação (Participação atual) → E-mail → Salvar → Agora não → Ver minha trajetória no Ifes → Voltar ao Início | Ordem coerente. Erro: ver A-01 |
+| `/formacoes/`, 1280×800 | Navegação (Participação atual) → Ver minha trajetória no Ifes → os dois "Iniciar a pesquisa desta formação" | Ver A-03 e A-04 |
+
+Capturas do foco: [`teclado-foco-inicio-hoje-375.jpg`](evidencias/capturas/teclado-foco-inicio-hoje-375.jpg)
+(link do "Hoje", Ana) e [`teclado-foco-encontro-1280.png`](evidencias/capturas/teclado-foco-encontro-1280.png)
+(link do encontro, Bruno).
+
+**Árvore de acessibilidade (Início do Bruno, 1280×800):** `banner`, `navigation` "Portal do
+Egresso" com quatro itens em lista, `main`, `contentinfo`. Os títulos seguem h1 → h2. A
+linha da trajetória é uma lista nomeada ("Sua trajetória com o Ifes"), com "Hoje" e "Adiante"
+como texto, não só cor. A região "Participação" tem nome. O card tem texto alternativo
+completo, e a decoração não aparece na árvore.
+
+### Achados
+
+Nenhum achado impede uma tarefa do Checkpoint 1 ou do Checkpoint 2. Nenhum foi corrigido:
+mudanças de código dependem de autorização.
+
+| # | Tela | Achado | Origem | Efeito nos checkpoints | Correção possível |
+|---|---|---|---|---|---|
+| A-01 | `/meu-email/` | Depois do erro do servidor, o foco fica no início da página, e não no campo nem no erro. O valor digitado não volta ao campo. O erro está ligado por `aria-describedby` e `aria-invalid` | 020 (anterior à C) | Nenhum: as tarefas só pedem encontrar a tela, sem preencher | `autofocus` no campo com erro, como na contribuição (026) |
+| A-02 | Sua contribuição; Suas contribuições | Os avisos "Contribuição enviada." e "Contribuição retirada." usam `role="status"`, mas já vêm no carregamento da página, e o foco não vai até eles. Leitores de tela costumam não anunciar regiões vivas presentes no carregamento | 026 | A confirmar no teste com leitor de tela (P4). R5 e R7 do Checkpoint 2 dependem de a pessoa perceber o envio e a retirada | Aviso focável (`tabindex="-1"` e `autofocus`), como em `/acesso/` |
+| A-03 | `/formacoes/` | O link "Ver minha trajetória no Ifes" tem 194×19 px, abaixo dos 44 px da 014 | Instrumento, anterior à C | Nenhum: não está no caminho das tarefas | Alvo mínimo no link isolado |
+| A-04 | `/formacoes/` | Com duas formações, os dois botões se chamam "Iniciar a pesquisa desta formação". O contexto está no mesmo item da lista, mas quem navega por botões ouve nomes iguais | Instrumento (007/008), anterior à C | A confirmar com leitor de tela; SC-012 passa por essa tela | Nome acessível com o curso, sem mudar o texto visível |
+
+**Observação de conteúdo, não de acessibilidade.** O "Hoje" conta também as oportunidades
+abertas a todos os egressos e os encontros. Na Ana e no Bruno, ele diz "2 oportunidades para
+a sua formação", e uma delas é "Aberta a todos os egressos do Ifes". Pode pesar no CP2-C1
+("por que aparece") e fica para a observação do Checkpoint 2.
+
+### Não coberto
+
+- leitor de tela real (P4);
+- vídeo da Minha trajetória;
+- compartilhamento por JavaScript da Minha trajetória;
+- toque e teclado virtual num celular real;
+- zoom do sistema a 200% com teclado (a ausência de rolagem horizontal a 200% já está medida
+  acima);
+- personas Maria e Diego, só no oráculo e nas medidas.

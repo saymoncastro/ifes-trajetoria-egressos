@@ -77,6 +77,9 @@ As telas seguem os protótipos e1 a e6, u1 e u2. Diferenças:
 ## Pendências
 
 - **Roteiro manual com teclado** (critério de entrega 4): não executado num navegador real.
+  *(2026-10-11: a contribuição, do formulário à retirada, foi percorrida com teclado na
+  versão C; ver a [validação da 032](../032-convergencia-visual-c/validacao.md#roteiro-manual-com-teclado-e-árvore-de-acessibilidade-2026-10-11),
+  achado A-02.)*
   Verificado por estrutura: nenhum JavaScript; só links, botões e controles nativos; rótulos
   associados; foco no primeiro campo com erro; sem `tabindex` positivo.
 - **D4, D5, DP-801, DP-2501:** continuam pendentes (plan, "Decisões Pendentes").
