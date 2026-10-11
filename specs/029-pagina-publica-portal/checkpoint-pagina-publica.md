@@ -12,6 +12,64 @@ Os critérios SC-008 a SC-016 da 024, o limiar e a leitura do resultado **não m
 > captura ou um protótipo estático. A seção "Material" é revista antes da aplicação, sem
 > mudar perguntas nem critérios.
 
+## Revisão de 2026-10-11 — versão C (Feature 032)
+
+*(Roadmap, revisão 13. Prevalece sobre as seções abaixo onde houver diferença; o texto
+abaixo fica como histórico.)*
+
+- **Versão avaliada: a página pública C**, servida em `/` sem sessão pela `main` com a 032
+  integrada (`63b9447` ou posterior). O commit vai na ficha. A página da 029 deixou de ser
+  servida: a 032 revisou a ordem, as chamadas e a composição (032 FR-005, FR-006).
+- **Comparação histórica: depende de P6** ([preparação](../024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md)).
+  As opções são comparar a C com a página da 029, com a da 028 ou não comparar.
+  - **Recomendação deste kit, a decidir em P6:** a C sempre primeiro, para que P-01 e P-02
+    da C tenham todos os participantes; a página da 029 como segunda versão, só para as
+    etapas P3 e P4 e o P-07. O P-07 fica marcado como influenciado pela ordem.
+  - **Página da 029:** cópia estática [`prototipo/proposta.html`](prototipo/proposta.html),
+    com estilo embutido, aberta no computador do moderador. É o protótipo que a
+    implementação da 029 reproduz, com três diferenças pequenas registradas na
+    [validação da 029](validacao.md) (nível dos títulos dos exemplos, legenda do card e
+    rótulo da categoria). As chamadas apontam para `/entrar/` da demonstração: o moderador
+    não as segue.
+  - **Página da 028:** cópia estática [`prototipo/atual.html`](prototipo/atual.html). Deixa
+    de ser a comparação padrão, porque já foi substituída duas vezes.
+  - Se P6 decidir alternar a ordem, valem as regras de "Ordem e contrabalanceamento"
+    abaixo, com a C no lugar da "proposta".
+- **O que a C mostra.** Menu da página com Encontros, Oportunidades e Contribuir (âncoras) e
+  "Entrar"; abaixo de 480 px, só "Entrar". Abertura "Sua história com o Ifes" com a linha
+  Ingresso → Adiante; como funciona; "Ninguém se forma sozinho", com um encontro de exemplo;
+  oportunidades; contribuição e participação; o card de exemplo e a chamada final. Todos os
+  exemplos têm o selo "Exemplo com dados fictícios".
+- **Olhar livre (P2).** "Sem entrar" quer dizer não seguir "Conhecer o Portal", "Entrar" nem
+  "Entrar para oferecer". As âncoras do menu podem ser usadas.
+- **P-01, benefícios reais na C.** São os mesmos três do FR-005 da 029: oportunidades
+  divulgadas pelo Ifes para a formação; contribuir com o Ifes (oferecer-se à unidade) e
+  participar (pesquisa de acompanhamento, e-mail); ver as formações reconhecidas pelo Ifes
+  ou o card. A C dá destaque próprio aos **encontros de egressos divulgados pela unidade,
+  com link oficial**. Eles contam como o benefício "oportunidades", porque já estão no
+  FR-005 ("eventos") e na categoria "Eventos" da 025 (alternativa A), e não como benefício
+  novo. O critério e a lista de benefícios não mudam; só se explicita como ler a seção de
+  encontros.
+- **P-02, funções inexistentes na C.** O critério e a lista original continuam; a lista
+  já inclui "comunidade", "rede de contatos" e "eventos próprios". Na C, anotar em especial
+  se a pessoa atribui ao Portal: encontros organizados pelo Portal ou propostos por
+  egressos; inscrição ou confirmação de presença em encontros; comunidade, rede ou
+  diretório de colegas; contato com outros egressos; histórias de egressos publicadas. A faixa "Ninguém se forma sozinho",
+  com a lista de lembranças da formação, é o ponto da C mais propenso a essa leitura. Anotar
+  a frase. Dizer que a unidade divulga encontros de egressos é benefício real (P-01), e não
+  falha de P-02.
+- **Leitura do resultado na C** (substitui a tabela abaixo onde ela fala em "proposta",
+  "atual" e "antes de implementar"):
+
+  | Resultado | Decisão |
+  |---|---|
+  | P-02 falha | Corrigir o texto ou o exemplo da C que gerou a leitura, antes do Checkpoint 2 |
+  | P-01 não atinge a referência na C | Revisar a primeira tela da C |
+  | P-06 não atinge a referência | Rever identidade e explicação dos dados; registrar se a dúvida é sobre a identificação (018) |
+  | Com comparação: P-07 favorece a versão histórica, com justificativa de conteúdo | Rever na C o ponto apontado. Não reverte a 032 automaticamente |
+
+  Qualquer mudança de código depende de autorização do solicitante.
+
 ## O que o bloco quer saber
 
 Se a página pública faz um egresso que nunca usou o Portal entender, em poucos segundos,

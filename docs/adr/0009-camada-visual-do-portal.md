@@ -257,5 +257,10 @@ camada do Portal. O instrumento, `/acesso/` e o shell sem o Portal não mudam.
   - as vedações da decisão 7, inclusive "turma", "conectad", "comunidade" e saudação.
 - **Decisão 8 mantida.** No Início, o convite à pesquisa continua depois das ações e de
   Oportunidades.
+  - *Nota de conciliação (roadmap, revisão 13).* Um dos motivos da decisão 8 citava o item
+    "Pesquisa" na navegação. Desde a 032 (FR-011), a navegação usa "Participação", que reúne
+    a pesquisa, o e-mail e a contribuição: é por ele que a pesquisa fica a um toque na
+    navegação. A regra de revisão não muda: se o SC-012 falhar no Checkpoint 1, a posição do
+    convite volta à discussão.
 - **Critério acrescentado:** a fonte servida pelo Portal não pode alargar a página: sem
   rolagem horizontal de 320 a 1440 px com fonte de 100% a 200%, como antes.

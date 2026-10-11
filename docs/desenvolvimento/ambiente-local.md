@@ -334,9 +334,12 @@ substituiu a comunicação simulada da 016) só aceita a URL de entrada
 
 | URL | O que é |
 |---|---|
-| `http://127.0.0.1:8000/` | Entrada do Portal do Egresso (Feature 024): redireciona para `/entrar/` ou, com sessão, para `/inicio/`. Com `TRAJETORIA_PORTAL=0`, redireciona para `/acesso/` como antes |
+| `http://127.0.0.1:8000/` | Página pública do Portal do Egresso, sem sessão (Features 028, 029 e 032); com sessão, leva ao Início. Com `TRAJETORIA_PORTAL=0`, redireciona para `/acesso/` como antes |
 | `http://127.0.0.1:8000/entrar/` | Identificação pelo Portal: a mesma de `/acesso/`, mas leva ao Início (Feature 024) |
-| `http://127.0.0.1:8000/inicio/` | Início do Portal: o que o Ifes registra, ações e convite à pesquisa (Feature 024) |
+| `http://127.0.0.1:8000/inicio/` | Início do Portal: o que o Ifes registra, linha das formações, encontros e oportunidades pertinentes, participação e convite à pesquisa (Features 024 e 032) |
+| `http://127.0.0.1:8000/participacao/` | Participação: contribuição, e-mail e pesquisa. A navegação do Portal é Início, Minha trajetória, Oportunidades e Participação (Feature 032) |
+| `http://127.0.0.1:8000/contribuir/` | Contribuir com o Ifes; `/contribuicoes/` lista as contribuições da Pessoa, com retirada (Feature 026; exige acesso e Portal ligado) |
+| `http://127.0.0.1:8000/curadoria/contribuicoes/` | Contribuições recebidas pela unidade, com CSV e registro de contato (Feature 026; operador; Portal ligado) |
 | `http://127.0.0.1:8000/acesso/` | Entrada do egresso pelo convite: CPF e data de nascimento **fictícios**; leva a `/formacoes/`. A própria página mostra o painel "Dados fictícios para demonstração" |
 | `http://127.0.0.1:8000/formacoes/` | Formações da Pessoa confirmada (exige acesso) |
 | `http://127.0.0.1:8000/minha-trajetoria/` | Minha trajetória, com card e vídeo, para quem tem Conclusão Acadêmica, mesmo sem ter respondido (Features 021 e 024) |

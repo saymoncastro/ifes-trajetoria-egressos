@@ -4,22 +4,24 @@ Copie como `participante-N-bloco-p.md`, junto da ficha da 024 do mesmo participa
 **Sem nome, CPF, e-mail, telefone ou qualquer dado que identifique a pessoa.**
 
 - **Participante:** N
-- **Primeira versão vista:** atual (ímpar) / proposta (par)
 - **Data:**
+- **Versão avaliada:** página pública C (032), commit `________` *(revisão de 2026-10-11)*
+- **Comparação histórica (P6):** nenhuma / 029 (`prototipo/proposta.html`) / 028 (`prototipo/atual.html`)
+- **Primeira versão vista:** C / histórica. *(Até 2026-10-11: atual (ímpar) / proposta (par).)*
 
 ## P1 — Cinco segundos
 
-| | Primeira versão (principal) | Segunda versão (secundário) |
+| | Primeira versão (principal) | Segunda versão (secundário; só com comparação) |
 |---|---|---|
 | "O que é este lugar?" | | |
 | "O que encontraria lá dentro?" | | |
 | "Mais alguma coisa?" | | |
 | Benefícios reais citados | | |
-| Funções inexistentes atribuídas (quais) | | |
+| Funções inexistentes atribuídas (quais; na C, atenção a encontros, comunidade e contato entre egressos) | | |
 
 ## Critérios
 
-Marcar **sim**, **parcial** ou **não**. Só "sim" conta. P-01 e P-02 na primeira versão vista.
+Marcar **sim**, **parcial** ou **não**. Só "sim" conta. P-01 e P-02 na primeira versão vista. Na C, um encontro de egressos divulgado pela unidade conta como "oportunidades" (P-01); encontro organizado ou com inscrição no Portal é função inexistente (P-02). Ver o bloco P, revisão de 2026-10-11.
 
 | Critério | Resultado | Evidência (frase literal curta) |
 |---|---|---|
@@ -29,7 +31,7 @@ Marcar **sim**, **parcial** ou **não**. Só "sim" conta. P-01 e P-02 na primeir
 | P-04: interesse declarado (registro) | | |
 | P-05: motivo para voltar (registro) | | |
 | P-06: confiança e identidade | | |
-| P-07: comparação (versão escolhida e motivo) | | |
+| P-07: comparação (versão escolhida e motivo; não anotar sem comparação) | | |
 
 ## Observações
 
