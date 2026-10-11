@@ -73,6 +73,23 @@
   Andamento em 2026-10-09: passo 1 concluído (026 integrada na demonstração, PR #56) e passo 2
   concluído (029 com "Contribuir com o Ifes" na spec, no protótipo e no bloco P; T024 da 026).
   O passo 3 aguarda autorização.
+- **Revisão 12 (2026-10-11).** O solicitante consolidou a **visão da Comunidade** e autorizou
+  só a revisão documental
+  ([alternativas de comunidade, revisão de 2026-10-11](2026-10-09-comunidade-alternativas.md#revisão-de-2026-10-11-a-visão-da-comunidade)):
+  - a Comunidade é dimensão permanente do Portal, com três capacidades permanentes:
+    pertencimento (B, Histórias), participação (**F**, encontros propostos por egressos) e
+    reencontro voluntário (**E1**). A rede social (**E2**) continua fora;
+  - 030 (Histórias) e 031 (Encontros) ficam **reservados, sem spec aberta**. A ordem entre as
+    duas sai do Checkpoint 2, com preferência funcional pela 031;
+  - o Checkpoint 2 ganha o **bloco Comunidade**, aplicado sobre um protótipo estático
+    (§7);
+  - decisões pendentes D8, D9 e D10 (§11.2). Outras soluções institucionais, como o
+    aplicativo da DIREC citado na pesquisa de egressos de 2025, são ponto de atenção para uso
+    real e não bloqueiam a demonstração (D10).
+
+  Sequência: 029 integrada (PR #58) → Checkpoint 1 → protótipo da Comunidade → Checkpoint 2 →
+  decisão entre 030 e 031. Constituição, ADR 0008 e ADR 0009 não mudam. Checkpoint 1 continua
+  **NÃO APLICADO**; a 027 continua fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -708,6 +725,24 @@ escrito antes do teste.
 - **Reentrada com menos atrito.** Spec própria, depois do Portão A e de DP-1808. Ganha peso com
   o Portal, que é um lugar ao qual se volta.
 
+### Comunidade: pertencimento, participação e reencontro *(revisão 12; sem spec aberta)*
+
+A visão, a fundamentação e a direção de cada capacidade estão nas
+[alternativas de comunidade](2026-10-09-comunidade-alternativas.md#revisão-de-2026-10-11-a-visão-da-comunidade).
+Resumo:
+
+- **030, Histórias de egressos (B).** Editorial, com curadoria e termo de publicação. A entrada
+  é a forma "Contar sua história" da 026. Fato novo provável: História.
+- **031, Encontros da comunidade (F).** Egressos propõem encontros virtuais, com moderação
+  antes da publicação, confirmação de participação, `.ics` e link externo. Fatos novos
+  prováveis: Encontro e Confirmação.
+- **E1, Reencontro voluntário.** Horizonte com condições: identidade reforçada (DP-1808), D8,
+  D9 e uma ADR própria antes de uso real.
+- **Dependências.** As de código são o shell e o Início da S1; a 030 também depende da 026. As
+  de validação são o Checkpoint 1 e o Checkpoint 2 (bloco Comunidade).
+- **Entidades.** "Comunidade", "Conexão" e "Evento" continuam fora do domínio (§2).
+  "Encontro" e "Confirmação" só existem se a 031 os justificar (Princípio XXII).
+
 ---
 
 ## 7. Checkpoints de validação
@@ -777,6 +812,25 @@ conclusão.
 - **Como ler o resultado.** O Checkpoint 2 decide se a S4 vale a pena e informa as decisões D4
   e D5 com evidência.
 
+#### Bloco Comunidade *(revisão 12)*
+
+- **Sobre o quê.** Um protótipo estático de Histórias, Encontros e Encontre colegas. O que é
+  conceitual aparece marcado, e nada disso está implementado.
+- **Critérios de compreensão.** A pessoa:
+  1. distingue encontro proposto por egresso de evento do Ifes;
+  2. entende quem vê a confirmação dela e quem recebe o link da reunião;
+  3. entende que aparecer no diretório é escolha dela, o que é mostrado, e que o contato
+     depende de aceite;
+  4. não atribui ao Portal função inexistente (mensagens, rede de contatos, evento oficial
+     onde não há).
+- **Utilidade e interesse.** Qualitativos, anotados por pessoa:
+  1. se proporia um encontro, sobre o quê e para quem;
+  2. se participaria de um encontro proposto por outro egresso;
+  3. se aderiria ao diretório e o que mostraria;
+  4. se uma história de outro egresso lhe diz algo, e por quê.
+- **Como ler o resultado.** Informa a escolha entre 030 e 031 e as condições do E1. Não é taxa
+  de adesão nem métrica de engajamento (seção 7).
+
 ---
 
 ## 8. Dependências
@@ -805,9 +859,15 @@ conclusão.
   └──────┬───────┘
          ▼
  ◆ Checkpoint 2 — valor recebido e reciprocidade
+   (+ bloco Comunidade, sobre protótipo estático; revisão 12)
          │
-         ▼
- S4  Linha do tempo da relação (opcional, se o checkpoint justificar)
+         ├──────────────────────────────┐
+         ▼                              ▼
+ S4  Linha do tempo da relação     Comunidade: 030 Histórias e 031 Encontros
+     (opcional)                    (ordem decidida pelo checkpoint; preferência pela 031)
+                                        │
+                                        ▼
+                                   E1 Reencontro voluntário ◄── DP-1808, D8, D9, ADR própria
 
 Trilhas paralelas, fora da camada Portal:
   CPAEG: nova Versão contextualizada ─────► "conte só o que mudou"
@@ -849,7 +909,9 @@ Quase tudo aqui é composição do que já existe e cabe na S1:
 Itens atraentes, mas que seriam overengineering agora:
 
 - **Rede, mensageria, aproximação entre egressos, "avise-me de encontros".** Exigem base legal
-  e moderação.
+  e moderação. **Revisão 12:** a aproximação entre egressos saiu desta lista. Ela entra como
+  encontros (031) e reencontro voluntário (E1), com as condições da seção 6. Rede, mensageria
+  e notificações continuam postergadas.
 - **Perfil de interesses.** Seria dado sem consumidor (XVI).
 - **Motor de recomendação, IA, crawler de editais.**
 - **Vagas, inscrições, eventos com agenda.** Integrar quando houver sistema institucional, sem
@@ -885,7 +947,10 @@ Itens atraentes, mas que seriam overengineering agora:
 | **D1 (produção)** | Relação entre este software e o Portal do Egresso da PAEG (Art. 10, I; Art. 13) | Proex/CPAEG/DTI | Só o uso real |
 | **D4** | Quem cura as oportunidades e quem recebe e responde às manifestações em cada unidade. A PAEG aponta a CSAEG (Art. 22, III) e a DIREC (Art. 15) | CPAEG/Proex | Uso real da S2 e da S3; na demonstração vale CSAEG como hipótese |
 | **D5** | Base legal e texto de ciência para guardar a manifestação e usar o contato com essa finalidade; finalidade de mostrar oportunidades por contexto acadêmico | Encarregado de dados, com a CPAEG | Uso real da S3 (e da S2, se segmentar por contexto) |
-| **D6** | Limiar e autorização para mostrar agregados a egressos (DP-1101, DP-2105) | CPAEG/Proex, encarregado | Comunidade (postergada) |
+| **D6** | Limiar e autorização para mostrar agregados a egressos (DP-1101, DP-2105) | CPAEG/Proex, encarregado | Comunidade agregada (postergada) |
+| **D8** | Quem modera encontros propostos por egressos, para cada recorte de público (uma unidade, várias, temático); critérios de recusa e retirada; quem recebe denúncias de encontros e do diretório. A PAEG não atribui essa função (Art. 22, VII, só "apoiar") | CPAEG, com as CSAEG | Uso real da 031 e do E1. Na demonstração, a spec registra uma hipótese |
+| **D9** | Base legal, termos (organizador, participação, publicação de história, adesão ao diretório) e retenção de confirmações, histórias e adesões | Encarregado de dados, com a CPAEG | Uso real da 030, da 031 e do E1 |
+| **D10** | Complementaridade, interoperabilidade e governança com outras soluções institucionais (aplicativo da DIREC; associações e grupos de ex-alunos), pela Constituição VI | Proex/DIREC/CPAEG | Só o uso real. Por decisão do solicitante (2026-10-11), não bloqueia a demonstração nem a validação |
 
 O Portal não reabre as decisões que já estavam pendentes:
 
