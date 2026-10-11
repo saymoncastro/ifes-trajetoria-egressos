@@ -54,6 +54,31 @@ e medidas em [`evidencias/medidas.json`](evidencias/medidas.json).
 
 A página implementada reproduz o protótipo (`prototipo/proposta.html`).
 
+## Roteiro manual com teclado (2026-10-11)
+
+Executado no navegador embutido do aplicativo Claude (Chromium), em macOS, sobre a página
+servida (commit `950aea6`, banco próprio com `preparar_demonstracao`). Teclas reais (Tab,
+Shift+Tab e Enter), a 1280×800 e a 375×812. O foco foi conferido a cada passo pelo elemento
+ativo e pelo estilo calculado.
+
+| Passo | Resultado |
+|---|---|
+| Primeiro Tab | "Pular para o conteúdo" aparece com o foco da 015 (contorno de 3 px e halo amarelo) |
+| Enter em "Pular para o conteúdo" | O foco vai para `main#conteudo` |
+| Tab, Tab | "Conhecer o Portal" e depois "Ver como funciona", com foco visível nos dois. Alvos de 180×44 e 185×44 px |
+| Enter em "Ver como funciona" | Leva a `#oferece` ("Oportunidades para a sua formação") por âncora, sem script. A seção fica no topo da janela |
+| Tab depois da âncora | Vai direto à chamada final "Conhecer o Portal", o próximo elemento focável depois da seção |
+| Shift+Tab | Volta para "Ver como funciona" |
+| Enter na chamada final | Abre `/entrar/` ("Confirme seus dados para entrar no Portal do Egresso"), sem mudança |
+| Ordem de foco | Pular → Conhecer o Portal → Ver como funciona → Conhecer o Portal (fim). É igual à ordem visual nas duas larguras. A composição decorativa e os exemplos não recebem foco |
+| 375×812 | Mesma ordem, foco visível, sem rolagem horizontal |
+| Página | 0 `script`, 0 formulário, 1 h1 |
+| `/acesso/` | Continua indo direto à identificação da pesquisa ("Confirme seus dados para acessar a pesquisa"), sem a página pública (US3, cenário 3) |
+
+Nenhum achado. Capturas do foco: [`teclado-foco-1280.png`](evidencias/capturas/teclado-foco-1280.png)
+("Ver como funciona" com foco) e [`teclado-foco-375.jpg`](evidencias/capturas/teclado-foco-375.jpg)
+("Conhecer o Portal" com foco).
+
 ## Diferenças em relação ao protótipo
 
 - **Títulos dos itens de exemplo:** são h3 (no protótipo, h4), para seguir a hierarquia sob
@@ -67,5 +92,5 @@ A página implementada reproduz o protótipo (`prototipo/proposta.html`).
 - **Checkpoint 1** (024 e bloco P): NÃO APLICADO. O material do bloco P foi revisto, e a 028
   aparece pela cópia estática [`prototipo/atual.html`](prototipo/atual.html).
 - **D2 e DP-801:** textos provisórios. **DP-2106:** fotografias.
-- **Roteiro manual com teclado** num navegador real: não executado. A página não tem
-  formulário nem script; as chamadas são links nativos e a secundária é uma âncora.
+- **Roteiro manual com teclado:** executado em 2026-10-11, sem achados (ver acima). Leitor
+  de tela real não foi testado; a árvore de acessibilidade é verificada pelos testes.
