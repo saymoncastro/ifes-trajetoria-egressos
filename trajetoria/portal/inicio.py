@@ -16,6 +16,7 @@ from trajetoria.narrativa import card, rasterizacao
 from trajetoria.narrativa.consultas import elegivel, entrada_da_pessoa
 from trajetoria.narrativa.contrato import DERIVADO, INSTITUCIONAL
 from trajetoria.narrativa.montagem import montar
+from trajetoria.narrativa.views import ARQUIVO
 from trajetoria.participacao.entrada import (
     ResolucaoDaEntrada,
     SituacaoDaFormacao,
@@ -23,7 +24,8 @@ from trajetoria.participacao.entrada import (
 )
 from trajetoria.portal import mensagens
 from trajetoria.portal.contribuicao import mensagens as m_contribuicao
-from trajetoria.portal.contribuicao.consultas import tem_manifestacao
+from trajetoria.portal.contribuicao.consultas import enviadas, tem_manifestacao, ultima_ativa
+from trajetoria.portal.models import Categoria
 from trajetoria.portal.oportunidades import mensagens as m_oportunidades
 from trajetoria.portal.oportunidades.consultas import itens_da_pessoa
 from trajetoria.video import renderizador
@@ -122,38 +124,49 @@ def _convite(situacao) -> dict | None:
     return {"texto": texto, "acao": mensagens.ACAO_RESPONDER}
 
 
-ACAO_CARD = {"rotulo": mensagens.ACAO_CARD, "endereco": "/minha-trajetoria/#card"}
-
-
-def _acoes(com_trajetoria: bool, com_previa: bool = False) -> list[dict]:
-    """Com a prévia do card no Início (028), a ação do card fica junto dela e sai da lista,
-    para não repetir o mesmo link."""
+def _acoes(com_trajetoria: bool, card_arquivo: str | None) -> list[dict]:
+    """Ações da trajetória junto do card (032, convergência C): baixar o card, quando há prévia,
+    ver a trajetória e o vídeo, quando há renderizador. O e-mail fica na participação."""
     acoes = []
     if com_trajetoria:
+        if card_arquivo:
+            acoes.append({"rotulo": mensagens.ACAO_CARD, "endereco": card_arquivo,
+                          "baixar": f"{ARQUIVO}.{card_arquivo.rsplit('.', 1)[-1]}"})
         acoes.append({"rotulo": mensagens.ACAO_TRAJETORIA, "endereco": "/minha-trajetoria/"})
-        if not com_previa:
-            acoes.append(ACAO_CARD)
         if renderizador.disponivel():
             acoes.append({"rotulo": mensagens.ACAO_VIDEO, "endereco": "/minha-trajetoria/#video"})
-    acoes.append({"rotulo": mensagens.ACAO_EMAIL, "endereco": "/meu-email/"})
     return acoes
 
 
-def _oportunidades(pessoa, hoje) -> dict | None:
-    """Um destaque e o total (025 FR-021). `None` sem itens: o bloco não existe. Uma falha do
-    banco omite só o bloco, como no reconhecimento; erro de programação não é engolido (code
+def _itens(pessoa, hoje):
+    """As oportunidades pertinentes, ou `None` se o banco falhar: nesse caso só os blocos que
+    dependem delas somem, como no reconhecimento. Erro de programação não é engolido (code
     review do PR #49): sem isso, uma regressão na pertinência sumiria com o bloco em silêncio."""
     try:
-        itens = itens_da_pessoa(pessoa, hoje)
+        return itens_da_pessoa(pessoa, hoje)
     except DatabaseError:
         logger.exception("portal: falha ao montar as oportunidades")
         return None
+
+
+def _encontro(itens):
+    """Encontros de egressos (comunidade, alternativa A): o primeiro item pertinente da
+    categoria Eventos (025). Nenhuma inferência além da pertinência (032 FR-012)."""
+    return next((i for i in itens or () if i.oportunidade.categoria == Categoria.EVENTOS), None)
+
+
+def _oportunidades(itens, encontro) -> dict | None:
+    """Um destaque e o total (025 FR-021). `None` sem itens: a seção não existe. O destaque não
+    repete o encontro mostrado acima (032 FR-008)."""
     if not itens:
+        return None
+    destaque = next((i for i in itens if i is not encontro), None)
+    if destaque is None:
         return None
     total = len(itens)
     return {
-        "titulo": m_oportunidades.TITULO,
-        "destaque": itens[0],
+        "titulo": mensagens.TITULO_OPORTUNIDADES_INICIO,
+        "destaque": destaque,
         "ver": (
             m_oportunidades.VER_TODAS.format(n=total) if total > 1 else m_oportunidades.VER_PAGINA
         ),
@@ -161,14 +174,39 @@ def _oportunidades(pessoa, hoje) -> dict | None:
     }
 
 
-def _contribuir(pessoa) -> dict:
-    """Bloco "Contribuir com o Ifes" (026 FR-011; plan R10): depois de Oportunidades e antes
-    do convite. Com alguma manifestação, leva também a "Suas contribuições"."""
+def _hoje(itens) -> dict | None:
+    """"Hoje" na linha (032 FR-009): quantas oportunidades há, com link, ou que não há."""
+    if itens is None:
+        return None
+    if not itens:
+        return {"texto": mensagens.HOJE_NENHUMA, "endereco": None}
+    texto = mensagens.HOJE_UMA if len(itens) == 1 else mensagens.HOJE_VARIAS.format(n=len(itens))
+    return {"texto": texto, "endereco": "#oportunidades"}
+
+
+def _adiante(enviadas: int) -> dict:
+    """"Adiante" na linha (032 FR-009): contribuições enviadas e ativas, ou o convite. Sem
+    estados de atendimento (D-2601)."""
+    if not enviadas:
+        return {"texto": m_contribuicao.INICIO_TITULO, "endereco": "/contribuir/"}
+    texto = (m_contribuicao.ADIANTE_UMA if enviadas == 1
+             else m_contribuicao.ADIANTE_VARIAS.format(n=enviadas))
+    return {"texto": texto, "endereco": "/contribuicoes/"}
+
+
+def montar_participacao(pessoa, com_trajetoria: bool | None = None) -> dict:
+    """Os blocos de participação (032 FR-008, FR-011), no Início e em `/participacao/`:
+    contribuição (026), e-mail (020, só convite: o Início não lê contato) e, por último, o
+    convite da pesquisa (007; ADR 0009, decisão 8)."""
+    if com_trajetoria is None:
+        com_trajetoria = elegivel(pessoa)
+    contribuicao = ultima_ativa(pessoa) if com_trajetoria else None
     return {
-        "titulo": m_contribuicao.INICIO_TITULO,
-        "texto": m_contribuicao.INICIO_TEXTO,
-        "acao": m_contribuicao.INICIO_ACAO,
-        "suas": m_contribuicao.INICIO_SUAS if tem_manifestacao(pessoa) else None,
+        "com_trajetoria": com_trajetoria,
+        "contribuicao": contribuicao,
+        "suas": com_trajetoria and tem_manifestacao(pessoa),
+        "titulo_convite": mensagens.TITULO_CONVITE,
+        "convite": _convite(situacao_de_entrada(pessoa)),
     }
 
 
@@ -177,16 +215,19 @@ def montar_inicio(pessoa, referencia, demonstracao) -> dict:
     reconhecimento = (
         _reconhecimento(pessoa, referencia, demonstracao) if com_trajetoria else None
     )
+    itens = _itens(pessoa, referencia) if com_trajetoria else None
+    encontro = _encontro(itens)
+    participacao = montar_participacao(pessoa, com_trajetoria)
     return {
         "titulo": mensagens.TITULO,
         "reconhecimento": reconhecimento,
         "sem_formacao": None if com_trajetoria else estados.SEM_FORMACAO,
         "proveniencia": mensagens.PROVENIENCIA if com_trajetoria else None,
         "titulo_acoes": mensagens.TITULO_ACOES,
-        "acoes": _acoes(com_trajetoria, com_previa=reconhecimento is not None),
-        "acao_card": ACAO_CARD,
-        "oportunidades": _oportunidades(pessoa, referencia) if com_trajetoria else None,
-        "contribuir": _contribuir(pessoa) if com_trajetoria else None,
-        "titulo_convite": mensagens.TITULO_CONVITE,
-        "convite": _convite(situacao_de_entrada(pessoa)),
+        "acoes": _acoes(com_trajetoria, reconhecimento and reconhecimento["card_arquivo"]),
+        "hoje": _hoje(itens) if reconhecimento else None,
+        "adiante": _adiante(enviadas(pessoa)) if reconhecimento else None,
+        "encontro": encontro,
+        "oportunidades": _oportunidades(itens, encontro),
+        **participacao,
     }

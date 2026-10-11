@@ -1,0 +1,137 @@
+/* Início e Participação (032, convergência C; ADR 0009, revisão de 2026-10-11). Celular
+   primeiro: uma coluna e linha vertical; a partir de 768 px a linha fica horizontal; a partir
+   de 1024 px a abertura divide a largura com o card. Ordem de leitura igual à visual. */
+main:has(.inicio) { padding: 0; background: var(--portal-creme); }
+main:has(.inicio) > .coluna { max-width: none; padding: 0; }
+.inicio h1, .inicio h2, .inicio h3 { color: var(--portal-profundo); margin: 0; }
+.inicio h1 { font-size: clamp(2.25rem, 11.5vw, 2.75rem); font-weight: 700; line-height: .95;
+  letter-spacing: -0.035em; max-width: 12ch; }
+.inicio h2 { font-size: clamp(1.75rem, 7.5vw, 2rem); font-weight: 700; line-height: 1;
+  letter-spacing: -0.03em; margin-bottom: 1rem; }
+
+/* Reconhecimento. */
+.inicio-abertura { padding-block: 1.5rem 2.5rem; }
+.inicio-abertura-grade { display: grid; gap: 1.5rem; }
+.inicio-sintese { font-size: 1.25rem; line-height: 1.45; color: #2c4a36; margin: 1rem 0 0; }
+.inicio-proveniencia { color: #3f5b47; margin: .5rem 0 0; }
+.inicio-numeros { margin-top: 1.25rem; border-top: 1px solid #e2ddd0; padding-top: 1rem; }
+.inicio .inicio-numeros h2 { font-size: 1.25rem; margin-bottom: .5rem; }
+.inicio-numero { display: flex; gap: .75rem; align-items: baseline; margin-bottom: .5rem; }
+.inicio-numero strong { font-family: var(--portal-fonte-titulo); font-size: 2rem; line-height: 1;
+  color: var(--portal-verde-rotulo); flex: none; }
+.inicio-numero p { margin: 0; }
+.inicio-numeros .suave { font-size: var(--fonte-5); color: #3f5b47; }
+.inicio-acoes-area { display: grid; gap: 1rem; justify-items: start; }
+.inicio-card { margin: 0; }
+.inicio-card img { display: block; width: min(100%, 13rem); height: auto;
+  box-shadow: 0 1.5rem 2.5rem -1.25rem rgba(14, 59, 35, .5); }
+.inicio-acoes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap;
+  gap: .75rem 1rem; align-items: center; }
+.inicio-acoes .portal-botao { background: var(--portal-profundo); border-color: var(--portal-profundo);
+  color: var(--portal-creme); font-weight: 700; border-radius: 6px; }
+.inicio-acoes .portal-botao:hover { background: var(--cor-acao); }
+
+/* Linha das formações, com Hoje e Adiante (032 FR-009). */
+.inicio-linha { list-style: none; margin: 2rem 0 0; padding: 0 0 0 1.75rem; display: grid; gap: 1.5rem;
+  border-left: 4px solid var(--cor-marca); }
+.inicio-linha li { position: relative; min-width: 0; }
+.inicio-linha li::before { content: ""; position: absolute; left: calc(-1.75rem - 12px); top: .4rem;
+  width: 20px; height: 20px; border-radius: 50%; background: var(--cor-marca); }
+.inicio-linha .inicio-linha-hoje::before { background: var(--portal-vermelho); width: 24px; height: 24px;
+  left: calc(-1.75rem - 14px); top: .3rem; box-shadow: 0 0 0 6px rgba(200, 25, 30, .16); }
+.inicio-linha .inicio-linha-adiante::before { background: var(--portal-creme);
+  border: 3px dashed var(--portal-verde-medio); width: 14px; height: 14px; }
+.inicio-ano { display: block; font-family: var(--portal-fonte-titulo); font-size: 1.875rem;
+  font-weight: 700; line-height: 1.05; color: var(--portal-profundo); margin-bottom: .25rem; }
+.inicio-linha-hoje .inicio-ano { color: var(--portal-verde-rotulo); }
+.inicio-linha-adiante .inicio-ano { color: #5f7a66; }
+.inicio-linha p { margin: 0 0 .125rem; font-size: var(--fonte-5); color: #2c4a36; }
+.inicio-linha p:first-of-type { font-weight: 700; color: var(--portal-profundo); }
+.inicio-linha .inicio-atributos { font-weight: 400; color: #3f5b47; }
+.inicio-origem { font-weight: 400; color: #3f5b47; }
+.inicio-linha a { color: var(--portal-profundo); font-weight: 700; display: inline-flex;
+  align-items: center; min-height: 44px; }
+
+/* Encontros (alternativa A da comunidade): só com um encontro pertinente. */
+.inicio-encontros.portal-faixa { background: var(--portal-profundo); padding-block: 2.5rem; }
+.inicio .inicio-encontros h2 { color: var(--portal-creme); }
+.inicio-encontros p { color: #d3e3d6; }
+.inicio-encontro { background: var(--portal-creme); color: var(--portal-profundo); border-radius: 10px;
+  padding: 1.25rem 1.5rem; margin-top: 1rem; }
+.inicio-encontro p { color: var(--portal-profundo); margin: 0 0 .375rem; }
+.inicio-encontros .inicio-encontro a { color: var(--portal-profundo); }
+.inicio-encontro .oportunidade-titulo { font-family: var(--portal-fonte-titulo); font-size: 1.5rem;
+  line-height: 1.1; margin: .25rem 0 .5rem; }
+.inicio-duas { display: grid; gap: 1rem; }
+
+/* Oportunidades: da formação à oportunidade (o destaque da 025, com o motivo e a origem). */
+.inicio-oportunidades { padding-block: 2.5rem; }
+.inicio-sobretitulo { font-size: var(--fonte-5); font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--portal-verde-rotulo); margin: 0 0 .375rem; }
+.inicio-ponte { display: grid; }
+.inicio-ponte-origem { border: 2px solid var(--portal-profundo); border-radius: 10px; padding: 1.25rem; }
+.inicio-ponte-curso { font-family: var(--portal-fonte-titulo); font-size: 1.375rem; font-weight: 700;
+  line-height: 1.15; margin: 0; }
+.inicio-ponte-seta { height: 2rem; margin-left: 2rem; border-left: 4px solid var(--cor-marca); position: relative; }
+.inicio-ponte-seta::after { content: ""; position: absolute; left: -12px; bottom: -2px;
+  border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid var(--cor-marca); }
+.inicio-ponte-destino { background: #fff; border: 1px solid #e2ddd0; border-radius: 10px; padding: 1.25rem; }
+.inicio-ponte-destino .oportunidade-titulo { font-family: var(--portal-fonte-titulo); font-size: 1.5rem;
+  line-height: 1.1; margin: 0 0 .5rem; }
+.inicio-ponte-destino .oportunidade-titulo a { color: var(--portal-profundo); }
+.inicio-sem-inscricao { font-size: var(--fonte-5); color: #3f5b47; margin: 1rem 0 0; }
+.inicio-ver-oportunidades { margin: .5rem 0 0; }
+
+/* Participação: contribuição, e-mail e o convite por último. */
+.inicio-participacao { background: var(--portal-verde-claro); padding-block: 2.5rem 3rem; }
+.inicio-participacao-intro { margin: 0 0 1.5rem; color: var(--portal-profundo); }
+.participacao-grade { display: grid; gap: 2rem; }
+.participacao-bloco { min-width: 0; }
+.inicio .participacao-bloco h2 { font-size: clamp(1.625rem, 6.5vw, 1.875rem); hyphens: auto; }
+.participacao-bloco p { color: var(--portal-profundo); }
+.participacao-sub { font-weight: 700; }
+.participacao-marcos { list-style: none; margin: 0 0 1rem; padding: 0 0 0 1.5rem;
+  border-left: 3px solid var(--cor-marca); display: grid; gap: .75rem; }
+.participacao-marcos li { position: relative; display: grid; color: var(--portal-profundo); }
+.participacao-marcos li::before { content: ""; position: absolute; left: calc(-1.5rem - 9px); top: .25rem;
+  width: 14px; height: 14px; border-radius: 50%; background: var(--cor-marca); }
+.participacao-marcos li:last-child::before { background: var(--portal-profundo); }
+.participacao-acoes { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; }
+.participacao-acoes a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700;
+  color: var(--portal-profundo); }
+.participacao-acoes .portal-botao { background: var(--portal-profundo); border-color: var(--portal-profundo);
+  color: var(--portal-creme); border-radius: 6px; }
+.participacao-acoes .portal-botao:hover { background: var(--cor-acao); }
+.inicio-botao-contorno { padding: 0 1.25rem; border: 2px solid var(--portal-profundo); border-radius: 6px;
+  text-decoration: none; }
+.inicio-convite { border: 0; padding: 0; }
+
+@media (min-width: 768px) {
+  .inicio h1 { font-size: clamp(3.25rem, 7vw, 4.25rem); }
+  .inicio h2 { font-size: clamp(2.25rem, 4.5vw, 2.75rem); }
+  .inicio-linha { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1.5rem 0;
+    padding: 0; border-left: 0; margin-top: 2.5rem; }
+  .inicio-linha li { border-top: 4px solid var(--cor-marca); padding: 1.5rem 1.25rem 0 0; }
+  .inicio-linha li.inicio-linha-adiante { border-top: 4px dashed var(--portal-verde-medio); }
+  .inicio-linha li::before { left: 0; top: -12px; }
+  .inicio-linha .inicio-linha-hoje::before { left: -6px; top: -14px; }
+  .inicio-linha .inicio-linha-adiante::before { display: none; }
+  .inicio-ponte { grid-template-columns: minmax(0, 5fr) 4rem minmax(0, 7fr); align-items: stretch; }
+  .inicio-ponte-origem { display: flex; flex-direction: column; justify-content: center; }
+  .inicio-ponte-seta { height: auto; margin: 0; border-left: 0; display: flex; align-items: center; }
+  .inicio-ponte-seta::before { content: ""; flex: 1; height: 4px; background: var(--cor-marca); }
+  .inicio-ponte-seta::after { position: static; border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; border-left: 14px solid var(--cor-marca); border-right: 0; }
+  .participacao-grade { grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 2.5rem; }
+}
+@media (min-width: 1024px) {
+  .inicio-abertura { padding-block: 3rem 3.5rem; }
+  .inicio-abertura-grade { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 3rem; align-items: center; }
+  .inicio h1 { font-size: clamp(4rem, 5.6vw, 5rem); }
+  .inicio-acoes-area { justify-items: center; }
+  .inicio-card img { width: min(100%, 15rem); transform: rotate(2deg); }
+  .inicio-acoes { justify-content: center; }
+  .inicio-duas { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 3rem; align-items: center; }
+  .inicio-encontros.portal-faixa, .inicio-oportunidades { padding-block: 4rem; }
+  .inicio-participacao { padding-block: 4rem; }
+}

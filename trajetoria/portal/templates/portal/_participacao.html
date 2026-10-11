@@ -1,0 +1,31 @@
+{% comment %}Participação (032 FR-008, FR-011), no Início e em /participacao/: contribuição (026),
+e-mail (020, só convite: nada sobre o contato guardado é lido) e, por último, o convite da
+pesquisa (007; ADR 0009, decisão 8). `nivel` é o nível dos títulos (h2 no Início, h2 na página).{% endcomment %}
+<div class="participacao-grade">
+  {% if com_trajetoria %}
+  <section class="participacao-bloco inicio-contribuir" aria-labelledby="participacao-contribuir">
+    <h2 id="participacao-contribuir">{% if contribuicao %}{{ m_contribuicao.TITULO_SUA }}{% else %}{{ m_contribuicao.INICIO_TITULO }}{% endif %}</h2>
+    {% if contribuicao %}
+    <p class="participacao-sub">{{ contribuicao.forma }} · {{ contribuicao.quem_recebe }}</p>
+    <ol class="participacao-marcos">{% for rotulo, data in contribuicao.marcos %}<li><strong>{{ rotulo }}</strong> <span>{{ data }}</span></li>{% endfor %}</ol>
+    <p class="participacao-acoes"><a class="portal-botao" href="/contribuir/">{{ m_contribuicao.OFERECER_NOVA }}</a> <a href="/contribuicoes/">{{ m_contribuicao.INICIO_SUAS }}</a></p>
+    {% else %}
+    <p>{{ m_contribuicao.INICIO_TEXTO }}</p>
+    <p class="participacao-acoes"><a class="portal-botao" href="/contribuir/">{{ m_contribuicao.INICIO_ACAO }}</a>{% if suas %} <a href="/contribuicoes/">{{ m_contribuicao.INICIO_SUAS }}</a>{% endif %}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+  <section class="participacao-bloco participacao-canal" aria-labelledby="participacao-canal">
+    <h2 id="participacao-canal">{{ m.TITULO_CANAL }}</h2>
+    <p>{{ m.CANAL_TEXTO }}</p>
+    <p class="participacao-acoes"><a class="inicio-botao-contorno" href="/meu-email/">{{ m.ACAO_EMAIL }}</a></p>
+  </section>
+  {% if convite %}
+  <section class="participacao-bloco inicio-convite" aria-labelledby="inicio-convite">
+    <h2 id="inicio-convite">{{ titulo_convite }}</h2>
+    <p>{{ convite.texto }}</p>
+    {# 032 FR-011: a escolha de formações continua a um toque, mesmo sem convite pendente. #}
+    <p class="participacao-acoes">{% if convite.acao %}<a class="portal-botao" href="/formacoes/">{{ convite.acao }}</a>{% else %}<a href="/formacoes/">{{ m.VER_FORMACOES }}</a>{% endif %}</p>
+  </section>
+  {% endif %}
+</div>

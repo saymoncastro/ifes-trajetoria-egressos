@@ -35,7 +35,7 @@ ORACULO = {
     "SIM-P-0002": ([("Pela sua formação", [
         (O4, "Aparece porque você concluiu Técnico em Edificações na unidade Vitória (2014) e "
              "Bacharelado em Engenharia Civil na unidade Vitória (2020)."),
-    ]), TODOS], O4),
+    ]), TODOS], O1),
     "SIM-P-0003": ([("Pela sua formação", [
         (O2, f"Aparece porque você concluiu {TADS} (Serra, 2022)."),
         (O3, "Aparece porque você concluiu Especialização em Informática na Educação, formação "
@@ -50,7 +50,7 @@ ORACULO = {
     "SIM-P-0007": ([TODOS], O1),
     "SIM-P-0010": ([("Pela sua formação", [
         (O4, "Aparece porque você concluiu Licenciatura em Pedagogia na unidade Vitória (2016)."),
-    ]), TODOS], O4),
+    ]), TODOS], O1),
     "SIM-P-0011": ([("Pela sua formação", [
         (O2, "Aparece porque você concluiu Tecnologia em Redes de Computadores (Serra, 2023)."),
     ]), TODOS], O2),
@@ -85,6 +85,17 @@ def _grupos(pagina: str):
     return grupos
 
 
+# Revisado pela 032 (FR-008): o encontro pertinente vai para a seção de encontros, e o
+# destaque de Oportunidades é o item seguinte, sem repeti-lo.
+ENCONTROS = {"SIM-P-0002": O4, "SIM-P-0010": O4}
+
+
+def _encontro(inicio: str) -> str | None:
+    achado = re.search(r'<section class="inicio-encontros.*?<h3 class="oportunidade-titulo">'
+                       r'<a [^>]*>(.*?)<span', inicio, re.S)
+    return _texto(achado.group(1)) if achado else None
+
+
 def _destaque(inicio: str) -> str | None:
     achado = re.search(
         r'<section class="inicio-oportunidades.*?'
@@ -100,7 +111,9 @@ def test_pagina_e_destaque_por_persona(client, demonstracao, id_externo):
     cp.entrar(client, _pessoa(id_externo))
     pagina = client.get("/oportunidades/").content.decode()
     assert _grupos(pagina) == grupos
-    assert _destaque(client.get("/inicio/").content.decode()) == destaque
+    inicio = client.get("/inicio/").content.decode()
+    assert _destaque(inicio) == destaque
+    assert _encontro(inicio) == ENCONTROS.get(id_externo)
     for invisivel in ("Ciclo de palestras", "Curso livre de fotografia", "Oficina de currículo",
                       O7, "Programa de mentoria"):
         assert invisivel not in pagina

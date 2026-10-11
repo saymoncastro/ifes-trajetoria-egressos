@@ -86,7 +86,8 @@ def test_sem_dependencia_de_nome_de_template_do_cliente(client, cenario):
 def test_formacoes_horizontais_continuam_em_ordem(client, cenario):
     cp.entrar(client, cenario.pessoa("SIM-P-0004"))
     html = client.get("/inicio/").content.decode()
-    linha = re.search(r'<ul class="inicio-formacoes.*?</ul>', html, re.S).group(0)
+    # Revisado pela 032: a linha é uma lista ordenada, com "Hoje" e "Adiante" no fim.
+    linha = re.search(r'<ol class="inicio-formacoes.*?</ol>', html, re.S).group(0)
     assert len(re.findall(r"<li>", linha)) == 3
     assert "2012" in linha and "2017" in linha and "2020" in linha
 

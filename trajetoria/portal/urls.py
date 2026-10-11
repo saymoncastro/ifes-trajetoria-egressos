@@ -12,6 +12,7 @@ urlpatterns = [
     path("", views.entrada),
     path("entrar/", views.entrar),
     path("inicio/", views.inicio),
+    path("participacao/", views.participacao),
     path("sair/", views.sair),
     path("fontes/<str:nome>", views.fonte),
     path("oportunidades/", views_egresso.oportunidades),

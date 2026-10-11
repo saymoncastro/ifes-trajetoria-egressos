@@ -90,7 +90,8 @@ def test_agora_nao_nao_grava(ana):
 def test_links_de_saida(ana):
     cliente, _ = ana
     html = cliente.post(URL, {"acao": "agora_nao"}).content.decode()
-    assert 'href="/formacoes/"' in html
+    # Revisado pela 032 (FR-011): com o Portal, a pesquisa fica em "Participação".
+    assert 'href="/formacoes/"' in html or 'href="/participacao/"' in html
     # 024 FR-009 (revisa 021 FR-001): a trajetória não depende de participação concluída.
     assert 'href="/minha-trajetoria/">Ver minha trajetória no Ifes' in html
 

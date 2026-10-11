@@ -15,10 +15,12 @@ from trajetoria.acesso.sessao import encerrar, pessoa_em_uso
 from trajetoria.acesso.views import identificar
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
+from trajetoria.portal.contribuicao import mensagens as m_contribuicao
 from trajetoria.portal.exemplo import demonstracao_publica
-from trajetoria.portal.inicio import montar_inicio
+from trajetoria.portal.inicio import montar_inicio, montar_participacao
 
 _PRODUTO = {"produto": mensagens.PRODUTO, "produto_subtitulo": mensagens.PRODUTO_SUBTITULO}
+_TEXTOS = {"m": mensagens, "m_contribuicao": m_contribuicao}
 
 
 def _ir(destino: str) -> HttpResponse:
@@ -73,8 +75,24 @@ def inicio(request):
         return _ir("/entrar/?aviso=sessao" if getattr(request, "_sessao_expirada", False)
                    else "/entrar/")
     contexto = montar_inicio(pessoa, timezone.localdate(), settings.TRAJETORIA_DEMONSTRACAO)
-    contexto.update(_PRODUTO)
+    contexto.update(_PRODUTO, **_TEXTOS)
     return render(request, "portal/inicio.html", contexto)
+
+
+@never_cache
+@require_GET
+def participacao(request):
+    """Participação (032 FR-011): contribuição, e-mail e o convite da pesquisa, os mesmos
+    blocos do Início. Só leitura; os destinos são as telas que já existem."""
+    pessoa = pessoa_em_uso(request)
+    if pessoa is None:
+        if declaracoes_em_uso(request) is not None:
+            return _ir("/declaracao/")
+        return _ir("/entrar/?aviso=sessao" if getattr(request, "_sessao_expirada", False)
+                   else "/entrar/")
+    contexto = montar_participacao(pessoa)
+    contexto.update(_PRODUTO, **_TEXTOS, titulo=mensagens.TITULO_PARTICIPACAO)
+    return render(request, "portal/participacao.html", contexto)
 
 
 @never_cache

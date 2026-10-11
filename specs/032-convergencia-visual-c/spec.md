@@ -37,7 +37,7 @@ protótipos. Nenhum modelo, fluxo ou funcionalidade nova.
 | "Que bom ver você de novo." | retirado | Saudação (decisão 7); errado no primeiro acesso |
 | "E-mail… Não informado… remover quando quiser" | convite para informar, sem situação | 024 FR-017; 020 E5; contato imutável |
 | "1 contribuição em andamento" | "1 contribuição enviada" | D-2601 |
-| "Compartilhar" | retirado | Sem JavaScript |
+| "Compartilhar" no Início | "Baixar meu card" (link de download) | O compartilhamento continua na Minha trajetória, onde já existe, com JavaScript opcional |
 | "Suas respostas ajudam o Ifes a melhorar o curso" | "Responder é como você atualiza sua trajetória com o Ifes" | Texto vigente (024) |
 | Grade de quadrados com círculo vermelho | retirada | Reproduz a marca (DP-3202) |
 | Card desenhado e inclinado | card real da 021 | 029 FR-009, FR-010 |
@@ -130,7 +130,8 @@ encontro, pesquisa e contribuição.
 - **FR-011**: Navegação: Início, Minha trajetória e Oportunidades (com Conclusão) e
   Participação. Página `/participacao/` com os blocos de participação; "Participação" é o
   item atual também nas telas da contribuição, em `/formacoes/`, `/meu-email/` e na
-  confirmação da participação. Nenhuma rota atual muda.
+  confirmação da participação. Nenhuma rota atual muda. Sem o item "Pesquisa", a escolha de
+  formações continua a um toque: o bloco da pesquisa sempre leva a `/formacoes/`.
 - **FR-012**: Nada é inferido além do que as regras atuais calculam: pertinência da 025,
   situação da 007, manifestações da 026. O Início continua sem ler Resposta nem contato.
 
