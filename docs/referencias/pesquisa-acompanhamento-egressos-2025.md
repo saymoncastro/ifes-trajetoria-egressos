@@ -23,7 +23,7 @@ Relações Empresariais e Extensão Comunitária (DIREC). Apoio da CPAEG e das C
 
 | Achado | Onde |
 |---|---|
-| Só **13,3%** dos egressos afirmaram manter alguma relação com a instituição (Gráfico 23). O relatório trata o índice como alerta e pede ações de relacionamento que vão "além de práticas pontuais" | Seção 09, "Engajamento e redes de contatos", p. 22 |
+| **13,3% dos participantes da pesquisa** afirmaram manter alguma relação com a instituição depois de concluir o curso (Gráfico 23). O resultado vale para quem respondeu, não para toda a população de egressos. O relatório trata o índice como alerta e pede ações de relacionamento que vão "além de práticas pontuais" | Seção 09, "Engajamento e redes de contatos", p. 22 |
 | Experiências existentes, como encontros anuais em campi agrícolas e grupos de ex-alunos autogeridos, são consideradas valiosas, mas insuficientes diante da abrangência do Ifes | p. 22 |
 | A DIREC criou o Observatório do Mundo do Trabalho e desenvolve **um aplicativo voltado a estudantes e egressos**, que "promete ampliar as possibilidades de conexão e engajamento" | p. 22 |
 | Grupos de WhatsApp de ex-alunos foram um dos canais de mobilização da própria pesquisa | Estratégias de mobilização, p. 7 |
@@ -32,7 +32,7 @@ Relações Empresariais e Extensão Comunitária (DIREC). Apoio da CPAEG e das C
 ## Como este registro é usado
 
 - Fundamenta a dimensão de **pertencimento**, a **participação** (encontros) e as **histórias**
-  da Comunidade, ao lado da PAEG (Arts. 12, 13 e 22, VII e X).
+  da Comunidade, ao lado da PAEG (Arts. 5, 6, 8, 12, 13 e 22, VII).
 - O aplicativo da DIREC é **ponto de atenção** para a Constituição VI, pergunta 3 ("existe
   ou está prevista solução institucional mais adequada?"). Ele não bloqueia a demonstração e
   deve ser examinado antes de uso real (decisão D10 do

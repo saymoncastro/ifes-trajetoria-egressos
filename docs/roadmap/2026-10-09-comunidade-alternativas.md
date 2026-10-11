@@ -126,8 +126,11 @@ sociais administráveis, rankings, reputação e recomendação de pessoas.
 
 ### Fundamentação conferida
 
-**PAEG** (conferida no [anexo versionado](../referencias/paeg-resolucao-cs-177-2023-anexo.pdf)):
+**PAEG** (conferida no [anexo versionado](../referencias/paeg-resolucao-cs-177-2023-anexo.pdf)).
+A PAEG **não exige** estas funcionalidades nem as regulamenta. Ela fixa objetivos com os quais
+elas são compatíveis. Desenvolvê-las não requer alterar a Resolução CS nº 177/2023.
 
+- **Art. 5:** valorizar a formação social do egresso e atribuir-lhe protagonismo.
 - **Art. 6:** valorizar a interação do egresso com o Instituto, para consolidar o vínculo.
   Fundamenta o pertencimento.
 - **Art. 8, II e IV:** incentivar a participação e o protagonismo dos egressos em eventos e
@@ -136,21 +139,37 @@ sociais administráveis, rankings, reputação e recomendação de pessoas.
 - **Art. 12:** eventos voltados aos egressos, para estimular a troca de experiência entre eles
   e a criação de associação de ex-alunos. É a única base direta para a relação **entre
   egressos**, e ela passa por eventos.
-- **Art. 13:** o Portal é canal de comunicação entre os egressos e as Unidades. Parágrafo
-  único: a gestão do Portal cabe à CSAEG, inclusive a divulgação de eventos para egressos.
-- **Art. 22, III, VII e X** (atribuições da CSAEG): gerir o Portal na unidade; **apoiar ações,
-  projetos e eventos voltados aos egressos**; **disponibilizar infraestrutura** para a atuação
-  do egresso nas pesquisas e eventos institucionais.
+- **Art. 13:** o Portal é canal de comunicação entre os egressos e as Unidades. As
+  funcionalidades listadas são exemplos ("entre outros, a serem definidos por cada unidade"),
+  e a lista não é fechada. Parágrafo único: a gestão do Portal cabe à CSAEG, inclusive a
+  divulgação de eventos para egressos.
+- **Art. 22, III e VII** (atribuições da CSAEG): gerir o Portal na unidade; **apoiar ações,
+  projetos e eventos voltados aos egressos**.
+- **Art. 22, X:** disponibilizar infraestrutura para a atuação do egresso **nas pesquisas e
+  eventos institucionais**. Fundamenta apoio a eventos institucionais. **Não** autoriza por si
+  só o uso de infraestrutura do Ifes em encontros organizados de forma autônoma por egressos.
+- **Competências de articulação (Arts. 2, 14, 18, 21, 22 e 26):**
+  - a PAEG é executada pelas unidades e pela Proex (Art. 2), que coordena a política e
+    alimenta o Portal (Art. 14);
+  - na unidade, a diretoria de pesquisa, pós-graduação e extensão, ou equivalente, coordena a
+    PAEG e propõe ações de aproximação (Art. 18, I e II);
+  - a CPAEG planeja a política e atua em consonância com as CSAEG (Art. 21, I e III);
+  - as CSAEG regulamentam suas atividades com base nas diretrizes da CPAEG (Art. 22, XI);
+  - os casos omissos são resolvidos pela CPAEG com a pró-reitoria competente (Art. 26).
+  A PAEG não proíbe encontros entre campi, mas também não diz quem os autoriza: é D8.
 - **Correção.** O Art. 21, VII é atribuição da CPAEG: propor a integração do mercado e da
   comunidade local com as associações de egressos. Ele não fundamenta a integração do Portal
   com associações.
 - **Lacuna.** A PAEG não atribui a ninguém a moderação de encontros propostos por egressos
-  (F) nem a mediação de contato entre egressos (E1). É `DECISÃO PENDENTE` (D8 do roadmap).
+  (F) nem a mediação de contato entre egressos (E1). É `DECISÃO PENDENTE` (D8 do roadmap),
+  definida institucionalmente antes de uso real e sem criar agora fluxo burocrático próprio.
 
 **Pesquisa de Acompanhamento de Egressos, Versão 2025**
 ([registro de referência](../referencias/pesquisa-acompanhamento-egressos-2025.md)):
 
-- só 13,3% dos egressos dizem manter alguma relação com o Ifes;
+- 13,3% dos **participantes da pesquisa** informaram manter alguma relação com a instituição
+  depois de concluir o curso. O resultado vale para quem respondeu, não para toda a população
+  de egressos;
 - encontros anuais e grupos de ex-alunos autogeridos são valiosos, mas insuficientes;
 - recomendações: grupos temáticos, eventos periódicos, espaços de escuta, participação em
   ensino, pesquisa e extensão, e divulgação de histórias.
@@ -204,18 +223,22 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
   - Sem lista nominal de participantes e sem contato exposto.
   - A contagem de confirmações fica restrita ao organizador e à moderação.
   - O link da reunião só aparece a quem confirmou e está com sessão.
-  - Termos do organizador e da participação são versionados (XVII). A retenção das
-    confirmações é D9.
+  - Termos do organizador e da participação são versionados (XVII). Eles registram ciência e
+    adesão, mas **não definem a base legal** do tratamento, que é D9. O mesmo vale para a
+    retenção das confirmações.
 - **Dado operacional, não analítico.** Confirmações servem ao funcionamento do encontro. Não
   entram em snapshot, exportação nem indicador de acompanhamento (ADR 0008).
 - **Fora do MVP:**
-  - encontros presenciais, que seguem pela A com apoio da CSAEG (Art. 22, VII e X);
+  - encontros presenciais, que seguem pela A com apoio da CSAEG (Art. 22, VII);
   - chat, comentários, curtidas e contador público;
   - notificações automáticas;
   - integração com videoconferência.
 - **Salas da RNP.** O egresso não cria sala no ConferênciaWeb: salas são criadas por usuários
   da instituição, e o uso deve estar alinhado a ensino, pesquisa e inovação (termos de uso do
-  serviço). Se uma sala institucional for necessária, a CSAEG pode fornecê-la (Art. 22, X).
+  serviço). Uma sala institucional pode ser **articulada com a unidade responsável**,
+  observados disponibilidade, autorizações, finalidade da atividade e condições de uso do
+  serviço. O Art. 22, X não cria autorização automática para encontros autônomos. O padrão do
+  MVP continua sendo o link externo informado pelo organizador.
 
 **B — Histórias de egressos (030)**
 
@@ -235,7 +258,7 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
   denúncia.
 - Antes de uso real:
   - identidade reforçada (DP-1808);
-  - base legal e retenção (D9);
+  - base legal e retenção (D9). A adesão voluntária não substitui a base legal;
   - responsável por denúncias (D8);
   - ADR própria, porque é a primeira vez que a camada mostra dado de um egresso a outro.
 - **Encontros (F) não substituem o E1.**
@@ -270,6 +293,7 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
   marcado.
 - Continuam valendo as demais vedações: "turma", "geração", "conectad", contagens de egressos
   e comparação social.
+- É uma **decisão de experiência**, e não uma exigência da PAEG.
 
 ### Outras soluções institucionais: ponto de atenção, não bloqueio
 
@@ -304,3 +328,20 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
 - **Critério da palavra "comunidade".** Antes era "só junto da experiência concreta"; agora é
   "com F ou E1".
 - Não mudam: Constituição, ADR 0008, ADR 0009 e as vedações em vigor.
+
+### Ajustes de 2026-10-11, depois do parecer normativo
+
+Um parecer sobre esta revisão, confrontada com a PAEG, não encontrou incompatibilidade
+normativa direta e pediu quatro ajustes, aplicados acima:
+
+1. Art. 22, X: apoio a eventos institucionais, sem autorização automática de infraestrutura
+   para encontros autônomos. A sala institucional é articulada com a unidade.
+2. Competências dos Arts. 2, 14, 18, 21, 22 e 26 acrescentadas à fundamentação de D8, sem
+   criar fluxo agora.
+3. Termos e adesão não substituem a base legal de cada tratamento: história, encontro,
+   confirmação e diretório podem ter bases diferentes (D9).
+4. O resultado de 13,3% foi delimitado aos participantes da pesquisa de 2025.
+
+**Distinção que permanece:** solução em desenvolvimento e validação, com dados fictícios, não
+é serviço institucional em operação com dados reais. D8 e D9 não bloqueiam specs nem a
+demonstração. Bloqueiam o uso real.
