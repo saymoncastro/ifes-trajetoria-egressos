@@ -55,16 +55,19 @@ def test_navegacao_nas_telas_fora_das_secoes(client, cenario):
     cp.entrar(client, ana)
     # Revisado pela 025 (FR-020): "Oportunidades" entre "Minha trajetória" e "Pesquisa".
     # Revisado pela 026 (FR-011; plan R9): "Contribuir" logo depois de "Oportunidades".
-    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/contribuir/",
-                "/formacoes/", "/meu-email/"]
-    for url in esperado:
+    # Revisado pela 032 (FR-011): "Participação" reúne contribuir, pesquisa e e-mail, que
+    # mantêm os seus endereços e marcam "Participação" como item atual.
+    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/participacao/"]
+    atual = {"/formacoes/": "/participacao/", "/meu-email/": "/participacao/",
+             "/contribuir/": "/participacao/"}
+    for url in [*esperado, *atual]:
         nav = _nav(client.get(url).content.decode())
         assert nav and f'aria-label="{mensagens.ROTULO_NAVEGACAO}"' in nav, url
         itens = _itens(nav)
         assert [i[0] for i in itens] == esperado, url
-        assert [i[0] for i in itens if i[2]] == [url], url
+        assert [i[0] for i in itens if i[2]] == [atual.get(url, url)], url
         assert "<script" not in nav
-    for endereco in esperado:
+    for endereco in [*esperado, *atual]:
         assert client.get(endereco).status_code == 200
 
 
@@ -73,7 +76,7 @@ def test_confirmacao_marca_a_pesquisa(client, cenario):
     participacao = cenario.concluir(ana.conclusoes.first())
     cp.entrar(client, ana)
     nav = _nav(client.get(f"/participacoes/{participacao.pk}/concluida/").content.decode())
-    assert [i[0] for i in _itens(nav) if i[2]] == ["/formacoes/"]
+    assert [i[0] for i in _itens(nav) if i[2]] == ["/participacao/"]  # revisado pela 032
 
 
 def test_sem_navegacao_nas_secoes_entrada_e_declaracao(client, cenario):
@@ -93,7 +96,7 @@ def test_sem_navegacao_nas_secoes_entrada_e_declaracao(client, cenario):
 def test_sem_conclusao_sem_item_da_trajetoria(client, cenario):
     cp.entrar(client, cp.pessoa_sem_conclusao())
     itens = _itens(_nav(client.get("/inicio/").content.decode()))
-    assert [i[0] for i in itens] == ["/inicio/", "/formacoes/", "/meu-email/"]
+    assert [i[0] for i in itens] == ["/inicio/", "/participacao/"]  # revisado pela 032
 
 
 def _nome_do_produto(html: str) -> str:

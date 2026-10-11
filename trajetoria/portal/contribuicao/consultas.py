@@ -23,6 +23,44 @@ def tem_manifestacao(pessoa) -> bool:
     return da_pessoa(pessoa).exists()
 
 
+@dataclass(frozen=True)
+class ResumoDaPessoa:
+    """Uma leitura só das manifestações da Pessoa, para o Início e a Participação (032 FR-008,
+    FR-009): se existe alguma, quantas estão ativas e a ativa mais recente."""
+
+    existe: bool
+    enviadas: int
+    ultima: dict | None
+
+
+def resumo_da_pessoa(pessoa) -> ResumoDaPessoa:
+    manifestacoes = list(da_pessoa(pessoa))  # mais recente primeiro (Meta.ordering)
+    ativas = [m for m in manifestacoes if m.retirada_em is None]
+    return ResumoDaPessoa(bool(manifestacoes), len(ativas), _ultima(ativas[0]) if ativas else None)
+
+
+def _ultima(manifestacao) -> dict:
+    """Forma, quem recebe e os marcos registrados, com a data."""
+    from django.utils import timezone
+
+    from trajetoria.portal.contribuicao import mensagens as m
+    from trajetoria.portal.models import Forma
+
+    def data(momento):
+        return timezone.localtime(momento).strftime("%d/%m/%Y")
+
+    marcos = [(m.MARCO_ENVIADA, data(manifestacao.registrada_em))]
+    if manifestacao.contato_registrado_em is not None:
+        marcos.append((m.MARCO_CONTATO.format(destino=m.destino(manifestacao.unidade, inicio=True)),
+                       data(manifestacao.contato_registrado_em)))
+    return {
+        "pk": manifestacao.pk,
+        "forma": Forma(manifestacao.forma).label,
+        "quem_recebe": m.quem_recebe(manifestacao.unidade),
+        "marcos": marcos,
+    }
+
+
 def da_pessoa_ou_none(pessoa, pk) -> Manifestacao | None:
     return da_pessoa(pessoa).filter(pk=pk).first()
 

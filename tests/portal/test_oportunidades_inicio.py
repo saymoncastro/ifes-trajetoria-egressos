@@ -38,9 +38,10 @@ def catalogo(cenario):
 
 def test_ordem_dos_blocos(client, cenario, catalogo):
     principal = _principal(client, cenario.pessoa("SIM-P-0001"))
+    # Revisado pela 032 (FR-008): ações do card, linha das formações, oportunidades, convite.
     posicoes = [principal.index(marca) for marca in (
-        "inicio-formacoes", m_portal.TITULO_ACOES, 'class="inicio-oportunidades',
-        'class="inicio-convite"',
+        m_portal.TITULO_ACOES, "inicio-formacoes", 'class="inicio-oportunidades',
+        'inicio-convite"',
     )]
     assert posicoes == sorted(posicoes)
 
@@ -71,7 +72,7 @@ def test_pessoa_sem_conclusao_sem_bloco(client, cenario):
 
 def test_convite_inalterado(client, cenario, catalogo):
     principal = _principal(client, cenario.pessoa("SIM-P-0001"))
-    convite = principal[principal.index('class="inicio-convite"'):]
+    convite = principal[principal.index('inicio-convite"'):]
     assert m_portal.CONVITE_UMA.format(curso=TADS) in convite
     assert f'href="/formacoes/">{m_portal.ACAO_RESPONDER}<' in convite
 

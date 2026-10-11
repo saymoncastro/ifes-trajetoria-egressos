@@ -2,6 +2,7 @@
 cliente decide para onde a pessoa vai (FR-006). Nada aqui grava, salvo a sessão que a
 identificação da 018 estabelece (FR-029)."""
 
+from functools import cache
 from pathlib import Path
 
 from django.conf import settings
@@ -15,10 +16,13 @@ from trajetoria.acesso.sessao import encerrar, pessoa_em_uso
 from trajetoria.acesso.views import identificar
 from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.portal import mensagens
+from trajetoria.portal.contribuicao import mensagens as m_contribuicao
+from trajetoria.portal.destinos import sem_pessoa
 from trajetoria.portal.exemplo import demonstracao_publica
-from trajetoria.portal.inicio import montar_inicio
+from trajetoria.portal.inicio import montar_inicio, montar_participacao
 
 _PRODUTO = {"produto": mensagens.PRODUTO, "produto_subtitulo": mensagens.PRODUTO_SUBTITULO}
+_TEXTOS = {"m": mensagens, "m_contribuicao": m_contribuicao}
 
 
 def _ir(destino: str) -> HttpResponse:
@@ -67,14 +71,23 @@ def entrar(request):
 def inicio(request):
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        if declaracoes_em_uso(request) is not None:
-            return _ir("/declaracao/")
-        # 023 FR-001: com aviso quando a sessão acabou de expirar (FR-007).
-        return _ir("/entrar/?aviso=sessao" if getattr(request, "_sessao_expirada", False)
-                   else "/entrar/")
+        return sem_pessoa(request)  # 023 FR-001: com aviso quando a sessão acabou de expirar
     contexto = montar_inicio(pessoa, timezone.localdate(), settings.TRAJETORIA_DEMONSTRACAO)
-    contexto.update(_PRODUTO)
+    contexto.update(_PRODUTO, **_TEXTOS)
     return render(request, "portal/inicio.html", contexto)
+
+
+@never_cache
+@require_GET
+def participacao(request):
+    """Participação (032 FR-011): contribuição, e-mail e o convite da pesquisa, os mesmos
+    blocos do Início. Só leitura; os destinos são as telas que já existem."""
+    pessoa = pessoa_em_uso(request)
+    if pessoa is None:
+        return sem_pessoa(request)
+    contexto = montar_participacao(pessoa)
+    contexto.update(_PRODUTO, **_TEXTOS, titulo=mensagens.TITULO_PARTICIPACAO)
+    return render(request, "portal/participacao.html", contexto)
 
 
 @never_cache
@@ -95,12 +108,17 @@ FONTES = frozenset({
 })
 
 
+@cache
+def _conteudo_da_fonte(nome: str) -> bytes:
+    return (_FONTES / nome).read_bytes()
+
+
 @require_GET
 def fonte(request, nome):
     """Fontes do Portal servidas pela própria aplicação (032 FR-001; ADR 0009, revisão de
     2026-10-11): sem CDN nem requisição a terceiros. O conteúdo não muda sem mudar o nome."""
     if nome not in FONTES:
         raise Http404
-    return HttpResponse((_FONTES / nome).read_bytes(), content_type="font/woff2", headers={
+    return HttpResponse(_conteudo_da_fonte(nome), content_type="font/woff2", headers={
         "Cache-Control": "public, max-age=31536000, immutable",
     })

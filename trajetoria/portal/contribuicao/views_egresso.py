@@ -16,7 +16,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from trajetoria.acesso.sessao import pessoa_em_uso
-from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.narrativa.consultas import elegivel
 from trajetoria.portal.contribuicao import mensagens as m
 from trajetoria.portal.contribuicao import operacoes
@@ -38,6 +37,7 @@ from trajetoria.portal.contribuicao.regras import (
     Situacao,
     situacao,
 )
+from trajetoria.portal.destinos import sem_pessoa
 from trajetoria.portal.models import Forma
 
 LISTA = "/contribuicoes/"
@@ -58,10 +58,7 @@ def egresso(view):
     def envolvida(request, *args, **kwargs):
         pessoa = pessoa_em_uso(request)
         if pessoa is None:
-            if declaracoes_em_uso(request) is not None:
-                return _ir("/declaracao/")
-            return _ir("/entrar/?aviso=sessao" if getattr(request, "_sessao_expirada", False)
-                       else "/entrar/")
+            return sem_pessoa(request)
         if not elegivel(pessoa):
             raise Http404
         return view(request, pessoa, *args, **kwargs)

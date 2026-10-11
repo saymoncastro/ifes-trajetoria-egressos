@@ -5,6 +5,9 @@ O shell do núcleo só tem pontos de extensão neutros (`navegacao`, `produto`, 
 Portal desligado, sem Pessoa na sessão e para o declarante (019): nesses casos, nenhuma tela
 mostra navegação e o shell é o da 015 (FR-027).
 
+Revisão pela 032 (FR-011): Início, Minha trajetória, Oportunidades e Participação; esta
+reúne a contribuição, a pesquisa e o e-mail, que mantêm os seus endereços.
+
 Revisão de 2026-10-08 (avaliação por IA, A1 a A4): nas telas que exibem a navegação do Portal
 (FR-022), o cabeçalho diz "Portal do Egresso", "Sair" volta à entrada do Portal e o fim da
 trajetória e do e-mail leva ao Início. As Seções, `/acesso/` e a declaração não mudam.
@@ -28,33 +31,32 @@ _CONTRIBUICAO = re.compile(
 # As telas com a navegação do Portal (FR-022; contracts/navegacao.md). Lista fechada: o
 # caminho só decide o cabeçalho e os destinos fixos abaixo, nunca um endereço do cliente.
 _TELAS_COM_NAVEGACAO = frozenset(
-    {"/inicio/", "/formacoes/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/"}
+    {"/inicio/", "/formacoes/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/",
+     "/participacao/"}
 )
 _TELAS_COM_LAYOUT = frozenset(
-    {"/inicio/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/"}
+    {"/inicio/", "/minha-trajetoria/", "/oportunidades/", "/meu-email/", "/participacao/"}
 )
+# 032 FR-011: "Participação" reúne a contribuição (026), a pesquisa e o e-mail; é o item atual
+# em todas essas telas, cujos endereços não mudam.
+_PARTICIPACAO = frozenset({"/participacao/", "/formacoes/", "/meu-email/"})
 
 
 def _atual(caminho: str, endereco: str) -> bool:
-    if endereco == "/formacoes/":
-        return caminho == endereco or bool(_CONFIRMACAO.match(caminho))
-    if endereco == "/contribuir/":
-        return bool(_CONTRIBUICAO.match(caminho))
+    if endereco == "/participacao/":
+        return (caminho in _PARTICIPACAO or bool(_CONFIRMACAO.match(caminho))
+                or bool(_CONTRIBUICAO.match(caminho)))
     return caminho == endereco
 
 
 def _itens(request, pessoa) -> list[dict]:
     itens = [(mensagens.NAVEGACAO_INICIO, "/inicio/")]
-    if elegivel(pessoa):  # uma consulta para os três itens (025 FR-020; 026 FR-011)
+    if elegivel(pessoa):  # uma consulta para os dois itens (025 FR-020)
         itens += [
             (mensagens.NAVEGACAO_TRAJETORIA, "/minha-trajetoria/"),
             (mensagens.NAVEGACAO_OPORTUNIDADES, "/oportunidades/"),
-            (mensagens.NAVEGACAO_CONTRIBUIR, "/contribuir/"),
         ]
-    itens += [
-        (mensagens.NAVEGACAO_PESQUISA, "/formacoes/"),
-        (mensagens.NAVEGACAO_EMAIL, "/meu-email/"),
-    ]
+    itens.append((mensagens.NAVEGACAO_PARTICIPACAO, "/participacao/"))  # 032 FR-011
     return [
         {"rotulo": rotulo, "endereco": endereco, "atual": _atual(request.path, endereco)}
         for rotulo, endereco in itens

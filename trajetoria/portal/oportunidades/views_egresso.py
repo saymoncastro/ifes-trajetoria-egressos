@@ -11,8 +11,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
 from trajetoria.acesso.sessao import pessoa_em_uso
-from trajetoria.declaracao.sessao import declaracoes_em_uso
 from trajetoria.narrativa.consultas import elegivel
+from trajetoria.portal.destinos import sem_pessoa
 from trajetoria.portal.oportunidades import mensagens
 from trajetoria.portal.oportunidades.consultas import itens_da_pessoa
 from trajetoria.portal.oportunidades.pertinencia import FORMACAO, TODOS
@@ -27,10 +27,7 @@ def _ir(destino: str) -> HttpResponse:
 def oportunidades(request):
     pessoa = pessoa_em_uso(request)
     if pessoa is None:
-        if declaracoes_em_uso(request) is not None:
-            return _ir("/declaracao/")
-        return _ir("/entrar/?aviso=sessao" if getattr(request, "_sessao_expirada", False)
-                   else "/entrar/")
+        return sem_pessoa(request)
     if not elegivel(pessoa):
         return _ir("/inicio/")  # FR-024: sem Conclusão, sem oportunidades
     itens = itens_da_pessoa(pessoa, timezone.localdate())

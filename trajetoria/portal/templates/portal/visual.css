@@ -58,14 +58,13 @@ main button:not(.secundario):hover { background: var(--cor-acao-forte); }
 .portal-faixa { background: var(--portal-profundo); color: #fff; padding-block: 1.5rem; }
 .portal-faixa h1, .portal-faixa h2 { color: #fff; margin-top: 0; }
 .portal-faixa p { margin-bottom: .75rem; }
-.portal-faixa .suave, .inicio-origem, .inicio-atributos { color: var(--portal-suave); }
+.portal-faixa .suave { color: var(--portal-suave); }
 .portal-faixa a:not(.portal-botao) { color: #fff; }
 .portal-faixa .portal-botao { background: #fff; border-color: #fff; color: var(--portal-profundo); }
 .portal-faixa .portal-botao:hover { background: var(--cor-institucional); color: var(--portal-profundo); }
 main:has(.portal-faixa) { padding: 0; }
 main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
-.inicio-reconhecimento { display: grid; gap: 1.5rem; }
-.inicio-sintese { font-size: var(--fonte-3); }
+
 .portal-selo { display: inline-block; background: #fff1d2; color: #1b1b1b; padding: .25rem .75rem;
   border-radius: var(--raio); margin-bottom: .75rem; font-weight: 700; }
 .portal-secao { padding-block: 2rem; }
@@ -74,45 +73,20 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
   background: #fff; padding: min(1.5rem, 5vw); }
 .portal-bloco h3 { margin-top: 0; }
 .portal-bloco > :last-child { margin-bottom: 0; }
-.inicio-formacoes { list-style: none; padding: 0; margin: 1.25rem 0 0;
-  display: grid; gap: 1.25rem; }
-.inicio-formacoes li { position: relative; padding-left: 2.5rem; min-width: 0; }
-.inicio-formacoes li::before { content: ''; position: absolute; left: 0; top: .15rem;
-  width: 1.5rem; height: 1.5rem; border: .4rem solid var(--cor-marca); border-radius: 50%; }
-.inicio-formacoes p { margin-bottom: .25rem; }
-.inicio-formacoes p:first-of-type { font-weight: 600; }
-.inicio-ano { display: block; font-size: var(--fonte-2); font-weight: 700; line-height: 1.2; }
-.inicio-origem { font-weight: 400; font-size: var(--fonte-5); }
-.inicio-numeros h2 { font-size: var(--fonte-2); }
-.inicio-numero { background: #214a35; border-left: 4px solid var(--cor-marca);
-  padding: .75rem 1.25rem; margin-bottom: .75rem; border-radius: 0 var(--raio) var(--raio) 0; }
-.inicio-numero strong { display: block; font-size: 3rem; line-height: 1.1; }
-.inicio-numero p { margin: 0; }
-.inicio-proveniencia { border-top: 1px solid #527361; padding-top: .75rem;
-  color: var(--portal-suave); grid-column: 1 / -1; }
-.portal-faixa .inicio-proveniencia { margin: 0; }
-.inicio-area-acoes { background: var(--portal-creme); }
-.inicio-acoes-grade { display: grid; gap: 1.5rem; }
-.inicio-acoes { margin: 0; list-style: none; padding: 0; }
-.inicio-acoes li { margin-bottom: .75rem; }
-.inicio-acoes li:last-child { margin-bottom: 0; }
-.inicio-card { margin: 0; display: grid; gap: 1rem; align-items: start; }
-.inicio-card img { width: 100%; max-width: 240px; height: auto; display: block; }
-.inicio-card h3 { margin-top: 0; }
-.inicio-card figcaption p { margin-bottom: .5rem; }
-.inicio-convite { border: 2px solid var(--cor-acao); border-radius: var(--raio);
-  padding: min(1.5rem, 5vw); margin-block: 0 2rem; }
-.inicio-convite h2 { margin-top: 0; }
-.inicio-convite > :last-child { margin-bottom: 0; }
-.inicio-oportunidades { margin-block: 0 2rem; }
-.inicio-oportunidades h2 { margin-top: 0; }
-.inicio-oportunidades.compacto-3 p { margin-block: 0 .25rem; font-size: var(--fonte-5); }
-.inicio-oportunidades.compacto-3 h2 { margin-bottom: .25rem; }
-.inicio-oportunidades .inicio-ver-oportunidades { margin-bottom: 0; }
-/* 026 (plan R10): bloco "Contribuir com o Ifes", entre Oportunidades e o convite. */
-.inicio-contribuir { margin-block: 0 2rem; }
-.inicio-contribuir h2 { margin-top: 0; }
-.inicio-contribuir > :last-child { margin-bottom: 0; }
+
+/* 032 (T007): as demais telas do Portal na mesma identidade, só pelos tokens: fundo creme,
+   títulos em verde profundo na fonte de títulos e itens de oportunidade como cartões. As
+   folhas da 025 continuam como estão, porque a curadoria também as usa. */
+main { background: var(--portal-creme); }
+main h1, main h2 { color: var(--portal-profundo); }
+main h1 { font-size: clamp(2.25rem, 11.5vw, 2.75rem); line-height: .98; letter-spacing: -0.035em; }
+.oportunidades-grupo h2 { font-size: 1.75rem; margin-bottom: 1rem; }
+.oportunidades-grupo .lista-simples { display: grid; gap: 1rem; }
+.oportunidades-grupo .lista-simples > li { background: #fff; border: 1px solid #e2ddd0;
+  border-radius: 10px; padding: 1.25rem 1.5rem; }
+.oportunidades-grupo .oportunidade-titulo { font-family: var(--portal-fonte-titulo);
+  font-size: 1.5rem; line-height: 1.1; }
+.oportunidades-grupo .oportunidade-titulo a { color: var(--portal-profundo); }
 .narrativa-abertura { display: grid; gap: .75rem 2rem; align-items: start; }
 .narrativa-figura { margin-bottom: 0; }
 .narrativa-capitulo { max-width: 100%; }
@@ -121,22 +95,10 @@ main:has(.portal-faixa) > .coluna { max-width: none; padding: 0; }
 @media (min-width: 768px) {
   .coluna, .portal-container { padding-inline: 2rem; }
   h1 { font-size: var(--portal-destaque); font-weight: 700; }
+  main h1 { font-size: clamp(3rem, 6vw, 3.75rem); }
 }
 @media (min-width: 1024px) {
-  .portal-faixa:has(.inicio-reconhecimento) { padding-block: 1rem; }
-  .inicio-reconhecimento:has(.inicio-numeros) { row-gap: 1rem; }
-  .inicio-numero { padding-block: .5rem; margin-bottom: .5rem; }
-  .inicio-numero strong { line-height: 1; }
-  .inicio-area-acoes { padding-top: 1rem; }
-  .inicio-reconhecimento:has(.inicio-numeros) { grid-template-columns: 7fr 5fr; gap: 1.25rem 3rem; }
-  .inicio-reconhecimento.varias .inicio-formacoes {
-    grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
-  .inicio-reconhecimento.varias .inicio-formacoes li { padding-left: 0; padding-top: 2.25rem; }
-  .inicio-reconhecimento.varias .inicio-formacoes li:not(:nth-child(3n)):not(:last-child)::after {
-    content: ''; position: absolute; left: 1.5rem; right: -1.5rem; top: .75rem;
-    height: 4px; background: var(--cor-marca); }
-  .inicio-acoes-grade { grid-template-columns: 2fr 1fr; gap: 3rem; }
-  .inicio-card { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); }
+
   .narrativa-abertura { grid-template-columns: 5fr 7fr; }
   .narrativa-figura { grid-row: 1 / 5; }
   .narrativa-linha { max-width: 48rem; }

@@ -132,6 +132,13 @@ INICIO_TEXTO = (
 )
 INICIO_ACAO = "Quero contribuir"
 INICIO_SUAS = "Suas contribuições"
+# 032: linha do Início e participação. Sem estados de atendimento (D-2601).
+ADIANTE_UMA = "1 contribuição enviada"
+ADIANTE_VARIAS = "{n} contribuições enviadas"
+TITULO_SUA = "Sua contribuição"
+MARCO_ENVIADA = "Enviada"
+MARCO_CONTATO = "{destino} registrou contato"
+OFERECER_NOVA = "Oferecer nova contribuição"
 
 # --- Unidade --------------------------------------------------------------------------------
 

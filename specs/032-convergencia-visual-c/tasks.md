@@ -11,9 +11,9 @@
 
 ## PR 2 — área autenticada e navegação
 
-- [ ] **T005** Navegação com "Participação" e página `/participacao/`; testes.
-- [ ] **T006** Início na composição C: reconhecimento, linha com "Hoje" e "Adiante", encontros,
+- [x] **T005** Navegação com "Participação" e página `/participacao/`; testes.
+- [x] **T006** Início na composição C: reconhecimento, linha com "Hoje" e "Adiante", encontros,
   oportunidades e participação, com estados vazios; testes da 024, 025 e 026 revisados.
-- [ ] **T007** Harmonização tipográfica das demais telas do Portal (Minha trajetória,
+- [x] **T007** Harmonização tipográfica das demais telas do Portal (Minha trajetória,
   Oportunidades, contribuição, Meu e-mail) pelos tokens; medidas e capturas.
-- [ ] **T008** Auditoria visual e funcional contra os mockups C; `validacao.md`.
+- [x] **T008** Auditoria visual e funcional contra os mockups C; `validacao.md`.

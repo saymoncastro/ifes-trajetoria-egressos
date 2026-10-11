@@ -1,0 +1,16 @@
+{% extends "portal/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block estilo %}{{ block.super }}{% include "portal/inicio.css" %}{% endblock %}
+{% block conteudo %}
+<div class="inicio">
+<section class="inicio-participacao" aria-labelledby="titulo-participacao">
+  <div class="portal-container">
+    <h1 id="titulo-participacao">{{ titulo }}</h1>
+    <p class="inicio-participacao-intro">{{ m.PARTICIPACAO_INTRODUCAO }}</p>
+    {% include "portal/_participacao.html" %}
+    {# 032 FR-011: sem convite (Pessoa sem Conclusão), a escolha de formações continua a um toque. #}
+    {% if not convite %}<p class="ligacao-isolada"><a href="/formacoes/">{{ m.VER_FORMACOES }}</a></p>{% endif %}
+  </div>
+</section>
+</div>
+{% endblock %}

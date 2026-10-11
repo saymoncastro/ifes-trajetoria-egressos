@@ -370,11 +370,12 @@ def test_bloco_depois_de_oportunidades_e_antes_do_convite(client, cenario):
     ana = _entrar(client, cenario, "SIM-P-0001")
     html = _principal(client.get("/inicio/"))
     posicoes = [html.index(marca) for marca in (
-        m_portal.TITULO_ACOES, 'class="inicio-oportunidades', 'class="inicio-contribuir"',
-        'class="inicio-convite"',
+        m_portal.TITULO_ACOES, 'class="inicio-oportunidades', 'inicio-contribuir"',
+        'inicio-convite"',
     )]
     assert posicoes == sorted(posicoes)
-    bloco = html[html.index('class="inicio-contribuir"'):html.index('class="inicio-convite"')]
+    # Revisado pela 032 (FR-008): a contribuição é o primeiro bloco da participação.
+    bloco = html[html.index('inicio-contribuir"'):html.index('participacao-canal"')]
     assert m.INICIO_TEXTO in bloco and f'href="/contribuir/">{m.INICIO_ACAO}<' in bloco
     assert "/contribuicoes/" not in bloco
     cc.registrar(ana)
@@ -384,15 +385,17 @@ def test_bloco_depois_de_oportunidades_e_antes_do_convite(client, cenario):
 
 def test_sem_conclusao_sem_bloco(client, cenario):
     cp.entrar(client, cp.pessoa_sem_conclusao())
-    assert 'class="inicio-contribuir"' not in client.get("/inicio/").content.decode()
+    assert 'inicio-contribuir"' not in client.get("/inicio/").content.decode()
 
 
-def test_navegacao_marca_contribuir_nas_telas_da_contribuicao(client, cenario):
+def test_navegacao_marca_participacao_nas_telas_da_contribuicao(client, cenario):
+    """Revisado pela 032 (FR-011): "Contribuir" passou a fazer parte de "Participação"."""
     diego = _entrar(client, cenario)
     manifestacao = cc.registrar(diego)
     for url in ("/contribuir/", "/contribuicoes/", f"/contribuicoes/{manifestacao.pk}/",
                 f"/contribuicoes/{manifestacao.pk}/retirar/"):
         html = client.get(url).content.decode()
         nav = re.search(r'<nav class="navegacao".*?</nav>', html, re.S).group(0)
-        assert re.findall(r'href="([^"]+)"[^>]*aria-current="page"', nav) == ["/contribuir/"], url
+        atual = re.findall(r'href="([^"]+)"[^>]*aria-current="page"', nav)
+        assert atual == ["/participacao/"], url
         assert 'action="/sair/"' in html and "--portal-profundo:" in html, url

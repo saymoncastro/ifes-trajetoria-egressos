@@ -34,18 +34,24 @@ def _sem_oportunidades(principal: str) -> str:
     """Revisado pela 025 (FR-021, FR-022; research R11): o bloco de Oportunidades pode citar
     "Oportunidade" e um título com "pesquisa" (conteúdo do operador). Os vetos da 024 valem
     fora dele."""
-    return re.sub(r'<section class="inicio-oportunidades.*?</section>', "", principal, flags=re.S)
+    sem_bloco = re.sub(r'<section class="inicio-oportunidades.*?</section>', "", principal,
+                       flags=re.S)
+    # 032 FR-010: "Oportunidade" também no "Hoje" da linha; o encontro é um item da 025.
+    sem_bloco = re.sub(r'<li class="inicio-linha-hoje">.*?</li>', "", sem_bloco, flags=re.S)
+    return re.sub(r'<section class="inicio-encontros.*?</section>', "", sem_bloco, flags=re.S)
 
 
 def test_ordem_reconhecimento_proveniencia_acoes_convite(client, cenario):
+    """Revisado pela 032 (FR-008): a linha das formações vem depois da proveniência e das
+    ações do card; o convite continua por último."""
     resposta = _inicio(client, cenario.pessoa("SIM-P-0003"))
     html = _principal(resposta)
     posicoes = [
-        html.index("<h1>"),
+        html.index("<h1"),
         html.index("O Ifes registra 2 formações concluídas por você."),
-        html.index("Tecnologia em Análise e Desenvolvimento de Sistemas"),
         html.index(mensagens.PROVENIENCIA),
         html.index(mensagens.TITULO_ACOES),
+        html.index("Tecnologia em Análise e Desenvolvimento de Sistemas"),
         html.index(mensagens.TITULO_CONVITE),
     ]
     assert posicoes == sorted(posicoes)
@@ -54,7 +60,7 @@ def test_ordem_reconhecimento_proveniencia_acoes_convite(client, cenario):
 
 def test_cada_frase_de_formacao_tem_a_origem(client, cenario):
     html = _principal(_inicio(client, cenario.pessoa("SIM-P-0003")))
-    itens = re.findall(r"<li>(.*?)</li>", html[html.index('class="inicio-formacoes"'):], re.S)
+    itens = re.findall(r"<li>(.*?)</li>", html[html.index('class="inicio-formacoes'):], re.S)
     formacoes = [i for i in itens if "<p" in i]
     assert len(formacoes) == 2
     for item in formacoes:
@@ -81,7 +87,7 @@ def test_sem_nome_e_sem_vocabulario_vedado(client, cenario):
 
 def test_pesquisa_so_no_convite(client, cenario):
     principal = _sem_oportunidades(_principal(_inicio(client, cenario.pessoa("SIM-P-0003"))))
-    antes_do_convite = principal[: principal.index('class="inicio-convite"')]
+    antes_do_convite = principal[: principal.index('inicio-convite"')]
     assert "pesquisa" not in re.sub(r"<[^>]+>", " ", antes_do_convite).lower()
 
 
@@ -107,7 +113,7 @@ def test_nao_le_resposta_nem_contato(client, cenario):
 
 def _convite(resposta) -> str:
     html = _principal(resposta)
-    return html[html.index('class="inicio-convite"'):]
+    return html[html.index('inicio-convite"'):]
 
 
 def test_convite_para_iniciar(client, cenario):
@@ -133,14 +139,21 @@ def test_convite_com_varias_formacoes(client, cenario):
     assert f'href="/formacoes/">{mensagens.ACAO_ESCOLHER}<' in convite
 
 
+def _so_ver_formacoes(convite: str) -> bool:
+    """Sem ação de responder (FR-020). Revisado pela 032 (FR-011): sem o item "Pesquisa" na
+    navegação, a escolha de formações continua a um toque por este link."""
+    links = re.findall(r'<a [^>]*>([^<]+)</a>', convite)
+    return links == [mensagens.VER_FORMACOES] and "portal-botao" not in convite
+
+
 def test_convite_sem_pendencia_e_sem_pesquisa(client, cenario, relogio):
     ana = cenario.pessoa("SIM-P-0001")
     cenario.concluir(ana.conclusoes.first())
     convite = _convite(_inicio(client, ana))
-    assert estados.SEM_ENTRADA_PENDENTE in convite and "<a" not in convite
+    assert estados.SEM_ENTRADA_PENDENTE in convite and _so_ver_formacoes(convite)
     relogio.agora = c.DEPOIS_DO_FIM
     convite = _convite(_inicio(client, ana))  # nova sessão: a anterior expirou
-    assert estados.SEM_PESQUISA in convite and "<a" not in convite
+    assert estados.SEM_PESQUISA in convite and _so_ver_formacoes(convite)
 
 
 # --- Casos de borda ------------------------------------------------------------------------
@@ -151,7 +164,8 @@ def test_pessoa_sem_conclusao(client, cenario):
     principal = _principal(resposta)
     assert estados.SEM_FORMACAO in principal
     assert "inicio-convite" not in principal and "/minha-trajetoria/" not in principal
-    assert re.findall(r'<li[^>]*><a href="([^"]+)"', principal) == ["/meu-email/"]
+    # Revisado pela 032 (FR-008): o e-mail fica na participação, não nas ações.
+    assert re.findall(r'href="([^"#]+)"', principal) == ["/meu-email/"]
 
 
 def test_falha_da_narrativa_omite_o_reconhecimento(client, cenario, monkeypatch, caplog):

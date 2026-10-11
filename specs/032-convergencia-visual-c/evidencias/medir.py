@@ -8,7 +8,7 @@ arnês dos protótipos (`docs/prototipos/2026-10-09-portal/medir.py`) e os crit�
 
 Uso, na raiz do repositório, com o `.env` da demonstração:
 
-    source .env && uv run python specs/032-convergencia-visual-c/evidencias/medir.py [publica] [inicio]
+    source .env && uv run python specs/032-convergencia-visual-c/evidencias/medir.py [publica] [inicio] [outras]
 """
 
 import importlib.util
@@ -23,7 +23,8 @@ PASTA = Path(__file__).resolve().parent
 RAIZ = PASTA.parents[2]
 sys.path.insert(0, str(RAIZ))
 CAPTURAS = PASTA / "capturas"
-PESSOAS = {"diego": ("000.000.003-53", "08/02/1994"), "ana": ("000.000.001-91", "12/04/1998")}
+PESSOAS = {"diego": ("000.000.003-53", "08/02/1994"), "ana": ("000.000.001-91", "12/04/1998"),
+           "bruno": ("111.444.777-35", "03/09/1990")}
 
 
 def _modulo(nome, caminho):
@@ -33,10 +34,11 @@ def _modulo(nome, caminho):
     return m
 
 
-def _limpar(html: str) -> str:
+def _limpar(html: str, nome: str) -> str:
+    """Cada pessoa com o próprio card, salvo como `card-<nome da tela>.<formato>`."""
     html = re.sub(r'(csrfmiddlewaretoken" value=")[^"]*', r"\1", html)
     html = html.replace('url("/fontes/', 'url("fontes/')
-    return re.sub(r'src="/minha-trajetoria/card\.(png|svg)"', r'src="card.\1"', html)
+    return re.sub(r'(src|href)="/minha-trajetoria/card\.(png|svg)"', rf'\1="card-{nome}.\2"', html)
 
 
 def telas(quais) -> dict[str, str]:
@@ -45,21 +47,27 @@ def telas(quais) -> dict[str, str]:
     paginas = {}
     if "publica" in quais:
         paginas["publica"] = Client(HTTP_HOST="127.0.0.1").get("/").content.decode()
+        paginas["entrar"] = Client(HTTP_HOST="127.0.0.1").get("/entrar/").content.decode()
     for nome, (cpf, nascimento) in PESSOAS.items():
-        if "inicio" not in quais:
+        if not {"inicio", "outras"} & quais:
             break
         c = Client(HTTP_HOST="127.0.0.1")
         assert c.post("/entrar/", {"cpf": cpf, "data_nascimento": nascimento}).status_code in (302, 303)
         paginas[f"inicio-{nome}"] = c.get("/inicio/").content.decode()
+        for formato in ("png", "svg"):
+            r = c.get(f"/minha-trajetoria/card.{formato}")
+            if r.status_code == 200:
+                paginas[f"_card-inicio-{nome}.{formato}"] = r.content
+                break
         if nome == "diego":
             participacao = c.get("/participacao/")
             if participacao.status_code == 200:  # só a partir do PR 2
                 paginas["participacao-diego"] = participacao.content.decode()
-            for formato in ("png", "svg"):
-                r = c.get(f"/minha-trajetoria/card.{formato}")
-                if r.status_code == 200:
-                    paginas[f"_card.{formato}"] = r.content
-                    break
+            if "outras" in quais:  # T007: as demais telas do Portal, com as fontes e os tokens
+                for rotulo, url in (("trajetoria", "/minha-trajetoria/"),
+                                    ("oportunidades", "/oportunidades/"),
+                                    ("contribuir", "/contribuir/"), ("email", "/meu-email/")):
+                    paginas[f"{rotulo}-diego"] = c.get(url).content.decode()
     return paginas
 
 
@@ -86,7 +94,7 @@ def main(quais):
         if nome.startswith("_card"):
             (temporaria / nome[1:]).write_bytes(conteudo)
             continue
-        (temporaria / f"{nome}.html").write_text(_limpar(conteudo), "utf-8")
+        (temporaria / f"{nome}.html").write_text(_limpar(conteudo, nome), "utf-8")
     for nome in sorted(p.stem for p in temporaria.glob("*.html") if not p.stem.startswith("_")):
         pagina = f"{nome}.html"
         v = {}
@@ -112,4 +120,4 @@ def main(quais):
 
 
 if __name__ == "__main__":
-    main(set(sys.argv[1:]) or {"publica", "inicio"})
+    main(set(sys.argv[1:]) or {"publica", "inicio", "outras"})
