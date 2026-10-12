@@ -3,9 +3,10 @@
 Complementa o [protocolo](protocolo.md), que define critérios, roteiro e leitura do
 resultado. Este arquivo é a lista prática do moderador.
 
-> **Situação: NÃO APLICADO.** Nenhuma sessão foi feita. Do protótipo do bloco Comunidade,
-> só a parte de Encontros existe (031, revisão 14 do roadmap); Histórias e Encontre colegas
-> ainda não. As pendências Q1 a Q7 estão abertas; Q8 foi decidida.
+> **Situação: NÃO APLICADO.** Nenhuma sessão foi feita. O material do bloco Comunidade está
+> completo (Encontros da 031; [Histórias e Encontre colegas](../../prototipos/2026-10-11-comunidade/index.html))
+> e tem um [percurso curto](percurso-bloco-comunidade.md), ainda sem revisão do solicitante.
+> As pendências Q1 a Q7 estão abertas; Q8 foi decidida.
 
 ## Sequência até os resultados
 

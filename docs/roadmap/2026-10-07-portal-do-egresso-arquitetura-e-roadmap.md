@@ -139,6 +139,13 @@
     As telas servidas não mudam;
   - os achados A-01 a A-04 da versão C continuam não corrigidos.
 
+  - **complemento (mesmo dia):** telas estáticas de
+    [Histórias e Encontre colegas](../prototipos/2026-10-11-comunidade/index.html), sem abrir a 030
+    nem especificar o diretório, e um
+    [percurso curto da sessão](../validacao/checkpoint-2/percurso-bloco-comunidade.md), com 12
+    telas. O rótulo de navegação do material segue uma regra de linguagem registrada como
+    hipótese no percurso, sem nova decisão pendente.
+
   Constituição, ADR 0008 e ADR 0009 não mudam; a ADR 0010 é nova, restrita à demonstração.
   D8, D9, D10 e DP-1808 continuam pendentes para uso real. Próximos passos: integrar o PR
   documental; completar o material do bloco Comunidade com poucas telas de Histórias e de
@@ -1145,14 +1152,15 @@ Checkpoint 2 estão **NÃO APLICADOS**. Nenhum critério de compreensão ou comp
 - A S4 (027) continua fora. O Checkpoint 2 informa se ela vale a pena (§7).
 - **Revisão 14.** A spec e o protótipo da 031 foram antecipados, como hipótese, fora desta
   sequência. Eles não mudam a ordem nem as condições dos passos 3 a 7. O protótipo da 031 é
-  parte do material do passo 5, que ainda precisa de Histórias e Encontre colegas.
+  parte do material do passo 5, completado no mesmo dia com Histórias e Encontre colegas e
+  um percurso curto. O passo 5 só termina com a revisão do solicitante (Q7).
 
 ### 13.4 Kits de validação
 
 | Kit | Arquivos | Situação |
 |---|---|---|
 | Checkpoint 1 (024 + bloco P) | [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md), [preparação](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md), [ficha](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/ficha-participante.md), [bloco P](../../specs/029-pagina-publica-portal/checkpoint-pagina-publica.md), [ficha do bloco P](../../specs/029-pagina-publica-portal/checkpoint/ficha-bloco-p.md) | Atualizado para a versão C. Critérios e limiar proposto não mudam. P1 a P5 continuam pendentes; P6 (comparação histórica) é nova |
-| Checkpoint 2 (025, 026 + bloco Comunidade) | [protocolo](../validacao/checkpoint-2/protocolo.md), [preparação](../validacao/checkpoint-2/preparacao-sessao.md), [ficha](../validacao/checkpoint-2/ficha-participante.md), [ficha do bloco Comunidade](../validacao/checkpoint-2/ficha-bloco-comunidade.md) | Escrito antes de qualquer sessão. Q1 a Q7 pendentes; Q8 decidida (observações exploratórias da 031). Do protótipo do bloco Comunidade, só a parte de Encontros existe (031, revisão 14); faltam Histórias e Encontre colegas |
+| Checkpoint 2 (025, 026 + bloco Comunidade) | [protocolo](../validacao/checkpoint-2/protocolo.md), [preparação](../validacao/checkpoint-2/preparacao-sessao.md), [ficha](../validacao/checkpoint-2/ficha-participante.md), [ficha do bloco Comunidade](../validacao/checkpoint-2/ficha-bloco-comunidade.md) | Escrito antes de qualquer sessão. Q1 a Q7 pendentes; Q8 decidida (observações exploratórias da 031). Material do bloco Comunidade completo, com [percurso curto](../validacao/checkpoint-2/percurso-bloco-comunidade.md), aguardando revisão (Q7) |
 
 O Checkpoint 2 fica em `docs/validacao/` porque cobre duas features (025 e 026) e uma
 capacidade sem spec (Comunidade). O Checkpoint 1 continua junto da 024.
