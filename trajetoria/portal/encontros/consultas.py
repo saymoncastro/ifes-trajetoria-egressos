@@ -7,6 +7,7 @@ nomes de critério. A descoberta não lê Resposta, Formação Declarada, contat
 from dataclasses import dataclass
 from datetime import datetime
 
+from django.db.models import Count, Q
 from django.utils import timezone
 
 from trajetoria.portal.encontros import mensagens as m
@@ -63,14 +64,26 @@ def eventos_do_ifes(pessoa, agora: datetime) -> list:
     return [i for i in itens if i.oportunidade.categoria == Categoria.EVENTOS]
 
 
+def com_contagem(encontros):
+    """Anota `n_confirmacoes` (só as ativas) numa consulta, sem uma contagem por linha."""
+    return encontros.annotate(
+        n_confirmacoes=Count("confirmacoes", filter=Q(confirmacoes__cancelada_em__isnull=True))
+    )
+
+
 def do_organizador(pessoa):
-    return Encontro.objects.filter(pessoa_id=pessoa.pk).order_by("-enviado_em", "id")
+    return com_contagem(Encontro.objects.filter(pessoa_id=pessoa.pk)).order_by("-enviado_em", "id")
 
 
-def do_escopo(escopo) -> list[Encontro]:
-    """Os encontros que o escopo modera (research R8). O volume da demonstração permite filtrar
-    em Python, com a mesma regra que autoriza a ação."""
-    return [e for e in Encontro.objects.order_by("inicio", "titulo", "id") if modera(escopo, e)]
+def do_escopo(escopo, agora: datetime) -> list[Encontro]:
+    """Os encontros que a lista da moderação mostra: sem decisão contrária nem cancelamento e
+    antes do término (em análise ou publicados), filtrados no banco e com a contagem anotada.
+    O escopo usa a mesma regra que autoriza a ação (`modera`; research R8)."""
+    candidatos = com_contagem(Encontro.objects.filter(
+        recusado_em__isnull=True, retirado_em__isnull=True, cancelado_em__isnull=True,
+        termino__gt=agora,
+    )).order_by("inicio", "titulo", "id")
+    return [e for e in candidatos if modera(escopo, e)]
 
 
 def confirmacao_ativa(pessoa, encontro):
@@ -84,14 +97,13 @@ def quantas_confirmaram(encontro) -> int:
     return encontro.confirmacoes.filter(cancelada_em__isnull=True).count()
 
 
-def quem_e(pessoa, encontro, *, com_conclusao: bool) -> Quem:
-    """Quem a Pessoa é diante deste encontro (research R10). A moderação tem telas próprias."""
+def quem_e(pessoa, encontro, *, com_conclusao: bool, confirmacao) -> Quem:
+    """Quem a Pessoa é diante deste encontro (research R10). `confirmacao` é a ativa da
+    Pessoa, já consultada por quem chama. A moderação tem telas próprias."""
     if pessoa is None:
         return Quem.ANONIMO
     if not com_conclusao:
         return Quem.SEM_CONCLUSAO
     if encontro.pessoa_id == pessoa.pk:
         return Quem.ORGANIZADOR
-    if confirmacao_ativa(pessoa, encontro) is not None:
-        return Quem.CONFIRMADO
-    return Quem.EGRESSO
+    return Quem.CONFIRMADO if confirmacao is not None else Quem.EGRESSO

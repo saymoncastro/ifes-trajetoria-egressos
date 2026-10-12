@@ -10,6 +10,7 @@ from django.utils import timezone
 from trajetoria.portal.encontros import mensagens as m
 from trajetoria.portal.encontros.formularios import publico_em_texto
 from trajetoria.portal.encontros.governanca import INSTITUCIONAL, responsavel
+from trajetoria.portal.encontros.regras import Situacao
 from trajetoria.portal.oportunidades import mensagens as m_oportunidades
 from trajetoria.portal.oportunidades.regras import origem_do_site
 
@@ -89,3 +90,20 @@ def apresentar(encontro, *, mostrar_link: bool = False) -> dict:
 
 def confirmacoes(n: int) -> str:
     return m.CONFIRMACOES.get(n) or m.CONFIRMACOES_VARIAS.format(n=n)
+
+
+def situacao_em_texto(encontro, atual: Situacao) -> str:
+    """O texto da situação, o mesmo na página do encontro e em "Seus encontros". Depois de
+    uma decisão, cita quem efetivamente decidiu (escopo gravado; code review do PR #67)."""
+    if atual is Situacao.EM_ANALISE:
+        return m.EM_ANALISE.format(quem=quem_analisa(encontro), data=data(encontro.enviado_em))
+    if atual is Situacao.PUBLICADO:
+        return m.PUBLICADO.format(data=data(encontro.publicado_em),
+                                  quem=quem_moderou(encontro.publicado_por_escopo))
+    if atual is Situacao.RECUSADO:
+        return m.RECUSADO.format(quem=quem_moderou(encontro.recusado_por_escopo),
+                                 data=data(encontro.recusado_em))
+    return {
+        Situacao.NAO_ANALISADO: m.NAO_ANALISADO, Situacao.RETIRADO: m.RETIRADO,
+        Situacao.CANCELADO: m.CANCELADO, Situacao.ENCERRADO: m.ENCERRADO,
+    }[atual]

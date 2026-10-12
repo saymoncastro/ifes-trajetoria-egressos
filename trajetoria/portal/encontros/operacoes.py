@@ -22,6 +22,7 @@ from trajetoria.portal.encontros.regras import (
     Violacao,
 )
 from trajetoria.portal.models import CRITERIOS_DE_PUBLICO, Confirmacao, Encontro
+from trajetoria.portal.oportunidades.consultas import opcoes_de_publico
 
 __all__ = [
     "Proposta", "cancelar", "cancelar_participacao", "confirmar", "propor", "publicar",
@@ -65,6 +66,16 @@ def violacoes_da_proposta(proposta: Proposta, agora: datetime) -> list[Violacao]
     return violacoes
 
 
+def _publico_registrado(proposta: Proposta) -> bool:
+    """FR-004 no próprio fato, e não só na tela: cada valor do público precisa estar entre os
+    registrados nas Conclusões, exatamente como escritos (025 FR-007; code review do PR #67)."""
+    definidos = {c: getattr(proposta, c) for c in CRITERIOS_DE_PUBLICO if getattr(proposta, c)}
+    if not definidos:
+        return True
+    registrados = opcoes_de_publico()
+    return all(set(valores) <= set(registrados[c]) for c, valores in definidos.items())
+
+
 @transaction.atomic
 def propor(pessoa, proposta: Proposta, *, versao_do_termo: str, agora: datetime,
            id=None) -> Encontro:
@@ -81,6 +92,8 @@ def propor(pessoa, proposta: Proposta, *, versao_do_termo: str, agora: datetime,
     ).first()
     if conclusao is None:
         violacoes.append(Violacao(Motivo.ORIGEM, "origem"))
+    if not _publico_registrado(proposta):
+        violacoes.append(Violacao(Motivo.PUBLICO, "publico"))
     if violacoes:
         raise EncontroRejeitado(violacoes)
     if versao_do_termo != VERSAO_DO_TERMO:
@@ -156,8 +169,10 @@ def recusar(encontro_id, *, operador: str, escopo, motivo, complemento, agora: d
     if regras.situacao(encontro, agora) is not Situacao.EM_ANALISE:
         _rejeitar(Motivo.ESTADO)
     encontro.recusado_em, encontro.recusado_por = agora, operador
+    encontro.recusado_por_escopo = escopo_da_decisao(escopo, encontro)
     encontro.motivo, encontro.complemento = motivo, complemento
-    encontro.save(update_fields=["recusado_em", "recusado_por", "motivo", "complemento"])
+    encontro.save(update_fields=["recusado_em", "recusado_por", "recusado_por_escopo", "motivo",
+                                 "complemento"])
     return encontro
 
 

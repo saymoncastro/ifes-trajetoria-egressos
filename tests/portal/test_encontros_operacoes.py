@@ -211,3 +211,21 @@ def test_cancelar_confirmacao_so_antes_do_inicio(pessoas):
     ce.confirmar(pessoas["diego"], encontro)
     assert Motivo.ESTADO in _motivos(lambda: operacoes.cancelar_participacao(
         pessoas["diego"], encontro.pk, agora=ce.INICIO))
+
+
+# --- Code review do PR #67 -----------------------------------------------------------------------
+
+def test_recusa_grava_o_escopo_de_quem_recusou(pessoas):
+    """A CPAEG recusando um encontro de unidade única fica registrada como CPAEG."""
+    encontro = ce.propor(pessoas["bruno"], publico_unidades=["Vitória"])
+    operacoes.recusar(encontro.pk, operador=ce.OPERADOR_A, escopo=ce.CPAEG,
+                      motivo="comercial", complemento="", agora=DEPOIS)
+    encontro.refresh_from_db()
+    assert encontro.recusado_por_escopo == "institucional"
+
+
+def test_publico_com_valor_nao_registrado_e_recusado_na_gravacao(pessoas):
+    """FR-004 vale para o fato, não só para o formulário."""
+    assert Motivo.PUBLICO in _motivos(lambda: ce.propor(pessoas["maria"],
+                                                        publico_cursos=["Curso inexistente"]))
+    assert not Encontro.objects.exists()

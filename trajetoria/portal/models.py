@@ -299,6 +299,8 @@ class Encontro(models.Model):
     publicado_por_escopo = models.TextField(null=True)
     recusado_em = models.DateTimeField(null=True)
     recusado_por = models.TextField(null=True)
+    # Quem efetivamente recusou, como na publicação (code review do PR #67).
+    recusado_por_escopo = models.TextField(null=True)
     retirado_em = models.DateTimeField(null=True)
     retirado_por = models.TextField(null=True)
     motivo = models.TextField(choices=MotivoDeModeracao.choices, null=True)
@@ -339,7 +341,7 @@ class Encontro(models.Model):
                 )
             ),
             _par("encontro", "publicado_em", "publicado_por", "publicado_por_escopo"),
-            _par("encontro", "recusado_em", "recusado_por"),
+            _par("encontro", "recusado_em", "recusado_por", "recusado_por_escopo"),
             _par("encontro", "retirado_em", "retirado_por"),
             # Recusa só antes da publicação; retirada só depois dela; nunca as duas.
             models.CheckConstraint(

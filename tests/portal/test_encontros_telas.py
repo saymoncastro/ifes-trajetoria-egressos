@@ -324,3 +324,41 @@ def test_item_encontros_na_navegacao(pessoas, encontro):
     assert 'href="/encontros/" data-rotulo="Encontros" aria-current="page"' in html
     sem = _html(_como(cp.pessoa_sem_conclusao()), "/inicio/")[1]
     assert 'href="/encontros/"' not in sem
+
+
+# --- Code review do PR #67 -----------------------------------------------------------------------
+
+def test_recusa_pela_cpaeg_aparece_como_cpaeg(pessoas):
+    encontro = ce.propor(pessoas["bruno"], publico_unidades=["Vitória"])
+    operacoes.recusar(encontro.pk, operador=ce.OPERADOR_A, escopo=ce.CPAEG,
+                      motivo="comercial", complemento="", agora=c.NO_PERIODO)
+    bruno = _como(pessoas["bruno"])
+    for url in (_pagina(encontro), "/encontros/seus/"):
+        html = bruno.get(url).content.decode()
+        assert "Recusado pela CPAEG" in html and "CSAEG Vitória" not in html, url
+
+
+def test_horario_ausente_e_erro_do_horario_e_nao_da_data(pessoas):
+    maria = pessoas["maria"]
+    dados = ce.formulario(maria.conclusoes.first(), inicio="", termino="")
+    resposta = _como(maria).post("/encontros/propor/", dados)
+    html = resposta.content.decode()
+    assert resposta.status_code == 422
+    assert m.ERROS["inicio"] in html and 'id="inicio-erro"' in html
+    assert 'id="data-erro"' not in html
+    dados = ce.formulario(maria.conclusoes.first(), termino="")
+    html = _como(maria).post("/encontros/propor/", dados).content.decode()
+    assert m.ERROS["termino_vazio"] in html
+
+
+def test_mensagem_de_data_sempre_formatada(pessoas):
+    from trajetoria.portal.encontros.formularios import mensagem_de_erro
+
+    texto = mensagem_de_erro("data", c.NO_PERIODO)
+    assert "{" not in texto and "03/05/2027" in texto
+
+
+def test_lista_da_moderacao_mostra_a_contagem(pessoas, vinculos, encontro):
+    ce.confirmar(pessoas["diego"], encontro)
+    html = _operador(ce.OPERADOR_A).get("/curadoria/encontros/").content.decode()
+    assert "1 pessoa confirmou" in html

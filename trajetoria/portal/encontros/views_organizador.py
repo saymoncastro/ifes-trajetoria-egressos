@@ -7,31 +7,35 @@ que a pessoa digitou (FR-007). Escritas só por `operacoes`: propor e cancelar.
 
 from types import SimpleNamespace
 
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
+from trajetoria.portal.barreiras import egresso
+from trajetoria.portal.destinos import ir
 from trajetoria.portal.encontros import consultas, operacoes, regras
 from trajetoria.portal.encontros import mensagens as m
 from trajetoria.portal.encontros.apresentacao import (
     apresentar,
     confirmacoes,
-    data,
-    quem_analisa,
-    quem_moderou,
+    situacao_em_texto,
 )
-from trajetoria.portal.encontros.formularios import ANCORAS, formacao_em_texto, ler, opcoes
+from trajetoria.portal.encontros.formularios import (
+    ANCORAS,
+    erros_das_violacoes,
+    formacao_em_texto,
+    ler,
+    opcoes,
+)
 from trajetoria.portal.encontros.regras import EncontroRejeitado, Motivo, Situacao
-from trajetoria.portal.encontros.views_egresso import ENCONTROS, egresso
+from trajetoria.portal.encontros.views_egresso import ENCONTROS
 from trajetoria.portal.oportunidades.consultas import opcoes_de_publico
 
 SEUS = "/encontros/seus/"
 
 
-def _ir(destino: str) -> HttpResponse:
-    return HttpResponse(status=303, headers={"Location": destino})
 
 
 def _conclusoes(pessoa) -> list:
@@ -117,30 +121,16 @@ def enviar(request, pessoa):
         if Motivo.LIMITE in erro.motivos:
             return _formulario(request, pessoa, lida.campos,
                                {"limite": m.ERROS["limite"]}, status=409)
-        campos = {v.campo for v in erro.violacoes}
         return _formulario(request, pessoa, lida.campos,
-                           {c: m.ERROS.get(c, m.ERROS["resumo"]) for c in campos if c},
-                           status=422)
-    return _ir(f"{ENCONTROS}{encontro.pk}/?aviso=enviado")
+                           erros_das_violacoes(erro.violacoes, agora), status=422)
+    return ir(f"{ENCONTROS}{encontro.pk}/?aviso=enviado")
 
 
 def _linha(encontro, agora) -> dict:
-    atual = regras.situacao(encontro, agora)
-    if atual is Situacao.EM_ANALISE:
-        texto = m.EM_ANALISE.format(quem=quem_analisa(encontro), data=data(encontro.enviado_em))
-    elif atual is Situacao.PUBLICADO:
-        texto = m.PUBLICADO.format(data=data(encontro.publicado_em),
-                                   quem=quem_moderou(encontro.publicado_por_escopo))
-    elif atual is Situacao.RECUSADO:
-        texto = m.RECUSADO.format(quem=quem_analisa(encontro), data=data(encontro.recusado_em))
-    else:
-        texto = {
-            Situacao.NAO_ANALISADO: m.NAO_ANALISADO, Situacao.RETIRADO: m.RETIRADO,
-            Situacao.CANCELADO: m.CANCELADO, Situacao.ENCERRADO: m.ENCERRADO,
-        }[atual]
+    texto = situacao_em_texto(encontro, regras.situacao(encontro, agora))
     linha = {"e": apresentar(encontro), "situacao": texto}
     if encontro.publicado_em is not None:
-        linha["contagem"] = confirmacoes(consultas.quantas_confirmaram(encontro))
+        linha["contagem"] = confirmacoes(encontro.n_confirmacoes)
     if encontro.motivo:
         linha["motivo"] = encontro.get_motivo_display()
     return linha
@@ -169,12 +159,12 @@ def cancelar(request, pessoa, pk):
     agora = timezone.now()
     atual = regras.situacao(encontro, agora)
     if atual not in (Situacao.EM_ANALISE, Situacao.PUBLICADO) or agora >= encontro.inicio:
-        return _ir(f"{ENCONTROS}{pk}/")
+        return ir(f"{ENCONTROS}{pk}/")
     if request.method == "POST":
         try:
             operacoes.cancelar(pessoa, pk, agora=agora)
         except EncontroRejeitado:
             return render(request, "portal/encontros/conflito.html",
                           {"m": m, "titulo": m.CONFLITO_TITULO, "texto": m.CONFLITO}, status=409)
-        return _ir(f"{SEUS}?aviso=cancelado")
+        return ir(f"{SEUS}?aviso=cancelado")
     return render(request, "portal/encontros/cancelar.html", {"m": m, "e": apresentar(encontro)})

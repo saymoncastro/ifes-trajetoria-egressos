@@ -31,13 +31,13 @@ ver o link → desistir → acompanhar a quantidade → cancelar → encerrament
 | `uv run ruff check .` | passou |
 | `uv run python manage.py check` | sem problemas |
 | `uv run python manage.py makemigrations --check --dry-run` | sem mudanças |
-| `uv run pytest` | 3545 passaram, 40 pulados (vídeo, sem o renderizador local; rodam no CI), 2 desmarcados |
+| `uv run pytest` | 3551 passaram, 40 pulados (vídeo, sem o renderizador local; rodam no CI), 2 desmarcados |
 
 **Testes novos:**
 - `test_encontros_regras.py`: 117, sem banco. Cobrem situação, limites, a tabela inteira de
   visibilidade × quem, link, governança e vocabulário.
-- `test_encontros_operacoes.py`: 22, com propor, moderar, confirmar e cancelar.
-- `test_encontros_telas.py`: 29. O destaque é o link **fora do HTML** de quem não pode vê-lo,
+- `test_encontros_operacoes.py`: 24, com propor, moderar, confirmar e cancelar.
+- `test_encontros_telas.py`: 33. O destaque é o link **fora do HTML** de quem não pode vê-lo,
   em cada situação (SC-002).
 - `test_encontros_fronteira.py`: só a camada grava; nada no snapshot nem na exportação; o
   núcleo não importa a camada; nenhum contato lido ou gravado; logs sem dados pessoais.
@@ -67,6 +67,21 @@ Feitas com o arnês dos protótipos sobre o HTML realmente servido pela demonstr
 **Correção feita nesta medição:** o link da trilha nas telas de análise da moderação tinha
 menos de 44 px. É o mesmo padrão das telas de operação da 025 e da 026, que não foram
 alteradas. A correção vale só para as telas da 031 (`moderacao/estilo.css`).
+
+## Code review do PR #67
+
+Dez achados, todos corrigidos neste PR:
+- a recusa agora grava o escopo de quem recusou (`recusado_por_escopo`) e a página cita quem
+  decidiu;
+- horário ausente vira erro do horário, e não da data;
+- as mensagens de erro saem sempre formatadas;
+- o público é validado também no caminho de gravação;
+- a lista da moderação e "Seus encontros" contam as confirmações numa só consulta;
+- a página do encontro consulta a confirmação uma vez;
+- o texto da situação ficou num lugar só;
+- as barreiras do egresso e das telas de operação ficaram em `portal/barreiras.py`, comum à
+  025, à 026 e à 031;
+- o campo morto do formulário foi removido.
 
 ## Desvios em relação ao protótipo
 

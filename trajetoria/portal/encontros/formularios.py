@@ -26,15 +26,14 @@ _CAMPOS_DE_PUBLICO = (
 )
 ANCORAS = {
     "titulo": "titulo", "descricao": "descricao", "nome": "nome", "data": "data",
-    "termino": "termino", "publico": "campo-publico", "link": "link", "origem": "campo-origem",
-    "limite": "campo-limite",
+    "inicio": "inicio", "termino": "termino", "publico": "campo-publico", "link": "link",
+    "origem": "campo-origem", "limite": "campo-limite",
 }
 
 
 @dataclass(frozen=True)
 class Lida:
     proposta: Proposta
-    publico: str  # TODOS ou FORMACOES
     campos: dict  # o que a pessoa enviou, para devolver ao formulário
 
 
@@ -61,6 +60,24 @@ def _momento(dia: date | None, hora: time | None) -> datetime | None:
 def limites_de_data(agora: datetime) -> tuple[date, date]:
     hoje = timezone.localdate(agora)
     return hoje + timedelta(days=ANTECEDENCIA_MINIMA), hoje + timedelta(days=ANTECEDENCIA_MAXIMA)
+
+
+def mensagem_de_erro(campo: str, agora: datetime) -> str:
+    """O texto do erro de um campo, com os limites de data já preenchidos (code review do PR
+    #67: a mensagem de data nunca sai com os marcadores crus)."""
+    if campo == "data":
+        de, ate = limites_de_data(agora)
+        return m.ERROS["data"].format(de=de.strftime("%d/%m/%Y"), ate=ate.strftime("%d/%m/%Y"))
+    return m.ERROS.get(campo, m.ERROS["resumo"])
+
+
+def erros_das_violacoes(violacoes, agora: datetime) -> dict[str, str]:
+    """Erros por campo, na ordem das violações; o primeiro de cada campo vale."""
+    erros: dict[str, str] = {}
+    for violacao in violacoes:
+        if violacao.campo:
+            erros.setdefault(violacao.campo, mensagem_de_erro(violacao.campo, agora))
+    return erros
 
 
 def ler(dados, conclusoes, opcoes_de_publico: dict, agora: datetime) -> tuple[Lida, dict]:
@@ -92,27 +109,29 @@ def ler(dados, conclusoes, opcoes_de_publico: dict, agora: datetime) -> tuple[Li
     ):
         erros["publico"] = m.ERROS["publico"]
     dia = _data(campos["data"])
+    hora_inicio, hora_termino = _hora(campos["inicio"]), _hora(campos["termino"])
     origem = next((c for c in conclusoes if str(c.pk) == campos["origem"]), None)
     proposta = Proposta(
         titulo=campos["titulo"], descricao=campos["descricao"],
         nome_apresentacao=campos["nome"],
-        inicio=_momento(dia, _hora(campos["inicio"])),
-        termino=_momento(dia, _hora(campos["termino"])),
+        inicio=_momento(dia, hora_inicio),
+        termino=_momento(dia, hora_termino),
         link=campos["link"],
         conclusao_origem_id=origem.pk if origem else None,
         **publico,
     )
-    de, ate = limites_de_data(agora)
-    for violacao in violacoes_da_proposta(proposta, agora):
-        chave = violacao.campo
-        if chave == "data":
-            erros["data"] = m.ERROS["data"].format(de=de.strftime("%d/%m/%Y"),
-                                                   ate=ate.strftime("%d/%m/%Y"))
-        elif chave in m.ERROS:
-            erros.setdefault(chave, m.ERROS[chave])
+    violacoes = violacoes_da_proposta(proposta, agora)
+    if dia is not None and hora_inicio is None:
+        # Data certa e horário ausente: o erro é do horário, não da data (code review).
+        violacoes = [v for v in violacoes if v.campo != "data"]
+        erros["inicio"] = m.ERROS["inicio"]
+    if hora_inicio is not None and hora_termino is None:
+        erros["termino"] = m.ERROS["termino_vazio"]
+    for campo, texto in erros_das_violacoes(violacoes, agora).items():
+        erros.setdefault(campo, texto)
     if origem is None:
         erros["origem"] = m.ERROS["origem"]
-    return Lida(proposta, campos["publico"], campos), erros
+    return Lida(proposta, campos), erros
 
 
 def opcoes(campos: dict | None, conclusoes, opcoes_de_publico: dict, agora: datetime) -> dict:

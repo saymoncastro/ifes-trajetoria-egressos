@@ -7,16 +7,14 @@ cliente decide para onde a pessoa vai (024 FR-006). Sem Conclusão, a contribui�
 `operacoes`: registrar e retirar.
 """
 
-from functools import wraps
 
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from trajetoria.acesso.sessao import pessoa_em_uso
-from trajetoria.narrativa.consultas import elegivel
+from trajetoria.portal.barreiras import egresso
 from trajetoria.portal.contribuicao import mensagens as m
 from trajetoria.portal.contribuicao import operacoes
 from trajetoria.portal.contribuicao.consultas import (
@@ -37,7 +35,7 @@ from trajetoria.portal.contribuicao.regras import (
     Situacao,
     situacao,
 )
-from trajetoria.portal.destinos import sem_pessoa
+from trajetoria.portal.destinos import ir
 from trajetoria.portal.models import Forma
 
 LISTA = "/contribuicoes/"
@@ -47,23 +45,6 @@ _ANCORAS = {
 }
 
 
-def _ir(destino: str) -> HttpResponse:
-    return HttpResponse(status=303, headers={"Location": destino})
-
-
-def egresso(view):
-    """Pessoa identificada pela 018 e com ao menos uma Conclusão Acadêmica (D-2603)."""
-
-    @wraps(view)
-    def envolvida(request, *args, **kwargs):
-        pessoa = pessoa_em_uso(request)
-        if pessoa is None:
-            return sem_pessoa(request)
-        if not elegivel(pessoa):
-            raise Http404
-        return view(request, pessoa, *args, **kwargs)
-
-    return envolvida
 
 
 def _data(momento) -> str:
@@ -158,7 +139,7 @@ def confirmar(request, pessoa):
             return _confirmacao(request, escolha, email=email,
                                 erros={"ciencia": m.ERROS["ciencia"]}, status=409)
         raise
-    return _ir(f"{LISTA}{manifestacao.pk}/?aviso=enviada")
+    return ir(f"{LISTA}{manifestacao.pk}/?aviso=enviada")
 
 
 def _situacao(manifestacao, *, na_lista: bool = False) -> tuple[str, str]:
@@ -240,15 +221,15 @@ def retirar(request, pessoa, pk):
     """Confirmação e retirada (FR-005). Já retirada: volta ao detalhe, que mostra a data."""
     manifestacao = _da_pessoa_ou_404(pessoa, pk)
     if not manifestacao.ativa:
-        return _ir(f"{LISTA}{pk}/")
+        return ir(f"{LISTA}{pk}/")
     if request.method == "POST":
         try:
             operacoes.retirar(pessoa, pk, agora=timezone.now())
         except ManifestacaoRejeitada as erro:
             if Motivo.FORA_DO_ESCOPO in erro.motivos:
                 raise Http404 from None
-            return _ir(f"{LISTA}{pk}/")
-        return _ir(f"{LISTA}?aviso=retirada")
+            return ir(f"{LISTA}{pk}/")
+        return ir(f"{LISTA}?aviso=retirada")
     (d,) = descrever([manifestacao])
     return render(request, "portal/contribuicao/retirar.html", {
         "m": m, "manifestacao": manifestacao, "forma": Forma(manifestacao.forma).label,

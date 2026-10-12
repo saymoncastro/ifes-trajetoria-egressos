@@ -6,9 +6,7 @@ escopo é 404 (não revela que existe). A moderação não vê CPF, data de nasc
 nem quem confirmou (FR-018). Sem Django admin.
 """
 
-from functools import wraps
 
-from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -16,8 +14,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods
 
 from trajetoria.acompanhamento import apresentacao as ap
-from trajetoria.acompanhamento.acesso import Atuacao, recusa
-from trajetoria.demonstracao.operador import operador_em_uso, vinculos_do_operador_em_uso
+from trajetoria.demonstracao.operador import operador_em_uso
+from trajetoria.portal.barreiras import operador
 from trajetoria.portal.encontros import consultas, operacoes, regras
 from trajetoria.portal.encontros import mensagens as m
 from trajetoria.portal.encontros.apresentacao import apresentar, confirmacoes, data, quem_analisa
@@ -36,23 +34,9 @@ DESTINO = "encontros"  # destino registrado da escolha de operador (portal/apps.
 ESCOLHA_DE_OPERADOR = f"/demonstracao/operador/?destino={DESTINO}"
 
 
-def moderacao(view):
-    """Demonstração, operador e competência, relidos a cada pedido."""
-
-    @wraps(view)
-    def envolvida(request, *args, **kwargs):
-        if not settings.TRAJETORIA_DEMONSTRACAO:
-            raise Http404
-        vinculos = vinculos_do_operador_em_uso(request)
-        if vinculos is None:
-            return redirect(ESCOLHA_DE_OPERADOR)
-        if not pode_moderar_encontros(vinculos):
-            return recusa(request, m.MODERACAO_RECUSA, destino_operador=DESTINO)
-        request.escopo = escopo_de_moderacao(vinculos)
-        request.atuacao = Atuacao(tuple(v.rotulo_de_atuacao for v in vinculos), False)
-        return view(request, *args, **kwargs)
-
-    return envolvida
+# Barreira das telas de operação, comum à curadoria da 025 e à lista da unidade da 026.
+moderacao = operador(pode=pode_moderar_encontros, escopo_de=escopo_de_moderacao,
+                     mensagem_de_recusa=m.MODERACAO_RECUSA, destino=DESTINO)
 
 
 def _pagina(request, template, *, titulo, status=200, **contexto):
@@ -84,14 +68,14 @@ def _conflito(request):
 def lista(request):
     agora = timezone.now()
     analise, publicados = [], []
-    for encontro in consultas.do_escopo(request.escopo):
+    for encontro in consultas.do_escopo(request.escopo, agora):
         atual = regras.situacao(encontro, agora)
         linha = {"e": apresentar(encontro), "responsavel": quem_analisa(encontro),
                  "enviado_em": data(encontro.enviado_em)}
         if atual is Situacao.EM_ANALISE:
             analise.append(linha)
         elif atual is Situacao.PUBLICADO:
-            linha["contagem"] = confirmacoes(consultas.quantas_confirmaram(encontro))
+            linha["contagem"] = confirmacoes(encontro.n_confirmacoes)
             publicados.append(linha)
     aviso = m.DECISAO_AVISOS.get(request.GET.get("aviso"))
     return _pagina(request, "lista", titulo=m.MODERACAO_TITULO, analise=analise,

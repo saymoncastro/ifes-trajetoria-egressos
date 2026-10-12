@@ -18,9 +18,9 @@
 <div class="campo{% if erros.data %} com-erro{% endif %}"><label for="data">{{ m.ROTULO_DATA }}</label>
 <p class="dica" id="data-dica">{{ dica_data }}</p>{% if erros.data %}<p class="erro" id="data-erro">{{ erros.data }}</p>{% endif %}
 <input type="date" id="data" name="data" min="{{ data_min }}" max="{{ data_max }}" value="{{ campos.data|default:'' }}" aria-describedby="data-dica{% if erros.data %} data-erro{% endif %}"{% if erros.data %} aria-invalid="true"{% endif %}></div>
-<div class="campo"><label for="inicio">{{ m.ROTULO_INICIO }}</label>
-<p class="dica" id="inicio-dica">{{ m.DICA_INICIO }}</p>
-<input type="time" id="inicio" name="inicio" value="{{ campos.inicio|default:'' }}" aria-describedby="inicio-dica"></div>
+<div class="campo{% if erros.inicio %} com-erro{% endif %}"><label for="inicio">{{ m.ROTULO_INICIO }}</label>
+<p class="dica" id="inicio-dica">{{ m.DICA_INICIO }}</p>{% if erros.inicio %}<p class="erro" id="inicio-erro">{{ erros.inicio }}</p>{% endif %}
+<input type="time" id="inicio" name="inicio" value="{{ campos.inicio|default:'' }}" aria-describedby="inicio-dica{% if erros.inicio %} inicio-erro{% endif %}"{% if erros.inicio %} aria-invalid="true"{% endif %}></div>
 <div class="campo{% if erros.termino %} com-erro{% endif %}"><label for="termino">{{ m.ROTULO_TERMINO }}</label>
 <p class="dica" id="termino-dica">{{ m.DICA_TERMINO }}</p>{% if erros.termino %}<p class="erro" id="termino-erro">{{ erros.termino }}</p>{% endif %}
 <input type="time" id="termino" name="termino" value="{{ campos.termino|default:'' }}" aria-describedby="termino-dica{% if erros.termino %} termino-erro{% endif %}"{% if erros.termino %} aria-invalid="true"{% endif %}></div>
