@@ -1,0 +1,77 @@
+{
+  "atual-conclusao-375": {
+    "fim_da_acao": 409,
+    "fim_do_conteudo": 1312,
+    "rolagem_horizontal": false
+  },
+  "atual-conclusao-320": {
+    "fim_da_acao": 448,
+    "fim_do_conteudo": 1375,
+    "rolagem_horizontal": false
+  },
+  "atual-conclusao-375-fonte200": {
+    "fim_da_acao": 1331,
+    "fim_do_conteudo": 3425,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-375": {
+    "fim_da_acao": 666,
+    "fim_do_conteudo": 714,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-320": {
+    "fim_da_acao": 729,
+    "fim_do_conteudo": 777,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-375-fonte200": {
+    "fim_da_acao": 2178,
+    "fim_do_conteudo": 2274,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-revisao-375": {
+    "fim_da_acao": 1424,
+    "fim_do_conteudo": 1472,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-revisao-320": {
+    "fim_da_acao": 1487,
+    "fim_do_conteudo": 1535,
+    "rolagem_horizontal": false
+  },
+  "proposta-conclusao-revisao-375-fonte200": {
+    "fim_da_acao": 3370,
+    "fim_do_conteudo": 3466,
+    "rolagem_horizontal": false
+  },
+  "atual-concluida-375": {
+    "fim_da_acao": 595,
+    "fim_do_conteudo": 1064,
+    "rolagem_horizontal": false
+  },
+  "atual-concluida-320": {
+    "fim_da_acao": 717,
+    "fim_do_conteudo": 1208,
+    "rolagem_horizontal": false
+  },
+  "atual-concluida-375-fonte200": {
+    "fim_da_acao": 2056,
+    "fim_do_conteudo": 3229,
+    "rolagem_horizontal": false
+  },
+  "proposta-concluida-375": {
+    "fim_da_acao": 694,
+    "fim_do_conteudo": 789,
+    "rolagem_horizontal": false
+  },
+  "proposta-concluida-320": {
+    "fim_da_acao": 816,
+    "fim_do_conteudo": 933,
+    "rolagem_horizontal": false
+  },
+  "proposta-concluida-375-fonte200": {
+    "fim_da_acao": 2344,
+    "fim_do_conteudo": 2578,
+    "rolagem_horizontal": false
+  }
+}
