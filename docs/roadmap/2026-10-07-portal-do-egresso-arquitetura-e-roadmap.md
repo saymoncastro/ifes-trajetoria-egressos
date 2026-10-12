@@ -193,14 +193,31 @@
     alteração tornou aplicáveis. Sem modelo, migração nem JavaScript.
     [Spec](../../specs/033-retorno-revisao-conclusao/spec.md) aguardando aprovação; a
     implementação só começa depois dela;
-  - **refinamento visual** da conclusão e da confirmação (D1, D2 e a confirmação, já
+  - **034 — Refinamento visual** da conclusão e da confirmação (D1, D2 e a confirmação, já
     aprovados conceitualmente): entrega separada, depois da 033, com o protótipo da auditoria
-    como referência. O número é dado quando a spec for aberta;
+    como referência. [Spec](../../specs/034-refinamento-conclusao-confirmacao/spec.md)
+    aguardando aprovação;
   - D3 (título da Seção 13) e D4 (texto de encerramento) ficam como **DECISÃO PENDENTE**
     institucional para uma próxima Versão e não bloqueiam as duas entregas.
 
   A trilha não muda a sequência da §13.3, os números reservados (027, 030) nem a situação dos
   checkpoints, que continuam **NÃO APLICADOS**.
+
+  *Estado em 2026-10-12 (fim do dia):*
+  - **033 implementada no PR #69**, com CI verde, aguardando revisão e integração;
+  - **034 com a spec na revisão 1:** B2, B3 e B5 aprovadas; B1 ajustada (identificação
+    compacta na confirmação); B4 ajustada (revisão sempre recolhida); verificação breve com
+    leitor de tela, fonte a 200% e refluxo a 320 CSS px. Aguarda aprovação, e a
+    implementação só começa depois da integração da 033;
+  - **ressalva da 033:** o aviso "Sua resposta mudou o caminho da pesquisa…" também aparece
+    numa parte só de opcionais já vista e deixada em branco, quando o caminho pode não ter
+    mudado. A 034 propõe uma redação neutra (B6), sem mudar a regra de destino;
+  - D3 e D4 continuam **DECISÃO PENDENTE** e não bloqueiam a 033 nem a 034.
+
+  *Atualização (2026-10-12, mais tarde):* a **033 foi integrada** (#69). A spec da 034 foi
+  aprovada (revisão 1, com B6) e a **034 foi implementada na demonstração**, em PR próprio
+  para revisão, sem merge autorizado. A verificação com leitor de tela está pendente e deve
+  ser concluída antes da aprovação final.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -852,8 +869,8 @@ Checkpoint 1 continua **NÃO APLICADO**, e a parte de Oportunidades do Checkpoin
 - **Reentrada com menos atrito.** Spec própria, depois do Portão A e de DP-1808. Ganha peso com
   o Portal, que é um lugar ao qual se volta.
 - **Encerramento da pesquisa** *(revisão 17)*. Pertence à jornada do egresso, não ao Portal:
-  033 (retorno à conclusão depois de revisar) e, em seguida, o refinamento visual da
-  conclusão e da confirmação. O Portal só aparece na confirmação, pela navegação que já
+  033 (retorno à conclusão depois de revisar) e, em seguida, a 034 (refinamento visual da
+  conclusão e da confirmação). O Portal só aparece na confirmação, pela navegação que já
   existe.
 
 ### Comunidade: pertencimento, participação e reencontro *(revisão 12; spec da 031 antecipada na revisão 14)*

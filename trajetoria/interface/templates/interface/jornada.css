@@ -219,3 +219,59 @@ button.sair-discreto {
   color: var(--cor-texto); font-weight: var(--peso-forte); text-decoration: none;
   box-shadow: inset 0 calc(-1 * var(--borda-acento)) 0 var(--cor-acao);
 }
+
+/* 034 — Conclusão e confirmação. Só tokens existentes; sem JavaScript. */
+
+/* FR-002: revisão recolhida com o marcador nativo (list-item; `display: flex`, como em
+   details.abertura, o removeria) e alvo de 44 px pelo preenchimento. */
+details.revisao {
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  border-bottom: var(--borda-fina) solid var(--cor-borda-suave);
+  margin: 0 0 var(--espaco-5);
+}
+details.revisao summary {
+  display: list-item; cursor: pointer; min-height: var(--alvo);
+  padding: var(--espaco-3) var(--espaco-1); color: var(--cor-acao); font-weight: var(--peso-medio);
+}
+details.revisao summary .quantas {
+  color: var(--cor-texto-suave); font-weight: var(--peso-normal); font-size: var(--fonte-5);
+}
+details.revisao > .nota { margin: 0 0 var(--espaco-3); color: var(--cor-texto-suave); }
+/* FR-004: multicoluna enche a primeira coluna e depois a segunda, na ordem do documento;
+   duas colunas só cabem com 15 rem cada (some com a fonte a 200% e no refluxo). FR-009: o
+   preenchimento lateral deixa o contorno e o halo do foco inteiros entre as colunas. */
+.lista-revisao {
+  list-style: none; margin: 0 0 var(--espaco-3); padding: 0;
+  columns: 2 15rem; column-gap: var(--espaco-5);
+}
+.lista-revisao li {
+  break-inside: avoid; border-top: var(--borda-fina) solid var(--cor-borda-suave);
+  padding: var(--espaco-1) var(--espaco-2);
+}
+.lista-revisao .numero {
+  display: block; padding-top: var(--espaco-1); font-size: var(--fonte-5); color: var(--cor-texto-suave);
+}
+.lista-revisao a { display: flex; align-items: center; min-height: var(--alvo); }
+.decisao > p { margin: 0 0 var(--espaco-3); }
+.decisao .acoes { margin-top: 0; }
+
+/* FR-005: identificação compacta da formação dentro do bloco de sucesso. */
+.formacao-concluida { color: var(--cor-texto-suave); }
+
+/* FR-005, FR-006: o bloco de continuidade; a trajetória com aparência de ação principal só quando
+   não há próxima formação (a marcação da ligação não muda). */
+.continuidade {
+  margin: var(--espaco-6) 0 var(--espaco-5); padding-top: var(--espaco-5);
+  border-top: var(--borda-fina) solid var(--cor-borda-suave);
+}
+.continuidade h2 { margin: 0 0 var(--espaco-3); font-size: var(--fonte-3); }
+.acao-principal a {
+  display: inline-flex; align-items: center; justify-content: center; min-height: var(--alvo);
+  padding: var(--espaco-2) var(--espaco-5); border-radius: var(--raio);
+  background: var(--cor-acao); color: var(--cor-fundo); font-weight: var(--peso-forte);
+  text-decoration: none;
+}
+.acao-principal a:hover { background: var(--cor-acao-forte); color: var(--cor-fundo); }
+@media (max-width: 30em) {
+  .acao-principal a { width: 100%; }
+}

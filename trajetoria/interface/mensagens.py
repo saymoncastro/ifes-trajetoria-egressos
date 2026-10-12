@@ -56,8 +56,11 @@ AVISOS = {
     "saida": "Você pode continuar a pesquisa quando quiser.",
     # 023 FR-016: só quando a Seção enviada tem Resposta gravada (014 FR-008).
     "anterior": "Parte anterior salva.",
-    # 033 FR-006: em revisão, a resposta fez entrar no percurso uma parte que pede atenção.
-    "caminho": "Sua resposta mudou o caminho da pesquisa. Confira esta parte para concluir.",
+    # 033 FR-006, com a redação neutra da 034 (FR-011, B6): verdadeira para a parte nova no
+    # percurso e para a parte só de opcionais já vista e deixada em branco.
+    "caminho": (
+        "Confira esta parte antes de concluir: ela pode ter perguntas ainda sem resposta."
+    ),
     # 033 FR-007: chegada à conclusão pela revisão, só com Resposta gravada na Seção enviada.
     "revisada": "Parte salva.",
 }
@@ -73,6 +76,25 @@ VARIANTE_DO_AVISO = {
 }
 # 033 FR-002: a Seção aberta pela lista de revisão da conclusão.
 SALVAR_E_VOLTAR = "Salvar e voltar à conclusão"
+
+# 034 FR-001 a FR-003: tela de conclusão (textos provisórios, DP-801).
+ULTIMA_ETAPA = "Última etapa"
+FIM_DA_PESQUISA = "Você chegou ao fim da pesquisa. Falta só enviar suas respostas."
+IRREVERSIVEL = "Depois de concluída, a pesquisa não poderá ser alterada."
+REVISAR = "Revisar respostas antes de enviar"
+REVISAR_NOTA = "Ao abrir uma parte, suas respostas aparecem como você deixou."
+
+
+def partes(n: int) -> str:
+    """ "· 9 partes" no resumo da revisão (034 FR-001); singular com uma."""
+    return "· 1 parte" if n == 1 else f"· {n} partes"
+
+
+# 034 FR-005: confirmação (textos provisórios, DP-801). "Formação:" identifica a formação da
+# pesquisa já concluída, sem "Você está respondendo" (B1). O título do bloco de continuidade
+# é "No" + o nome do produto do slot neutro `produto`, que só existe com a camada ligada.
+FORMACAO_CONCLUIDA = "Formação:"
+PREFIXO_CONTINUIDADE = "No"
 # Nota de "Sair sem salvar esta seção" (014 FR-013).
 SAIR_SEM_SALVAR_NOTA = "O que já foi salvo antes continua guardado."
 

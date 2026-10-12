@@ -1,0 +1,226 @@
+{
+  "concluida-com-proxima": {
+    "375": {
+      "fim_da_acao": 807,
+      "fim_do_conteudo": 1018,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 639,
+      "fim_do_conteudo": 849,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 2677,
+      "fim_do_conteudo": 3237,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1142,
+      "fim_do_conteudo": 1563,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 977,
+      "fim_do_conteudo": 1210,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "concluida-declarada": {
+    "375": {
+      "fim_da_acao": 506,
+      "fim_do_conteudo": 856,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 434,
+      "fim_do_conteudo": 668,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 1722,
+      "fim_do_conteudo": 2563,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 775,
+      "fim_do_conteudo": 1243,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 545,
+      "fim_do_conteudo": 919,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "concluida": {
+    "375": {
+      "fim_da_acao": 758,
+      "fim_do_conteudo": 853,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 618,
+      "fim_do_conteudo": 713,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 2660,
+      "fim_do_conteudo": 2894,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1093,
+      "fim_do_conteudo": 1282,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 904,
+      "fim_do_conteudo": 1021,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "conclusao-parte-salva": {
+    "375": {
+      "fim_da_acao": 764,
+      "fim_do_conteudo": 812,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 644,
+      "fim_do_conteudo": 692,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 2324,
+      "fim_do_conteudo": 2420,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1189,
+      "fim_do_conteudo": 1285,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 803,
+      "fim_do_conteudo": 851,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "conclusao": {
+    "375": {
+      "fim_da_acao": 690,
+      "fim_do_conteudo": 738,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 570,
+      "fim_do_conteudo": 618,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 2178,
+      "fim_do_conteudo": 2274,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1043,
+      "fim_do_conteudo": 1139,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 729,
+      "fim_do_conteudo": 777,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "secao-aviso-parte-nova": {
+    "375": {
+      "fim_da_acao": 836,
+      "fim_do_conteudo": 1060,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 731,
+      "fim_do_conteudo": 933,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 2876,
+      "fim_do_conteudo": 3369,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1317,
+      "fim_do_conteudo": 1720,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 934,
+      "fim_do_conteudo": 1158,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  },
+  "conclusao-aberta": {
+    "375": {
+      "fim_da_acao": 1448,
+      "fim_do_conteudo": 1496,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280": {
+      "fim_da_acao": 987,
+      "fim_do_conteudo": 1035,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "375-fonte200": {
+      "fim_da_acao": 3514,
+      "fim_do_conteudo": 3610,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "1280-fonte200": {
+      "fim_da_acao": 1673,
+      "fim_do_conteudo": 1769,
+      "rolagem_horizontal": false,
+      "problemas": []
+    },
+    "refluxo320": {
+      "fim_da_acao": 1487,
+      "fim_do_conteudo": 1535,
+      "rolagem_horizontal": false,
+      "problemas": []
+    }
+  }
+}

@@ -432,8 +432,9 @@ def test_confirmacao_separada_da_ficha_sem_mudar_a_ficha(client, cenario):
         f"4px solid {mapa['--cor-marca']}"
     )
     assert ci.valor(html, set(), "contexto", "section", "background") == mapa["--cor-institucional"]
-    # 023 FR-028: o contexto passou para o fim, depois das ações.
-    assert html.index("Ver minha trajetória no Ifes") < html.index('<section class="contexto"')
+    # 034 FR-005 (revisa 023 FR-028): a ficha sai da confirmação; a regra de estilo acima
+    # continua definida e intacta, para as telas que ainda mostram a ficha.
+    assert '<section class="contexto"' not in html and "Formação:" in html
 
 
 # --- US4: trajetória, contexto, ação principal e divisores (FR-031 a FR-035) ----------------
