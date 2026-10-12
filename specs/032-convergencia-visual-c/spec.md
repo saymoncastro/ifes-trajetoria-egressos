@@ -172,3 +172,9 @@ encontro, pesquisa e contribuição.
 
 Comunidade (030, 031, E1); novas formas de contribuição; recomendação; mudanças no
 instrumento; fotografia (DP-2106); dados fictícios fora da demonstração.
+
+## Nota de revisão pela Feature 031, incremento 1 (2026-10-11)
+
+A [031](../031-encontros-propostos-egressos/spec.md) acrescenta "Encontros" à navegação do
+FR-011, entre "Oportunidades" e "Participação", para quem tem Conclusão (H-3105). A página
+pública, o Início (FR-008) e o vocabulário (SC-005) não mudam no incremento 1.

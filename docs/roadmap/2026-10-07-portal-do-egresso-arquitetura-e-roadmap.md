@@ -165,6 +165,25 @@
   - a organização dos checkpoints segue como trilha separada, sem novas entregas agora.
 
   Checkpoint 1 e Checkpoint 2 continuam **NÃO APLICADOS**.
+- **Revisão 16 (2026-10-11).** O solicitante autorizou o **primeiro incremento funcional da
+  031, só na demonstração, antes dos checkpoints**, como fez com a 025 (revisão 5) e a 026
+  (revisão 10). Isso revisa explicitamente a T001 das tasks:
+  - **entra no incremento 1** o percurso completo: propor, moderar (publicar, recusar,
+    retirar), descobrir, confirmar, ver o link, desistir, acompanhar a quantidade, cancelar,
+    encerramento automático do link e estados vazios, com autorização, visibilidade por
+    situação (FR-024a), separação do núcleo e testes;
+  - **fica para o incremento 2**, registrado na spec e nas tasks:
+    - calendário `.ics`;
+    - edição em análise e depois da publicação, com correção operacional e nova análise;
+    - denúncia dentro do Portal;
+    - retorno ao encontro depois da identificação pelo endereço compartilhado (a página sem
+      sessão continua neutra);
+    - a seção de encontros no Início;
+  - nenhum protótipo, protocolo ou lista de decisões de preparação novos.
+
+  Os checkpoints continuam **NÃO APLICADOS** e passam a avaliar a experiência funcionando.
+  Não há aprovação registrada nem liberação de uso real: D8, D9, D10 e DP-1808 continuam
+  pendentes. O custo aceito é ajustar ou abandonar parte do incremento depois deles.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.

@@ -11,6 +11,11 @@
 > leitura do Checkpoint 1 e do Checkpoint 2 (bloco Comunidade), ambos **NÃO APLICADOS**, e à
 > escolha entre 031 e 030. A T001 das tasks é o portão. Se autorizada, vale só para a
 > demonstração.
+>
+> **Revisão 16 (2026-10-11):** o incremento 1 foi autorizado antes dos checkpoints, só na
+> demonstração. O recorte está na spec ("Recorte do incremento 1") e nas tasks. Calendário,
+> edição, nova análise, denúncia, retorno pelo endereço e seção do Início ficam para o
+> incremento 2.
 
 ## Summary
 
