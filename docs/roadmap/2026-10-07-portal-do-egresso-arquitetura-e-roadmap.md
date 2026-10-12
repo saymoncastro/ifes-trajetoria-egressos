@@ -184,6 +184,23 @@
   Os checkpoints continuam **NÃO APLICADOS** e passam a avaliar a experiência funcionando.
   Não há aprovação registrada nem liberação de uso real: D8, D9, D10 e DP-1808 continuam
   pendentes. O custo aceito é ajustar ou abandonar parte do incremento depois deles.
+- **Revisão 17 (2026-10-12).** A
+  [auditoria da conclusão e da confirmação](../auditorias/2026-10-12-conclusao-e-confirmacao.md)
+  (PR #68) abriu uma trilha pequena na jornada da pesquisa, **fora da camada Portal** (ver "Na
+  mesma visão, mas fora da camada Portal"):
+  - **033 — Retorno à conclusão depois de revisar** (D5, priorizada): quem revisa uma parte a
+    partir da conclusão volta a ela depois de salvar, passando antes pelas partes que a
+    alteração tornou aplicáveis. Sem modelo, migração nem JavaScript.
+    [Spec](../../specs/033-retorno-revisao-conclusao/spec.md) aguardando aprovação; a
+    implementação só começa depois dela;
+  - **refinamento visual** da conclusão e da confirmação (D1, D2 e a confirmação, já
+    aprovados conceitualmente): entrega separada, depois da 033, com o protótipo da auditoria
+    como referência. O número é dado quando a spec for aberta;
+  - D3 (título da Seção 13) e D4 (texto de encerramento) ficam como **DECISÃO PENDENTE**
+    institucional para uma próxima Versão e não bloqueiam as duas entregas.
+
+  A trilha não muda a sequência da §13.3, os números reservados (027, 030) nem a situação dos
+  checkpoints, que continuam **NÃO APLICADOS**.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -834,6 +851,10 @@ Checkpoint 1 continua **NÃO APLICADO**, e a parte de Oportunidades do Checkpoin
   - DP-2107, para dado declarado.
 - **Reentrada com menos atrito.** Spec própria, depois do Portão A e de DP-1808. Ganha peso com
   o Portal, que é um lugar ao qual se volta.
+- **Encerramento da pesquisa** *(revisão 17)*. Pertence à jornada do egresso, não ao Portal:
+  033 (retorno à conclusão depois de revisar) e, em seguida, o refinamento visual da
+  conclusão e da confirmação. O Portal só aparece na confirmação, pela navegação que já
+  existe.
 
 ### Comunidade: pertencimento, participação e reencontro *(revisão 12; spec da 031 antecipada na revisão 14)*
 
