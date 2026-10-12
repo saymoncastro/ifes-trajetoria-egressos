@@ -2,9 +2,11 @@
 
 **Feature Branch**: `claude/034-refinamento-conclusao` (a partir da 033, que mexe na mesma tela)
 **Created**: 2026-10-12
-**Status**: Revisão 1 (2026-10-12), para aprovação do solicitante. B2, B3 e B5 foram
-aprovadas; B1 e B4 foram ajustadas conforme a avaliação do solicitante; B6 é nova. A
-implementação só começa depois da aprovação desta revisão e da integração da 033 (#69).
+**Status**: Revisão 1 **aprovada** pelo solicitante em 2026-10-12, incluindo B1 e B4
+ajustadas e B6. Plano, tarefas e implementação na demonstração estão autorizados **depois da
+integração da 033 (#69)**, que fica com o solicitante. O PR é aberto para revisão. Merge da
+034 e uso real exigem nova autorização. A verificação com leitor de tela pode ficar como
+pendência explícita no PR, mas precisa ser concluída antes da aprovação final.
 **Input**: Solicitante, 2026-10-12: depois da 033, implementar o refinamento visual das
 telas de conclusão e de confirmação, com o protótipo aprovado como referência
 ([auditoria](../../docs/auditorias/2026-10-12-conclusao-e-confirmacao.md), seção 4;
@@ -190,6 +192,10 @@ como na US1.
   O espaçamento em torno do resumo, dos links e do botão DEVE deixar o contorno e o halo do
   foco inteiros (B5).
 - **FR-010**: O fechamento DEVE ter, registrado em `validacao.md`:
+  - o aviso da B6 verificado nos dois casos: parte nova no percurso e parte só de opcionais
+    já visitada e deixada em branco;
+  - as garantias da 033, a confirmação da declarada e os textos protegidos da Versão
+    preservados;
   - testes por requisição da ordem, da ausência da ficha, da identificação compacta na
     confirmação, da revisão sempre recolhida, da ação principal única e da declarada
     inalterada;
@@ -240,7 +246,7 @@ como na US1.
 | B3 | Frase de fim | **Aprovada**: "Você chegou ao fim da pesquisa. Falta só enviar suas respostas." (DP-801), com o aviso de irreversibilidade junto do botão |
 | B4 | Revisão na volta de uma revisão | **Ajustada** (2026-10-12): recolhida, com "Parte salva." visível. No protótipo, a 375 px, o botão termina a 666 px fechada e a 1.424 px aberta; a implementação mede de novo |
 | B5 | Foco do resumo da revisão | **Aprovada**: o foco comum da jornada, com espaçamento que não corte o contorno nem o halo |
-| B6 | Redação do aviso da 033 | **Proposta**: "Confira esta parte antes de concluir: ela pode ter perguntas ainda sem resposta." Vale para a parte nova e para a parte só de opcionais já vista e deixada em branco, sem afirmar que o caminho mudou. A regra de destino não muda |
+| B6 | Redação do aviso da 033 | **Aprovada** (2026-10-12): "Confira esta parte antes de concluir: ela pode ter perguntas ainda sem resposta." Vale para a parte nova e para a parte só de opcionais já vista e deixada em branco, sem afirmar que o caminho mudou. A regra de destino não muda |
 
 ## Decisões Pendentes
 
