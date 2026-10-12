@@ -193,9 +193,10 @@
     alteração tornou aplicáveis. Sem modelo, migração nem JavaScript.
     [Spec](../../specs/033-retorno-revisao-conclusao/spec.md) aguardando aprovação; a
     implementação só começa depois dela;
-  - **refinamento visual** da conclusão e da confirmação (D1, D2 e a confirmação, já
+  - **034 — Refinamento visual** da conclusão e da confirmação (D1, D2 e a confirmação, já
     aprovados conceitualmente): entrega separada, depois da 033, com o protótipo da auditoria
-    como referência. O número é dado quando a spec for aberta;
+    como referência. [Spec](../../specs/034-refinamento-conclusao-confirmacao/spec.md)
+    aguardando aprovação;
   - D3 (título da Seção 13) e D4 (texto de encerramento) ficam como **DECISÃO PENDENTE**
     institucional para uma próxima Versão e não bloqueiam as duas entregas.
 
@@ -852,8 +853,8 @@ Checkpoint 1 continua **NÃO APLICADO**, e a parte de Oportunidades do Checkpoin
 - **Reentrada com menos atrito.** Spec própria, depois do Portão A e de DP-1808. Ganha peso com
   o Portal, que é um lugar ao qual se volta.
 - **Encerramento da pesquisa** *(revisão 17)*. Pertence à jornada do egresso, não ao Portal:
-  033 (retorno à conclusão depois de revisar) e, em seguida, o refinamento visual da
-  conclusão e da confirmação. O Portal só aparece na confirmação, pela navegação que já
+  033 (retorno à conclusão depois de revisar) e, em seguida, a 034 (refinamento visual da
+  conclusão e da confirmação). O Portal só aparece na confirmação, pela navegação que já
   existe.
 
 ### Comunidade: pertencimento, participação e reencontro *(revisão 12; spec da 031 antecipada na revisão 14)*
