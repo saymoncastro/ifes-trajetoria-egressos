@@ -1,0 +1,22 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.SEUS }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-025 (protótipos o5 e o10): a quantidade de confirmações, nunca quem. #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+{% if aviso %}<p role="status" class="aviso aviso-sucesso pe-status">{{ aviso }}</p>{% endif %}
+<h1>{{ m.SEUS }}</h1>
+{% if linhas %}
+<p class="pe-lead">{{ m.SEUS_LEAD }}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/propor/">{{ m.PROPOR }}</a></p>
+<ol class="pe-estados">{% for linha in linhas %}<li><h2><a href="/encontros/{{ linha.e.id }}/">{{ linha.e.titulo }}</a></h2>
+<p>{{ linha.e.data_completa }} · {{ linha.e.horario }}</p>
+<p><span class="pe-situacao">{{ linha.situacao }}</span></p>
+{% if linha.motivo %}<p>{{ m.MOTIVO }}: {{ linha.motivo }}.</p>{% endif %}
+{% if linha.contagem %}<p>{{ linha.contagem }}</p>{% endif %}</li>{% endfor %}</ol>
+{% else %}
+<div class="pe-vazio"><p><strong>{{ m.SEUS_VAZIO }}</strong></p><p>{{ m.SEUS_VAZIO_CONVITE }}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/propor/">{{ m.PROPOR }}</a></p></div>
+{% endif %}
+<p class="ligacao-isolada"><a href="/encontros/">{{ m.VOLTAR_AOS_ENCONTROS }}</a></p>
+</div></div>
+{% endblock %}

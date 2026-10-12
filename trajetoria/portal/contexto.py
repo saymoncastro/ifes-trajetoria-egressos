@@ -8,6 +8,9 @@ mostra navegação e o shell é o da 015 (FR-027).
 Revisão pela 032 (FR-011): Início, Minha trajetória, Oportunidades e Participação; esta
 reúne a contribuição, a pesquisa e o e-mail, que mantêm os seus endereços.
 
+Revisão pela 031 (incremento 1; H-3105): "Encontros", para quem tem Conclusão, entre
+"Oportunidades" e "Participação"; é o item atual nas telas de `/encontros/`.
+
 Revisão de 2026-10-08 (avaliação por IA, A1 a A4): nas telas que exibem a navegação do Portal
 (FR-022), o cabeçalho diz "Portal do Egresso", "Sair" volta à entrada do Portal e o fim da
 trajetória e do e-mail leva ao Início. As Seções, `/acesso/` e a declaração não mudam.
@@ -28,6 +31,11 @@ _CONFIRMACAO = re.compile(r"^/participacoes/[^/]+/concluida/$")
 _CONTRIBUICAO = re.compile(
     r"^/(contribuir/(confirmar/)?|contribuicoes/([0-9a-f-]{36}/(retirar/)?)?)$"
 )
+# As telas dos encontros (031): lista, proposta, seus encontros e cada encontro.
+_ENCONTROS = re.compile(
+    r"^/encontros/(propor/(enviar/)?|seus/|[0-9a-f-]{36}/"
+    r"(participar/|cancelar-participacao/|cancelar/)?)?$"
+)
 # As telas com a navegação do Portal (FR-022; contracts/navegacao.md). Lista fechada: o
 # caminho só decide o cabeçalho e os destinos fixos abaixo, nunca um endereço do cliente.
 _TELAS_COM_NAVEGACAO = frozenset(
@@ -43,6 +51,8 @@ _PARTICIPACAO = frozenset({"/participacao/", "/formacoes/", "/meu-email/"})
 
 
 def _atual(caminho: str, endereco: str) -> bool:
+    if endereco == "/encontros/":
+        return bool(_ENCONTROS.match(caminho))
     if endereco == "/participacao/":
         return (caminho in _PARTICIPACAO or bool(_CONFIRMACAO.match(caminho))
                 or bool(_CONTRIBUICAO.match(caminho)))
@@ -55,6 +65,7 @@ def _itens(request, pessoa) -> list[dict]:
         itens += [
             (mensagens.NAVEGACAO_TRAJETORIA, "/minha-trajetoria/"),
             (mensagens.NAVEGACAO_OPORTUNIDADES, "/oportunidades/"),
+            (mensagens.NAVEGACAO_ENCONTROS, "/encontros/"),  # 031, H-3105
         ]
     itens.append((mensagens.NAVEGACAO_PARTICIPACAO, "/participacao/"))  # 032 FR-011
     return [
@@ -65,7 +76,7 @@ def _itens(request, pessoa) -> list[dict]:
 
 def _tela_com_navegacao(caminho: str) -> bool:
     return (caminho in _TELAS_COM_NAVEGACAO or bool(_CONFIRMACAO.match(caminho))
-            or bool(_CONTRIBUICAO.match(caminho)))
+            or bool(_CONTRIBUICAO.match(caminho)) or bool(_ENCONTROS.match(caminho)))
 
 
 def _shell_do_portal() -> dict:

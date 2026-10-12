@@ -1,0 +1,49 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.PROPOR }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-002 a FR-007 (protótipos o1 e o2). Sem JavaScript; os erros voltam com o que a pessoa digitou. #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<h1>{{ m.PROPOR }}</h1>
+{% if resumo_erros %}<div class="resumo-erros" role="alert" tabindex="-1" autofocus><h2>{{ m.ERROS.resumo }}</h2><ul>{% for erro in resumo_erros %}<li><a href="#{{ erro.ancora }}">{{ erro.texto }}</a></li>{% endfor %}</ul></div>{% endif %}
+{% if erros.limite %}<p class="pe-aviso" id="campo-limite">{{ erros.limite }} <a href="/encontros/seus/">{{ m.SEUS }}</a></p>{% endif %}
+<p class="pe-lead">{{ m.PROPOR_LEAD }}</p>
+<form method="post" action="/encontros/propor/" novalidate>{% csrf_token %}
+<div class="campo{% if erros.titulo %} com-erro{% endif %}"><label for="titulo">{{ m.ROTULO_TITULO }}</label>
+<p class="dica" id="titulo-dica">{{ m.DICA_TITULO }}</p>{% if erros.titulo %}<p class="erro" id="titulo-erro">{{ erros.titulo }}</p>{% endif %}
+<input type="text" id="titulo" name="titulo" maxlength="90" value="{{ campos.titulo|default:'' }}" aria-describedby="titulo-dica{% if erros.titulo %} titulo-erro{% endif %}"{% if erros.titulo %} aria-invalid="true"{% endif %}></div>
+<div class="campo{% if erros.descricao %} com-erro{% endif %}"><label for="descricao">{{ m.ROTULO_DESCRICAO }}</label>
+<p class="dica" id="descricao-dica">{{ m.DICA_DESCRICAO }}</p>{% if erros.descricao %}<p class="erro" id="descricao-erro">{{ erros.descricao }}</p>{% endif %}
+<textarea id="descricao" name="descricao" maxlength="400" aria-describedby="descricao-dica{% if erros.descricao %} descricao-erro{% endif %}"{% if erros.descricao %} aria-invalid="true"{% endif %}>{{ campos.descricao|default:'' }}</textarea></div>
+<div class="pe-campos-data">
+<div class="campo{% if erros.data %} com-erro{% endif %}"><label for="data">{{ m.ROTULO_DATA }}</label>
+<p class="dica" id="data-dica">{{ dica_data }}</p>{% if erros.data %}<p class="erro" id="data-erro">{{ erros.data }}</p>{% endif %}
+<input type="date" id="data" name="data" min="{{ data_min }}" max="{{ data_max }}" value="{{ campos.data|default:'' }}" aria-describedby="data-dica{% if erros.data %} data-erro{% endif %}"{% if erros.data %} aria-invalid="true"{% endif %}></div>
+<div class="campo"><label for="inicio">{{ m.ROTULO_INICIO }}</label>
+<p class="dica" id="inicio-dica">{{ m.DICA_INICIO }}</p>
+<input type="time" id="inicio" name="inicio" value="{{ campos.inicio|default:'' }}" aria-describedby="inicio-dica"></div>
+<div class="campo{% if erros.termino %} com-erro{% endif %}"><label for="termino">{{ m.ROTULO_TERMINO }}</label>
+<p class="dica" id="termino-dica">{{ m.DICA_TERMINO }}</p>{% if erros.termino %}<p class="erro" id="termino-erro">{{ erros.termino }}</p>{% endif %}
+<input type="time" id="termino" name="termino" value="{{ campos.termino|default:'' }}" aria-describedby="termino-dica{% if erros.termino %} termino-erro{% endif %}"{% if erros.termino %} aria-invalid="true"{% endif %}></div>
+</div>
+<fieldset class="pergunta{% if erros.publico %} com-erro{% endif %}" id="campo-publico"{% if erros.publico %} aria-describedby="publico-erro"{% endif %}><legend>{{ m.LEGENDA_PUBLICO }} <span class="nota">{{ m.NOTA_PUBLICO }}</span></legend>
+{% if erros.publico %}<p class="erro" id="publico-erro">{{ erros.publico }}</p>{% endif %}
+<div class="opcao"><input type="radio" id="publico-todos" name="publico" value="todos"{% if publico_todos %} checked{% endif %}><label for="publico-todos">{{ m.PUBLICO_TODOS }}</label></div>
+<div class="opcao"><input type="radio" id="publico-formacoes" name="publico" value="formacoes"{% if publico_formacoes %} checked{% endif %}><label for="publico-formacoes">{{ m.PUBLICO_FORMACOES }}</label></div>
+{% for lista in listas %}<details class="pe-escolha"{% if lista.escolhidos %} open{% endif %}><summary>{{ lista.rotulo }}{% if lista.escolhidos %} ({{ lista.escolhidos }}){% endif %}</summary>
+{% for opcao in lista.itens %}<div class="opcao"><input type="checkbox" id="{{ lista.nome }}-{{ forloop.counter }}" name="{{ lista.nome }}" value="{{ opcao.valor }}"{% if opcao.marcado %} checked{% endif %}><label for="{{ lista.nome }}-{{ forloop.counter }}">{{ opcao.valor }}</label></div>
+{% endfor %}</details>{% endfor %}
+<p class="pe-nota">{{ m.QUEM_ANALISA }}</p>
+</fieldset>
+<div class="campo{% if erros.link %} com-erro{% endif %}"><label for="link">{{ m.ROTULO_LINK }}</label>
+<p class="dica" id="link-dica">{{ m.DICA_LINK }}</p>{% if erros.link %}<p class="erro" id="link-erro">{{ erros.link }}</p>{% endif %}
+<input type="url" id="link" name="link" maxlength="500" value="{{ campos.link|default:'' }}" aria-describedby="link-dica{% if erros.link %} link-erro{% endif %}"{% if erros.link %} aria-invalid="true"{% endif %}></div>
+<div class="campo{% if erros.nome %} com-erro{% endif %}"><label for="nome">{{ m.ROTULO_NOME }}</label>
+<p class="dica" id="nome-dica">{{ m.DICA_NOME }}</p>{% if erros.nome %}<p class="erro" id="nome-erro">{{ erros.nome }}</p>{% endif %}
+<input type="text" id="nome" name="nome" maxlength="40" value="{{ campos.nome|default:'' }}" aria-describedby="nome-dica{% if erros.nome %} nome-erro{% endif %}"{% if erros.nome %} aria-invalid="true"{% endif %}></div>
+<fieldset class="pergunta{% if erros.origem %} com-erro{% endif %}" id="campo-origem"{% if erros.origem %} aria-describedby="origem-erro"{% endif %}><legend>{{ m.LEGENDA_ORIGEM }} <span class="nota">{{ m.NOTA_ORIGEM }}</span></legend>
+{% if erros.origem %}<p class="erro" id="origem-erro">{{ erros.origem }}</p>{% endif %}
+{% for origem in origens %}<div class="opcao"><input type="radio" id="origem-{{ forloop.counter }}" name="origem" value="{{ origem.valor }}"{% if origem.marcada %} checked{% endif %}><label for="origem-{{ forloop.counter }}">{{ origem.rotulo }}</label></div>
+{% endfor %}</fieldset>
+<p class="pe-acoes"><button type="submit" class="pe-botao">{{ m.CONTINUAR }}</button> <a href="/encontros/">{{ m.VOLTAR_AOS_ENCONTROS }}</a></p>
+</form></div></div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.CANCELAR_PARTICIPACAO_TITULO }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-023 (protótipo p5). #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<h1>{{ m.CANCELAR_PARTICIPACAO_TITULO }}</h1>
+<p class="pe-lead">{{ e.titulo }}</p>
+<p>{{ e.data_completa }}, {{ e.horario }}.</p>
+<ul class="pe-ciencia">{% for item in m.CANCELAR_PARTICIPACAO_ITENS %}<li>{{ item }}</li>{% endfor %}</ul>
+<form method="post">{% csrf_token %}<p class="pe-acoes"><button type="submit" class="pe-botao">{{ m.CANCELAR_PARTICIPACAO_ACAO }}</button> <a href="/encontros/{{ e.id }}/">{{ m.VOLTAR_SEM_CANCELAR }}</a></p></form>
+</div></div>
+{% endblock %}

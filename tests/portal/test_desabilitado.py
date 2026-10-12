@@ -26,10 +26,13 @@ def test_raiz_volta_a_ser_a_da_008(client, cenario):
 
 
 def test_rotas_do_portal_nao_existem(client, cenario):
-    for url in ("/entrar/", "/inicio/"):
+    # Revisado pela 031: as rotas dos encontros e da moderação também não existem.
+    rotas = ("/entrar/", "/inicio/", "/encontros/", "/encontros/propor/", "/encontros/seus/",
+             "/curadoria/encontros/")
+    for url in rotas:
         assert client.get(url).status_code == 404
     cp.entrar(client, cenario.pessoa("SIM-P-0001"))
-    for url in ("/entrar/", "/inicio/"):
+    for url in rotas:
         assert client.get(url).status_code == 404
 
 

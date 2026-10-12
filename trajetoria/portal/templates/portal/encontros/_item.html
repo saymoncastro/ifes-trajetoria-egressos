@@ -1,0 +1,7 @@
+{# Item de encontro proposto por egresso (FR-013, FR-014; protótipo p2). A data grande é decorativa: o texto repete a data. #}
+<li class="pe-item"><p class="pe-item-data" aria-hidden="true"><span class="pe-item-dia">{{ e.dia }}</span><span class="pe-item-mes">{{ e.mes_curto }}</span></p>
+<div><p class="pe-selo pe-selo-f">{{ m.SELO_F }}</p>
+<h3>{% if e.id %}<a href="/encontros/{{ e.id }}/">{{ e.titulo }}</a>{% else %}{{ e.titulo }}{% endif %}</h3>
+<p>{{ e.data_curta }} · {{ e.horario }} · {{ m.VIRTUAL }}</p>
+<p>Proposto por {{ e.nome }} · {{ e.origem_curta }}</p>
+{% if e.explicacao %}<p class="oportunidade-por-que">{{ e.explicacao }}</p>{% endif %}</div></li>

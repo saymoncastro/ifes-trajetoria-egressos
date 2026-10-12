@@ -12,6 +12,7 @@ TITULO_ENTRADA = "Confirme seus dados para entrar no Portal do Egresso"
 NAVEGACAO_INICIO = "Início"
 NAVEGACAO_TRAJETORIA = "Minha trajetória"
 NAVEGACAO_OPORTUNIDADES = "Oportunidades"
+NAVEGACAO_ENCONTROS = "Encontros"  # 031, H-3105
 NAVEGACAO_PARTICIPACAO = "Participação"  # 032 FR-011: contribuir, pesquisa e e-mail
 VOLTAR_AO_INICIO = "Voltar ao Início"
 
