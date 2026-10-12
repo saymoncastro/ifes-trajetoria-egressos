@@ -112,6 +112,40 @@
   Constituição e ADR 0008 não mudam. A ADR 0009 recebe só uma nota de conciliação: a
   navegação usa "Participação", e não mais "Pesquisa" (decisão 8). Checkpoint 1 continua
   **NÃO APLICADO**; a 027 continua fora.
+- **Revisão 14 (2026-10-11).** O solicitante autorizou antecipar **só a spec e o protótipo
+  estático** da [031](../../specs/031-encontros-propostos-egressos/spec.md) (encontros
+  propostos por egressos, alternativa F), **como hipótese, antes dos checkpoints**:
+  - sem plan, tasks, código ou migração. A 030 não é aberta;
+  - a **implementação** continua condicionada à leitura do Checkpoint 1 e do Checkpoint 2, em
+    especial do bloco Comunidade. A escolha entre 031 e 030 continua com o solicitante depois
+    dos dois (§13.5). Antecipar a spec não decide essa escolha;
+  - o [protótipo](../../specs/031-encontros-propostos-egressos/prototipo/index.html) cobre só
+    os Encontros (F), com organizadora, participante e moderação. Para o bloco Comunidade
+    ainda faltam Histórias e Encontre colegas (§13.3, passo 5);
+  - **revisão de produto da 031**, decidida pelo solicitante no mesmo dia:
+    - a Denúncia é aceita como registro mínimo, sem sistema de atendimento, com canal externo
+      como alternativa para uso real;
+    - o público é contexto de descoberta, e não exclusividade;
+    - nome de apresentação e origem do organizador, a primeira exposição de dado de um
+      egresso a outro, ficam na
+      [ADR 0010](../adr/0010-dado-de-egresso-visivel-a-outros-egressos.md);
+    - depois da publicação, data, horário e link na mesma plataforma são correção operacional,
+      e as demais mudanças passam por nova análise;
+    - a moderação por CSAEG ou CPAEG continua hipótese da demonstração, e não competência
+      aprovada;
+  - Q8 do Checkpoint 2 fica decidida: CM-F1 a CM-F5 entram como **observações exploratórias,
+    sem limiar** ([preparação](../validacao/checkpoint-2/preparacao-sessao.md));
+  - as revisões de vocabulário e de navegação ficam listadas na spec, para a implementação.
+    As telas servidas não mudam;
+  - os achados A-01 a A-04 da versão C continuam não corrigidos.
+
+  Constituição, ADR 0008 e ADR 0009 não mudam; a ADR 0010 é nova, restrita à demonstração.
+  D8, D9, D10 e DP-1808 continuam pendentes para uso real. Próximos passos: integrar o PR
+  documental; completar o material do bloco Comunidade com poucas telas de Histórias e de
+  Encontre colegas, sem abrir a 030; escolher um percurso curto de telas para a sessão; e
+  resolver a preparação (leitor de tela, procedimento de participação) antes de aplicar os
+  checkpoints. Checkpoint 1 e Checkpoint 2 continuam **NÃO APLICADOS**; a 027 continua
+  fora.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
@@ -763,7 +797,7 @@ Checkpoint 1 continua **NÃO APLICADO**, e a parte de Oportunidades do Checkpoin
 - **Reentrada com menos atrito.** Spec própria, depois do Portão A e de DP-1808. Ganha peso com
   o Portal, que é um lugar ao qual se volta.
 
-### Comunidade: pertencimento, participação e reencontro *(revisão 12; sem spec aberta)*
+### Comunidade: pertencimento, participação e reencontro *(revisão 12; spec da 031 antecipada na revisão 14)*
 
 A visão, a fundamentação e a direção de cada capacidade estão nas
 [alternativas de comunidade](2026-10-09-comunidade-alternativas.md#revisão-de-2026-10-11-a-visão-da-comunidade).
@@ -773,13 +807,18 @@ Resumo:
   é a forma "Contar sua história" da 026. Fato novo provável: História.
 - **031, Encontros da comunidade (F).** Egressos propõem encontros virtuais, com moderação
   antes da publicação, confirmação de participação, `.ics` e link externo. Fatos novos
-  prováveis: Encontro e Confirmação.
+  prováveis: Encontro e Confirmação. **Revisão 14:**
+  [spec e protótipo](../../specs/031-encontros-propostos-egressos/spec.md) antecipados como
+  hipótese, sem implementação. A spec justifica Encontro e Confirmação e acrescenta a
+  Denúncia, que sai da camada se D8 indicar outro canal.
 - **E1, Reencontro voluntário.** Horizonte com condições: identidade reforçada (DP-1808), D8,
   D9 e uma ADR própria antes de uso real.
 - **Dependências.** As de código são o shell e o Início da S1; a 030 também depende da 026. As
   de validação são o Checkpoint 1 e o Checkpoint 2 (bloco Comunidade).
 - **Entidades.** "Comunidade", "Conexão" e "Evento" continuam fora do domínio (§2).
-  "Encontro" e "Confirmação" só existem se a 031 os justificar (Princípio XXII).
+  "Encontro" e "Confirmação" só existem se a 031 os justificar (Princípio XXII). A
+  justificativa está na spec ("Fatos novos e por que existem"). Nada é criado antes da
+  autorização de implementação.
 
 ---
 
@@ -917,6 +956,9 @@ conclusão.
          ▼                              ▼
  S4  Linha do tempo da relação     Comunidade: 030 Histórias e 031 Encontros
      (opcional)                    (ordem decidida pelo checkpoint; preferência pela 031)
+                                   [2026-10-11, revisão 14: spec e protótipo da 031
+                                    antecipados como hipótese; implementação só depois
+                                    da leitura dos dois checkpoints]
                                         │
                                         ▼
                                    E1 Reencontro voluntário ◄── DP-1808, D8, D9, ADR própria
@@ -1093,7 +1135,7 @@ Checkpoint 2 estão **NÃO APLICADOS**. Nenhum critério de compreensão ou comp
 | 3 | **Checkpoint 1** | 024 e bloco P, sobre a versão C ([protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md)) | P1 a P6 da [preparação](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md) resolvidas antes da primeira sessão |
 | 4 | **Ajustes** | Leitura do Checkpoint 1 conforme o protocolo; ajustes do Início, da navegação ou da página pública | Ajustes integrados, ou registro de que não foram necessários |
 | 5 | **Protótipo estático da Comunidade** | Histórias, Encontros e Encontre colegas, com o conceitual marcado (revisão 12; requisitos do material no [protocolo do Checkpoint 2](../validacao/checkpoint-2/protocolo.md#material-do-bloco-comunidade)) | Protótipo revisado pelo solicitante. Feito depois do passo 4, para não prototipar sobre uma navegação que o Checkpoint 1 reprove |
-| 6 | **Checkpoint 2** | Produto (Oportunidades, contribuição, Participação) e bloco Comunidade, sobre o protótipo | Pendências Q1 a Q7 do protocolo resolvidas |
+| 6 | **Checkpoint 2** | Produto (Oportunidades, contribuição, Participação) e bloco Comunidade, sobre o protótipo | Pendências Q1 a Q7 do protocolo resolvidas (Q8 decidida na revisão 14) |
 | 7 | **Decisão entre 031 e 030** | Solicitante, com a leitura dos dois checkpoints (§13.5) | — |
 
 - As decisões institucionais (D4, D5, D8, D9, D10, identidade e operadores reais) **não**
@@ -1101,13 +1143,16 @@ Checkpoint 2 estão **NÃO APLICADOS**. Nenhum critério de compreensão ou comp
 - Os passos 3 e 6 não aprovam nada sozinhos: os resultados entram em PR próprio, com as
   fichas e a síntese, e a leitura segue a regra escrita antes do teste.
 - A S4 (027) continua fora. O Checkpoint 2 informa se ela vale a pena (§7).
+- **Revisão 14.** A spec e o protótipo da 031 foram antecipados, como hipótese, fora desta
+  sequência. Eles não mudam a ordem nem as condições dos passos 3 a 7. O protótipo da 031 é
+  parte do material do passo 5, que ainda precisa de Histórias e Encontre colegas.
 
 ### 13.4 Kits de validação
 
 | Kit | Arquivos | Situação |
 |---|---|---|
 | Checkpoint 1 (024 + bloco P) | [protocolo](../../specs/024-inicio-egresso-portal/evidencias/protocolo-checkpoint-1.md), [preparação](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/preparacao-sessao.md), [ficha](../../specs/024-inicio-egresso-portal/evidencias/checkpoint-1/ficha-participante.md), [bloco P](../../specs/029-pagina-publica-portal/checkpoint-pagina-publica.md), [ficha do bloco P](../../specs/029-pagina-publica-portal/checkpoint/ficha-bloco-p.md) | Atualizado para a versão C. Critérios e limiar proposto não mudam. P1 a P5 continuam pendentes; P6 (comparação histórica) é nova |
-| Checkpoint 2 (025, 026 + bloco Comunidade) | [protocolo](../validacao/checkpoint-2/protocolo.md), [preparação](../validacao/checkpoint-2/preparacao-sessao.md), [ficha](../validacao/checkpoint-2/ficha-participante.md), [ficha do bloco Comunidade](../validacao/checkpoint-2/ficha-bloco-comunidade.md) | Escrito antes de qualquer sessão. Q1 a Q7 pendentes. O bloco Comunidade depende de um protótipo que ainda não existe |
+| Checkpoint 2 (025, 026 + bloco Comunidade) | [protocolo](../validacao/checkpoint-2/protocolo.md), [preparação](../validacao/checkpoint-2/preparacao-sessao.md), [ficha](../validacao/checkpoint-2/ficha-participante.md), [ficha do bloco Comunidade](../validacao/checkpoint-2/ficha-bloco-comunidade.md) | Escrito antes de qualquer sessão. Q1 a Q7 pendentes; Q8 decidida (observações exploratórias da 031). Do protótipo do bloco Comunidade, só a parte de Encontros existe (031, revisão 14); faltam Histórias e Encontre colegas |
 
 O Checkpoint 2 fica em `docs/validacao/` porque cobre duas features (025 e 026) e uma
 capacidade sem spec (Comunidade). O Checkpoint 1 continua junto da 024.
@@ -1116,6 +1161,12 @@ capacidade sem spec (Comunidade). O Checkpoint 1 continua junto da 024.
 
 **Candidata preferencial: 031, Encontros da comunidade** (alternativa F), condicionada à
 leitura do Checkpoint 1 e do Checkpoint 2, com o bloco Comunidade.
+
+> **Revisão 14.** A [spec da 031](../../specs/031-encontros-propostos-egressos/spec.md) já
+> existe, antecipada como hipótese. Ela resolve os pontos do escopo mínimo abaixo e as duas
+> obrigações listadas em "A spec da 031 também terá de". A implementação continua dependendo
+> dos dois checkpoints e da decisão entre 031 e 030. Os motivos que poderiam pôr a 030 antes
+> continuam valendo.
 
 **Por que a 031.**
 - É a primeira capacidade em que egressos produzem valor para outros egressos, que é o

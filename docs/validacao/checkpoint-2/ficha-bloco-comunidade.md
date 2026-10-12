@@ -31,6 +31,18 @@ Marcar **sim**, **parcial** ou **não**. Só "sim" conta. Limiar conforme Q1.
 | CM-U3: entraria no diretório? O que mostraria? | D2 | |
 | CM-U4: uma história de outro egresso lhe diz algo? Por quê? | H2 | |
 
+## Observações exploratórias da 031 (sem limiar)
+
+Anotar **sim**, **parcial** ou **não**, com a frase literal. Não contam para aprovação (Q8).
+
+| Observação | Tela | Resultado | Evidência (frase literal curta) |
+|---|---|---|---|
+| CM-F1: por que o encontro aparece | p2 | | |
+| CM-F2: análise antes de publicar | o3, o4 | | |
+| CM-F3: o calendário não se atualiza | p4 | | |
+| CM-F4: cancelar a confirmação; cancelamento por quem propôs | p4, p9 | | |
+| CM-F5: público é descoberta, não exclusividade | p7 | | |
+
 ## Observações
 
 - Preocupações com privacidade, exposição ou segurança, com a tela em que surgiram:

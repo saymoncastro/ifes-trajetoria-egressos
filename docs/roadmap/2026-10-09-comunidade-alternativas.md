@@ -76,7 +76,8 @@ A ordem e a revisão da decisão 7 foram respondidas em 2026-10-09 e revistas em
   sobre encontros propostos pelos próprios egressos. Registrada também no
   [roadmap](2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md), revisão 12.
 - **Natureza.** Registro de visão e de decisões de produto. **Não é spec.** Nenhuma spec é
-  aberta: 030 e 031 são números reservados. Nada entra em código.
+  aberta: 030 e 031 são números reservados. Nada entra em código. *(Revisão 14 do roadmap: a
+  spec da 031 foi antecipada como hipótese; a 030 continua reservada.)*
 - **Preservado.** Constituição 2.1.0, ADR 0008 e ADR 0009 não mudam. Onde esta revisão muda
   uma decisão de 2026-10-09, isso é dito em "O que muda em relação a 2026-10-09".
 
@@ -195,6 +196,20 @@ São insumos das specs, não requisitos aprovados. Cada spec confirma, revê ou 
 `DECISÃO PENDENTE`.
 
 **F — Encontros da comunidade (031)**
+
+> **Revisão 14 do roadmap (2026-10-11).** A
+> [spec da 031](../../specs/031-encontros-propostos-egressos/spec.md) e o
+> [protótipo estático](../../specs/031-encontros-propostos-egressos/prototipo/index.html)
+> foram antecipados como hipótese, sem implementação. A spec confirma a direção abaixo. Os
+> pontos que ela revê ou detalha são cinco:
+> - a página sem sessão é neutra (DP-3102);
+> - depois da publicação, data, horário e link na mesma plataforma são correção operacional,
+>   e as demais mudanças passam por nova análise;
+> - a responsabilidade de moderação sai do público (H-3102), como hipótese da demonstração;
+> - a Denúncia é registro mínimo da camada, sem sistema de atendimento;
+> - nome de apresentação e origem do organizador seguem a
+>   [ADR 0010](../adr/0010-dado-de-egresso-visivel-a-outros-egressos.md). O E1 continua
+>   precisando de ADR própria.
 
 - **O que é.** Um egresso identificado, com ao menos uma Conclusão Acadêmica, propõe um
   encontro **virtual** com título, descrição, data, horário, público e link externo de
