@@ -5,8 +5,9 @@
 **Status**: **Hipótese.** Spec e [protótipo estático](prototipo/index.html) antecipados antes dos
 checkpoints, por autorização do solicitante
 ([roadmap, revisão 14](../../docs/roadmap/2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md)).
-**Não há plan, tasks, código nem migração.** A implementação depende da leitura do Checkpoint 1
-e do Checkpoint 2, em especial do bloco Comunidade. Os dois estão **NÃO APLICADOS**. A escolha
+Plan e tasks autorizados na [revisão 15](../../docs/roadmap/2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md)
+(fluxo do Spec Kit); **código e migração não**. A implementação depende da leitura do
+Checkpoint 1 e do Checkpoint 2, em especial do bloco Comunidade. Os dois estão **NÃO APLICADOS**. A escolha
 entre 031 e 030 continua com o solicitante depois deles (roadmap, §13.5). Se autorizada, a
 implementação vale só para a demonstração.
 **Revisão de produto (2026-10-11, solicitante)**: Denúncia mínima aceita, sem sistema de
@@ -39,6 +40,14 @@ a primeira capacidade do Portal em que um egresso produz valor para outros egres
 | Os PRs #62 (revisão 13, kits dos checkpoints) e #63 (roteiro com teclado da versão C) estão **integrados** na `main` (`f5c4035`). Não havia PR aberto sobre o tema. O teste com leitor de tela não foi executado | `git log`; roadmap §13.2 | Esta spec parte do que está integrado. Nada dela depende de proposta aberta |
 | Os achados de acessibilidade A-01 a A-04 da versão C não foram corrigidos | 032, validação | Fora desta tarefa. O protótipo não os corrige nem os reproduz como regra |
 
+## Clarifications
+
+### Session 2026-10-11
+
+- Q: Quem vê o conteúdo de um encontro que deixou de estar publicado (retirado, cancelado ou encerrado)? → A: Por situação. Retirado: só o organizador e a moderação; os demais veem só "Retirado pela moderação". Cancelado ou encerrado: o organizador, a moderação e quem tinha confirmação ativa; os demais veem só a situação. Por coerência com o FR-015, o conteúdo alterado de um encontro "Em revisão depois de uma alteração" só aparece ao organizador e à moderação (FR-024a).
+- Q: Quando o encontro cabe à CSAEG de uma unidade, a CPAEG pode também publicar, recusar e retirar? → A: Sim. A CPAEG tem escopo institucional e pode agir em qualquer encontro, como na curadoria da 025. Decisões concorrentes caem na página de conflito (FR-016).
+- Q: Deve haver um limite de encontros ativos por organizador? → A: Até 3 ativos (em análise, em revisão ou publicados ainda não encerrados), como hipótese da demonstração (H-3101). A quarta proposta é recusada no formulário, com mensagem que explica o limite (FR-002).
+
 ## O percurso completo
 
 ```text
@@ -68,8 +77,9 @@ a primeira capacidade do Portal em que um egresso produz valor para outros egres
                                                                     página; pode cancelar
  8. Vê quantas pessoas
     confirmaram (só o número);
-    pode mudar data e horário
-    ou cancelar
+    pode corrigir data, horário
+    ou link, alterar (com nova
+    análise) ou cancelar
                                 9. Recebe denúncias; retira com
                                    motivo, se for o caso
  10. O encontro acontece fora do Portal, na plataforma do link. Depois do término, a página
@@ -107,8 +117,9 @@ mais de uma unidade).
 
 ### US2 — Moderar antes da publicação (P1)
 
-**Independent Test**: com operadores fictícios CSAEG Serra, CSAEG Vila Velha e CPAEG, conferir
-que cada um vê só os encontros que lhe cabem e que publicar, recusar e retirar registram
+**Independent Test**: com os operadores fictícios da demonstração (CSAEG Vitória e CPAEG) e,
+nos testes, vínculos CSAEG de outras unidades, conferir que cada um vê só os encontros que lhe
+cabem e que publicar, recusar e retirar registram
 momento, operador e motivo.
 
 1. **Dado** um encontro em análise no escopo do operador, **quando** abre a análise, **então**
@@ -230,7 +241,7 @@ por outras pessoas. Ela tem um autor egresso, uma data e um ciclo próprio.
 | Público: unidades, níveis e cursos, opcional | Descoberta e explicação (FR-011 a FR-013) e responsabilidade de moderação (FR-016) |
 | Link da reunião | Acesso de quem confirmou |
 | Versão do termo do organizador e momento do envio | XVII |
-| Publicação (a primeira e a última), recusa e retirada: momento, operador opaco e, nas duas últimas, motivo e complemento | Moderação e prestação de contas ao organizador |
+| Publicação (a primeira e a última, com o escopo de quem publicou), recusa e retirada: momento, operador opaco e, nas duas últimas, motivo e complemento | Moderação, prestação de contas ao organizador e "quem moderou" na página (FR-024) |
 | Cancelamento: momento | Página e listas |
 | Data alterada em; link atualizado em | Avisos na página e sequência do `.ics` (FR-008) |
 | Reenvio para nova análise: momento e nomes dos campos alterados | Mudança substancial depois da publicação (FR-008); a moderação sabe o que conferir |
@@ -289,7 +300,11 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
   - link da reunião;
   - Conclusão de origem.
 
-  Tudo texto simples, exibido como texto.
+  Tudo texto simples, exibido como texto. Cada organizador tem **no máximo 3 encontros
+  ativos**: em análise, em revisão depois de uma alteração ou publicados ainda não
+  encerrados. Os encontros encerrados, cancelados, recusados, retirados ou não analisados a
+  tempo não contam. A quarta proposta é recusada no formulário, sem gravar nada, com uma
+  mensagem que explica o limite e aponta "Seus encontros".
 - **FR-003 [Arquitetura]**: O link da reunião passa pela validação mínima da 025: absoluto em
   `https://`, sem usuário nem senha, sem IP como destino, sem espaços e com até 500
   caracteres. O domínio é classificado só para exibição (site do Ifes ou site externo). O
@@ -371,8 +386,8 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
     data do encontro, e "Eventos do Ifes", os itens da categoria "Eventos" (A) na ordem da 025.
     Os itens A vêm da 025 sem mudança. Como a Oportunidade não tem data de evento (025
     FR-001), os dois grupos não se misturam numa agenda;
-  - **Início**: na seção de encontros (032 FR-008), o próximo encontro proposto por egresso e o
-    próximo evento do Ifes, quando houver. Sem nenhum, a seção não existe.
+  - **Início**: na seção de encontros (032 FR-008), o próximo encontro proposto por egresso, pela
+    data, e o primeiro evento do Ifes pertinente, na ordem da 025, quando houver. Sem nenhum, a seção não existe.
 
   A ordem é determinística, sem ranking nem recomendação, e consultar não grava nada.
 - **FR-014 [Arquitetura]**: A distinção é visível e textual, nunca só por cor:
@@ -393,8 +408,10 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
   - **CPAEG**, em todos os outros casos: várias unidades, nenhum critério de unidade (só
     cursos ou níveis) ou aberto a todos.
 
-  A CPAEG também vê os de unidade única, como na 025 (DP-2501). Nenhum outro papel nem perfil
-  técnico recebe a competência. Quem modera aparece ao organizador antes do envio.
+  A CPAEG pode também publicar, recusar e retirar os de unidade única, como na curadoria da 025
+  (DP-2501). Quando a CSAEG e a CPAEG decidem ao mesmo tempo, vale a primeira decisão gravada,
+  e a outra recebe a página de conflito (Edge Cases, "Decisão concorrente"). Nenhum outro papel
+  nem perfil técnico recebe a competência. Quem modera aparece ao organizador antes do envio.
 - **FR-017 [Hipótese, H-3104; D8]**: Recusa e retirada exigem um motivo de lista fechada e um
   complemento opcional, obrigatório em "Outro motivo". O organizador vê os dois. A página
   retirada diz só "Retirado pela moderação". Motivos provisórios:
@@ -446,10 +463,25 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
   - nome de apresentação ("nome escolhido por quem propõe") e origem (curso, unidade e ano,
     marcados como registro do Ifes), conforme os campos, destinatários e finalidade da
     [ADR 0010](../../docs/adr/0010-dado-de-egresso-visivel-a-outros-egressos.md);
-  - quem moderou ("Publicado após análise da CPAEG" ou "da CSAEG {unidade}").
+  - quem moderou ("Publicado após análise da CPAEG" ou "da CSAEG {unidade}"), pelo escopo de
+    quem **efetivamente publicou**, gravado na publicação. Não é deduzido do público, porque a
+    CPAEG pode publicar também os de unidade única (FR-016).
 
   Nunca mostra lista de quem confirmou, quantidade de confirmações a quem não organiza, nem
   contato.
+- **FR-024a [Arquitetura; ADR 0010]**: O conteúdo da página (título, descrição, público, nome de
+  apresentação e origem) depende da situação. Fora dos casos abaixo, a página mostra só a
+  situação, sem conteúdo:
+
+  | Situação | Quem vê o conteúdo | O que os demais egressos identificados veem |
+  |---|---|---|
+  | Em análise; Não analisado a tempo; Recusado | Organizador e moderação | "Este encontro não está disponível" |
+  | Publicado | Pessoa identificada com Conclusão (FR-024) | — |
+  | Em revisão depois de uma alteração; Alteração não analisada a tempo | Organizador e moderação | A situação. Quem confirmou vê também a data e o horário, e sua confirmação continua |
+  | Retirado | Organizador e moderação | "Retirado pela moderação" |
+  | Cancelado; Encerrado | Organizador, moderação e quem tinha confirmação ativa no cancelamento ou no término | "Cancelado por quem propôs" ou "Encontro encerrado" |
+
+  Sem sessão, vale sempre a página neutra (FR-022).
 
 **Organizador**
 
@@ -476,7 +508,8 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
 **Denúncia**
 
 - **FR-029 [Hipótese, H-3107; D8]**: "Denunciar este encontro" aparece a Pessoa identificada com
-  Conclusão, em encontro Publicado ou Encerrado.
+  Conclusão, que não organiza, e que **vê o conteúdo** do encontro (FR-024a): em encontro
+  Publicado, qualquer uma; em Encerrado, só quem tinha confirmação ativa no término.
   - Motivos provisórios: link suspeito ou que não funciona; divulgação comercial; desrespeito
     a pessoas; parece evento oficial do Ifes; outro motivo.
   - Complemento de até 300 caracteres, com orientação para não incluir dados pessoais.
@@ -527,7 +560,7 @@ tela. A Denúncia sai do modelo sem afetar Encontro e Confirmação.
 
 | Dado | Finalidade | Quem vê | Retenção |
 |---|---|---|---|
-| Encontro: título, descrição, data, público | Divulgar e permitir a participação | Egressos identificados com Conclusão; organizador; moderação | D9. Na demonstração, sem exclusão |
+| Encontro: título, descrição, data, público | Divulgar e permitir a participação | Conforme a situação (FR-024a) | D9. Na demonstração, sem exclusão |
 | Nome de apresentação e origem | Dizer quem propõe ([ADR 0010](../../docs/adr/0010-dado-de-egresso-visivel-a-outros-egressos.md)) | Os mesmos. Nunca sem sessão nem no `.ics` | D9 |
 | Link da reunião | Acesso de quem confirmou | Quem confirmou (com sessão), organizador, moderação | D9 |
 | Confirmação | Mostrar o link a quem confirmou; informar a quantidade | A própria pessoa. Organizador e moderação veem só o número | D9. A avaliar: não guardar depois do encerramento |
@@ -704,7 +737,7 @@ O bloco Comunidade continua precisando do material de Histórias e de Encontre c
 
 | # | Hipótese | Onde | Revisão por |
 |---|---|---|---|
-| H-3101 | Limites de texto, de 2 a 90 dias de antecedência, até 3 h | FR-002 | Checkpoint 2; D8 |
+| H-3101 | Limites de texto, de 2 a 90 dias de antecedência, até 3 h, até 3 encontros ativos por organizador | FR-002 | Checkpoint 2; D8 |
 | H-3102 | CSAEG para unidade única; CPAEG nos demais casos. Não é competência institucional aprovada | FR-016 | D8 |
 | H-3103 | Depois de publicado: data, horário e link no mesmo domínio são correção operacional; o resto, e link de outro domínio, pede nova análise | FR-008 | Checkpoint 2; D8 |
 | H-3104 | Motivos de recusa e retirada | FR-017 | D8 |

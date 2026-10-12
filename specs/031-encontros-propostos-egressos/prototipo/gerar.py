@@ -777,13 +777,18 @@ def alterar_encontro() -> str:
 
 
 def em_revisao() -> str:
-    extra = ('<p class="pe-alterado" role="note"><strong>Em revisão depois de uma alteração.</strong> '
-             'Quem propôs mudou o encontro em 20/10/2026, e a moderação do Ifes está analisando.</p>')
-    lateral = """<section class="pe-participar" aria-labelledby="pe-situacao"><h2 id="pe-situacao" class="pe-confirmado">Você vai participar</h2>
-<p>Sua confirmação continua. O link da reunião volta a aparecer aqui se o encontro for publicado de novo.</p>
-<p>Confira esta página antes do encontro: você não recebe aviso.</p>
-<p class="pe-acoes"><a class="pe-contorno" href="p5-cancelar-participacao.html">Cancelar minha participação</a></p></section>"""
-    return pagina_encontro(lateral, extra_hero=extra)
+    """FR-024a: em revisão, o conteúdo alterado ainda não foi moderado. Quem confirmou vê só a
+    situação, a data e o horário."""
+    return f"""<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<p class="pe-selo pe-selo-f">Encontro proposto por egresso</p>
+<h1>Encontro em revisão</h1>
+<p class="pe-lead">Quem propôs alterou este encontro em 20/10/2026, e a moderação do Ifes está analisando a alteração. O conteúdo volta a aparecer se ele for publicado de novo.</p>
+<div class="pe-participar"><p class="pe-confirmado">Você vai participar</p>
+<p>Quinta-feira, 29/10/2026, {e(TEC["hora"])} (horário de Brasília).</p>
+<p>Sua confirmação continua. O link da reunião não aparece enquanto o encontro estiver em revisão. Confira esta página antes do encontro: você não recebe aviso.</p>
+<p class="pe-acoes"><a class="pe-contorno" href="p5-cancelar-participacao.html">Cancelar minha participação</a></p></div>
+<p class="ligacao-isolada"><a href="p2-encontros.html">Ver outros encontros</a></p>
+</div></div>"""
 
 
 def reanalisar() -> str:

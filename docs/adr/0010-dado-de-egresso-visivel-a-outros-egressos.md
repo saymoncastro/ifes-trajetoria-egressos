@@ -66,8 +66,12 @@ ninguém. O organizador vê só a quantidade (031 FR-025).
 
 **Ciclo**: o organizador vê esses campos na prévia e no termo antes de enviar (031 FR-006).
 Pode mudá-los enquanto o encontro está em análise. Depois da publicação, a mudança passa por
-nova análise (031 FR-008). Cancelado, recusado, retirado ou encerrado, o encontro sai das
-listas. A página continua acessível a quem tem o endereço, e a retenção é D9.
+nova análise (031 FR-008). Fora da situação "Publicado", nome e origem só aparecem a quem a
+031 (FR-024a, esclarecimento de 2026-10-11) autoriza:
+- retirado ou em revisão: ao organizador e à moderação;
+- cancelado ou encerrado: também a quem tinha confirmação ativa.
+
+Os demais veem só a situação. A retenção é D9.
 
 ## Consequências
 
