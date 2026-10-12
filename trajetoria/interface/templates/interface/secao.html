@@ -23,6 +23,8 @@
 <form method="post" action="{{ acao }}" novalidate>{% csrf_token %}
   {# Botão padrão desabilitado: Enter/"Ir" num campo não envia a Seção (014 FR-016; research R2). #}
   <button type="submit" disabled hidden>Salvar</button>
+  {# 033 FR-002: a Seção aberta pela revisão leva o marcador no próprio envio. #}
+  {% if revisao %}<input type="hidden" name="revisao" value="1">{% endif %}
   {% for item in itens %}
     {% if item.modo == "texto" %}{% include "interface/perguntas/texto_curto.html" %}
     {% elif item.modo == "lista" %}{% include "interface/perguntas/escolha_unica.html" %}
@@ -38,7 +40,7 @@
     {% endif %}
   {% endfor %}
   <div class="acoes acoes-secao">
-    <button type="submit" class="primario">Salvar e continuar</button>
+    <button type="submit" class="primario">{% if revisao %}{{ salvar_e_voltar }}{% else %}Salvar e continuar{% endif %}</button>
     <button type="submit" name="depois" value="sair" class="secundario">Salvar e sair</button>
   </div>
 </form>

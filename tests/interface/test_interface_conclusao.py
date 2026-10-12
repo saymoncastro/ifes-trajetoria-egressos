@@ -53,7 +53,8 @@ def test_tela_de_conclusao(client, cenario, ana):
     assert "Você chegou ao fim da pesquisa." in texto
     assert "Depois de concluída, ela não poderá ser alterada." in texto
     assert "Concluir pesquisa" in texto and "Sobre a sua formação" in texto
-    assert f'href="{_url(ana, "secoes/1/")}"' in html and "Termos e condições" in texto
+    # 033 FR-001: a parte aberta pela revisão leva o marcador.
+    assert f'href="{_url(ana, "secoes/1/?revisao=1")}"' in html and "Termos e condições" in texto
     # Seção sem título: "Parte X" (023 FR-015), nunca o número interno "Seção 13".
     assert re.search(r"\bParte \d+\b", texto) and "Seção 13" not in texto
     assert ci.TEXTO_FICTICIO not in texto  # nenhum valor declarado
@@ -268,4 +269,5 @@ def test_ligacoes_da_conclusao_em_lista_com_alvo_de_toque(client, cenario, ana):
     _percorrer(client, cenario, ana)
     html = client.get(_url(ana, "concluir/")).content.decode()
     lista = re.search(r'<ul class="lista-secoes">(.*?)</ul>', html, re.S)
-    assert lista and f'href="{_url(ana, "secoes/1/")}"' in lista.group(1)
+    # 033 FR-001: a parte aberta pela revisão leva o marcador.
+    assert lista and f'href="{_url(ana, "secoes/1/?revisao=1")}"' in lista.group(1)

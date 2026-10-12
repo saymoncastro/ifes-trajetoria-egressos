@@ -2,8 +2,8 @@
 
 **Feature Branch**: `claude/033-retorno-revisao`
 **Created**: 2026-10-12
-**Status**: Rascunho para aprovação do solicitante. A implementação só começa depois da
-aprovação desta spec e dos cenários de aceitação.
+**Status**: Spec, cenários de aceitação e decisões A1 a A5 aprovados pelo solicitante em
+2026-10-12; implementação autorizada no mesmo dia, na demonstração.
 **Input**: Solicitante, 2026-10-12: priorizar a D5 da
 [auditoria de conclusão e confirmação](../../docs/auditorias/2026-10-12-conclusao-e-confirmacao.md)
 (seção 6). Quem revisa uma parte a partir da conclusão deve poder voltar à conclusão depois
@@ -246,9 +246,9 @@ novos com o marcador forjado.
 | 023 FR-016 ("Parte anterior salva.") | Em revisão, substituído pelo aviso de mudança de caminho (FR-006) ou pela confirmação na conclusão (FR-007) |
 | 023 FR-027 (conclusão) | A lista de revisão ganha o marcador e a conclusão, a confirmação do FR-007. A ordem não muda nesta feature |
 
-## Decisões para aprovação
+## Decisões aprovadas (2026-10-12)
 
-| # | Decisão | Proposta |
+| # | Decisão | Aprovado |
 |---|---|---|
 | A1 | Regra de destino | "Próxima parte que pede atenção" (FR-004), no lugar da comparação de percursos da auditoria |
 | A2 | Rótulo do botão em revisão | "Salvar e voltar à conclusão", com o aviso do FR-006 quando o caminho muda |

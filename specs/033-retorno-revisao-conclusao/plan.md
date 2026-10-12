@@ -45,9 +45,10 @@ Arquivo novo `tests/interface/test_interface_revisao.py`:
   Participação concluída e com a coleta encerrada (US4.3); a confirmação na conclusão nunca
   aparece pela simples presença do código no endereço.
 
-As suítes existentes da jornada passam sem mudar nenhuma expectativa (SC-004). A única
-alteração prevista é no teste da conclusão que verifica o `href` dos links da revisão, que
-passa a conter `?revisao=1`, com nota.
+As suítes existentes da jornada passam sem mudar nenhuma expectativa (SC-004). As únicas
+alterações previstas são no teste da conclusão que verifica o `href` dos links da revisão, que
+passa a conter `?revisao=1`, e no que fixa a variante de cada código de aviso, que ganha
+`caminho` e `revisada`, ambas com nota.
 
 ## Riscos
 

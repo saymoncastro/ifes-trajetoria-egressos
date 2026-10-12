@@ -56,6 +56,10 @@ AVISOS = {
     "saida": "Você pode continuar a pesquisa quando quiser.",
     # 023 FR-016: só quando a Seção enviada tem Resposta gravada (014 FR-008).
     "anterior": "Parte anterior salva.",
+    # 033 FR-006: em revisão, a resposta fez entrar no percurso uma parte que pede atenção.
+    "caminho": "Sua resposta mudou o caminho da pesquisa. Confira esta parte para concluir.",
+    # 033 FR-007: chegada à conclusão pela revisão, só com Resposta gravada na Seção enviada.
+    "revisada": "Parte salva.",
 }
 # Variante visual fixa de cada aviso (015 FR-026): sucesso só quando algo foi salvo.
 VARIANTE_DO_AVISO = {
@@ -64,7 +68,11 @@ VARIANTE_DO_AVISO = {
     "salvo": "sucesso",
     "saida": "informacao",
     "anterior": "sucesso",
+    "caminho": "informacao",
+    "revisada": "sucesso",
 }
+# 033 FR-002: a Seção aberta pela lista de revisão da conclusão.
+SALVAR_E_VOLTAR = "Salvar e voltar à conclusão"
 # Nota de "Sair sem salvar esta seção" (014 FR-013).
 SAIR_SEM_SALVAR_NOTA = "O que já foi salvo antes continua guardado."
 

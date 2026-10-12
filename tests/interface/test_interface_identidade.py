@@ -308,6 +308,8 @@ def test_variante_fixa_para_cada_codigo_de_aviso():
         "situacao": "informacao",
         "percurso": "informacao",
         "anterior": "sucesso",  # 023 FR-016
+        "caminho": "informacao",  # 033 FR-006
+        "revisada": "sucesso",  # 033 FR-007: só com Resposta gravada
     }
 
 

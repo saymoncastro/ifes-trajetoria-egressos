@@ -91,6 +91,12 @@ def linha_da_parte(parte: int, maximo: int) -> str:
     return f"Parte {parte} · {_restantes(maximo)}"
 
 
+def linha_da_parte_em_revisao(parte: int) -> str:
+    """ "Parte 4 · revisando suas respostas" (033 FR-002c): sem o máximo restante, que em
+    revisão diria quanto falta de um caminho já percorrido."""
+    return f"Parte {parte} · revisando suas respostas"
+
+
 def onde_parou(jornada) -> str:
     """Onde a pessoa parou numa Participação em rascunho (FR-017), pela jornada da 006."""
     if jornada.finalizada:

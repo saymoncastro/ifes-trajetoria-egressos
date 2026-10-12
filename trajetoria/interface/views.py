@@ -29,6 +29,7 @@ from trajetoria.interface.apresentacao import (
     contexto_da_formacao,
     formacao_exibida,
     linha_da_parte,
+    linha_da_parte_em_revisao,
     onde_parou_da_participacao,
     resumo_da_formacao,
     rotulo_da_formacao,
@@ -219,8 +220,11 @@ _CAMPO_DA_SECAO = re.compile(r"p\d{1,4}(?:-complemento|-remover)?")
 
 def _guardar_envio(request, participacao, posicao) -> None:
     """Envio de Seção sem sujeito válido: guarda só os campos de Pergunta, sem gravar nada
-    (FR-002). A posse é verificada só ao restaurar, pelo sujeito que confirmar (FR-006)."""
-    dados = {
+    (FR-002), e o marcador de revisão, para a restauração continuar em revisão (033 FR-010).
+    A posse é verificada só ao restaurar, pelo sujeito que confirmar (FR-006)."""
+    # O marcador vem primeiro: o limite de campos de `pendente` corta pelo fim.
+    dados = {"revisao": ["1"]} if _em_revisao(request.POST) else {}
+    dados |= {
         campo: request.POST.getlist(campo)
         for campo in request.POST
         if _CAMPO_DA_SECAO.fullmatch(campo)
@@ -385,7 +389,7 @@ def _passagem(participacao, jornada, posicao):
 
 
 def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=None, *,
-                   pendencias=False, recuperado=False):  # fmt: skip
+                   pendencias=False, recuperado=False, revisao=False):  # fmt: skip
     # Título e abertura vêm da Versão já carregada com a Participação (sem reler o conteúdo);
     # a primeira passagem do percurso é sempre a primeira Seção da Versão (006 FR-014).
     versao = participacao.campanha.versao
@@ -434,7 +438,8 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
             "aviso": (
                 {"texto": mensagens.RECUPERADO, "variante": "informacao"}
                 if recuperado
-                else _aviso(request, "percurso")
+                # 033 FR-006: "caminho" só existe em revisão.
+                else _aviso(request, "percurso", *(("caminho",) if revisao else ()))
             ),
             # 023 FR-016: discreto, junto da parte, e só se a Seção anterior do percurso tem
             # Resposta gravada (014 FR-008) — nunca pela simples presença do código no endereço.
@@ -446,13 +451,19 @@ def _tela_da_secao(request, participacao, jornada, passagem, formulario, erros=N
                 and _ha_resposta_na_secao(jornada, jornada.passagens[indice - 1].secao)
                 else None
             ),
-            "anterior": anterior and _base(participacao) + f"secoes/{anterior}/",
+            "anterior": anterior
+            and _base(participacao) + f"secoes/{anterior}/" + (_REVISAO if revisao else ""),
             "sair_sem_salvar_nota": mensagens.SAIR_SEM_SALVAR_NOTA,
             # 023 FR-013, FR-015: parte no percurso e máximo restante; "Parte X" sem título.
             "rotulo_secao": rotulo_da_secao(passagem.secao, parte),
-            "linha_da_parte": linha_da_parte(
-                parte, maximo_restante(jornada.conteudo, passagem.secao.id)
+            "linha_da_parte": (
+                linha_da_parte_em_revisao(parte)
+                if revisao
+                else linha_da_parte(parte, maximo_restante(jornada.conteudo, passagem.secao.id))
             ),
+            # 033 FR-002: a Seção aberta pela revisão leva o marcador no próprio envio.
+            "revisao": revisao,
+            "salvar_e_voltar": mensagens.SALVAR_E_VOLTAR,
             "meio": meio,
             "precisa_parar": mensagens.PRECISA_PARAR,
         },
@@ -485,16 +496,18 @@ def secao(request, participacao, posicao):
             dados.setlist(campo, valores)
         pendente.marcar_apresentado(request)
         formulario = FormularioDaSecao(passagem.secao, jornada.respostas, data=dados)
+        # 033 FR-010: o envio guardado tem todos os campos, inclusive o marcador de revisão.
         return _tela_da_secao(
-            request, participacao, jornada, passagem, formulario, recuperado=True
-        )
+            request, participacao, jornada, passagem, formulario, recuperado=True,
+            revisao=_em_revisao(dados),
+        )  # fmt: skip
     formulario = FormularioDaSecao(passagem.secao, jornada.respostas)
     pendencias = None
     if request.GET.get("pendencias") == "1" and passagem is jornada.passagens[-1]:
         pendencias = _pendencias(passagem)
     return _tela_da_secao(
         request, participacao, jornada, passagem, formulario, pendencias,
-        pendencias=bool(pendencias),
+        pendencias=bool(pendencias), revisao=_em_revisao(request.GET),
     )  # fmt: skip
 
 
@@ -516,8 +529,11 @@ def _pendencias(passagem) -> dict[int, list[str]]:
 def _salvar(request, participacao, jornada, passagem):
     """Envio da Seção (contracts/rotas.md, "POST secoes"): forma → 005 → 006."""
     formulario = FormularioDaSecao(passagem.secao, jornada.respostas, data=request.POST)
+    revisao = _em_revisao(request.POST)
     if not formulario.is_valid():
-        return _tela_da_secao(request, participacao, jornada, passagem, formulario)
+        return _tela_da_secao(
+            request, participacao, jornada, passagem, formulario, revisao=revisao
+        )
     resultado = salvar_secao(participacao, passagem.secao, formulario.limpos, jornada.respostas)
     if resultado.motivo_global is Motivo.PARTICIPACAO_CONCLUIDA:
         return _tela(request, mensagens.JA_RESPONDIDA, **_da_participacao(participacao))
@@ -527,8 +543,9 @@ def _salvar(request, participacao, jornada, passagem):
         raise Http404
     if resultado.erros_por_pergunta:
         return _tela_da_secao(
-            request, participacao, jornada, passagem, formulario, resultado.erros_por_pergunta
-        )
+            request, participacao, jornada, passagem, formulario, resultado.erros_por_pergunta,
+            revisao=revisao,
+        )  # fmt: skip
     # Envio aceito: o envio pendente desta Seção já cumpriu seu papel (023 FR-008).
     envio = _envio_da_participacao(request, participacao)
     if envio is not None and envio.posicao == passagem.secao.posicao:
@@ -544,7 +561,10 @@ def _salvar(request, participacao, jornada, passagem):
         return redirect(destino + "?aviso=" + ("salvo" if salvo else "saida"))
     secao = _base(participacao) + f"secoes/{passagem.secao.posicao}/"
     if not passagem.satisfeita:
-        return redirect(secao + "?pendencias=1")
+        return redirect(secao + "?pendencias=1" + ("&revisao=1" if revisao else ""))
+    if revisao:
+        # 033 FR-004: em revisão, só o destino muda; validação e gravação foram as de sempre.
+        return redirect(_destino_da_revisao(participacao, jornada, passagem))
     if passagem.destino is Saida.FINALIZACAO:
         return redirect(_base(participacao) + "concluir/")
     # Seção satisfeita com destino determinado: o percurso da 006 segue para ele, que é,
@@ -553,6 +573,35 @@ def _salvar(request, participacao, jornada, passagem):
     # "Parte anterior salva." só com Resposta gravada na Seção enviada (023 FR-016; 014 FR-008).
     aviso = "?aviso=anterior" if _ha_resposta_na_secao(jornada, passagem.secao) else ""
     return redirect(_base(participacao) + f"secoes/{seguinte.secao.posicao}/" + aviso)
+
+
+_REVISAO = "?revisao=1"
+
+
+def _em_revisao(dados) -> bool:
+    """Marcador de revisão (033 FR-001): só o valor "1"; nada é guardado fora do endereço e do
+    formulário."""
+    return dados.get("revisao") == "1"
+
+
+def _pede_atencao(jornada, passagem) -> bool:
+    """033 FR-004: obrigatória pendente (a Seção atual da 006) ou Perguntas sem nenhuma
+    Resposta gravada — inclusive a Seção só de opcionais que a pessoa talvez nunca tenha
+    visto. Na dúvida, mostrar."""
+    return not passagem.satisfeita or (
+        bool(passagem.secao.perguntas) and not _ha_resposta_na_secao(jornada, passagem.secao)
+    )
+
+
+def _destino_da_revisao(participacao, jornada, passagem) -> str:
+    """A primeira Seção do percurso, depois da enviada, que pede atenção, ainda em revisão; se
+    nenhuma pedir, a conclusão (033 FR-004, FR-008). Os destinos são sempre posteriores (006
+    FR-015): o que vem antes da Seção enviada não muda com o envio. A conclusão revalida tudo."""
+    seguintes = jornada.passagens[jornada.passagens.index(passagem) + 1 :]
+    for seguinte in seguintes:
+        if _pede_atencao(jornada, seguinte):
+            return _base(participacao) + f"secoes/{seguinte.secao.posicao}/?revisao=1&aviso=caminho"
+    return _base(participacao) + f"concluir/?aviso=revisada&secao={passagem.secao.posicao}"
 
 
 # --- Conclusão (006) -----------------------------------------------------------------------------
@@ -576,10 +625,16 @@ def concluir_view(request, participacao):
     secoes = [
         {
             "nome": rotulo_da_secao(p.secao, parte),
-            "endereco": _base(participacao) + f"secoes/{p.secao.posicao}/",
+            # 033 FR-001: a parte aberta daqui fica em revisão.
+            "endereco": _base(participacao) + f"secoes/{p.secao.posicao}/" + _REVISAO,
         }
         for parte, p in enumerate(jornada.passagens, start=1)
     ]
+    # 033 FR-007: "Parte salva." só se a Seção indicada está no percurso e tem Resposta
+    # gravada (014 FR-008) — nunca pela simples presença do código no endereço.
+    revisada = request.GET.get("aviso") == "revisada" and next(
+        (p for p in jornada.passagens if str(p.secao.posicao) == request.GET.get("secao")), None
+    )
     return render(
         request,
         "interface/conclusao.html",
@@ -590,6 +645,11 @@ def concluir_view(request, participacao):
             "declarada": participacao.formacao_declarada_id is not None,
             "secoes": secoes,
             "acao": _base(participacao) + "concluir/",
+            "aviso": (
+                {"texto": mensagens.AVISOS["revisada"], "variante": "sucesso"}
+                if revisada and _ha_resposta_na_secao(jornada, revisada.secao)
+                else None
+            ),
         },
     )
 

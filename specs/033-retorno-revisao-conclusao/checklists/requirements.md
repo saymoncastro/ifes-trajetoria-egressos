@@ -37,5 +37,5 @@
 - SC-005 cita a verificação de migrações do CI como evidência da ausência de dado novo,
   igual à 023 (FR-034).
 - As escolhas que seriam [NEEDS CLARIFICATION] (regra de destino, rótulos, "voltar sem
-  salvar") estão em "Decisões para aprovação" (A1 a A5), com proposta. O solicitante pediu
+  salvar") estão em "Decisões aprovadas" (A1 a A5). O solicitante pediu
   para aprovar a spec antes da implementação.
