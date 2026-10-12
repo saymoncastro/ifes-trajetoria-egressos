@@ -5,6 +5,8 @@
 <div class="confirmacao">
 <h1>Pesquisa concluída</h1>
 <p>{{ registro }}</p>
+{# 034 FR-005 (B1): identificação compacta, no lugar da ficha; a declarada não muda. #}
+{% if not declarada and identificacao %}<p class="formacao-concluida">{{ formacao_concluida }} {{ identificacao }}</p>{% endif %}
 </div>
 {% if agradecimento %}<p>{{ agradecimento }}</p>{% endif %}
 {% if texto_encerramento %}<div class="encerramento">{{ texto_encerramento|linebreaks }}</div>{% endif %}
@@ -19,7 +21,12 @@
 </form>
 {% if outras_proximas %}<p><a href="/formacoes/">Ver todas as suas formações</a></p>{% endif %}
 </section>{% endif %}
-{% if declarada %}<p><a href="/declaracao/">Ver suas formações informadas</a></p>{% else %}<p><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></p>
-<p class="nota convite-contato"><a href="/meu-email/">Quer manter seu e-mail atualizado com o Ifes?</a></p>{% endif %}
-{% include "interface/contexto.html" %}
+{% if declarada %}<p><a href="/declaracao/">Ver suas formações informadas</a></p>
+{% include "interface/contexto.html" %}{% else %}
+{# 034 FR-005, FR-006: trajetória como ação principal só sem próxima formação; título só com o slot `produto`. #}
+<div class="continuidade">
+{% if navegacao and produto %}<h2>{{ prefixo_continuidade }} {{ produto }}</h2>{% endif %}
+<p{% if not proxima %} class="acao-principal"{% endif %}><a href="/minha-trajetoria/">Ver minha trajetória no Ifes</a></p>
+<p class="nota convite-contato"><a href="/meu-email/">Quer manter seu e-mail atualizado com o Ifes?</a></p>
+</div>{% endif %}
 {% endblock %}

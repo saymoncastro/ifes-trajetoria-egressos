@@ -410,13 +410,14 @@ def test_sair_sem_salvar_so_com_erro_de_forma(client, cenario):
 def test_ordem_da_tela_de_conclusao(client, cenario):
     ana = _na_secao(client, cenario, 14)
     html = client.get(f"/participacoes/{ana.pk}/concluir/").content.decode()
+    # 034 FR-001 revisa esta ordem: contexto compacto → revisão recolhida → aviso → botão.
     ordem = [
+        html.index("Você está respondendo sobre:"),
+        html.index('<details class="revisao">'),
         html.index("não poderá ser alterada"),
         html.index("Concluir pesquisa</button>"),
-        html.index("volte a uma das partes"),
-        html.index("Sobre a sua formação"),
     ]
-    assert ordem == sorted(ordem)
+    assert ordem == sorted(ordem) and "Sobre a sua formação" not in html
 
 
 # --- US8: entrada e declaração (FR-029 a FR-032) -----------------------------------------------

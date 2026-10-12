@@ -51,8 +51,10 @@ def test_tela_de_conclusao(client, cenario, ana):
     assert resposta.status_code == 200
     html, texto = resposta.content.decode(), ci.texto_visivel(resposta)
     assert "Você chegou ao fim da pesquisa." in texto
-    assert "Depois de concluída, ela não poderá ser alterada." in texto
-    assert "Concluir pesquisa" in texto and "Sobre a sua formação" in texto
+    # 034 FR-001 (revisa 023 FR-027): aviso junto do botão; contexto compacto, sem a ficha.
+    assert "Depois de concluída, a pesquisa não poderá ser alterada." in texto
+    assert "Concluir pesquisa" in texto and "Você está respondendo sobre:" in texto
+    assert "Sobre a sua formação" not in texto
     # 033 FR-001: a parte aberta pela revisão leva o marcador.
     assert f'href="{_url(ana, "secoes/1/?revisao=1")}"' in html and "Termos e condições" in texto
     # Seção sem título: "Parte X" (023 FR-015), nunca o número interno "Seção 13".
@@ -135,7 +137,8 @@ def test_confirmacao_simples_sem_respostas(client, cenario, ana):
     assert "Pesquisa concluída" in texto
     # 014 FR-040: a Versão tem texto de encerramento, que é o agradecimento; o fixo não aparece.
     assert "Obrigado pela sua participação." not in texto
-    assert "Sobre a sua formação" in texto and "Serra" in texto
+    # 034 FR-005 (B1): identificação compacta no lugar da ficha.
+    assert "Formação:" in texto and "Serra" in texto and "Sobre a sua formação" not in texto
     assert "Este formulário chegou ao fim!" in texto  # texto de encerramento da Versão
     assert ci.TEXTO_FICTICIO not in texto
     ana.refresh_from_db()
@@ -214,7 +217,8 @@ def test_titulo_principal_da_conclusao(client, cenario, ana):
     html = client.get(_url(ana, "concluir/")).content.decode()
     assert re.findall(r"<h1>\s*(.*?)\s*</h1>", html) == ["Concluir a pesquisa"]
     assert not re.search(r"<h2[^>]*>\s*Concluir a pesquisa", html)
-    assert re.search(r"<h2[^>]*>\s*Sobre a sua formação", html)  # contexto completo mantido
+    # 034 FR-001: a ficha completa sai; o contexto compacto não tem título próprio.
+    assert not re.search(r"<h2[^>]*>\s*Sobre a sua formação", html)
 
 
 # --- 014 US8: encerramento que fecha a conversa (FR-038 a FR-041) ---------------------------
@@ -265,9 +269,10 @@ def test_sem_texto_de_encerramento_agradece_uma_vez(client, db):
 
 def test_ligacoes_da_conclusao_em_lista_com_alvo_de_toque(client, cenario, ana):
     """014 FR-026 (MF-13): as ligações para revisar Seções ficam numa lista com alvo de 44 px
-    (medido no quickstart §2.4); aqui, a marcação que recebe esse estilo."""
+    (medido no quickstart §2.4); aqui, a marcação que recebe esse estilo. 034 FR-002 a FR-004:
+    a lista fica na revisão recolhida, numerada e em ordem."""
     _percorrer(client, cenario, ana)
     html = client.get(_url(ana, "concluir/")).content.decode()
-    lista = re.search(r'<ul class="lista-secoes">(.*?)</ul>', html, re.S)
+    lista = re.search(r'<ol class="lista-revisao">(.*?)</ol>', html, re.S)
     # 033 FR-001: a parte aberta pela revisão leva o marcador.
     assert lista and f'href="{_url(ana, "secoes/1/?revisao=1")}"' in lista.group(1)

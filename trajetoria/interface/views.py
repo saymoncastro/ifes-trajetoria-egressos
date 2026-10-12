@@ -625,6 +625,8 @@ def concluir_view(request, participacao):
     secoes = [
         {
             "nome": rotulo_da_secao(p.secao, parte),
+            # 034 FR-003: "Parte N" fora do link só quando a Seção tem título próprio.
+            "parte": parte if p.secao.titulo else None,
             # 033 FR-001: a parte aberta daqui fica em revisão.
             "endereco": _base(participacao) + f"secoes/{p.secao.posicao}/" + _REVISAO,
         }
@@ -640,10 +642,17 @@ def concluir_view(request, participacao):
         "interface/conclusao.html",
         {
             "titulo_pesquisa": participacao.campanha.versao.titulo or "Pesquisa",
-            "contexto_formacao": contexto_da_formacao(formacao_exibida(participacao)),
+            # 034 FR-001: o contexto compacto das Seções, no lugar da ficha completa.
+            "resumo_formacao": resumo_da_formacao(formacao_exibida(participacao)),
             "rotulo_formacao": rotulo_da_formacao(participacao),
             "declarada": participacao.formacao_declarada_id is not None,
             "secoes": secoes,
+            "quantas_partes": mensagens.partes(len(secoes)),
+            "ultima_etapa": mensagens.ULTIMA_ETAPA,
+            "fim_da_pesquisa": mensagens.FIM_DA_PESQUISA,
+            "irreversivel": mensagens.IRREVERSIVEL,
+            "revisar": mensagens.REVISAR,
+            "revisar_nota": mensagens.REVISAR_NOTA,
             "acao": _base(participacao) + "concluir/",
             "aviso": (
                 {"texto": mensagens.AVISOS["revisada"], "variante": "sucesso"}
@@ -712,8 +721,13 @@ def concluida(request, participacao):
             if encerramento or participacao.formacao_declarada_id
             else mensagens.AGRADECIMENTO,
             "declarada": bool(participacao.formacao_declarada_id),
+            # A declarada continua com a ficha de hoje (034 FR-007).
             "contexto_formacao": contexto_da_formacao(formacao_exibida(participacao)),
             "rotulo_formacao": rotulo_da_formacao(participacao),
+            # 034 FR-005 (B1): curso · unidade · ano, sem a ficha; vazio, a linha não aparece.
+            "identificacao": resumo_da_formacao(formacao_exibida(participacao)),
+            "formacao_concluida": mensagens.FORMACAO_CONCLUIDA,
+            "prefixo_continuidade": mensagens.PREFIXO_CONTINUIDADE,
             "texto_encerramento": encerramento,
             "proxima": proxima,
             "outras_proximas": len(proximas) > 1,
