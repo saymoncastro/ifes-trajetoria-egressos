@@ -213,6 +213,11 @@
     numa parte só de opcionais já vista e deixada em branco, quando o caminho pode não ter
     mudado. A 034 propõe uma redação neutra (B6), sem mudar a regra de destino;
   - D3 e D4 continuam **DECISÃO PENDENTE** e não bloqueiam a 033 nem a 034.
+
+  *Atualização (2026-10-12, mais tarde):* a **033 foi integrada** (#69). A spec da 034 foi
+  aprovada (revisão 1, com B6) e a **034 foi implementada na demonstração**, em PR próprio
+  para revisão, sem merge autorizado. A verificação com leitor de tela está pendente e deve
+  ser concluída antes da aprovação final.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
