@@ -34,6 +34,12 @@
 - A tabela "Contexto" cita arquivos e componentes existentes como fonte dos fatos e para
   mostrar que nada novo de padrão visual é necessário, como nas specs anteriores. Os
   requisitos descrevem ordem, presença e aparência, não estrutura de código.
-- As escolhas abertas estão em "Decisões para aprovação" (B1 a B5), com proposta, porque o
-  solicitante aprova a spec antes da implementação.
-- Depende da 033 (#69), que precisa estar integrada antes do PR desta feature.
+- Revisão 1 (2026-10-12): B2, B3 e B5 aprovadas; B1 e B4 ajustadas pelo solicitante; B6
+  (redação neutra do aviso da 033) proposta. A seção "Decisões" registra a situação de cada
+  uma.
+- Acessibilidade revista: fonte a 200% (WCAG 1.4.4) e refluxo a 320 CSS px (WCAG 1.4.10) são
+  verificações separadas, ambas com conferência de conteúdo e função, não só de rolagem; a
+  ordem das duas colunas segue a do documento; foco inteiro; verificação breve com leitor de
+  tela (US3.5), registrada como pendente se não puder ser executada.
+- Depende da 033 (#69), que precisa estar integrada antes do PR desta feature. Depois da
+  integração, a branch é atualizada sobre `main` e o PR deve conter só a 034.

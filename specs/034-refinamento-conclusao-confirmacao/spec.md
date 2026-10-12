@@ -2,8 +2,9 @@
 
 **Feature Branch**: `claude/034-refinamento-conclusao` (a partir da 033, que mexe na mesma tela)
 **Created**: 2026-10-12
-**Status**: Rascunho para aprovação do solicitante. A implementação só começa depois da
-aprovação desta spec e das decisões B1 a B5.
+**Status**: Revisão 1 (2026-10-12), para aprovação do solicitante. B2, B3 e B5 foram
+aprovadas; B1 e B4 foram ajustadas conforme a avaliação do solicitante; B6 é nova. A
+implementação só começa depois da aprovação desta revisão e da integração da 033 (#69).
 **Input**: Solicitante, 2026-10-12: depois da 033, implementar o refinamento visual das
 telas de conclusão e de confirmação, com o protótipo aprovado como referência
 ([auditoria](../../docs/auditorias/2026-10-12-conclusao-e-confirmacao.md), seção 4;
@@ -13,6 +14,15 @@ foram aprovadas conceitualmente. D3 e D4 seguem pendentes, sem bloquear. Formul�
 mobile-first, na coluna da jornada. Caber numa tela é resultado, não requisito.
 Legibilidade, espaçamento e acessibilidade vêm primeiro. Verificar 320 px, fonte a 200%,
 teclado e ausência de JavaScript. Sem promessas institucionais novas.
+
+**Revisão 1 (solicitante, 2026-10-12):**
+- B1 ajustada: a ficha completa sai da confirmação, mas curso, unidade e ano ficam num
+  contexto compacto, com redação de pesquisa já concluída;
+- B4 ajustada: a revisão volta recolhida também depois de salvar, com "Parte salva."
+  visível;
+- acessibilidade: entram uma verificação breve com leitor de tela, ordem coerente nas duas
+  colunas, foco sem cortes e testes separados de fonte a 200% e de zoom/refluxo;
+- registro da ressalva da 033 sobre o aviso de mudança de caminho (B6).
 
 ## Contexto
 
@@ -27,6 +37,8 @@ teclado e ausência de JavaScript. Sem promessas institucionais novas.
 | O título "Pesquisa concluída", a frase de registro e o texto de encerramento literal são requisitos | 014 FR-038, FR-040 | Não mudam |
 | A confirmação não pode afirmar finalidade, uso futuro, contato ou periodicidade | 014 FR-039; DP-504 | Nenhuma frase nova desse tipo |
 | A Seção 13 da Versão de 2024 não tem título | Inventário, E-11; auditoria D2 | Continua "Parte 9" (023 FR-015) |
+| O curso sozinho pode não distinguir duas formações da mesma Pessoa | 007 (várias formações); `resumo_da_formacao` já combina curso, unidade e ano | A confirmação mantém a identificação compacta (FR-005, B1) |
+| O aviso da 033 "Sua resposta mudou o caminho da pesquisa…" também aparece numa parte só de opcionais já vista e deixada em branco, quando o percurso pode não ter mudado | 033 FR-004, FR-006 e edge case "parte já vista e deixada em branco" | Redação neutra proposta (FR-011, B6), sem mudar a regra de destino |
 
 ## User Scenarios & Testing
 
@@ -55,7 +67,8 @@ com outra formação pendente. Uma declarante, para a confirmação da declarada
 3. **Dado** a Parte 9, sem título na Versão, **então** o link diz "Parte 9", sem número
    repetido nem trecho de Pergunta.
 4. **Dado** Ana voltando de uma revisão (033), **então** "Parte salva." aparece no topo e a
-   revisão vem **aberta**, para ela conferir outra parte se quiser.
+   revisão vem **recolhida**, como nos demais casos. O botão fica onde fica com a revisão
+   fechada, e ela pode reabrir a lista se quiser revisar outra parte (B4).
 5. **Dado** a ficha completa da formação, **então** ela não aparece mais na conclusão.
 
 ### US2 — A confirmação registra, agradece com o texto da Versão e leva ao Portal (P1)
@@ -67,33 +80,56 @@ como na US1.
 
 1. **Dado** Ana depois de concluir, **então** vê, nesta ordem:
    - "Pesquisa concluída", com a frase de registro;
+   - a identificação compacta da formação, com curso, unidade e ano (texto provisório:
+     "Formação: Tecnologia em Análise e Desenvolvimento de Sistemas · Serra · 2022");
    - o texto de encerramento da Versão, literal;
    - o bloco "No Portal do Egresso", com "Ver minha trajetória no Ifes" com aparência de
      ação principal e, abaixo, o convite de e-mail.
 2. **Dado** Diego, com outra formação pendente, **então** a próxima formação vem antes do
    bloco do Portal e continua sendo a única ação principal. "Ver minha trajetória no Ifes"
    volta a ter aparência de link.
-3. **Dado** a confirmação, **então** a ficha completa da formação não aparece (B1), e nenhuma
-   frase de finalidade, uso, contato ou periodicidade é acrescentada.
+3. **Dado** a confirmação, **então** a ficha completa da formação (nível, modalidade, data
+   completa) não aparece, mas a identificação compacta sim (B1). Ela não usa "Você está
+   respondendo". Nenhuma frase de finalidade, uso, contato ou periodicidade é acrescentada.
 4. **Dado** a declarante, **então** a confirmação dela é a de hoje.
 
-### US3 — Legível e utilizável em qualquer largura, com teclado e sem JavaScript (P1)
+### US3 — Legível e utilizável em qualquer largura, com teclado, leitor de tela e sem JavaScript (P1)
 
 **Acceptance Scenarios:**
 
-1. **Dado** 320 px, 375 px e 375 px com fonte a 200%, **então** nenhuma das duas telas tem
-   rolagem horizontal, com a revisão aberta ou fechada.
-2. **Dado** 1280 px, **então** a coluna é a da jornada, e a lista aberta usa duas colunas
-   quando couber, voltando a uma quando a fonte cresce.
-3. **Dado** o teclado, **então** a ordem é: resumo da revisão → (aberta) links das partes →
-   "Concluir pesquisa". O resumo abre e fecha com Enter e Espaço, e o foco é sempre visível.
-4. **Dado** JavaScript desligado, **então** tudo funciona igual. Sem suporte a `<details>`, a
+1. **Fonte a 200%** (só o tamanho do texto, a 375 px e a 1280 px): **então**, nas duas telas,
+   com a revisão aberta e fechada:
+   - todo o conteúdo e toda a função continuam disponíveis;
+   - nenhum texto é cortado ou sobreposto;
+   - não há rolagem horizontal.
+
+   (WCAG 2.2, 1.4.4.)
+2. **Zoom/refluxo** (largura equivalente a 320 CSS px, como 1280 px com zoom de 400%):
+   **então**, nas duas telas, o conteúdo reflui numa coluna, sem rolagem em duas dimensões e
+   sem perda de conteúdo ou função (WCAG 2.2, 1.4.10). A ausência de rolagem horizontal
+   sozinha não basta: a verificação confere também que cada elemento esperado está visível e
+   utilizável.
+3. **Dado** 1280 px, **então** a coluna é a da jornada. A lista aberta usa duas colunas quando
+   couber, e a sequência das partes segue de cima para baixo na primeira coluna e depois na
+   segunda, igual à ordem de leitura e de teclado.
+4. **Dado** o teclado, **então** a ordem é: resumo da revisão → (aberta) links das partes, em
+   ordem numérica → "Concluir pesquisa". O resumo abre e fecha com Enter e Espaço. O foco é
+   sempre visível e nunca cortado por borda, divisor ou coluna. O marcador nativo e os alvos
+   de 44 px se mantêm.
+5. **Leitor de tela** (verificação breve, VoiceOver ou NVDA): **então**:
+   - o resumo é anunciado como controle expansível, com o estado aberto ou fechado;
+   - cada link diz o título da parte (ou "Parte N"), precedido pelo número lido como texto;
+   - "Parte salva." é anunciado ao chegar;
+   - na confirmação, título, registro e ação principal são anunciados em ordem.
+6. **Dado** JavaScript desligado, **então** tudo funciona igual. Sem suporte a `<details>`, a
    lista aparece aberta.
 
 ### Edge Cases
 
-- **Formação sem curso, unidade ou ano:** o contexto compacto mostra o texto atual de "dados
-  não informados".
+- **Formação sem curso, unidade ou ano:** na conclusão, o contexto compacto mostra o texto
+  atual de "dados não informados". Na confirmação, a identificação mostra só os dados
+  informados e não aparece quando não há nenhum (a frase de registro já cobre esse caso, 014
+  FR-038).
 - **Percurso com uma única parte** (Termos "Não"): o resumo diz "· 1 parte".
 - **Declarada na conclusão:** o contexto compacto usa o rótulo da formação informada, como nas
   Seções.
@@ -115,26 +151,32 @@ como na US1.
   8. o botão "Concluir pesquisa".
 
   A ficha completa da formação NÃO DEVE aparecer.
-- **FR-002**: A revisão DEVE ser recolhida por padrão, sem JavaScript. Ela DEVE vir aberta
-  quando a pessoa chega pela volta de uma revisão com "Parte salva." (B4). O resumo DEVE ter
-  o marcador nativo de abrir e fechar e alvo de pelo menos 44 px.
+- **FR-002**: A revisão DEVE vir recolhida sempre, inclusive na volta de uma revisão com
+  "Parte salva." (B4), e abrir sem JavaScript. O resumo DEVE ter o marcador nativo de abrir e
+  fechar e alvo de pelo menos 44 px.
 - **FR-003**: Cada item da revisão DEVE ter "Parte N" fora do link, em texto discreto, e o
   título da Seção como texto do link. Para Seção sem título, o link diz "Parte N" e não há
   linha de número (023 FR-015). Os títulos são os da Versão (008 FR-033).
-- **FR-004**: A partir de ~32 rem de largura útil, a lista aberta PODE usar duas colunas. Com
-  fonte ampliada, ela DEVE voltar a uma coluna antes de criar rolagem horizontal.
+- **FR-004**: A partir de ~32 rem de largura útil, a lista aberta PODE usar duas colunas, com
+  a sequência de cima para baixo na primeira coluna e depois na segunda, igual à ordem do
+  documento (leitura e teclado). Com fonte ampliada ou largura de refluxo, ela DEVE voltar a
+  uma coluna antes de criar rolagem horizontal ou cortar conteúdo.
 
 **Confirmação** — revisa a 023 FR-028
 
 - **FR-005**: A confirmação de Participação ancorada em Conclusão Acadêmica DEVE apresentar,
   nesta ordem:
   1. título e frase de registro (014 FR-038);
-  2. texto de encerramento ou agradecimento (014 FR-040);
-  3. próxima formação, quando houver (023 FR-011);
-  4. o bloco "No Portal do Egresso", com "Ver minha trajetória no Ifes" e o convite de
+  2. a identificação compacta da formação, com curso, unidade e ano, quando informados
+     (o mesmo resumo das Seções), com redação de pesquisa concluída e sem "Você está
+     respondendo" (B1);
+  3. texto de encerramento ou agradecimento (014 FR-040);
+  4. próxima formação, quando houver (023 FR-011);
+  5. o bloco "No Portal do Egresso", com "Ver minha trajetória no Ifes" e o convite de
      e-mail (020).
 
-  A ficha completa da formação NÃO DEVE aparecer (B1).
+  A ficha completa da formação (rótulos e valores de curso, unidade, data, nível,
+  modalidade e forma de oferta) NÃO DEVE aparecer.
 - **FR-006**: "Ver minha trajetória no Ifes" DEVE ter aparência de ação principal quando não
   houver próxima formação, e de link quando houver. A tela tem uma única ação principal.
 - **FR-007**: A confirmação da declarada NÃO DEVE mudar.
@@ -145,25 +187,40 @@ como na US1.
   de registro, comportamento da 033, rotas ou dados. Ela NÃO DEVE acrescentar frase de
   finalidade, uso, contato ou periodicidade (014 FR-039), JavaScript, modelo ou migração.
 - **FR-009**: A coluna, os tokens e o foco DEVEM ser os da jornada (015). Nenhum token novo.
-- **FR-010**: O fechamento DEVE ter:
-  - testes por requisição da ordem, da ausência da ficha, da revisão aberta só na volta, da
-    ação principal única e da declarada inalterada;
-  - capturas e medidas reais a 375, 320, 375 com fonte a 200% e 1280 px;
-  - um roteiro com teclado registrado em `validacao.md`.
+  O espaçamento em torno do resumo, dos links e do botão DEVE deixar o contorno e o halo do
+  foco inteiros (B5).
+- **FR-010**: O fechamento DEVE ter, registrado em `validacao.md`:
+  - testes por requisição da ordem, da ausência da ficha, da identificação compacta na
+    confirmação, da revisão sempre recolhida, da ação principal única e da declarada
+    inalterada;
+  - capturas e medidas reais, refeitas na implementação (as do protótipo são só
+    referência), a 375 px, a 1280 px e com fonte a 200%;
+  - um teste de refluxo separado, a 320 CSS px, que confira a presença e o uso de cada
+    elemento esperado, além da ausência de rolagem horizontal;
+  - um roteiro com teclado (ordem, foco inteiro, Enter e Espaço no resumo);
+  - a verificação breve com leitor de tela da US3.5. Se não puder ser executada no ambiente
+    de implementação, o fechamento a registra como pendente e o PR diz isso.
+- **FR-011**: O aviso da 033 ao levar a uma parte que pede atenção DEVE ter redação neutra,
+  verdadeira tanto para uma parte nova no caminho quanto para uma parte só de opcionais já
+  vista e deixada em branco (B6). A regra de destino da 033 (FR-004) NÃO DEVE mudar.
 
 ## Success Criteria
 
-- **SC-001**: Sem rolagem horizontal nas duas telas, de 320 a 1280 px, com fonte a 100% e
-  200%, com a revisão aberta e fechada.
+- **SC-001**: Com fonte a 200% e no refluxo a 320 CSS px, as duas telas, com a revisão
+  aberta e fechada, mantêm todo o conteúdo e toda a função, sem corte, sobreposição ou
+  rolagem horizontal. As duas verificações são registradas separadamente.
 - **SC-002**: A 375×812, "Concluir pesquisa" fica na primeira tela com a revisão fechada.
   Isso é referência, não meta: nenhum espaçamento, tamanho de fonte ou alvo é reduzido para
   cumpri-la.
-- **SC-003**: Um h1 por tela; alvos ≥ 44 px; foco visível em todo elemento interativo; uma
-  única ação principal por tela.
+- **SC-003**: Um h1 por tela; alvos ≥ 44 px; foco visível e inteiro em todo elemento
+  interativo; uma única ação principal por tela; ordem visual das partes igual à ordem de
+  leitura e de teclado.
 - **SC-004**: Os textos protegidos (título, registro, encerramento) estão iguais, e nenhuma
   frase de finalidade aparece. Verificado em teste.
 - **SC-005**: A suíte completa passa. Os testes de requisitos revistos são atualizados com
   nota.
+- **SC-006**: A verificação com leitor de tela da US3.5 está registrada, executada ou
+  declarada pendente.
 
 ## Requisitos revisados
 
@@ -172,26 +229,30 @@ como na US1.
 | 023 FR-027 | Ordem da conclusão (FR-001); revisão recolhida (FR-002); ficha sai |
 | 023 FR-028 | Ficha sai da confirmação; trajetória com peso de ação quando não há próxima formação (FR-005, FR-006) |
 | 014 FR-041 (revista pela 020 e pela 023) | Inalterada no que permite; só a aparência da ligação da trajetória muda |
+| 033 FR-006 (texto do aviso) | Redação neutra (FR-011, B6); a regra de destino não muda |
 
-## Decisões para aprovação
+## Decisões
 
-| # | Decisão | Proposta |
+| # | Decisão | Situação |
 |---|---|---|
-| B1 | Ficha da formação na confirmação | **Retirar.** O curso já está na frase de registro, e a navegação do Portal leva à trajetória. Alternativa conservadora: contexto compacto no fim |
-| B2 | "Última etapa" acima do título da conclusão | Manter, no estilo discreto da linha de parte das Seções |
-| B3 | Frase de fim | "Você chegou ao fim da pesquisa. Falta só enviar suas respostas." (DP-801) |
-| B4 | Revisão aberta na volta de uma revisão | Sim: abrir quando houver "Parte salva."; fechada nos demais casos |
-| B5 | Foco do resumo da revisão | Manter o foco comum da jornada (contorno escuro com halo amarelo), como em todo elemento interativo (015). Integrar visualmente pela posição e pelo espaçamento, não trocando o indicador |
+| B1 | Ficha da formação na confirmação | **Ajustada** (2026-10-12): a ficha completa sai; curso, unidade e ano ficam numa identificação compacta logo depois da frase de registro. Texto provisório: "Formação: curso · unidade · ano" (DP-801) |
+| B2 | "Última etapa" acima do título da conclusão | **Aprovada**: discreto e legível, no estilo da linha de parte das Seções |
+| B3 | Frase de fim | **Aprovada**: "Você chegou ao fim da pesquisa. Falta só enviar suas respostas." (DP-801), com o aviso de irreversibilidade junto do botão |
+| B4 | Revisão na volta de uma revisão | **Ajustada** (2026-10-12): recolhida, com "Parte salva." visível. No protótipo, a 375 px, o botão termina a 666 px fechada e a 1.424 px aberta; a implementação mede de novo |
+| B5 | Foco do resumo da revisão | **Aprovada**: o foco comum da jornada, com espaçamento que não corte o contorno nem o halo |
+| B6 | Redação do aviso da 033 | **Proposta**: "Confira esta parte antes de concluir: ela pode ter perguntas ainda sem resposta." Vale para a parte nova e para a parte só de opcionais já vista e deixada em branco, sem afirmar que o caminho mudou. A regra de destino não muda |
 
 ## Decisões Pendentes
 
-- **DP-801:** textos definitivos ("Última etapa", frase de fim, "No Portal do Egresso").
+- **DP-801:** textos definitivos ("Última etapa", frase de fim, "Formação:", "No Portal do
+  Egresso", aviso da B6).
 - **D3, D4 (auditoria):** título da Seção 13 e texto de encerramento numa próxima Versão,
   institucionais. Enquanto não forem resolvidas, a lista mostra "Parte 9" e a confirmação
   mostra "Este formulário chegou ao fim!".
 
 ## Out of Scope
 
-Comportamento da revisão (033); qualquer mudança na Versão; resumo de respostas;
-composição desktop no estilo do Portal (a jornada continua mobile-first); leitor de tela
-(segue no roteiro da versão C).
+Regra de destino da revisão (033); qualquer mudança na Versão; resumo de respostas;
+composição desktop no estilo do Portal (a jornada continua mobile-first); auditoria
+completa com leitor de tela das demais telas (segue no roteiro da versão C; aqui entra só a
+verificação breve da US3.5).

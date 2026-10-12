@@ -202,6 +202,17 @@
 
   A trilha não muda a sequência da §13.3, os números reservados (027, 030) nem a situação dos
   checkpoints, que continuam **NÃO APLICADOS**.
+
+  *Estado em 2026-10-12 (fim do dia):*
+  - **033 implementada no PR #69**, com CI verde, aguardando revisão e integração;
+  - **034 com a spec na revisão 1:** B2, B3 e B5 aprovadas; B1 ajustada (identificação
+    compacta na confirmação); B4 ajustada (revisão sempre recolhida); verificação breve com
+    leitor de tela, fonte a 200% e refluxo a 320 CSS px. Aguarda aprovação, e a
+    implementação só começa depois da integração da 033;
+  - **ressalva da 033:** o aviso "Sua resposta mudou o caminho da pesquisa…" também aparece
+    numa parte só de opcionais já vista e deixada em branco, quando o caminho pode não ter
+    mudado. A 034 propõe uma redação neutra (B6), sem mudar a regra de destino;
+  - D3 e D4 continuam **DECISÃO PENDENTE** e não bloqueiam a 033 nem a 034.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
