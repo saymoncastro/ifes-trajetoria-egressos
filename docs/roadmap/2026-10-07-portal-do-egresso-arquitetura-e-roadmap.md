@@ -153,6 +153,18 @@
   resolver a preparação (leitor de tela, procedimento de participação) antes de aplicar os
   checkpoints. Checkpoint 1 e Checkpoint 2 continuam **NÃO APLICADOS**; a 027 continua
   fora.
+- **Revisão 15 (2026-10-11).** O solicitante reconduziu a 031 ao fluxo do Spec Kit:
+  **clarify → plan → tasks → analyze** ficam autorizados. Isso ajusta de forma explícita a
+  restrição da revisão 14 ("sem plan, tasks"):
+  - preparar plan e tasks **não libera a implementação**. Código e migrações da 031 continuam
+    condicionados à leitura do Checkpoint 1 e do Checkpoint 2 (bloco Comunidade) e à escolha
+    entre 031 e 030. A T001 das tasks é o portão, como na 025 e na 026;
+  - a expansão de protótipos termina: o material existente (031, #64; Histórias e Encontre
+    colegas, #65) é suficiente. O clarify resolve só ambiguidades que mudam comportamento,
+    dados ou autorização;
+  - a organização dos checkpoints segue como trilha separada, sem novas entregas agora.
+
+  Checkpoint 1 e Checkpoint 2 continuam **NÃO APLICADOS**.
 - **Entradas.**
   - O protótipo conceitual `portal_egresso.html`.
   - A Constituição 2.0.0.
