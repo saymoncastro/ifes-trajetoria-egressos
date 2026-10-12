@@ -7,8 +7,10 @@ qualitativos da 026.
 
 > **Situação: NÃO APLICADO.**
 > - Nenhuma sessão com egressos foi feita.
-> - O bloco Comunidade depende de um **protótipo estático**. Só a parte de Encontros existe
->   (031, revisão 14); Histórias e Encontre colegas ainda não.
+> - O bloco Comunidade depende de um **protótipo estático**, agora completo: Encontros (031) e
+>   [Histórias e Encontre colegas](../../prototipos/2026-10-11-comunidade/index.html), com um
+>   [percurso curto](percurso-bloco-comunidade.md). O material aguarda a revisão do solicitante
+>   (Q7).
 > - O Checkpoint 2 vem depois do Checkpoint 1, dos ajustes e do protótipo da Comunidade
 >   (roadmap, §13.3).
 > - As pendências Q1 a Q7 ([preparação](preparacao-sessao.md)) são decididas antes da
@@ -214,9 +216,10 @@ autorização do solicitante.
 > **Revisão 14 do roadmap (2026-10-11).** A parte de **Encontros** já existe: o
 > [protótipo da 031](../../../specs/031-encontros-propostos-egressos/prototipo/index.html)
 > mostra a organizadora, a participante e a moderação. Ele atende aos requisitos de Encontros
-> abaixo e serve às tarefas F1 a F4. **Histórias** e **Encontre colegas** ainda não têm
-> protótipo. Sem eles, as tarefas H1, H2, D1 e D2 e os critérios CM-C3, CM-U3 e CM-U4 não
-> podem ser aplicados. A [spec da 031](../../../specs/031-encontros-propostos-egressos/spec.md)
+> abaixo e serve às tarefas F1 a F4. **Complemento (2026-10-11):** as telas de
+> [Histórias e Encontre colegas](../../prototipos/2026-10-11-comunidade/index.html) cobrem H1,
+> H2, D1 e D2 (CM-C3, CM-U3, CM-U4) sem abrir a 030 nem especificar o diretório. A sessão usa o
+> [percurso curto](percurso-bloco-comunidade.md), com 12 telas. A [spec da 031](../../../specs/031-encontros-propostos-egressos/spec.md)
 > acrescenta cinco observações exploratórias (CM-F1 a CM-F5), sem limiar (Q8, decidida em
 > 2026-10-11). Ver "Observações exploratórias da 031".
 
@@ -258,9 +261,8 @@ proporiam e se participariam.
 Leitura: sem limiar. As observações indicam o que a spec e o protótipo da 031 precisam rever
 antes de qualquer implementação. Não são taxa de adesão.
 
-**Seleção de telas para a sessão.** As 33 telas do protótipo cobrem a spec. A sessão usa um
-percurso curto, a escolher quando o material do bloco Comunidade estiver completo (roadmap,
-§13.3, passo 5).
+**Seleção de telas para a sessão.** As 33 telas do protótipo cobrem a spec. A sessão usa o
+[percurso curto](percurso-bloco-comunidade.md), a aprovar com o material (Q7).
 
 ## Registro
 
