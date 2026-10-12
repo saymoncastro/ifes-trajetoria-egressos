@@ -1,0 +1,68 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ e.titulo }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-020 a FR-026 e FR-024a (protótipos p3, p4, p7, p9, p10, o4, o6, o9). O link só existe no contexto quando regras.mostra_link permite (FR-021). #}
+<div class="pe">
+{% if aviso %}<div class="portal-container"><p role="status" class="aviso aviso-sucesso pe-status">{{ aviso }}</p></div>{% endif %}
+<section class="pe-hero" aria-labelledby="pe-titulo">
+<div class="portal-container pe-hero-grade">
+<div>
+<p class="pe-selo pe-selo-f">{{ m.SELO_F_PAGINA }}</p>
+<h1 id="pe-titulo">{{ e.titulo }}</h1>
+<p class="pe-onde">{{ m.ONDE }}</p>
+</div>
+<p class="pe-data"><span class="pe-data-dia" aria-hidden="true">{{ e.dia }}</span><span class="pe-data-semana">{{ e.semana }},</span><span class="pe-data-mes">{{ e.data_longa }}</span><span class="pe-data-hora">{{ e.horario }} {{ m.FUSO }}</span></p>
+</div>
+</section>
+<div class="portal-container pe-corpo">
+<div class="pe-texto">
+<section class="pe-bloco" aria-labelledby="pe-sobre"><h2 id="pe-sobre">{{ m.SOBRE }}</h2><p>{{ e.descricao }}</p></section>
+<section class="pe-bloco" aria-labelledby="pe-quem"><h2 id="pe-quem">{{ m.QUEM_PROPOE }}</h2>
+<div class="pe-pessoa"><span class="pe-inicial" aria-hidden="true">{{ e.inicial }}</span><div><p class="pe-nome">{{ e.nome }}</p><p class="pe-nota">{{ m.NOME_ESCOLHIDO }}</p><p>{{ e.origem }} <span class="inicio-origem">· {{ m.REGISTRO_DO_IFES }}</span></p></div></div>
+{% if e.moderado_por %}<p class="pe-nota">{{ e.moderado_por }}</p>{% endif %}</section>
+<section class="pe-bloco" aria-labelledby="pe-para-quem"><h2 id="pe-para-quem">{{ m.PARA_QUEM }}</h2>
+<p>{{ e.publico }}. {{ m.QUEM_RECEBE_O_ENDERECO }}</p>
+{% if explicacao %}<p class="pe-porque">{{ explicacao }}</p>{% elif fora_do_publico and quem != "organizador" %}<p class="pe-aviso">{{ m.VOCE_RECEBEU }}</p>{% endif %}
+</section>
+</div>
+{% if quem == "organizador" %}
+<section class="pe-participar" aria-labelledby="pe-participar">
+<h2 id="pe-participar">{{ m.VOCE_PROPOS }}</h2>
+<p><span class="pe-situacao">{{ situacao_texto }}</span></p>
+{% if motivo %}<div class="pe-cartao"><p class="pe-rotulo">{{ m.MOTIVO }}</p><p><strong>{{ motivo }}.</strong></p>{% if complemento %}<p>“{{ complemento }}”</p>{% endif %}</div>{% endif %}
+{% if em_analise %}<ul class="pe-ciencia">{% for item in m.EM_ANALISE_ITENS %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+{% if contagem %}<p class="pe-contagem">{{ contagem }}</p><p class="pe-nota">{{ m.SO_O_NUMERO }}</p>{% endif %}
+{% if e.link %}<div class="pe-cartao"><p class="pe-rotulo">{{ m.LINK_DA_REUNIAO }}</p><p><a href="{{ e.link.endereco }}" rel="noreferrer">{{ e.link.texto }}</a></p><p class="pe-nota">{{ e.link.nota }}</p></div>
+<div class="pe-cartao"><p class="pe-rotulo">{{ m.PARA_COMPARTILHAR }}</p><p>{{ m.COMPARTILHAR_TEXTO }}</p><span class="pe-endereco">{{ endereco }}</span></div>{% endif %}
+{% if pode_cancelar %}<p class="pe-acoes"><a class="pe-contorno" href="/encontros/{{ e.id }}/cancelar/">{{ m.CANCELAR_ENCONTRO }}</a></p>{% endif %}
+<p class="pe-acoes"><a href="/encontros/seus/">{{ m.SEUS }}</a></p>
+</section>
+{% elif cancelado or encerrado %}
+<section class="pe-participar" aria-labelledby="pe-participar">
+<h2 id="pe-participar">{% if cancelado %}{{ m.CANCELADO }}{% else %}{{ m.ENCERRADO }}{% endif %}</h2>
+<p>{% if cancelado %}{{ m.CANCELADO_TEXTO_CURTO }}{% else %}{{ m.ENCERRADO_TEXTO_CURTO }}{% endif %}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/">{{ m.VER_TODOS }}</a></p>
+</section>
+{% elif confirmacao %}
+<section class="pe-participar" aria-labelledby="pe-participar">
+<h2 id="pe-participar" class="pe-confirmado">{{ m.VOCE_VAI }}</h2>
+<p>{{ confirmada_em_texto }}</p>
+{% if e.link %}<div class="pe-cartao"><p class="pe-rotulo">{{ m.LINK_DA_REUNIAO }}</p><p><a href="{{ e.link.endereco }}" rel="noreferrer">{{ e.link.texto }}</a></p><p class="pe-nota">{{ e.link.nota }}</p></div>{% endif %}
+{% if aceita %}<p class="pe-acoes"><a class="pe-contorno" href="/encontros/{{ e.id }}/cancelar-participacao/">{{ m.CANCELAR_PARTICIPACAO }}</a></p>{% endif %}
+<p class="pe-nota">{{ m.INDICAR }}</p>
+<span class="pe-endereco">{{ endereco }}</span>
+</section>
+{% else %}
+<section class="pe-participar" aria-labelledby="pe-participar">
+<h2 id="pe-participar">{{ m.VOU_PARTICIPAR_TITULO }}</h2>
+{% if aceita %}
+<ul class="pe-ciencia">{% for item in ciencia %}<li>{{ item }}</li>{% endfor %}</ul>
+<form method="post" action="/encontros/{{ e.id }}/participar/">{% csrf_token %}<input type="hidden" name="versao" value="{{ versao }}"><button type="submit" class="pe-botao pe-acao-principal">{{ m.VOU_PARTICIPAR }}</button></form>
+<p class="pe-versao">{{ ciencia_versao }}</p>
+{% else %}<p>{{ m.PARTICIPACAO_ENCERRADA }}</p>{% endif %}
+</section>
+{% endif %}
+</div>
+<div class="portal-container pe-fim"><p class="ligacao-isolada"><a href="/encontros/">{{ m.VER_TODOS }}</a></p></div>
+</div>
+{% endblock %}

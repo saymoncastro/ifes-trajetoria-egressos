@@ -1,11 +1,14 @@
-"""Rotas do Portal (024; contracts/rotas.md; 025; 026 plan, "Rotas"). Só incluídas com
-`TRAJETORIA_PORTAL` ligado."""
+"""Rotas do Portal (024; contracts/rotas.md; 025; 026 plan, "Rotas"; 031 contracts/rotas.md,
+incremento 1). Só incluídas com `TRAJETORIA_PORTAL` ligado."""
 
 from django.urls import path
 
 from trajetoria.portal import views
 from trajetoria.portal.contribuicao import views_egresso as contribuicao
 from trajetoria.portal.contribuicao import views_unidade as contribuicao_unidade
+from trajetoria.portal.encontros import views_egresso as encontros
+from trajetoria.portal.encontros import views_moderacao as moderacao
+from trajetoria.portal.encontros import views_organizador as organizador
 from trajetoria.portal.oportunidades import views_curadoria, views_egresso
 
 urlpatterns = [
@@ -29,4 +32,16 @@ urlpatterns = [
     path("curadoria/contribuicoes/", contribuicao_unidade.lista),
     path("curadoria/contribuicoes/exportar.csv", contribuicao_unidade.exportar),
     path("curadoria/contribuicoes/<uuid:pk>/contato/", contribuicao_unidade.contato),
+    path("encontros/", encontros.encontros),
+    path("encontros/propor/", organizador.propor),
+    path("encontros/propor/enviar/", organizador.enviar),
+    path("encontros/seus/", organizador.seus),
+    path("encontros/<uuid:pk>/", encontros.pagina),
+    path("encontros/<uuid:pk>/participar/", encontros.participar),
+    path("encontros/<uuid:pk>/cancelar-participacao/", encontros.cancelar_participacao),
+    path("encontros/<uuid:pk>/cancelar/", organizador.cancelar),
+    path("curadoria/encontros/", moderacao.lista),
+    path("curadoria/encontros/<uuid:pk>/", moderacao.analisar),
+    path("curadoria/encontros/<uuid:pk>/recusar/", moderacao.recusar),
+    path("curadoria/encontros/<uuid:pk>/retirar/", moderacao.retirar),
 ]

@@ -1,0 +1,28 @@
+{% extends "portal/curadoria/base.html" %}
+{% block estilo %}{{ block.super }}
+/* 031 (protótipo m1): as células quebram linhas, como na lista de contribuições da 026. */
+#conteudo .rolagem .encontros-tabela th, #conteudo .rolagem .encontros-tabela td {
+  white-space: normal; vertical-align: top; overflow-wrap: break-word; }
+.encontros-tabela td a { display: inline-flex; align-items: center; min-height: 44px; }
+{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% if aviso %}<p role="status" class="aviso aviso-sucesso">{{ aviso }}</p>{% endif %}
+<p>{{ m.MODERACAO_INTRODUCAO }}</p>
+<h2>{{ m.PARA_ANALISE }}</h2>
+{% if analise %}
+<div class="rolagem" role="region" aria-label="{{ m.PARA_ANALISE }}" tabindex="0">
+<table class="encontros-tabela"><caption>{{ m.PARA_ANALISE }} ({{ analise|length }})</caption>
+<thead><tr><th scope="col">Data do encontro</th><th scope="col">Título</th><th scope="col">Público</th><th scope="col">Responsável</th><th scope="col">Enviado em</th><th scope="col">Ações</th></tr></thead>
+<tbody>{% for linha in analise %}<tr><td>{{ linha.e.data }}</td><th scope="row">{{ linha.e.titulo }}</th><td>{{ linha.e.publico }}</td><td>{{ linha.responsavel }}</td><td>{{ linha.enviado_em }}</td>
+<td><a href="/curadoria/encontros/{{ linha.e.id }}/" aria-label="{{ m.ANALISAR }}: {{ linha.e.titulo }}">{{ m.ANALISAR }}</a></td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p>{{ m.FILA_VAZIA }}</p>{% endif %}
+<h2>{{ m.PUBLICADOS }}</h2>
+{% if publicados %}
+<div class="rolagem" role="region" aria-label="{{ m.PUBLICADOS }}" tabindex="0">
+<table class="encontros-tabela"><caption>{{ m.PUBLICADOS }} ({{ publicados|length }})</caption>
+<thead><tr><th scope="col">Data do encontro</th><th scope="col">Título</th><th scope="col">Confirmações</th><th scope="col">Ações</th></tr></thead>
+<tbody>{% for linha in publicados %}<tr><td>{{ linha.e.data }}</td><th scope="row">{{ linha.e.titulo }}</th><td>{{ linha.contagem }}</td>
+<td><a href="/curadoria/encontros/{{ linha.e.id }}/retirar/" aria-label="{{ m.RETIRAR }}: {{ linha.e.titulo }}">{{ m.RETIRAR }}</a></td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p>{{ m.PUBLICADOS_VAZIO }}</p>{% endif %}
+{% endblock %}

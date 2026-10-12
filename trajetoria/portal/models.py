@@ -9,6 +9,10 @@ listas de público = critério ausente; `[]` e `""` são inválidos e nunca grav
 dependem de tempo ou escopo ficam em `oportunidades/operacoes.py`, único caminho de escrita.
 
 Manifestação (Feature 026; plan, "Modelo de dados"; R2 a R6): ver a classe.
+
+Encontro e Confirmação (Feature 031, incremento 1; data-model.md; research R2, R3, R5): ver as
+classes. A Confirmação tem chave estrangeira para o Encontro, interna à camada; nenhuma aponta
+para o núcleo.
 """
 
 import uuid
@@ -218,3 +222,192 @@ class Manifestacao(models.Model):
 
     def __str__(self) -> str:
         return f"Manifestação {self.forma}"
+
+
+
+# --- Encontro proposto por egresso e Confirmação (031, incremento 1) --------------------------
+
+ENCONTRO_TITULO_MAXIMO = 90
+ENCONTRO_DESCRICAO_MAXIMA = 400
+NOME_APRESENTACAO_MAXIMO = 40
+COMPLEMENTO_MAXIMO = 300
+
+
+class MotivoDeModeracao(models.TextChoices):
+    """Lista provisória de recusa e retirada (031 FR-017; H-3104; D8)."""
+
+    FINALIDADE = "finalidade", "Fora da finalidade dos encontros entre egressos"
+    COMERCIAL = "comercial", "Divulgação comercial ou venda"
+    LINK = "link", "Link da reunião inadequado"
+    CONFUSAO = "confusao", (
+        "Informação incompleta ou que pode ser confundida com evento oficial do Ifes"
+    )
+    RESPEITO = "respeito", "Desrespeito a pessoas ou à lei"
+    OUTRO = "outro", "Outro motivo"
+
+
+def _tamanho_entre(campo: str, minimo: int, maximo: int, prefixo: str) -> models.CheckConstraint:
+    return models.CheckConstraint(
+        condition=Q(GreaterThanOrEqual(Length(campo), minimo))
+        & Q(LessThanOrEqual(Length(campo), maximo)),
+        name=f"{prefixo}_{campo}_tamanho",
+    )
+
+
+def _par(prefixo: str, *campos: str) -> models.CheckConstraint:
+    """Os campos são todos nulos ou todos preenchidos (momento e operador)."""
+    return models.CheckConstraint(
+        condition=Q(**{f"{c}__isnull": True for c in campos})
+        | Q(**{f"{c}__isnull": False for c in campos}),
+        name=f"{prefixo}_{campos[0]}_em_par",
+    )
+
+
+class Encontro(models.Model):
+    """Encontro virtual proposto por um egresso (031 FR-001 a FR-024a; data-model.md).
+
+    Sem chave estrangeira para o núcleo (R2): `pessoa_id` e `conclusao_origem_id` são
+    identificadores, e a posse da Conclusão é verificada em `encontros/operacoes.py`, único
+    caminho de escrita. A origem é copiada da Conclusão no envio (R3): a moderação aprova o
+    que vê. Sem coluna de estado: a situação deriva dos momentos e do relógio
+    (`encontros.regras.situacao`; R5). O público usa os critérios da Oportunidade (R6).
+
+    Incremento 1: correção depois da publicação, nova análise e denúncia ficam para o
+    incremento 2 (roadmap, revisão 16) e não têm campos aqui (XXII).
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    pessoa_id = models.UUIDField()
+    conclusao_origem_id = models.UUIDField()
+    origem_curso = models.TextField(default="", blank=True)
+    origem_unidade = models.TextField(default="", blank=True)
+    origem_ano = models.PositiveSmallIntegerField(null=True)
+    nome_apresentacao = models.TextField()
+    titulo = models.TextField()
+    descricao = models.TextField()
+    inicio = models.DateTimeField()
+    termino = models.DateTimeField()
+    publico_unidades = ArrayField(models.TextField(), null=True)
+    publico_niveis = ArrayField(models.TextField(), null=True)
+    publico_cursos = ArrayField(models.TextField(), null=True)
+    link = models.TextField()
+    versao_do_termo = models.TextField()
+    enviado_em = models.DateTimeField()
+    publicado_em = models.DateTimeField(null=True)
+    publicado_por = models.TextField(null=True)
+    # "institucional" (CPAEG) ou a unidade da CSAEG que publicou (FR-024; analyze F1).
+    publicado_por_escopo = models.TextField(null=True)
+    recusado_em = models.DateTimeField(null=True)
+    recusado_por = models.TextField(null=True)
+    # Quem efetivamente recusou, como na publicação (code review do PR #67).
+    recusado_por_escopo = models.TextField(null=True)
+    retirado_em = models.DateTimeField(null=True)
+    retirado_por = models.TextField(null=True)
+    motivo = models.TextField(choices=MotivoDeModeracao.choices, null=True)
+    complemento = models.TextField(default="", blank=True)
+    cancelado_em = models.DateTimeField(null=True)
+
+    class Meta:
+        ordering = ["inicio", "titulo", "id"]
+        indexes = [models.Index(fields=["pessoa_id"], name="encontro_pessoa")]
+        constraints = [
+            _tamanho_entre("titulo", 1, ENCONTRO_TITULO_MAXIMO, "encontro"),
+            _tamanho_entre("descricao", 1, ENCONTRO_DESCRICAO_MAXIMA, "encontro"),
+            _tamanho_entre("nome_apresentacao", 1, NOME_APRESENTACAO_MAXIMO, "encontro"),
+            models.CheckConstraint(
+                condition=Q(LessThanOrEqual(Length("complemento"), COMPLEMENTO_MAXIMO)),
+                name="encontro_complemento_tamanho",
+            ),
+            models.CheckConstraint(condition=~Q(link=""), name="encontro_link_nao_vazio"),
+            models.CheckConstraint(
+                condition=~Q(versao_do_termo=""), name="encontro_termo_nao_vazio"
+            ),
+            models.CheckConstraint(
+                condition=Q(inicio__lt=F("termino")), name="encontro_termino_depois_do_inicio"
+            ),
+            *(
+                c
+                for campo in CRITERIOS_DE_PUBLICO
+                for c in (
+                    models.CheckConstraint(
+                        condition=Q(**{f"{campo}__isnull": True})
+                        | Q(**{f"{campo}__len__gte": 1}),
+                        name=f"encontro_{campo}_nao_vazio",
+                    ),
+                    models.CheckConstraint(
+                        condition=~Q(**{f"{campo}__contains": [""]}),
+                        name=f"encontro_{campo}_sem_cadeia_vazia",
+                    ),
+                )
+            ),
+            _par("encontro", "publicado_em", "publicado_por", "publicado_por_escopo"),
+            _par("encontro", "recusado_em", "recusado_por", "recusado_por_escopo"),
+            _par("encontro", "retirado_em", "retirado_por"),
+            # Recusa só antes da publicação; retirada só depois dela; nunca as duas.
+            models.CheckConstraint(
+                condition=Q(recusado_em__isnull=True) | Q(publicado_em__isnull=True),
+                name="encontro_recusa_sem_publicacao",
+            ),
+            models.CheckConstraint(
+                condition=Q(retirado_em__isnull=True)
+                | Q(publicado_em__isnull=False, retirado_em__gte=F("publicado_em")),
+                name="encontro_retirada_depois_da_publicacao",
+            ),
+            # O motivo existe se, e só se, houve recusa ou retirada (FR-017).
+            models.CheckConstraint(
+                condition=Q(motivo__isnull=True, recusado_em__isnull=True,
+                            retirado_em__isnull=True)
+                | (Q(motivo__in=MotivoDeModeracao.values)
+                   & (Q(recusado_em__isnull=False) | Q(retirado_em__isnull=False))),
+                name="encontro_motivo_com_decisao",
+            ),
+            models.CheckConstraint(
+                condition=~Q(motivo=MotivoDeModeracao.OUTRO) | ~Q(complemento=""),
+                name="encontro_outro_motivo_com_complemento",
+            ),
+        ]
+
+    @property
+    def tem_publico(self) -> bool:
+        return any(getattr(self, campo) is not None for campo in CRITERIOS_DE_PUBLICO)
+
+    def __str__(self) -> str:
+        return f"Encontro {self.titulo}"
+
+
+class Confirmacao(models.Model):
+    """"Vou participar" (031 FR-020, FR-023). Não é inscrição nem registro de presença.
+
+    Mostra o link a quem confirmou e dá ao organizador só a quantidade (FR-025). Nunca é
+    exportada nem entra no dado analítico (FR-032). Cancelar não apaga: grava o momento, e
+    confirmar de novo cria outra.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    encontro = models.ForeignKey(Encontro, on_delete=models.PROTECT, related_name="confirmacoes")
+    pessoa_id = models.UUIDField()
+    versao_da_ciencia = models.TextField()
+    confirmada_em = models.DateTimeField()
+    cancelada_em = models.DateTimeField(null=True)
+
+    class Meta:
+        ordering = ["confirmada_em", "id"]
+        indexes = [models.Index(fields=["pessoa_id"], name="confirmacao_pessoa")]
+        constraints = [
+            models.CheckConstraint(
+                condition=~Q(versao_da_ciencia=""), name="confirmacao_versao_nao_vazia"
+            ),
+            models.CheckConstraint(
+                condition=Q(cancelada_em__isnull=True) | Q(cancelada_em__gte=F("confirmada_em")),
+                name="confirmacao_cancelada_depois",
+            ),
+            models.UniqueConstraint(
+                fields=["encontro", "pessoa_id"],
+                condition=Q(cancelada_em__isnull=True),
+                name="confirmacao_uma_ativa_por_pessoa",
+            ),
+        ]
+
+    @property
+    def ativa(self) -> bool:
+        return self.cancelada_em is None

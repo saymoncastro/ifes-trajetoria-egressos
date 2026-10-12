@@ -1,0 +1,12 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.NEUTRA_TITULO }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-022 (protótipo p6): sem sessão, nada do encontro aparece — nem título, nem data, nem quem propõe. #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<h1>{{ m.NEUTRA_TITULO }}</h1>
+<p class="pe-lead">{{ texto }}</p>
+{% if com_acao %}<p class="pe-acoes"><a class="pe-botao pe-acao-principal" href="/entrar/">{{ m.NEUTRA_ACAO }}</a></p>
+<p class="pe-nota">{{ m.NEUTRA_NOTA }}</p>
+<p class="pe-nota">{{ m.SO_PARA_EGRESSOS }}</p>{% endif %}
+</div></div>
+{% endblock %}

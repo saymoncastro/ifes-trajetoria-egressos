@@ -1,0 +1,29 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.CONFIRA }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-006 (protótipo o3): prévia, quem analisa e o termo do organizador, versionado. Os campos voltam ocultos e são revalidados ao enviar. #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<h1>{{ m.CONFIRA }}</h1>
+{% if erros.termo %}<p class="resumo-erros" role="alert">{{ erros.termo }}</p>{% endif %}
+<div class="pe-previa"><p class="pe-rotulo">{{ m.COMO_VERAO }}</p>
+<ul class="pe-lista">{% include "portal/encontros/_item.html" %}</ul></div>
+<dl class="contribuicao-resumo">
+<dt>{{ m.RESUMO.descricao }}</dt><dd>{{ e.descricao }}</dd>
+<dt>{{ m.RESUMO.quando }}</dt><dd>{{ e.data_completa }}, {{ e.horario }} {{ m.FUSO }}</dd>
+<dt>{{ m.RESUMO.onde_aparece }}</dt><dd>{{ e.publico }}. {{ m.QUEM_RECEBE_O_ENDERECO }}</dd>
+<dt>{{ m.RESUMO.quem_analisa }}</dt><dd>{{ quem_analisa }}</dd>
+<dt>{{ m.RESUMO.link }}</dt><dd>{{ link }}</dd>
+<dt>{{ m.RESUMO.como_aparece }}</dt><dd>{{ e.nome }} · {{ origem }} ({{ m.REGISTRO_DO_IFES|lower }})</dd>
+</dl>
+<section class="contribuicao-ciencia" aria-labelledby="pe-termo"><h2 id="pe-termo">{{ m.ANTES_DE_ENVIAR }}</h2>
+<ul>{% for item in termo %}<li>{{ item }}</li>{% endfor %}</ul>
+<p class="contribuicao-versao">{{ termo_versao }}</p></section>
+<form method="post" action="/encontros/propor/enviar/">{% csrf_token %}
+<input type="hidden" name="titulo" value="{{ campos.titulo }}"><textarea name="descricao" hidden>{{ campos.descricao }}</textarea>
+<input type="hidden" name="data" value="{{ campos.data }}"><input type="hidden" name="inicio" value="{{ campos.inicio }}"><input type="hidden" name="termino" value="{{ campos.termino }}">
+<input type="hidden" name="link" value="{{ campos.link }}"><input type="hidden" name="nome" value="{{ campos.nome }}"><input type="hidden" name="origem" value="{{ campos.origem }}"><input type="hidden" name="publico" value="{{ campos.publico }}">
+{% for valor in campos.unidade %}<input type="hidden" name="unidade" value="{{ valor }}">{% endfor %}{% for valor in campos.nivel %}<input type="hidden" name="nivel" value="{{ valor }}">{% endfor %}{% for valor in campos.curso %}<input type="hidden" name="curso" value="{{ valor }}">{% endfor %}
+<input type="hidden" name="versao" value="{{ versao }}">
+<p class="pe-acoes"><button type="submit" class="pe-botao">{{ m.ENVIAR }}</button> <button type="submit" class="secundario" formaction="/encontros/propor/" name="voltar" value="1">{{ m.VOLTAR_E_ALTERAR }}</button></p>
+</form></div></div>
+{% endblock %}

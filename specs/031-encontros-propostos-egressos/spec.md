@@ -6,10 +6,14 @@
 checkpoints, por autorização do solicitante
 ([roadmap, revisão 14](../../docs/roadmap/2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md)).
 Plan e tasks autorizados na [revisão 15](../../docs/roadmap/2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md)
-(fluxo do Spec Kit); **código e migração não**. A implementação depende da leitura do
+(fluxo do Spec Kit); código e migração não, até a revisão 16 abaixo. A implementação depende da leitura do
 Checkpoint 1 e do Checkpoint 2, em especial do bloco Comunidade. Os dois estão **NÃO APLICADOS**. A escolha
 entre 031 e 030 continua com o solicitante depois deles (roadmap, §13.5). Se autorizada, a
 implementação vale só para a demonstração.
+**Incremento 1 autorizado** ([roadmap, revisão 16](../../docs/roadmap/2026-10-07-portal-do-egresso-arquitetura-e-roadmap.md)):
+implementação só na demonstração, **antes** dos checkpoints, que continuam NÃO APLICADOS e
+passam a avaliar a experiência funcionando. Sem aprovação registrada nem uso real. Ver
+"Recorte do incremento 1", logo abaixo.
 **Revisão de produto (2026-10-11, solicitante)**: Denúncia mínima aceita, sem sistema de
 atendimento; público como contexto de descoberta; nome e origem do organizador registrados na
 [ADR 0010](../../docs/adr/0010-dado-de-egresso-visivel-a-outros-egressos.md); edição depois da
@@ -20,6 +24,22 @@ O Ifes modera antes de publicar. Outros egressos descobrem o encontro, confirmam
 link. É a alternativa **F** da
 [visão da Comunidade](../../docs/roadmap/2026-10-09-comunidade-alternativas.md#direção-registrada-por-capacidade):
 a primeira capacidade do Portal em que um egresso produz valor para outros egressos.
+
+## Recorte do incremento 1 (revisão 16)
+
+| Entra no incremento 1 | Fica para o incremento 2 |
+|---|---|
+| Propor, com limite de 3 ativos, termo versionado e origem copiada (FR-001 a FR-007) | Editar em análise e depois da publicação: correção operacional e nova análise (FR-008) |
+| Moderar: publicar, recusar e retirar, com motivo e escopo de quem decidiu (FR-015 a FR-019) | Calendário `.ics` (FR-027, FR-028) |
+| Descobrir pela formação, na página Encontros, com F e A (FR-011 a FR-014) | Denúncia dentro do Portal (FR-029). A Denúncia não tem modelo no incremento 1 |
+| Página por situação e por quem vê; link só para quem pode (FR-020 a FR-024a) | Retorno ao encontro depois da identificação, por lista fechada (FR-022, segunda parte). A página sem sessão já é neutra |
+| Confirmar, desistir, contagem só para quem organiza, cancelar (FR-009, FR-023, FR-025, FR-026) | Seção de encontros no Início (FR-013, Início) e o novo `ENCONTROS_TEXTO` |
+| Encerramento automático do link; estados vazios e encerrados (US6) | — |
+| Item "Encontros" na navegação (FR-037) | — |
+| Fronteira, privacidade, acessibilidade e testes (FR-030 a FR-036) | — |
+
+O texto da página Encontros não usa "comunidade" no incremento 1. Por isso a revisão da
+ADR 0009, decisão 7, fica para quando a palavra entrar.
 
 ## Contexto e dependências
 

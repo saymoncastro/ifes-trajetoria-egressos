@@ -1,0 +1,18 @@
+{% extends "portal/curadoria/base.html" %}
+{% block estilo %}{{ block.super }}{% include "portal/encontros/moderacao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% if erros %}<div class="resumo-erros" role="alert" tabindex="-1" autofocus><h2>{{ m.ERROS.resumo }}</h2><ul>{% for campo, texto in erros.items %}<li><a href="#campo-{{ campo }}">{{ texto }}</a></li>{% endfor %}</ul></div>{% endif %}
+{% include "portal/encontros/moderacao/_analise.html" %}
+<form method="post" novalidate>{% csrf_token %}
+<fieldset class="pergunta{% if erros.motivo %} com-erro{% endif %}" id="campo-motivo"><legend>{{ m.LEGENDA_MOTIVO }} <span class="nota">{{ m.NOTA_MOTIVO }}</span></legend>
+{% if erros.motivo %}<p class="erro">{{ erros.motivo }}</p>{% endif %}
+{% for motivo in motivos %}<div class="opcao"><input type="radio" id="motivo-{{ motivo.valor }}" name="motivo" value="{{ motivo.valor }}"{% if motivo.marcado %} checked{% endif %}><label for="motivo-{{ motivo.valor }}">{{ motivo.rotulo }}</label></div>
+{% endfor %}</fieldset>
+<div class="campo{% if erros.complemento %} com-erro{% endif %}" id="campo-complemento"><label for="complemento"><strong>{{ m.ROTULO_COMPLEMENTO }}</strong></label>
+<p class="dica" id="complemento-dica">{{ m.DICA_COMPLEMENTO }}</p>{% if erros.complemento %}<p class="erro" id="complemento-erro">{{ erros.complemento }}</p>{% endif %}
+<textarea id="complemento" name="complemento" maxlength="300" aria-describedby="complemento-dica{% if erros.complemento %} complemento-erro{% endif %}">{{ complemento }}</textarea></div>
+<p>{{ m.RETIRADA_NOTA }}</p>
+<p><button type="submit">{{ m.RETIRAR }}</button> <a href="/curadoria/encontros/">{{ m.VOLTAR }}</a></p>
+</form>
+{% endblock %}

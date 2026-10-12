@@ -23,7 +23,7 @@ que cada fato existe: spec, "Fatos novos e por que existem".
 | `primeira_publicacao_em` | data e hora ou nulo | preenchido uma vez | FR-010 |
 | `publicado_em`, `publicado_por` | data e hora, texto (operador opaco) | a última publicação, em par | FR-015 |
 | `publicado_por_escopo` | texto | com `publicado_em`: `institucional` (CPAEG) ou a unidade da CSAEG que publicou; a página diz quem moderou a partir dele | FR-024 |
-| `recusado_em`, `recusado_por` | idem | em par; só sem publicação | FR-017 |
+| `recusado_em`, `recusado_por`, `recusado_por_escopo` | idem, e o escopo de quem recusou | em trio; só sem publicação; a página diz quem recusou (code review do PR #67) | FR-017 |
 | `retirado_em`, `retirado_por` | idem | em par; só depois de publicado | FR-017 |
 | `motivo`, `complemento` | texto (`choices`), texto | só com recusa ou retirada; complemento até 300, obrigatório com `outro` | FR-017 |
 | `cancelado_em` | data e hora ou nulo | só pelo organizador, antes do início | FR-009 |

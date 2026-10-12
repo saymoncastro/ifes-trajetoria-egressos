@@ -230,16 +230,17 @@ def test_csrf_exigido(vinculos):
 
 
 def test_retirada_imediata_e_registrada(operador_b, cenario):
-    o = co.publicada("Encontro", escopo=co.ESCOPO_B, operador=co.OPERADOR_B,
+    # Revisado pela 031: o título deixa de ser "Encontro", que agora também é item da navegação.
+    o = co.publicada("Encontro de egressos na unidade", escopo=co.ESCOPO_B, operador=co.OPERADOR_B,
                      unidade_responsavel="Vitória", publico_unidades=["Vitória"])
     egresso = Client()
     cp.entrar(egresso, cenario.pessoa("SIM-P-0002"))
-    assert "Encontro" in egresso.get("/oportunidades/").content.decode()
+    assert "Encontro de egressos na unidade" in egresso.get("/oportunidades/").content.decode()
     assert m.RETIRAR_TEXTO in operador_b.get(f"{LISTA}{o.pk}/retirar/").content.decode()
     assert operador_b.post(f"{LISTA}{o.pk}/retirar/")["Location"] == f"{LISTA}?aviso=retirada"
     o.refresh_from_db()
     assert o.retirada_por == co.OPERADOR_B and o.retirada_em is not None
-    assert "Encontro" not in egresso.get("/oportunidades/").content.decode()
+    assert "Encontro de egressos na unidade" not in egresso.get("/oportunidades/").content.decode()
 
 
 def test_rascunho_retirado_nunca_publica(operador_b):

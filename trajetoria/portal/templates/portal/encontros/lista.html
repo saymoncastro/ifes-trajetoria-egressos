@@ -1,0 +1,35 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ m.TITULO_ENCONTROS }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-013 (protótipos p2 e p11): propostos por egressos, pela data; eventos do Ifes, na ordem da 025. #}
+<div class="pe">
+<section class="pe-abertura" aria-labelledby="pe-titulo"><div class="portal-container">
+<h1 id="pe-titulo">{{ m.TITULO_ENCONTROS }}</h1>
+<p class="pe-lead">{{ m.INTRODUCAO }}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/propor/">{{ m.PROPOR }}</a> <a href="/encontros/seus/">{{ m.SEUS }}</a></p>
+</div></section>
+<section class="pe-grupo" aria-labelledby="pe-g-f"><div class="portal-container">
+<h2 id="pe-g-f">{{ m.GRUPO_F }}</h2>
+{% if propostos %}
+<p class="pe-nota">{{ m.GRUPO_F_NOTA }}</p>
+<ol class="pe-lista">{% for e in propostos %}{% include "portal/encontros/_item.html" %}{% endfor %}</ol>
+{% else %}
+<div class="pe-vazio"><p><strong>{{ m.VAZIO_F }}</strong></p><p>{{ m.VAZIO_F_CONVITE }}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/propor/">{{ m.PROPOR }}</a></p></div>
+{% endif %}
+</div></section>
+<section class="pe-grupo" aria-labelledby="pe-g-a"><div class="portal-container">
+<h2 id="pe-g-a">{{ m.GRUPO_A }}</h2>
+{% if eventos %}
+<p class="pe-nota">{{ m.GRUPO_A_NOTA }}</p>
+<ul class="pe-lista">{% for item in eventos %}<li class="pe-item pe-item-a"><div><p class="pe-selo pe-selo-a">{{ m.SELO_A }}</p>
+<h3><a href="{{ item.oportunidade.endereco }}" rel="noreferrer">{{ item.oportunidade.titulo }}<span class="visualmente-oculto"> — {{ item.origem_do_site }}: {{ item.dominio }}</span></a></h3>
+<p>{{ item.oportunidade.resumo }}</p>
+<p class="oportunidade-por-que">{{ item.explicacao }}</p>
+<p class="oportunidade-origem">{{ item.oferecida }} · {{ item.origem_do_site }}: {{ item.dominio }}</p></div></li>{% endfor %}</ul>
+{% else %}
+<p>{{ m.VAZIO_A }}</p>
+{% endif %}
+</div></section>
+</div>
+{% endblock %}

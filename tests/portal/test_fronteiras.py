@@ -30,14 +30,21 @@ def test_nucleo_nao_menciona_o_portal():
 def test_portal_dois_modelos_sem_fk_para_o_nucleo():
     """Revisado pela 025 (research R1) e pela 026 (plan R2): a 024 não tinha modelo; a 025
     traz a `Oportunidade` e a 026 a `Manifestacao`, com migrações só aditivas e nenhuma
-    chave estrangeira."""
+    chave estrangeira.
+
+    Revisado pela 031 (incremento 1; research R2): entram `Encontro` e `Confirmacao`. A regra
+    da ADR 0008 é não depender do núcleo: chaves estrangeiras só podem apontar para modelos
+    da própria camada (a Confirmação aponta para o Encontro)."""
     from django.apps import apps
     from django.db import models
 
     modelos = list(apps.get_app_config("portal").get_models())
-    assert sorted(m.__name__ for m in modelos) == ["Manifestacao", "Oportunidade"]
-    assert not any(isinstance(c, models.ForeignKey | models.OneToOneField | models.ManyToManyField)
-                   for modelo in modelos for c in modelo._meta.get_fields())
+    assert sorted(m.__name__ for m in modelos) == [
+        "Confirmacao", "Encontro", "Manifestacao", "Oportunidade"]
+    relacoes = [c for modelo in modelos for c in modelo._meta.get_fields()
+                if isinstance(c, models.ForeignKey | models.OneToOneField | models.ManyToManyField)]
+    assert all(r.related_model._meta.app_label == "portal" for r in relacoes)
+    assert [f"{r.model.__name__}.{r.name}" for r in relacoes] == ["Confirmacao.encontro"]
     operacoes = re.findall(r"migrations\.(\w+)\(",
                            "".join(p.read_text("utf-8")
                                    for p in (PORTAL / "migrations").glob("0*.py")))
@@ -55,7 +62,10 @@ def test_portal_nao_grava(client, cenario):
     também não grava; só enviar e retirar gravam (test_contribuicao_fronteira.py)."""
     maria = cenario.pessoa("SIM-P-0003")
     antes = cp.contagens()
-    telas = ("/", "/entrar/", "/inicio/", "/oportunidades/", "/contribuir/", "/contribuicoes/")
+    # Revisado pela 031: abrir os encontros também não grava; só propor, decidir, confirmar e
+    # cancelar gravam (test_encontros_operacoes.py).
+    telas = ("/", "/entrar/", "/inicio/", "/oportunidades/", "/contribuir/", "/contribuicoes/",
+             "/encontros/", "/encontros/propor/", "/encontros/seus/")
     for url in telas:
         client.get(url)
     cp.entrar(client, maria)

@@ -1,0 +1,11 @@
+{% extends "portal/encontros/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block conteudo %}
+{# 031 FR-024a: só a situação, sem título, descrição, nome nem origem. #}
+<div class="pe"><div class="portal-container pe-pagina pe-pagina-estreita">
+<p class="pe-selo pe-selo-f">{{ m.SELO_F_PAGINA }}</p>
+<h1>{{ titulo }}</h1>
+<p class="pe-lead">{{ texto }}</p>
+<p class="pe-acoes"><a class="pe-botao" href="/encontros/">{{ m.VER_TODOS }}</a></p>
+</div></div>
+{% endblock %}

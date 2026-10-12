@@ -6,9 +6,7 @@ mudou vira conflito (409), registro fora do escopo é 404 (não revela que exist
 admin.
 """
 
-from functools import wraps
 
-from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -16,8 +14,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
 from trajetoria.acompanhamento import apresentacao as ap
-from trajetoria.acompanhamento.acesso import Atuacao, recusa
-from trajetoria.demonstracao.operador import operador_em_uso, vinculos_do_operador_em_uso
+from trajetoria.demonstracao.operador import operador_em_uso
+from trajetoria.portal.barreiras import operador
 from trajetoria.portal.models import Categoria, Oportunidade
 from trajetoria.portal.oportunidades import mensagens as m
 from trajetoria.portal.oportunidades import operacoes
@@ -54,24 +52,9 @@ _ERROS = {
 }
 
 
-def curadoria(view):
-    """Barreira externa (contracts/curadoria.md, "Acesso"): demonstração, operador e
-    competência, relidos a cada pedido. O identificador do operador nunca vai ao template."""
-
-    @wraps(view)
-    def envolvida(request, *args, **kwargs):
-        if not settings.TRAJETORIA_DEMONSTRACAO:
-            raise Http404
-        vinculos = vinculos_do_operador_em_uso(request)
-        if vinculos is None:
-            return redirect(ESCOLHA_DE_OPERADOR)
-        if not pode_curar_oportunidades(vinculos):
-            return recusa(request, m.RECUSA, destino_operador=DESTINO)
-        request.escopo = escopo_de_curadoria(vinculos)
-        request.atuacao = Atuacao(tuple(v.rotulo_de_atuacao for v in vinculos), False)
-        return view(request, *args, **kwargs)
-
-    return envolvida
+# Barreira externa (contracts/curadoria.md, "Acesso"), comum às telas de operação.
+curadoria = operador(pode=pode_curar_oportunidades, escopo_de=escopo_de_curadoria,
+                     mensagem_de_recusa=m.RECUSA, destino=DESTINO)
 
 
 def _pagina(request, template, *, titulo, status=200, **contexto):

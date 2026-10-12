@@ -810,3 +810,17 @@ observação aponta "Participação", e não mais "Pesquisa"
 ([protocolo](evidencias/protocolo-checkpoint-1.md), revisão de 2026-10-11). O trecho
 "Volte ao Ifes não aparecem no produto" dos critérios qualitativos é anterior à 025 e à 026.
 Checkpoint 1 continua **NÃO APLICADO**.
+
+## Nota de revisão pela Feature 031, incremento 1 (2026-10-11)
+
+A [031](../031-encontros-propostos-egressos/spec.md) (roadmap, revisão 16) revisa, só na
+demonstração:
+- **FR-022 e FR-023:** a navegação ganha **"Encontros"**, para quem tem Conclusão, entre
+  "Oportunidades" e "Participação" (031 FR-037; H-3105). É o item atual nas telas de
+  `/encontros/`, que exibem a navegação do Portal.
+- **FR-029:** a camada passa a ter mais dois fatos, Encontro e Confirmação. O egresso grava a
+  proposta, a confirmação e os cancelamentos, e a moderação grava as decisões. As demais telas
+  continuam sem gravar.
+
+O Início não muda no incremento 1: a seção de encontros com F e A fica para o incremento 2.
+Checkpoint 1 continua **NÃO APLICADO**.

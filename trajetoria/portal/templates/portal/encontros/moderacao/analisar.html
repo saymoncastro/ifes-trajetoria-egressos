@@ -1,0 +1,8 @@
+{% extends "portal/curadoria/base.html" %}
+{% block estilo %}{{ block.super }}{% include "portal/encontros/moderacao/estilo.css" %}{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+{% include "portal/encontros/moderacao/_analise.html" %}
+<form method="post">{% csrf_token %}<p><button type="submit">{{ m.PUBLICAR }}</button> <a href="/curadoria/encontros/{{ e.id }}/recusar/">{{ m.RECUSAR }}</a> · <a href="/curadoria/encontros/">{{ m.VOLTAR }}</a></p></form>
+<p>{{ m.PUBLICAR_NOTA }}</p>
+{% endblock %}

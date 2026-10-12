@@ -1,0 +1,12 @@
+{# 031 FR-018 (protótipos m2 a m4): prévia, público, data, link completo e aviso do domínio. Sem CPF, nascimento, contato, nem quem confirmou. #}
+<section class="encontro-previa" aria-labelledby="pe-como"><h2 id="pe-como">{{ m.COMO_VERAO }}</h2>
+<p><strong>{{ m.SELO_F_PAGINA }}</strong></p><p><strong>{{ e.titulo }}</strong></p><p>{{ e.descricao }}</p>
+<p>Proposto por {{ e.nome }} · {{ e.origem }} ({{ m.REGISTRO_DO_IFES|lower }})</p></section>
+<dl class="encontro-resumo">
+<dt>{{ m.RESUMO.quando }}</dt><dd>{{ e.data_completa }}, {{ e.horario }}</dd>
+<dt>Público</dt><dd>{{ e.publico }}</dd>
+<dt>{{ m.LINK_DA_REUNIAO }}</dt><dd><strong>{{ link }}</strong></dd>
+<dt>Termo do organizador</dt><dd>{{ termo }}</dd>
+{% if contagem %}<dt>Confirmações</dt><dd>{{ contagem }}</dd>{% endif %}
+</dl>
+<p role="note" class="aviso">{{ aviso_link }}</p>

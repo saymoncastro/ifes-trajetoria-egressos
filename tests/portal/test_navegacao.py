@@ -57,7 +57,10 @@ def test_navegacao_nas_telas_fora_das_secoes(client, cenario):
     # Revisado pela 026 (FR-011; plan R9): "Contribuir" logo depois de "Oportunidades".
     # Revisado pela 032 (FR-011): "Participação" reúne contribuir, pesquisa e e-mail, que
     # mantêm os seus endereços e marcam "Participação" como item atual.
-    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/participacao/"]
+    # Revisado pela 031 (incremento 1; H-3105): "Encontros" entre "Oportunidades" e
+    # "Participação", para quem tem Conclusão.
+    esperado = ["/inicio/", "/minha-trajetoria/", "/oportunidades/", "/encontros/",
+                "/participacao/"]
     atual = {"/formacoes/": "/participacao/", "/meu-email/": "/participacao/",
              "/contribuir/": "/participacao/"}
     for url in [*esperado, *atual]:
